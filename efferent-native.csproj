@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom native transcoder for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC</Copyright>
+    <VersionPrefix>3.8.0</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Efferent.Native</RootNamespace>
     <AssemblyName>Efferent.Native</AssemblyName>
