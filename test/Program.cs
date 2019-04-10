@@ -13,7 +13,7 @@ namespace Efferent.Native.Test
             TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
             var output = "JPEG2000.dcm";
             var data = DicomFile.Open("testDicom.dcm");
-            var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.JPEGLSLossless);
+            var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.JPEG2000Lossy);
             image.Save(output);
         }
     }

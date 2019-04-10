@@ -2,3 +2,6 @@
 /src/obj
 /test/bin
 /test/obj
+/test/JPEG2000.dcm
+/src/Native/Linux64/build_ALL/
+/src/Native/Windows64/build_ALL/
