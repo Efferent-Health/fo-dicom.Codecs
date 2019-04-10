@@ -21,9 +21,9 @@ namespace Efferent.Native.Test
         [TestMethod]
         public void CanTranscodeJPEGLSLossless()
         {
-            var output = "out/JPEG2000.dcm";
+            var output = "out/JPEGLSLossless.dcm";
             var data = DicomFile.Open("test.dcm");
-            var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.JPEGLSLossless);
+            var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.JPEGProcess14);
 
             Assert.IsNotNull(image);
 

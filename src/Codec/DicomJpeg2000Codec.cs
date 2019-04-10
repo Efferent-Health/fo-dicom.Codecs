@@ -749,6 +749,8 @@ namespace Efferent.Native.Codec
                         Opj_set_event_mgr_Windows64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
 
+                    else throw new InvalidOperationException("Platform unsupported!");
+
                     eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
                     eparams.max_comp_size = 0;
                     eparams.numresolution = 6;
@@ -819,6 +821,8 @@ namespace Efferent.Native.Codec
                         {
                             image = Opj_image_create_Windows64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
+
+                        else throw new InvalidOperationException("Platform unsupported!");
 
                         image->x0 = eparams.image_offset_x0;
                         image->y0 = eparams.image_offset_y0;
@@ -928,6 +932,8 @@ namespace Efferent.Native.Codec
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null, 0);
                         }
 
+                        else throw new InvalidOperationException("Platform unsupported!");
+
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
@@ -969,6 +975,8 @@ namespace Efferent.Native.Codec
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
                         }
+
+                        else throw new InvalidOperationException("Platform unsupported!");
                     }
 
                     finally
@@ -977,18 +985,21 @@ namespace Efferent.Native.Codec
                         {
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
+                            else throw new InvalidOperationException("Platform unsupported!");
                         }
 
                         if (image != null)
                         {
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
+                            else throw new InvalidOperationException("Platform unsupported!");
                         }
 
                         if (cinfo != null)
                         {
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);
+                            else throw new InvalidOperationException("Platform unsupported!");
                         }
                     }
                 }
@@ -1078,6 +1089,8 @@ namespace Efferent.Native.Codec
                             Opj_setup_decoder_Windows64(dinfo, &dparams);
                         }
 
+                        else throw new InvalidOperationException("Platform unsupported!");
+
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
 
@@ -1092,6 +1105,8 @@ namespace Efferent.Native.Codec
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
                             image = Opj_decode_Windows64(dinfo, cio);
                         }
+
+                        else throw new InvalidOperationException("Platform unsupported!");
 
                         if (image == null)
                             throw new DicomCodecException("Error in JPEG 2000 code stream!");
@@ -1179,17 +1194,23 @@ namespace Efferent.Native.Codec
 
                     finally
                     {
-                        if (cio != null)
+                        if (cio != null){
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
+                            else throw new InvalidOperationException("Platform unsupported!");
+                        }
 
-                        if (dinfo != null)
+                        if (dinfo != null){
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_decompress_Linux64(dinfo);
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_decompress_Windows64(dinfo);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_decompress_Windows64(dinfo);
+                            else throw new InvalidOperationException("Platform unsupported!");
+                        }
 
-                        if (image != null)
+                        if (image != null){
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
+                            else throw new InvalidOperationException("Platform unsupported!");
+                        }
                     }
 
                 }

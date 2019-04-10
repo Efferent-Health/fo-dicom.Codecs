@@ -219,6 +219,7 @@ namespace Efferent.Native.Codec
                     {
                         CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
                     }
+                    else throw new InvalidOperationException("Platform unsupported!");
 
                     Array.Resize(ref jpegData, (int)jpegDataSize);
 
@@ -259,6 +260,7 @@ namespace Efferent.Native.Codec
                     {
                         CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
                     }
+                    else throw new InvalidOperationException("Platform unsupported!");
 
                     IByteBuffer buffer;
                     if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
