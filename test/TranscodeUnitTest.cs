@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Dicom;
 using Dicom.Imaging.Codec;
+using Dicom.Imaging;
 
 namespace Efferent.Native.Test
 {
@@ -28,10 +29,8 @@ namespace Efferent.Native.Test
 
             image.Save(output);
 
-//            var data1 = DicomFile.Open(output);
-//            var pixelData = data1.Dataset.GetValue<DicomOtherByteFragment>(DicomTag.PixelData, 0);
-
-//            Assert.IsNotNull(pixelData);
+            var data1 = DicomFile.Open(output);
+            Assert.IsTrue(data1.Dataset.Contains(DicomTag.PixelData));
         }
     }
 }
