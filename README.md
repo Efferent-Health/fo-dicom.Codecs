@@ -11,10 +11,15 @@ This transcoder differs from the existing fo-dicom implementations in the follow
 - Avoids pure C# implementation for performance reasons (with exception of RLE)
 
 The following CODECS are implemented:
-- JPEG
-- JPEG 2000
-- JPEG-LS
-- RLE (C#)
+- JPEG 2000 Image Compression (Lossless Only)
+- JPEG 2000 Image Compression
+- JPEG Baseline (Process 1): Default Transfer Syntax for Lossy JPEG 8 Bit Image Compression
+- JPEG Extended (Process 2 & 4): Default Transfer Syntax for Lossy JPEG 12 Bit Image Compression - (Process 4 only)
+- JPEG Lossless, Non-Hierarchical (Process 14)
+- JPEG Lossless, Non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1]): Default Transfer Syntax for Lossless JPEG Image Compression
+- JPEG-LS Lossless Image Compression
+- JPEG-LS Lossy (Near-Lossless) Image Compression
+- RLE Lossless
 
 ## Usage
 
@@ -22,5 +27,5 @@ The following CODECS are implemented:
 - Add the standard fo-dicom nuget packages to your project
 - At the beginning of your application, replace the transcoder manager, as:
 ````C#
-Dicom.Codec.TranscoderManager.SetImplementation(new Efferent.Native.NativeTranscoderManager());
+Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Coded.NativeTranscoderManager());
 ````

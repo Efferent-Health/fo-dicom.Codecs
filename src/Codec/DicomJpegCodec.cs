@@ -365,14 +365,14 @@ namespace Efferent.Native.Codec
     public unsafe delegate int empty_output_buffer(ref j_compress_ptr cinfo);
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate void term_destination(ref j_compress_ptr cinfo);
-    
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jpeg_destination_mgr
     {
         public IntPtr next_output_byte;
         public uint free_in_buffer;
 
-        public IntPtr init_Destination;             
+        public IntPtr init_Destination;
         public IntPtr empty_Output_Buffer;
         public IntPtr term_Destination;
     }
@@ -537,7 +537,7 @@ namespace Efferent.Native.Codec
     [Flags]
     public enum J_BUF_MODE
     {
-        JBUF_PASS_THRU,     /* Plain stripwise operation */                         
+        JBUF_PASS_THRU,     /* Plain stripwise operation */
         JBUF_SAVE_SOURCE,   /* Run source subobject only, save output */
         JBUF_CRANK_DEST,    /* Run dest subobject only, using saved data */
         JBUF_SAVE_AND_PASS
@@ -877,7 +877,7 @@ namespace Efferent.Native.Codec
 
             public static extern unsafe int jpeg_resync_to_restart_8_Windows64(ref j_decompress_ptr dinfo, int desired);
 
-            
+
             //DLLIMPORT libijg8 library for Linux
 
             //Encode Native functions
@@ -1115,7 +1115,7 @@ namespace Efferent.Native.Codec
 
             public static extern unsafe int jpeg_resync_to_restart_12_Linux64(ref j_decompress_ptr dinfo, int desired);
 
-            
+
             //DLLIMPORT libijg16 library for Windows
 
             //Encode Native functions
@@ -1291,7 +1291,7 @@ namespace Efferent.Native.Codec
                 thisPtr.MemoryBuffer = new MemoryStream();
                 thisPtr.DataArray = new PinnedByteArray(16384);
                 cinfo.dest->next_output_byte = thisPtr.DataArray.Pointer;
-                cinfo.dest->free_in_buffer = 16384;              
+                cinfo.dest->free_in_buffer = 16384;
             }
 
             public static unsafe int emptyOutputBuffer(ref j_compress_ptr cinfo)
@@ -1311,10 +1311,12 @@ namespace Efferent.Native.Codec
                 thisPtr.DataArray = null;
             }
 
-            public static unsafe void initSource(ref j_decompress_ptr dinfo){//dinfo) {               
+            public static unsafe void initSource(ref j_decompress_ptr dinfo)
+            {//dinfo) {               
             }
 
-            public static unsafe void OutputMessage(ref j_common_ptr cinfo){
+            public static unsafe void OutputMessage(ref j_common_ptr cinfo)
+            {
             }
 
             public static unsafe int fillInputBuffer(ref j_decompress_ptr dinfo)
@@ -1327,7 +1329,7 @@ namespace Efferent.Native.Codec
                     src->next_buffer = null;
                     src->next_buffer_size = 0;
 
-                    if(src->skip_bytes > 0)
+                    if (src->skip_bytes > 0)
                     {
                         if (src->pub.bytes_in_buffer < (uint)src->skip_bytes)
                         {
@@ -1339,7 +1341,7 @@ namespace Efferent.Native.Codec
                         }
                         else
                         {
-                            src->pub.bytes_in_buffer -= (uint) src->skip_bytes;
+                            src->pub.bytes_in_buffer -= (uint)src->skip_bytes;
                             src->pub.next_input_byte += src->skip_bytes;
                             src->skip_bytes = 0;
                         }
@@ -1534,39 +1536,39 @@ namespace Efferent.Native.Codec
                             cinfo.err = jpeg_std_error_8_Windows64(ref jerr);
 
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                            cinfo.err = jpeg_std_error_8_Linux64(ref jerr);    
+                            cinfo.err = jpeg_std_error_8_Linux64(ref jerr);
 
                         //jpeg_std_error_12 for Linux and Windows for 64 bits
-                        else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))  
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             cinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-                        
-                        else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))  
+
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             cinfo.err = jpeg_std_error_12_Linux64(ref jerr);
 
                         //jpeg_std_error_16 for Linux and Windows for 64 bits
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             cinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-                        
+
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             cinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-                        
+
 
                         jerr.error_exit = IntPtr.Zero;
 
                         ouput_Message ouput_Message_ = OutputMessage;
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
-                                             
+
                         //jpeg_create_compress_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_compress_8_Windows64(ref cinfo);
 
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                            jpeg_create_compress_8_Linux64(ref cinfo);    
+                            jpeg_create_compress_8_Linux64(ref cinfo);
 
                         //jpeg_create_compress_12 for Linux and Windows for 64 bits
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_compress_12_Windows64(ref cinfo);
-                        
+
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_compress_12_Linux64(ref cinfo);
 
@@ -1581,18 +1583,18 @@ namespace Efferent.Native.Codec
 
                         This = this;
                         // Specify destination manager
-                        jpeg_destination_mgr dest; 
+                        jpeg_destination_mgr dest;
 
-                        init_destination init_Destination_ = initDestination;                        
+                        init_destination init_Destination_ = initDestination;
                         dest.init_Destination = Marshal.GetFunctionPointerForDelegate((init_Destination_));
 
                         empty_output_buffer empty_Output_Buffer_ = emptyOutputBuffer;
                         dest.empty_Output_Buffer = Marshal.GetFunctionPointerForDelegate(empty_Output_Buffer_);
-                        
+
                         term_destination term_Destination_ = termDestination;
                         dest.term_Destination = Marshal.GetFunctionPointerForDelegate(term_Destination_);
 
-                        cinfo.dest = &dest;                       
+                        cinfo.dest = &dest;
 
                         cinfo.image_width = oldPixelData.Width;
                         cinfo.image_height = oldPixelData.Height;
@@ -1602,15 +1604,15 @@ namespace Efferent.Native.Codec
                         //jpeg_set_defaults_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_8_Windows64(ref cinfo);
-                        
+
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_8_Linux64(ref cinfo);
 
                         //jpeg_set_defaults_12 for Linux and Windows for 64 bits
-                        else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_12_Windows64(ref cinfo);
 
-                        else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_12_Linux64(ref cinfo);
 
                         //jpeg_set_defaults_16 for Linux and Windows for 64 bits
@@ -1638,7 +1640,7 @@ namespace Efferent.Native.Codec
 
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
+
                             //jpeg_set_quality_16 for Linux and Windows for 64 bits
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
@@ -1664,10 +1666,10 @@ namespace Efferent.Native.Codec
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             //jpeg_set_quality_16 for Linux and Windows for 64 bits
-                            else if (Bits <= 16  && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits <= 16  && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             jpeg_simple_spectral_selection(ref cinfo);
@@ -1729,11 +1731,11 @@ namespace Efferent.Native.Codec
                                 jpeg_simple_lossless_12_Linux64(ref cinfo, Predictor, PointTransform);
 
                             //jpeg_simple_lossless_16 for Linux and Windows for 64 bits
-                            else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_simple_lossless_16_Windows64(ref cinfo, Predictor, PointTransform);
 
-                            else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                                jpeg_simple_lossless_16_Linux64(ref cinfo, Predictor, PointTransform);                          
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                jpeg_simple_lossless_16_Linux64(ref cinfo, Predictor, PointTransform);
                         }
 
                         cinfo.smoothing_factor = jpegParams.SmoothingFactor;
@@ -1755,10 +1757,10 @@ namespace Efferent.Native.Codec
                                 jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
 
                             //jpeg_set_colorspace_16 for Linux and Windows for 64 bits
-                            else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_colorspace_16_Windows64(ref cinfo, cinfo.in_color_space);
 
-                            else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_colorspace_16_Linux64(ref cinfo, cinfo.in_color_space);
 
                             cinfo.comp_info->h_samp_factor = 1;
@@ -1792,23 +1794,23 @@ namespace Efferent.Native.Codec
                                         jpeg_set_colorspace_8_Linux64(ref cinfo, cinfo.in_color_space);
 
                                     //jpeg_set_colorspace_12 for Linux and Windows for 64 bits
-                                    else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                         jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
 
-                                    else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                         jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
 
                                     //jpeg_set_colorspace_16 for Linux and Windows for 64 bits
-                                    else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                         jpeg_set_colorspace_16_Windows64(ref cinfo, cinfo.in_color_space);
 
-                                    else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                    else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                         jpeg_set_colorspace_16_Linux64(ref cinfo, cinfo.in_color_space);
                                 }
 
                                 cinfo.comp_info[0].h_samp_factor = 1;
                                 cinfo.comp_info[0].v_samp_factor = 1;
-                                
+
                             }
                         }
 
@@ -1826,18 +1828,18 @@ namespace Efferent.Native.Codec
                             jpeg_start_compress_8_Linux64(ref cinfo, Convert.ToInt32(true));
 
                         //jpeg_start_compress_12 for Linux and Windows for 64 bits
-                        else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_12_Windows64(ref cinfo, Convert.ToInt32(true));
 
-                        else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_start_compress_12_Linux64(ref cinfo, Convert.ToInt32(true));
 
                         //jpeg_start_compress_16 for Linux and Windows for 64 bits
-                        else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_16_Windows64(ref cinfo, Convert.ToInt32(true));
 
-                        else if (Bits <= 16 && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                            jpeg_start_compress_16_Linux64(ref cinfo, Convert.ToInt32(true));    
+                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            jpeg_start_compress_16_Linux64(ref cinfo, Convert.ToInt32(true));
 
                         byte* row_pointer;
                         int row_stride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
@@ -1856,17 +1858,17 @@ namespace Efferent.Native.Codec
                                 jpeg_write_scanlines_8_Linux64(ref cinfo, &row_pointer, 1);
 
                             //jpeg_write_scanlines_12 for Linux and Windows for 64 bits    
-                            else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_12_Windows64(ref cinfo, &row_pointer, 1);
 
-                            else if (Bits <= 12 && Bits >8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_12_Linux64(ref cinfo, &row_pointer, 1);
 
                             //jpeg_write_scanlines_16 for Linux and Windows for 64 bits
-                            else if (Bits <= 16  && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_16_Windows64(ref cinfo, &row_pointer, 1);
 
-                            else if (Bits <= 16  && Bits >12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_16_Linux64(ref cinfo, &row_pointer, 1);
                         }
 
@@ -2036,7 +2038,7 @@ namespace Efferent.Native.Codec
                             dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
 
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                            dinfo.err = jpeg_std_error_16_Linux64(ref jerr);    
+                            dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
 
                         jerr.error_exit = IntPtr.Zero;
 
@@ -2052,7 +2054,7 @@ namespace Efferent.Native.Codec
 
                         //jpeg_create_decompress_12 for Linux and Windows for 64 bits
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                            jpeg_create_decompress_12_Windows64(ref dinfo);   
+                            jpeg_create_decompress_12_Windows64(ref dinfo);
 
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_12_Linux64(ref dinfo);
@@ -2063,7 +2065,7 @@ namespace Efferent.Native.Codec
 
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_16_Linux64(ref dinfo);
-                    
+
 
                         dinfo.src = (jpeg_source_mgr*)&src.pub;
 
@@ -2126,7 +2128,7 @@ namespace Efferent.Native.Codec
                         }
 
                         else
-                        { 
+                        {
                             dinfo.jpeg_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
                             dinfo.out_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
                         }
@@ -2167,9 +2169,9 @@ namespace Efferent.Native.Codec
                             jpeg_start_decompress_16_Linux64(ref dinfo);
                         }
 
-                        int rowSize; 
-                        if(Bits == 8) rowSize= Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short)/2);
-                        else rowSize= Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
+                        int rowSize;
+                        if (Bits == 8) rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
+                        else rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
 
                         int frameSize = Convert.ToInt32(rowSize * dinfo.output_height);
                         if ((frameSize % 2) != 0)
@@ -2179,16 +2181,16 @@ namespace Efferent.Native.Codec
                         byte* framePtr = (byte*)(void*)frameArray.Pointer;
 
                         while (dinfo.output_scanline < dinfo.output_height)
-                        {   
+                        {
                             //jpeg_read_scanlines_8 for Linux and Windows for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
-                                int rows = Convert.ToInt32(jpeg_read_scanlines_8_Windows64(ref dinfo,  (byte**)&framePtr, 1));
+                                int rows = Convert.ToInt32(jpeg_read_scanlines_8_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             {
-                                int rows = Convert.ToInt32(jpeg_read_scanlines_8_Linux64(ref dinfo,  (byte**)&framePtr, 1));
+                                int rows = Convert.ToInt32(jpeg_read_scanlines_8_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
                             }
 
@@ -2209,35 +2211,35 @@ namespace Efferent.Native.Codec
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
-                            }      
+                            }
                             else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
-                            }                     
+                            }
                         }
 
                         //jpeg_destroy_decompress_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_destroy_decompress_8_Windows64(ref dinfo);
-                        
+
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_destroy_decompress_8_Linux64(ref dinfo);
-                        
+
                         //jpeg_destroy_decompress_12 for Linux and Windows for 64 bits
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_destroy_decompress_12_Windows64(ref dinfo);
 
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_destroy_decompress_12_Linux64(ref dinfo);
-                        
+
                         //jpeg_destroy_decompress_16 for Linux and Windows for 64 bits
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_destroy_decompress_16_Windows64(ref dinfo);
 
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_destroy_decompress_16_Linux64(ref dinfo);
-                        
+
 
                         IByteBuffer buffer;
                         if (frameArray.Count >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -2353,7 +2355,7 @@ namespace Efferent.Native.Codec
                     dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
 
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    dinfo.err = jpeg_std_error_16_Linux64(ref jerr);    
+                    dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
 
                 jerr.error_exit = IntPtr.Zero;
 
@@ -2361,7 +2363,7 @@ namespace Efferent.Native.Codec
                 jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
 
-               //jpeg_create_decompress_8 for Linux and Windows for 64 bits
+                //jpeg_create_decompress_8 for Linux and Windows for 64 bits
                 if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     jpeg_create_decompress_8_Windows64(ref dinfo);
 
@@ -2370,7 +2372,7 @@ namespace Efferent.Native.Codec
 
                 //jpeg_create_decompress_12 for Linux and Windows for 64 bits
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    jpeg_create_decompress_12_Windows64(ref dinfo);   
+                    jpeg_create_decompress_12_Windows64(ref dinfo);
 
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     jpeg_create_decompress_12_Linux64(ref dinfo);
@@ -2381,7 +2383,7 @@ namespace Efferent.Native.Codec
 
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     jpeg_create_decompress_16_Linux64(ref dinfo);
-                    
+
 
                 dinfo.src = (jpeg_source_mgr*)&src.pub;
 
@@ -2538,7 +2540,7 @@ namespace Efferent.Native.Codec
             {
                 return DicomTransferSyntax.JPEGProcess1;
             }
-            
+
         }
 
         protected override JpegNativeCodec GetCodec(int bits, DicomJpegParams jparams)

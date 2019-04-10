@@ -9,44 +9,10 @@ using Dicom.IO;
 using Dicom.IO.Buffer;
 
 namespace Efferent.Native.Codec
-{
-    public abstract class DicomRleCodec : IDicomCodec
-    {
-        public string Name
-        {
-            get
-            {
-                return DicomTransferSyntax.RLELossless.UID.Name;
-            }
-        }
-
-        public DicomTransferSyntax TransferSyntax
-        {
-            get
-            {
-                return DicomTransferSyntax.RLELossless;
-            }
-        }
-
-        public DicomCodecParams GetDefaultParameters()
-        {
-            return null;
-        }
-
-        public abstract void Encode(
-            DicomPixelData oldPixelData,
-            DicomPixelData newPixelData,
-            DicomCodecParams parameters);
-
-        public abstract void Decode(
-            DicomPixelData oldPixelData,
-            DicomPixelData newPixelData,
-            DicomCodecParams parameters);
-    }
-
+{    
     [Export(typeof(IDicomCodec))]
-    public class DicomRleNativeCodec : DicomRleCodec {
-        
+    public class DicomRleNativeCodec : DicomRleCodec
+    {
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             var pixelCount = oldPixelData.Width * oldPixelData.Height;
@@ -153,7 +119,7 @@ namespace Efferent.Native.Codec
                 newPixelData.AddFrame(frameData);
             }
         }
-        
+
     };
 
     // EXTENSIONS CLASSES

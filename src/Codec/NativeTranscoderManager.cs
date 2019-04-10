@@ -15,6 +15,7 @@ namespace Efferent.Native.Codec
     public sealed class NativeTranscoderManager : TranscoderManager
     {
         #region FIELDS
+        private static bool IsLoaded = false;
 
         /// <summary>
         /// Singleton instance of the <see cref="NativeTranscodeManager"/>.
@@ -53,14 +54,18 @@ namespace Efferent.Native.Codec
         /// <param name="search">Search pattern for codec assemblies.</param>
         protected override void LoadCodecsImpl(string path, string search)
         {
+            if (IsLoaded)
+                return;
+
             Codecs.Clear();
 
             var foundAnyCodecs = false;
             var assembly = Assembly.GetExecutingAssembly();
-            var codecs = assembly.GetTypes().Where(t => t.IsAssignableFrom(typeof(IDicomCodec)));
+            var types = assembly.GetTypes();
+            var codecTypes = types.Where(t => typeof(IDicomCodec).IsAssignableFrom(t) && !t.IsAbstract);
             var log = LogManager.GetLogger("Efferent.Native.Codec");
 
-            foreach (var codecType in codecs)
+            foreach (var codecType in codecTypes)
             {
                 foundAnyCodecs = true;
                 IDicomCodec codec = (IDicomCodec)Activator.CreateInstance(codecType);
@@ -70,6 +75,13 @@ namespace Efferent.Native.Codec
             if (!foundAnyCodecs)
             {
                 log.Warn("No Dicom codecs were found after searching {path}\\{wildcard}", path, search);
+            }
+            else
+            {
+                IsLoaded = true;
+
+                var codecNames = string.Join("\n", Codecs.Keys.Select(k => "- " + k.ToString()));
+                System.Diagnostics.Debug.WriteLine($"Codecs found:\n{codecNames}");
             }
         }
 

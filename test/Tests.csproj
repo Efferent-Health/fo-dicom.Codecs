@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-
+    <GenerateProgramFile>false</GenerateProgramFile>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -16,4 +16,7 @@
     <ProjectReference Include="../src/efferent-native.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="fo-dicom.NetCore" Version="4.0.1"/>
+  </ItemGroup>
 </Project>

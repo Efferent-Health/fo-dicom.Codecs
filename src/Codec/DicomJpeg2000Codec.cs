@@ -12,9 +12,9 @@ using Dicom.IO.Buffer;
 
 namespace Efferent.Native.Codec
 {
-    [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct opj_event_mgr_t
-    {       
+    {
         /** Error message callback if available, NULL otherwise */
         public IntPtr error_handler;
         /** Warning message callback if available, NULL otherwise */
@@ -24,27 +24,29 @@ namespace Efferent.Native.Codec
     }
 
     [Flags]
-    public enum OPJ_CODEC_FORMAT {
+    public enum OPJ_CODEC_FORMAT
+    {
         CODEC_UNKNOWN = -1, /**< place-holder */
         CODEC_J2K = 0,      /**< JPEG-2000 codestream : read/write */
         CODEC_JPT = 1,      /**< JPT-stream (JPEG 2000, JPIP) : read only */
         CODEC_JP2 = 2 		/**< JPEG-2000 file format : read/write */
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet =CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct opj_common_ptr
     {
-        public opj_event_mgr_t* event_mgr;	
-	    public void* client_data;			
-	    public int is_decompressor;	
-	    public OPJ_CODEC_FORMAT codec_format;	
-	    public void* j2k_handle;			
-	    public void* jp2_handle;			
-	    public void* mj2_handle;
+        public opj_event_mgr_t* event_mgr;
+        public void* client_data;
+        public int is_decompressor;
+        public OPJ_CODEC_FORMAT codec_format;
+        public void* j2k_handle;
+        public void* jp2_handle;
+        public void* mj2_handle;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet =CharSet.Unicode)]
-    public unsafe struct opj_cinfo_t {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public unsafe struct opj_cinfo_t
+    {
 
         public opj_event_mgr_t* event_mgr;
         public void* client_data;
@@ -55,8 +57,9 @@ namespace Efferent.Native.Codec
         public void* mj2_handle;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet= CharSet.Unicode)]
-    public unsafe struct opj_cio_t {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public unsafe struct opj_cio_t
+    {
         /** open mode (read/write) either OPJ_STREAM_READ or OPJ_STREAM_WRITE */
         public opj_common_ptr* cinfo;
 
@@ -84,7 +87,8 @@ namespace Efferent.Native.Codec
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_image_comp_t {
+    public unsafe struct opj_image_comp_t
+    {
         /** XRsiz: horizontal separation of a sample of ith component with respect to the reference grid */
         public int dx;
         /** YRsiz: vertical separation of a sample of ith component with respect to the reference grid */
@@ -111,7 +115,8 @@ namespace Efferent.Native.Codec
         public int* data;
     }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_image_t {
+    public unsafe struct opj_image_t
+    {
         /** XOsiz: horizontal offset from the origin of the reference grid to the left side of the image area */
         public int x0;
         /** YOsiz: vertical offset from the origin of the reference grid to the top side of the image area */
@@ -147,7 +152,7 @@ namespace Efferent.Native.Codec
         CINEMA2K_48 = 2,    /** 2K Digital Cinema at 48 fps*/
         CINEMA4K_24 = 3		/** 4K Digital Cinema at 24 fps*/
     }
-    
+
     [Flags]
     public enum OPJ_PROG_ORDER
     {
@@ -159,8 +164,9 @@ namespace Efferent.Native.Codec
         CPRL = 4		/**< component-precinct-resolution-layer order */
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet =CharSet.Unicode)]
-    public unsafe struct opj_cparameters_t {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public unsafe struct opj_cparameters_t
+    {
         public int tile_size_on;
 
         public int cp_tx0;
@@ -184,7 +190,7 @@ namespace Efferent.Native.Codec
         public int csty;
 
         public OPJ_PROG_ORDER prog_order;
-     
+
         public opj_poc_t POC1;
         public opj_poc_t POC2;
         public opj_poc_t POC3;
@@ -222,7 +228,7 @@ namespace Efferent.Native.Codec
         /** number of layers */
         public int tcp_numlayers;
         /** rates of layers */
-        public unsafe fixed float tcp_rates[100] ;
+        public unsafe fixed float tcp_rates[100];
         /** different psnr for successive layers */
         public unsafe fixed float tcp_distoratio[100];
         /** number of resolutions */
@@ -334,7 +340,8 @@ namespace Efferent.Native.Codec
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_image_cmptparm_t {
+    public unsafe struct opj_image_cmptparm_t
+    {
         public int dx;
         /** YRsiz: vertical separation of a sample of ith component with respect to the reference grid */
         public int dy;
@@ -357,14 +364,14 @@ namespace Efferent.Native.Codec
     [Flags]
     public enum OPJ_LIMIT_DECODING
     {
-        NO_LIMITATION = 0,                
-        LIMIT_TO_MAIN_HEADER = 1,       
+        NO_LIMITATION = 0,
+        LIMIT_TO_MAIN_HEADER = 1,
         DECODE_ALL_BUT_PACKETS = 2
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct opj_dparameters_t
-    {   
+    {
         public int cp_reduce;
 
         public int cp_layer;
@@ -522,7 +529,7 @@ namespace Efferent.Native.Codec
         }
     }
 
-   
+
     public abstract class DicomJpeg2000Codec : IDicomCodec
     {
         public string Name
@@ -555,7 +562,7 @@ namespace Efferent.Native.Codec
     public abstract class DicomJpeg2000NativeCodec : DicomJpeg2000Codec
     {
         //Encode JPEG2000 for Windows
-        [DllImport("Efferent.Native-win64.dll", CharSet =CharSet.Unicode,CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
+        [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
 
         public static extern unsafe opj_cinfo_t* Opj_create_compress_Windows64(OPJ_CODEC_FORMAT format);
 
@@ -565,7 +572,7 @@ namespace Efferent.Native.Codec
 
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
 
-        public static extern unsafe opj_image_t* Opj_image_create_Windows64(int numcmpts,ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
+        public static extern unsafe opj_image_t* Opj_image_create_Windows64(int numcmpts, ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
 
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
 
@@ -573,8 +580,8 @@ namespace Efferent.Native.Codec
 
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
-        public static extern unsafe opj_cio_t* Opj_cio_open_Windows64(opj_common_ptr* cinfo , byte* buffer, int length);
-         
+        public static extern unsafe opj_cio_t* Opj_cio_open_Windows64(opj_common_ptr* cinfo, byte* buffer, int length);
+
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
         public static extern unsafe int Opj_encode_Windows64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
@@ -616,7 +623,7 @@ namespace Efferent.Native.Codec
 
 
         //Encode JPEG2000 for Linux
-        [DllImport("Efferent.Native-linux64.so", CharSet =CharSet.Unicode,CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
+        [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
 
         public static extern unsafe opj_cinfo_t* Opj_create_compress_Linux64(OPJ_CODEC_FORMAT format);
 
@@ -626,7 +633,7 @@ namespace Efferent.Native.Codec
 
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
 
-        public static extern unsafe opj_image_t* Opj_image_create_Linux64(int numcmpts,ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
+        public static extern unsafe opj_image_t* Opj_image_create_Linux64(int numcmpts, ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
 
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
 
@@ -634,8 +641,8 @@ namespace Efferent.Native.Codec
 
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
-        public static extern unsafe opj_cio_t* Opj_cio_open_Linux64(opj_common_ptr* cinfo , byte* buffer, int length);
-         
+        public static extern unsafe opj_cio_t* Opj_cio_open_Linux64(opj_common_ptr* cinfo, byte* buffer, int length);
+
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
         public static extern unsafe int Opj_encode_Linux64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
@@ -691,16 +698,18 @@ namespace Efferent.Native.Codec
         }
 
 
-        public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters) {
+        public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        {
 
-            unsafe {
+            unsafe
+            {
                 if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422) ||
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
                     throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG 2000 encoder",
                     oldPixelData.PhotometricInterpretation);
 
-    
+
                 DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
 
                 if (jparams == null)
@@ -715,9 +724,9 @@ namespace Efferent.Native.Codec
 
                     opj_image_cmptparm_t[] cmptparm = new opj_image_cmptparm_t[3];
 
-                    opj_cparameters_t eparams= new opj_cparameters_t();
+                    opj_cparameters_t eparams = new opj_cparameters_t();
                     opj_event_mgr_t event_mgr;
-                    opj_cinfo_t* cinfo= null;  /* handle to a compressor */
+                    opj_cinfo_t* cinfo = null;  /* handle to a compressor */
                     opj_image_t* image = null;
                     opj_cio_t* cio = null;
 
@@ -728,7 +737,7 @@ namespace Efferent.Native.Codec
                         event_mgr.info_handler = IntPtr.Zero;
                     }
 
-                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         cinfo = Opj_create_compress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Linux64((opj_common_ptr*)cinfo, &event_mgr, null);
@@ -739,7 +748,7 @@ namespace Efferent.Native.Codec
                         cinfo = Opj_create_compress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Windows64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-                    
+
                     eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
                     eparams.max_comp_size = 0;
                     eparams.numresolution = 6;
@@ -747,18 +756,18 @@ namespace Efferent.Native.Codec
                     eparams.cblockw_init = 64;
                     eparams.cblockh_init = 64;
                     eparams.prog_order = OPJ_PROG_ORDER.LRCP;
-                    eparams.roi_compno = -1;        
+                    eparams.roi_compno = -1;
                     eparams.subsampling_dx = 1;
                     eparams.subsampling_dy = 1;
                     eparams.tp_on = (char)0;
                     eparams.decod_format = -1;
-                    eparams.cod_format = -1; 
-                    eparams.tcp_rates[0]= 0;
+                    eparams.cod_format = -1;
+                    eparams.tcp_rates[0] = 0;
                     eparams.tcp_numlayers = 0;
                     eparams.cp_disto_alloc = 0;
                     eparams.cp_fixed_alloc = 0;
                     eparams.cp_fixed_quality = 0;
-                    eparams.jpip_on = 0; 
+                    eparams.jpip_on = 0;
                     eparams.cp_disto_alloc = 1;
 
                     if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
@@ -775,7 +784,7 @@ namespace Efferent.Native.Codec
                         else
                             break;
                     }
-                    
+
                     eparams.tcp_numlayers++;
                     eparams.tcp_rates[r] = (float)jparams.Rate;
 
@@ -802,11 +811,11 @@ namespace Efferent.Native.Codec
                     {
                         OPJ_COLOR_SPACE color_space = getOpenJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             image = Opj_image_create_Linux64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
-                        else if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             image = Opj_image_create_Windows64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
@@ -822,7 +831,7 @@ namespace Efferent.Native.Codec
 
                             int pos = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
                             int offset = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
-                            
+
                             if (oldPixelData.BytesAllocated == 1)
                             {
                                 if (Convert.ToBoolean(comp->sgnd))
@@ -905,24 +914,24 @@ namespace Efferent.Native.Codec
                                 throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
                         }
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             Opj_setup_encoder_Linux64(cinfo, ref eparams, image);
-                        
-                            cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null , 0);
+
+                            cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null, 0);
                         }
 
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             Opj_setup_encoder_Windows64(cinfo, ref eparams, image);
-                        
-                            cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null , 0);
+
+                            cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null, 0);
                         }
 
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            if(Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
+                            if (Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Linux64(cio);
                                 byte[] cbuf = new byte[clen];
@@ -942,7 +951,7 @@ namespace Efferent.Native.Codec
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if(Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
+                            if (Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Windows64(cio);
                                 byte[] cbuf = new byte[clen];
@@ -959,50 +968,50 @@ namespace Efferent.Native.Codec
                             }
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
-                        }                      
+                        }
                     }
 
                     finally
                     {
                         if (cio != null)
                         {
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);                           
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
                         }
 
                         if (image != null)
                         {
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);                            
-                        }                       
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
+                        }
 
                         if (cinfo != null)
                         {
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);      
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);                      
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);
                         }
                     }
                 }
-            
-                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb)
-                    {
-                        newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
 
-                        if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
-                        {
-                            if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
-                            else
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
-                        }
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb)
+                {
+                    newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+
+                    if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
+                    {
+                        if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
+                        else
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
                     }
+                }
             }
 
         }//
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            DicomJpeg2000Params  jparams = (DicomJpeg2000Params)parameters;
+            DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
             if (jparams == null)
                 jparams = (DicomJpeg2000Params)GetDefaultParameters();
 
@@ -1050,14 +1059,14 @@ namespace Efferent.Native.Codec
 
                     try
                     {
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             dinfo = Opj_create_decompress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
 
                             Opj_set_event_mgr_Linux64((opj_common_ptr*)dinfo, null, null);
 
                             Opj_setup_decoder_Linux64(dinfo, &dparams);
-                        
+
                         }
 
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -1072,7 +1081,7 @@ namespace Efferent.Native.Codec
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
                             image = Opj_decode_Linux64(dinfo, cio);
@@ -1171,15 +1180,15 @@ namespace Efferent.Native.Codec
                     finally
                     {
                         if (cio != null)
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
 
                         if (dinfo != null)
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_decompress_Linux64(dinfo);
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_decompress_Windows64(dinfo);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_decompress_Linux64(dinfo);
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_decompress_Windows64(dinfo);
 
                         if (image != null)
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
                     }
 
@@ -1193,8 +1202,8 @@ namespace Efferent.Native.Codec
 
 
     [Export(typeof(IDicomCodec))]
-    public class DicomJpeg2000LosslessCodec : DicomJpeg2000NativeCodec {
-
+    public class DicomJpeg2000LosslessCodec : DicomJpeg2000NativeCodec
+    {
         public override DicomTransferSyntax TransferSyntax
         {
             get
@@ -1205,7 +1214,8 @@ namespace Efferent.Native.Codec
     };
 
     [Export(typeof(IDicomCodec))]
-    public class DicomJpeg2000LossyCodec : DicomJpeg2000NativeCodec {
+    public class DicomJpeg2000LossyCodec : DicomJpeg2000NativeCodec
+    {
         public override DicomTransferSyntax TransferSyntax
         {
             get
@@ -1213,6 +1223,5 @@ namespace Efferent.Native.Codec
                 return DicomTransferSyntax.JPEG2000Lossy;
             }
         }
-
     };
 }

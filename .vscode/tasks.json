@@ -2,12 +2,35 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build-test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/test/Tests.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "perform-test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test"
+            ],
+            "options":
+            {
+                "cwd": "${workspaceFolder}/test"
+            },
+            "problemMatcher": "$tsc"
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/dicom-native.csproj"
+                "${workspaceFolder}/src/dicom-native.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +40,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/dicom-native.csproj"
+                "${workspaceFolder}/src/dicom-native.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +51,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/dicom-native.csproj"
+                "${workspaceFolder}/src/dicom-native.csproj"
             ],
             "problemMatcher": "$tsc"
         }

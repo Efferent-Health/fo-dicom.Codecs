@@ -9,37 +9,40 @@ using Dicom.IO;
 using Dicom.IO.Buffer;
 
 namespace Efferent.Native.Codec
-{   
+{
     [Flags]
-    public enum CharlsInterleaveModeType 
-    {   
+    public enum CharlsInterleaveModeType
+    {
         None = 0,
         Line = 1,
         Sample = 2
     };
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct JpegLSPresetCodingParameters {
-       public int MaximumSampleValue;
-       public int Threshold1;
-       public int Threshold2;
-       public int Threshold3;
-       public int ResetValue;
+    public struct JpegLSPresetCodingParameters
+    {
+        public int MaximumSampleValue;
+        public int Threshold1;
+        public int Threshold2;
+        public int Threshold3;
+        public int ResetValue;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct JfifParameters {
-       public int version;
-       public int units;
-       public int Xdensity;
-       public int Ydensity;
-       public int Xthumbnail;
-       public int Ythumbnail;
-       public void* thumbnail;
+    public unsafe struct JfifParameters
+    {
+        public int version;
+        public int units;
+        public int Xdensity;
+        public int Ydensity;
+        public int Xthumbnail;
+        public int Ythumbnail;
+        public void* thumbnail;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct JlsParameters {
+    public unsafe struct JlsParameters
+    {
         public int width;
         public int height;
         public int bitsPerSample;
@@ -74,7 +77,8 @@ namespace Efferent.Native.Codec
     }
 
     [Flags]
-    public enum CharlsColorTransformationType {
+    public enum CharlsColorTransformationType
+    {
         None = 0,
         HP1 = 1,
         HP2 = 2,
@@ -143,7 +147,7 @@ namespace Efferent.Native.Codec
 
         [DllImport("Efferent.Native-win64.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
-        public static extern unsafe CharlsApiResultType JpegLSDecode_Windows64(void * destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_Windows64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For JPEGLS Linux
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
@@ -152,10 +156,10 @@ namespace Efferent.Native.Codec
 
         [DllImport("Efferent.Native-linux64.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
-        public static extern unsafe CharlsApiResultType JpegLSDecode_Linux64(void * destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_Linux64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        public override unsafe void Encode(DicomPixelData oldPixelData,DicomPixelData newPixelData, DicomCodecParams parameters)
-        {          
+        public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        {
             if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422) ||
             (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
             (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
@@ -172,7 +176,7 @@ namespace Efferent.Native.Codec
             //IMPORT JLSPARAMETERS (DLLIMPORT)
 
             JlsParameters jls = new JlsParameters
-            {  
+            {
                 width = oldPixelData.Width,
                 height = oldPixelData.Height,
                 bitsPerSample = oldPixelData.BitsStored,
@@ -188,7 +192,7 @@ namespace Efferent.Native.Codec
 
             if (TransferSyntax == DicomTransferSyntax.JPEGLSNearLossless)
             {
-					jls.allowedLossyError = jparams.AllowedError;
+                jls.allowedLossyError = jparams.AllowedError;
             }
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
@@ -204,18 +208,19 @@ namespace Efferent.Native.Codec
                 char[] errorMessage = new char[256];
 
                 // IMPORT JpegLsEncode
-                unsafe {  
-                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    { 
-                        CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                unsafe
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
                     }
 
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {   
-                        CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                    {
+                        CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
                     }
 
-                    Array.Resize(ref jpegData,(int)jpegDataSize);
+                    Array.Resize(ref jpegData, (int)jpegDataSize);
 
                     IByteBuffer buffer;
                     if (jpegDataSize >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -225,7 +230,7 @@ namespace Efferent.Native.Codec
                     buffer = EvenLengthBuffer.Create(buffer);
                     newPixelData.AddFrame(buffer);
                 }
-            }          
+            }
         }
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
@@ -245,16 +250,16 @@ namespace Efferent.Native.Codec
 
                 // IMPORT JpegLsDecode 
                 unsafe
-                {   
-                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                {
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         CharlsApiResultType err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
                     }
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                         CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
+                        CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
                     }
-                    
+
                     IByteBuffer buffer;
                     if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
                         buffer = new TempFileBuffer(frameData);
@@ -268,7 +273,8 @@ namespace Efferent.Native.Codec
     };
 
     [Export(typeof(IDicomCodec))]
-    public class DicomJpegLsLosslessCodec : DicomJpegLsNativeCodec {
+    public class DicomJpegLsLosslessCodec : DicomJpegLsNativeCodec
+    {
 
         public override DicomTransferSyntax TransferSyntax
         {
@@ -280,7 +286,8 @@ namespace Efferent.Native.Codec
     };
 
     [Export(typeof(IDicomCodec))]
-    public class DicomJpegLsNearLosslessCodec : DicomJpegLsNativeCodec {
+    public class DicomJpegLsNearLosslessCodec : DicomJpegLsNativeCodec
+    {
 
         public override DicomTransferSyntax TransferSyntax
         {
