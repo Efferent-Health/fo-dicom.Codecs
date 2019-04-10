@@ -1501,6 +1501,11 @@ namespace Efferent.Native.Codec
 
             public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame)
             {
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    throw new InvalidOperationException("Unsupported OS Platform");
+                }
+
                 if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct) || (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct))
                     throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG encoder!", oldPixelData.PhotometricInterpretation);
 
@@ -1534,34 +1539,18 @@ namespace Efferent.Native.Codec
                         //jpeg_std_error_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             cinfo.err = jpeg_std_error_8_Windows64(ref jerr);
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             cinfo.err = jpeg_std_error_8_Linux64(ref jerr);
-                        
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_std_error_12 for Linux and Windows for 64 bits
                         else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             cinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             cinfo.err = jpeg_std_error_12_Linux64(ref jerr);
-
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        
-
                         //jpeg_std_error_16 for Linux and Windows for 64 bits
                         else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             cinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             cinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        //
 
                         jerr.error_exit = IntPtr.Zero;
 
@@ -1571,33 +1560,19 @@ namespace Efferent.Native.Codec
                         //jpeg_create_compress_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_compress_8_Windows64(ref cinfo);
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_compress_8_Linux64(ref cinfo);
-
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_create_compress_12 for Linux and Windows for 64 bits
                         else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_compress_12_Windows64(ref cinfo);
-
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_compress_12_Linux64(ref cinfo);
-
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_create_compress_16 for Linux and Windows for 64 bits
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_compress_16_Windows64(ref cinfo);
-
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_compress_16_Linux64(ref cinfo);
-
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        //
+                        
                         cinfo.client_data = null;
 
                         This = this;
@@ -1623,102 +1598,56 @@ namespace Efferent.Native.Codec
                         //jpeg_set_defaults_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_8_Windows64(ref cinfo);
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_8_Linux64(ref cinfo);
-                        
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_set_defaults_12 for Linux and Windows for 64 bits
                         else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_12_Windows64(ref cinfo);
-
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_12_Linux64(ref cinfo);
-                        
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
-
                         //jpeg_set_defaults_16 for Linux and Windows for 64 bits
                         else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_16_Windows64(ref cinfo);
-
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_16_Linux64(ref cinfo);
 
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        //
                         cinfo.optimize_coding = 1;
-
 
                         if (Mode == JpegMode.Baseline || Mode == JpegMode.Sequential)
                         {
                             //jpeg_set_quality_8 for Linux and Windows for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_8_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_8_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_set_quality_12 for Linux and Windows for 64 bits
                             else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                                jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
+                                jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));                            
                             //jpeg_set_quality_16 for Linux and Windows for 64 bits
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-                            //
                         }
                         else if (Mode == JpegMode.SpectralSelection)
                         {
                             //jpeg_set_quality_8 for Linux and Windows for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_8_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_8_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_set_quality_12 for Linux and Windows for 64 bits
                             else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_set_quality_16 for Linux and Windows for 64 bits
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
 
                             jpeg_simple_spectral_selection(ref cinfo);
 
@@ -1736,11 +1665,6 @@ namespace Efferent.Native.Codec
                                 jpeg_set_quality_8_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_8_Linux64(ref cinfo);
                             }
-                            
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            {
-                                throw new InvalidOperationException("Platform unsupported!");
-                            }
 
                             //jpeg_set_quality_12 for Linux and Windows for 64 bits
                             else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -1752,11 +1676,6 @@ namespace Efferent.Native.Codec
                             {
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_12_Linux64(ref cinfo);
-                            }
-                            
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            {
-                                throw new InvalidOperationException("Platform unsupported!");
                             }
 
                             //jpeg_set_quality_16 for Linux and Windows for 64 bits
@@ -1770,45 +1689,24 @@ namespace Efferent.Native.Codec
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_16_Linux64(ref cinfo);
                             }
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            {
-                                throw new InvalidOperationException("Platform unsupported!");
-                            }
-                            //
-
                         }
                         else
                         {
                             //jpeg_simple_lossless_8 for Linux and Windows for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_simple_lossless_8_Windows64(ref cinfo, Predictor, PointTransform);
-
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_simple_lossless_8_Linux64(ref cinfo, Predictor, PointTransform);
-
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_simple_lossless_12 for Linux and Windows for 64 bits
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_simple_lossless_12_Windows64(ref cinfo, Predictor, PointTransform);
-
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_simple_lossless_12_Linux64(ref cinfo, Predictor, PointTransform);
-                            
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_simple_lossless_16 for Linux and Windows for 64 bits
                             else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_simple_lossless_16_Windows64(ref cinfo, Predictor, PointTransform);
-
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_simple_lossless_16_Linux64(ref cinfo, Predictor, PointTransform);
-                            
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-                            //
                         }
 
                         cinfo.smoothing_factor = jpegParams.SmoothingFactor;
@@ -1818,33 +1716,18 @@ namespace Efferent.Native.Codec
                             //jpeg_set_colorspace_8 for Linux and Windows for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_colorspace_8_Windows64(ref cinfo, cinfo.in_color_space);
-
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_colorspace_8_Linux64(ref cinfo, cinfo.in_color_space);
-
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_set_colorspace_12 for Linux and Windows for 64 bits
                             else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
-
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
-                            
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_set_colorspace_16 for Linux and Windows for 64 bits
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_colorspace_16_Windows64(ref cinfo, cinfo.in_color_space);
-
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_colorspace_16_Linux64(ref cinfo, cinfo.in_color_space);
-                            
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-                            //
 
                             cinfo.comp_info->h_samp_factor = 1;
                             cinfo.comp_info->v_samp_factor = 1;
@@ -1872,32 +1755,18 @@ namespace Efferent.Native.Codec
                                     //jpeg_set_colorspace_8 for Linux and Windows for 64 bits
                                     if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                         jpeg_set_colorspace_8_Windows64(ref cinfo, cinfo.in_color_space);
-
                                     else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                         jpeg_set_colorspace_8_Linux64(ref cinfo, cinfo.in_color_space);
-                                    
-                                    else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                        throw new InvalidOperationException("Platform unsupported!");
-
                                     //jpeg_set_colorspace_12 for Linux and Windows for 64 bits
                                     else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                         jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
-
                                     else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                         jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
-                                    
-                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                        throw new InvalidOperationException("Platform unsupported!");
-
                                     //jpeg_set_colorspace_16 for Linux and Windows for 64 bits
                                     else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                         jpeg_set_colorspace_16_Windows64(ref cinfo, cinfo.in_color_space);
-
                                     else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                         jpeg_set_colorspace_16_Linux64(ref cinfo, cinfo.in_color_space);
-
-                                    else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                        throw new InvalidOperationException("Platform unsupported!");
                                 }
 
                                 cinfo.comp_info[0].h_samp_factor = 1;
@@ -1915,33 +1784,18 @@ namespace Efferent.Native.Codec
                         //jpeg_start_compress_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_8_Windows64(ref cinfo, Convert.ToInt32(true));
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_start_compress_8_Linux64(ref cinfo, Convert.ToInt32(true));
-                        
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_start_compress_12 for Linux and Windows for 64 bits
                         else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_12_Windows64(ref cinfo, Convert.ToInt32(true));
-
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_start_compress_12_Linux64(ref cinfo, Convert.ToInt32(true));
-                        
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_start_compress_16 for Linux and Windows for 64 bits
                         else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_16_Windows64(ref cinfo, Convert.ToInt32(true));
-
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_start_compress_16_Linux64(ref cinfo, Convert.ToInt32(true));
-
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        //
 
                         byte* row_pointer;
                         int row_stride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
@@ -1955,33 +1809,18 @@ namespace Efferent.Native.Codec
                             //jpeg_write_scanlines_8 for Linux and Windows for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_8_Windows64(ref cinfo, &row_pointer, 1);
-
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_8_Linux64(ref cinfo, &row_pointer, 1);
-
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_write_scanlines_12 for Linux and Windows for 64 bits    
                             else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_12_Windows64(ref cinfo, &row_pointer, 1);
-
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_12_Linux64(ref cinfo, &row_pointer, 1);
-                            
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-
                             //jpeg_write_scanlines_16 for Linux and Windows for 64 bits
                             else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_16_Windows64(ref cinfo, &row_pointer, 1);
-
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_16_Linux64(ref cinfo, &row_pointer, 1);
-                            
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-                            //
                         }
 
                         //jpeg_finish_compress_8 and jpeg_destroy_compress_8 for Linux and Windows for 64 bits
@@ -1997,11 +1836,6 @@ namespace Efferent.Native.Codec
 
                             jpeg_destroy_compress_8_Linux64(ref cinfo);
                         }
-                        
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
-                        }
 
                         //jpeg_finish_compress_12 and jpeg_destroy_compress_8 for Linux and Windows for 64 bits
                         else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2015,10 +1849,6 @@ namespace Efferent.Native.Codec
                             jpeg_finish_compress_12_Linux64(ref cinfo);
 
                             jpeg_destroy_compress_12_Linux64(ref cinfo);
-                        }
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
                         }
 
                         //jpeg_finish_compress_16 and jpeg_destroy_compress_8 for Linux and Windows for 64 bits
@@ -2034,11 +1864,6 @@ namespace Efferent.Native.Codec
 
                             jpeg_destroy_compress_16_Linux64(ref cinfo);
                         }
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
-                        }
-                        //
 
                         if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && cinfo.jpeg_color_space == J_COLOR_SPACE.JCS_YCbCr)
                         {
@@ -2078,9 +1903,13 @@ namespace Efferent.Native.Codec
                 }
             }
 
-
             public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame)
             {
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    throw new InvalidOperationException("Unsupported OS Platform");
+                }
+
                 unsafe
                 {
                     PinnedByteArray jpegArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
@@ -2112,11 +1941,6 @@ namespace Efferent.Native.Codec
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
 
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
-                        }
-
                         //jpeg_resync_to_restart_12 for Linux and Windows for 64 bits
                         else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
@@ -2127,11 +1951,6 @@ namespace Efferent.Native.Codec
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Linux64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
-                        }
-
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
                         }
 
                         //jpeg_resync_to_restart_16 for Linux and Windows for 64 bits
@@ -2145,11 +1964,6 @@ namespace Efferent.Native.Codec
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Linux64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
-                        }
-                        //
 
                         src.pub.term_source = IntPtr.Zero;
                         src.pub.bytes_in_buffer = 0;
@@ -2163,33 +1977,18 @@ namespace Efferent.Native.Codec
                         //jpeg_std_error_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             dinfo.err = jpeg_std_error_8_Windows64(ref jerr);
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             dinfo.err = jpeg_std_error_8_Linux64(ref jerr);
-                        
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_std_error_12 for Linux and Windows for 64 bits
                         else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             dinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             dinfo.err = jpeg_std_error_12_Linux64(ref jerr);
-                        
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_std_error_16 for Linux and Windows for 64 bits
                         else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-                        
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        //
 
                         jerr.error_exit = IntPtr.Zero;
 
@@ -2199,33 +1998,18 @@ namespace Efferent.Native.Codec
                         //jpeg_create_decompress_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_decompress_8_Windows64(ref dinfo);
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_8_Linux64(ref dinfo);
-
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_create_decompress_12 for Linux and Windows for 64 bits
                         else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_decompress_12_Windows64(ref dinfo);
-
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_12_Linux64(ref dinfo);
-
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_create_decompress_16 for Linux and Windows for 64 bits
                         else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_decompress_16_Windows64(ref dinfo);
-
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_16_Linux64(ref dinfo);
-
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-                        //
 
                         dinfo.src = (jpeg_source_mgr*)&src.pub;
 
@@ -2244,10 +2028,6 @@ namespace Efferent.Native.Codec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
-                        }
 
                         //jpeg_read_header_12 for Linux and Windows for 64 bits
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2264,11 +2044,6 @@ namespace Efferent.Native.Codec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
-                        }
 
                         //jpeg_read_header_12 for Linux and Windows for 64 bits
                         else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2284,11 +2059,6 @@ namespace Efferent.Native.Codec
                             {
                                 throw new DicomCodecException("Unable to read JPEG header: Suspended");
                             }
-                        }
-                        
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            throw new InvalidOperationException("Platform unsupported!");
                         }
 
                         newPixelData.PhotometricInterpretation = oldPixelData.PhotometricInterpretation;
@@ -2318,10 +2088,6 @@ namespace Efferent.Native.Codec
                             jpeg_calc_output_dimensions_8_Linux64(ref dinfo);
                             jpeg_start_decompress_8_Linux64(ref dinfo);
                         }
-                        
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_calc_output_dimensions_12 and jpeg_start_decompress_8 for Linux and Windows for 64 bits
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
@@ -2333,10 +2099,6 @@ namespace Efferent.Native.Codec
                             jpeg_calc_output_dimensions_12_Linux64(ref dinfo);
                             jpeg_start_decompress_12_Linux64(ref dinfo);
                         }
-                        
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_calc_output_dimensions_16 and jpeg_start_decompress_8 for Linux and Windows for 64 bits
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
@@ -2348,12 +2110,12 @@ namespace Efferent.Native.Codec
                             jpeg_calc_output_dimensions_16_Linux64(ref dinfo);
                             jpeg_start_decompress_16_Linux64(ref dinfo);
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
 
                         int rowSize;
-                        if (Bits == 8) rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
-                        else rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
+                        if (Bits == 8) 
+                            rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
+                        else 
+                            rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
 
                         int frameSize = Convert.ToInt32(rowSize * dinfo.output_height);
                         if ((frameSize % 2) != 0)
@@ -2375,9 +2137,6 @@ namespace Efferent.Native.Codec
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
                             }
-                            
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
 
                             //jpeg_read_scanlines_12 for Linux and Windows for 64 bits
                             else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2390,8 +2149,6 @@ namespace Efferent.Native.Codec
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
 
                             //jpeg_read_scanlines_12 for Linux and Windows for 64 bits
                             else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2404,41 +2161,23 @@ namespace Efferent.Native.Codec
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                                throw new InvalidOperationException("Platform unsupported!");
-                            //
                         }
 
                         //jpeg_destroy_decompress_8 for Linux and Windows for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_destroy_decompress_8_Windows64(ref dinfo);
-
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_destroy_decompress_8_Linux64(ref dinfo);
-
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_destroy_decompress_12 for Linux and Windows for 64 bits
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_destroy_decompress_12_Windows64(ref dinfo);
-
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_destroy_decompress_12_Linux64(ref dinfo);
-                        
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
                         //jpeg_destroy_decompress_16 for Linux and Windows for 64 bits
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_destroy_decompress_16_Windows64(ref dinfo);
-
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_destroy_decompress_16_Linux64(ref dinfo);
-                        
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                            throw new InvalidOperationException("Platform unsupported!");
-
 
                         IByteBuffer buffer;
                         if (frameArray.Count >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -2468,10 +2207,8 @@ namespace Efferent.Native.Codec
                         {
                             jpegArray = null;
                         }
-
                     }
                 }
-
             }
 
             internal override unsafe int ScanHeaderForPrecision(DicomPixelData pixelData)
@@ -2501,10 +2238,6 @@ namespace Efferent.Native.Codec
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Linux64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-
                 //jpeg_resync_to_restart_12 for Linux and Windows for 64 bits
                 else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -2516,10 +2249,6 @@ namespace Efferent.Native.Codec
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Linux64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-
                 //jpeg_resync_to_restart_16 for Linux and Windows for 64 bits
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -2531,10 +2260,6 @@ namespace Efferent.Native.Codec
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Linux64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-                //
 
                 src.pub.term_source = IntPtr.Zero;
                 src.pub.bytes_in_buffer = 0;
@@ -2548,69 +2273,39 @@ namespace Efferent.Native.Codec
                 //jpeg_std_error_8 for Linux and Windows for 64 bits
                 if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     dinfo.err = jpeg_std_error_8_Windows64(ref jerr);
-
                 else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     dinfo.err = jpeg_std_error_8_Linux64(ref jerr);
-                
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-
                 //jpeg_std_error_12 for Linux and Windows for 64 bits
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     dinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     dinfo.err = jpeg_std_error_12_Linux64(ref jerr);
-                
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-
                 //jpeg_std_error_16 for Linux and Windows for 64 bits
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-                
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-                //
 
                 jerr.error_exit = IntPtr.Zero;
 
                 ouput_Message ouput_Message_ = OutputMessage;
                 jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
-
                 //jpeg_create_decompress_8 for Linux and Windows for 64 bits
                 if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     jpeg_create_decompress_8_Windows64(ref dinfo);
-
                 else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     jpeg_create_decompress_8_Linux64(ref dinfo);
-                
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-
                 //jpeg_create_decompress_12 for Linux and Windows for 64 bits
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     jpeg_create_decompress_12_Windows64(ref dinfo);
-
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     jpeg_create_decompress_12_Linux64(ref dinfo);
-                
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
-
                 //jpeg_create_decompress_16 for Linux and Windows for 64 bits
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     jpeg_create_decompress_16_Windows64(ref dinfo);
-
                 else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    jpeg_create_decompress_16_Linux64(ref dinfo);
-                
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    throw new InvalidOperationException("Platform unsupported!");
+                    jpeg_create_decompress_16_Linux64(ref dinfo);                
 
                 dinfo.src = (jpeg_source_mgr*)&src.pub;
 
@@ -2629,7 +2324,6 @@ namespace Efferent.Native.Codec
                         throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                     }
                 }
-                else throw new InvalidOperationException("Platform unsupported!");
 
                 //jpeg_read_header_12 for Linux and Windows for 64 bits
                 if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2646,7 +2340,6 @@ namespace Efferent.Native.Codec
                         throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                     }
                 }
-                else throw new InvalidOperationException("Platform unsupported!");
 
                 //jpeg_read_header_12 for Linux and Windows for 64 bits
                 if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -2663,15 +2356,14 @@ namespace Efferent.Native.Codec
                         throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
                 }
-                else throw new InvalidOperationException("Platform unsupported!");
 
                 return dinfo.data_precision;
             }
 
-            [ThreadStatic] internal static JpegCodec This;
-        };
-
-    }//Jpeg
+            [ThreadStatic] 
+            internal static JpegCodec This;
+        }
+    }
 
     public abstract class DicomJpegNativeCodec : DicomJpegCodec
     {
@@ -2698,7 +2390,6 @@ namespace Efferent.Native.Codec
             {
                 codec.Encode(oldPixelData, newPixelData, jparams, frame);
             }
-
         }
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
@@ -2718,6 +2409,7 @@ namespace Efferent.Native.Codec
 
             DicomJpegParams jparams = (DicomJpegParams)parameters;
             int precision = 0;
+
             try
             {
                 try
@@ -2757,13 +2449,11 @@ namespace Efferent.Native.Codec
             else
                 throw new DicomCodecException(String.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
         }
-
     }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpegProcess1Codec : DicomJpegNativeCodec
     {
-
         public override DicomTransferSyntax TransferSyntax
         {
             get
@@ -2807,7 +2497,7 @@ namespace Efferent.Native.Codec
             else
                 throw new DicomCodecException(String.Format("Unable to create JPEG Process 4 codec for bits stored == {0}", bits));
         }
-    };
+    }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpegLossless14Codec : DicomJpegNativeCodec
@@ -2834,7 +2524,7 @@ namespace Efferent.Native.Codec
             else
                 throw new DicomCodecException(String.Format("Unable to create JPEG Process 14 codec for bits stored == {0}", bits));
         }
-    };
+    }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpegLossless14SV1Codec : DicomJpegNativeCodec
@@ -2861,6 +2551,5 @@ namespace Efferent.Native.Codec
             else
                 throw new DicomCodecException(String.Format("Unable to create JPEG Process 14 [SV1] codec for bits stored == {0}", bits));
         }
-    };
-
-}; //Dicom.Imaging.Codec
+    }
+}

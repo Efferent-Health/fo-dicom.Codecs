@@ -529,7 +529,6 @@ namespace Efferent.Native.Codec
         }
     }
 
-
     public abstract class DicomJpeg2000Codec : IDicomCodec
     {
         public string Name
@@ -697,9 +696,12 @@ namespace Efferent.Native.Codec
                 return OPJ_COLOR_SPACE.CLRSPC_UNKNOWN;
         }
 
-
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                throw new InvalidOperationException("Unsupported OS Platform");
+            }
 
             unsafe
             {
@@ -708,7 +710,6 @@ namespace Efferent.Native.Codec
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
                     throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG 2000 encoder",
                     oldPixelData.PhotometricInterpretation);
-
 
                 DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
 
@@ -731,6 +732,7 @@ namespace Efferent.Native.Codec
                     opj_cio_t* cio = null;
 
                     event_mgr.error_handler = IntPtr.Zero;
+
                     if (jparams.IsVerbose)
                     {
                         event_mgr.warning_handler = IntPtr.Zero;
@@ -742,14 +744,11 @@ namespace Efferent.Native.Codec
                         cinfo = Opj_create_compress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Linux64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         cinfo = Opj_create_compress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Windows64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-
-                    else throw new InvalidOperationException("Platform unsupported!");
 
                     eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
                     eparams.max_comp_size = 0;
@@ -821,8 +820,6 @@ namespace Efferent.Native.Codec
                         {
                             image = Opj_image_create_Windows64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
-
-                        else throw new InvalidOperationException("Platform unsupported!");
 
                         image->x0 = eparams.image_offset_x0;
                         image->y0 = eparams.image_offset_y0;
@@ -924,16 +921,12 @@ namespace Efferent.Native.Codec
 
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null, 0);
                         }
-
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             Opj_setup_encoder_Windows64(cinfo, ref eparams, image);
 
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null, 0);
                         }
-
-                        else throw new InvalidOperationException("Platform unsupported!");
-
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
@@ -975,31 +968,32 @@ namespace Efferent.Native.Codec
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
                         }
-
-                        else throw new InvalidOperationException("Platform unsupported!");
                     }
 
                     finally
                     {
                         if (cio != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
-                            else throw new InvalidOperationException("Platform unsupported!");
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                                Opj_cio_close_Linux64(cio);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                                Opj_cio_close_Windows64(cio);
                         }
 
                         if (image != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
-                            else throw new InvalidOperationException("Platform unsupported!");
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                                Opj_image_destroy_Linux64(image);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                                Opj_image_destroy_Windows64(image);
                         }
 
                         if (cinfo != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);
-                            else throw new InvalidOperationException("Platform unsupported!");
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                                Opj_destroy_compress_Linux64(cinfo);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                                Opj_destroy_compress_Windows64(cinfo);
                         }
                     }
                 }
@@ -1017,12 +1011,17 @@ namespace Efferent.Native.Codec
                     }
                 }
             }
-
-        }//
+        }
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                throw new InvalidOperationException("Unsupported OS Platform");
+            }
+
             DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
+
             if (jparams == null)
                 jparams = (DicomJpeg2000Params)GetDefaultParameters();
 
@@ -1079,7 +1078,6 @@ namespace Efferent.Native.Codec
                             Opj_setup_decoder_Linux64(dinfo, &dparams);
 
                         }
-
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             dinfo = Opj_create_decompress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
@@ -1089,8 +1087,6 @@ namespace Efferent.Native.Codec
                             Opj_setup_decoder_Windows64(dinfo, &dparams);
                         }
 
-                        else throw new InvalidOperationException("Platform unsupported!");
-
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
 
@@ -1099,14 +1095,11 @@ namespace Efferent.Native.Codec
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
                             image = Opj_decode_Linux64(dinfo, cio);
                         }
-
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
                             image = Opj_decode_Windows64(dinfo, cio);
                         }
-
-                        else throw new InvalidOperationException("Platform unsupported!");
 
                         if (image == null)
                             throw new DicomCodecException("Error in JPEG 2000 code stream!");
@@ -1194,33 +1187,34 @@ namespace Efferent.Native.Codec
 
                     finally
                     {
-                        if (cio != null){
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
-                            else throw new InvalidOperationException("Platform unsupported!");
+                        if (cio != null) 
+                        {
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                                Opj_cio_close_Linux64(cio);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                                Opj_cio_close_Windows64(cio);
                         }
 
-                        if (dinfo != null){
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_decompress_Linux64(dinfo);
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_decompress_Windows64(dinfo);
-                            else throw new InvalidOperationException("Platform unsupported!");
+                        if (dinfo != null)
+                        {
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                                Opj_destroy_decompress_Linux64(dinfo);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                                Opj_destroy_decompress_Windows64(dinfo);
                         }
 
-                        if (image != null){
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
-                            else throw new InvalidOperationException("Platform unsupported!");
+                        if (image != null)
+                        {
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                                Opj_image_destroy_Linux64(image);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                                Opj_image_destroy_Windows64(image);
                         }
                     }
-
                 }
-
             }
-
         }
-
-    };
-
+    }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpeg2000LosslessCodec : DicomJpeg2000NativeCodec
@@ -1232,7 +1226,7 @@ namespace Efferent.Native.Codec
                 return DicomTransferSyntax.JPEG2000Lossless;
             }
         }
-    };
+    }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpeg2000LossyCodec : DicomJpeg2000NativeCodec
@@ -1244,5 +1238,5 @@ namespace Efferent.Native.Codec
                 return DicomTransferSyntax.JPEG2000Lossy;
             }
         }
-    };
+    }
 }

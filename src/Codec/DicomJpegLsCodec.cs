@@ -16,7 +16,7 @@ namespace Efferent.Native.Codec
         None = 0,
         Line = 1,
         Sample = 2
-    };
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct JpegLSPresetCodingParameters
@@ -92,7 +92,7 @@ namespace Efferent.Native.Codec
         Line = 1,
 
         Sample = 2
-    };
+    }
 
     public enum DicomJpegLsColorTransform
     {
@@ -103,7 +103,7 @@ namespace Efferent.Native.Codec
         HP2 = 2,
 
         HP3 = 3
-    };
+    }
 
     //JpegLS Codec Development
 
@@ -136,7 +136,7 @@ namespace Efferent.Native.Codec
             DicomPixelData oldPixelData,
             DicomPixelData newPixelData,
             DicomCodecParams parameters);
-    };
+    }
 
     public abstract class DicomJpegLsNativeCodec : DicomJpegLsCodec
     {
@@ -160,6 +160,11 @@ namespace Efferent.Native.Codec
 
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                throw new InvalidOperationException("Unsupported OS Platform");
+            }
+
             if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422) ||
             (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
             (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
@@ -219,7 +224,6 @@ namespace Efferent.Native.Codec
                     {
                         CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
                     }
-                    else throw new InvalidOperationException("Platform unsupported!");
 
                     Array.Resize(ref jpegData, (int)jpegDataSize);
 
@@ -236,6 +240,11 @@ namespace Efferent.Native.Codec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                throw new InvalidOperationException("Unsupported OS Platform");
+            }
+
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
@@ -260,7 +269,6 @@ namespace Efferent.Native.Codec
                     {
                         CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
                     }
-                    else throw new InvalidOperationException("Platform unsupported!");
 
                     IByteBuffer buffer;
                     if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -272,7 +280,7 @@ namespace Efferent.Native.Codec
                 }
             }
         }
-    };
+    }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpegLsLosslessCodec : DicomJpegLsNativeCodec
@@ -285,7 +293,7 @@ namespace Efferent.Native.Codec
                 return DicomTransferSyntax.JPEGLSLossless;
             }
         }
-    };
+    }
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpegLsNearLosslessCodec : DicomJpegLsNativeCodec
@@ -298,5 +306,5 @@ namespace Efferent.Native.Codec
                 return DicomTransferSyntax.JPEGLSNearLossless;
             }
         }
-    };
+    }
 }
