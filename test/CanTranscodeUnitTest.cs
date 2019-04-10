@@ -9,7 +9,7 @@ namespace Efferent.Native.Test
     public class CanTranscodeUnitTest
     {
         [TestInitialize]
-        public void InitializationTest()
+        public void Initialization()
         {
             TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
         }

@@ -10,6 +10,8 @@ This transcoder differs from the existing fo-dicom implementations in the follow
 - Doesn't implement a Managed C++ middleware. Direct C# to C++ integration.
 - Avoids pure C# implementation for performance reasons (with exception of RLE)
 
+## Supported CODECs
+
 The following CODECS are implemented:
 - JPEG 2000 Image Compression (Lossless Only)
 - JPEG 2000 Image Compression

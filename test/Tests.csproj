@@ -19,4 +19,11 @@
   <ItemGroup>
     <PackageReference Include="fo-dicom.NetCore" Version="4.0.1"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="*.dcm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>  
+  </ItemGroup>
+
 </Project>
