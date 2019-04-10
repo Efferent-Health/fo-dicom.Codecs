@@ -27,5 +27,5 @@ The following CODECS are implemented:
 - Add the standard fo-dicom nuget packages to your project
 - At the beginning of your application, replace the transcoder manager, as:
 ````C#
-Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Coded.NativeTranscoderManager());
+Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
 ````
