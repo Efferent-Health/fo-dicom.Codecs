@@ -1,5 +1,8 @@
 # Dicom-Native
 
+[![NuGet](https://img.shields.io/nuget/v/Efferent.Native.svg)](https://www.nuget.org/packages/Efferent.Native/)
+[![github](https://img.shields.io/github/stars/Efferent-Health/Dicom-native.svg)]()
+
 This is an alternative `TranscoderManager` class to be used along with the well-known [fo-dicom](https://github.com/fo-dicom/fo-dicom) project. It is associated to C++ libraries compiled natively for several platforms. So far:
 - Windows 64 (similar to Native64.dll)
 - Linux 64 (tested with Ubuntu 16/18 Desktop and Server)
@@ -25,9 +28,10 @@ The following CODECS are implemented:
 
 ## Usage
 
-- Add the nuget package to your .Net Standard project (to be provided soon)
-- Add the standard fo-dicom nuget packages to your project
+- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard project 
+- Add the standard fo-dicom nuget packages to your project (tested with 4.0.1)
 - At the beginning of your application, replace the transcoder manager, as:
-````C#
-Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
-````
+  ````C#
+  Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
+  ````
+- Continue using any fo-dicom image manipulation function
