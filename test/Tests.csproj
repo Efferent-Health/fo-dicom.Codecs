@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="*.dcm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>  
+    <None Include="./*.dcm" CopyToOutputDirectory="Always" />
+    <None Include="../src/Native/Linux64/ubuntu.16.04-x64/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../src/Native/Windows64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

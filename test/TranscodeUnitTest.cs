@@ -1,4 +1,7 @@
+using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Dicom;
@@ -18,12 +21,24 @@ namespace Efferent.Native.Test
             Directory.CreateDirectory("out");
         }
 
-        [TestMethod]
-        public void CanTranscodeJPEGLSLossless()
+        [DataTestMethod]
+        [DataRow("RLELossless")]
+        [DataRow("JPEG2000Lossless")]
+        [DataRow("JPEG2000Lossy")]
+        [DataRow("JPEGProcess1")]
+        [DataRow("JPEGProcess2_4")]
+        [DataRow("JPEGProcess14")]
+        [DataRow("JPEGProcess14SV1")]
+        [DataRow("JPEGLSLossless")]
+        [DataRow("JPEGLSNearLossless")]
+        public void PerformTranscode(string name)
         {
-            var output = "out/JPEGLSLossless.dcm";
+            var output = $"out/{name}.dcm";
             var data = DicomFile.Open("test.dcm");
-            var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.JPEGProcess14);
+            var binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+
+            var ts = (DicomTransferSyntax)typeof(DicomTransferSyntax).GetField(name, binding).GetValue(0);
+            var image = new DicomFile(data.Dataset).Clone(ts);
 
             Assert.IsNotNull(image);
 
