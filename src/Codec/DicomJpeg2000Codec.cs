@@ -703,14 +703,13 @@ namespace Efferent.Native.Codec
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
 
-            unsafe
-            {
-                if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422) ||
-                        (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
+            unsafe {
+                if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
                     throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG 2000 encoder",
                     oldPixelData.PhotometricInterpretation);
 
+    
                 DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
 
                 if (jparams == null)
@@ -721,35 +720,46 @@ namespace Efferent.Native.Codec
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
                     IByteBuffer frameData = oldPixelData.GetFrame(frame);
+
+                    //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                    if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                    {
+                        frameData = PixelDataConverter.YbrFullToRgb(frameData);
+                    }
+                    else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                    {
+                        frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
+                    }    
+
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
                     opj_image_cmptparm_t[] cmptparm = new opj_image_cmptparm_t[3];
 
-                    opj_cparameters_t eparams = new opj_cparameters_t();
+                    opj_cparameters_t eparams= new opj_cparameters_t();
                     opj_event_mgr_t event_mgr;
-                    opj_cinfo_t* cinfo = null;  /* handle to a compressor */
+                    opj_cinfo_t* cinfo= null;  /* handle to a compressor */
                     opj_image_t* image = null;
                     opj_cio_t* cio = null;
 
                     event_mgr.error_handler = IntPtr.Zero;
-
                     if (jparams.IsVerbose)
                     {
                         event_mgr.warning_handler = IntPtr.Zero;
                         event_mgr.info_handler = IntPtr.Zero;
                     }
 
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         cinfo = Opj_create_compress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Linux64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
+
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         cinfo = Opj_create_compress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Windows64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-
+                    
                     eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
                     eparams.max_comp_size = 0;
                     eparams.numresolution = 6;
@@ -757,18 +767,18 @@ namespace Efferent.Native.Codec
                     eparams.cblockw_init = 64;
                     eparams.cblockh_init = 64;
                     eparams.prog_order = OPJ_PROG_ORDER.LRCP;
-                    eparams.roi_compno = -1;
+                    eparams.roi_compno = -1;        
                     eparams.subsampling_dx = 1;
                     eparams.subsampling_dy = 1;
                     eparams.tp_on = (char)0;
                     eparams.decod_format = -1;
-                    eparams.cod_format = -1;
-                    eparams.tcp_rates[0] = 0;
+                    eparams.cod_format = -1; 
+                    eparams.tcp_rates[0]= 0;
                     eparams.tcp_numlayers = 0;
                     eparams.cp_disto_alloc = 0;
                     eparams.cp_fixed_alloc = 0;
                     eparams.cp_fixed_quality = 0;
-                    eparams.jpip_on = 0;
+                    eparams.jpip_on = 0; 
                     eparams.cp_disto_alloc = 1;
 
                     if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
@@ -785,7 +795,7 @@ namespace Efferent.Native.Codec
                         else
                             break;
                     }
-
+                    
                     eparams.tcp_numlayers++;
                     eparams.tcp_rates[r] = (float)jparams.Rate;
 
@@ -812,11 +822,11 @@ namespace Efferent.Native.Codec
                     {
                         OPJ_COLOR_SPACE color_space = getOpenJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             image = Opj_image_create_Linux64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             image = Opj_image_create_Windows64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
@@ -832,7 +842,7 @@ namespace Efferent.Native.Codec
 
                             int pos = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
                             int offset = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
-
+                            
                             if (oldPixelData.BytesAllocated == 1)
                             {
                                 if (Convert.ToBoolean(comp->sgnd))
@@ -915,22 +925,24 @@ namespace Efferent.Native.Codec
                                 throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
                         }
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             Opj_setup_encoder_Linux64(cinfo, ref eparams, image);
-
-                            cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null, 0);
+                        
+                            cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null , 0);
                         }
+
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             Opj_setup_encoder_Windows64(cinfo, ref eparams, image);
-
-                            cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null, 0);
+                        
+                            cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null , 0);
                         }
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+
+                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            if (Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
+                            if(Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Linux64(cio);
                                 byte[] cbuf = new byte[clen];
@@ -950,7 +962,7 @@ namespace Efferent.Native.Codec
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if (Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
+                            if(Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Windows64(cio);
                                 byte[] cbuf = new byte[clen];
@@ -967,47 +979,42 @@ namespace Efferent.Native.Codec
                             }
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
-                        }
+                        }                      
                     }
 
                     finally
                     {
                         if (cio != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-                                Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-                                Opj_cio_close_Windows64(cio);
+                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);                           
                         }
 
                         if (image != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-                                Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-                                Opj_image_destroy_Windows64(image);
-                        }
+                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);                            
+                        }                       
 
                         if (cinfo != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-                                Opj_destroy_compress_Linux64(cinfo);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-                                Opj_destroy_compress_Windows64(cinfo);
+                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);      
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);                      
                         }
                     }
                 }
-
-                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb)
-                {
-                    newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
-
-                    if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
+            
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                     {
-                        if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
-                        else
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
+                        newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+
+                        if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
+                        {
+                            if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
+                            else
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
+
                     }
                 }
             }
@@ -1038,6 +1045,17 @@ namespace Efferent.Native.Codec
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
+
+                //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                {
+                    jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                }
+                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                {
+                    jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                }
+
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
 
                 PinnedByteArray destArray = new PinnedByteArray(newPixelData.UncompressedFrameSize);

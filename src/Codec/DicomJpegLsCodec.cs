@@ -165,14 +165,12 @@ namespace Efferent.Native.Codec
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
 
-            if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422) ||
-            (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
+            if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
             (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
             {
                 throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG-LS encoder", oldPixelData.PhotometricInterpretation);
             }
             DicomJpegLsParams jparams = (DicomJpegLsParams)parameters;
-
             if (jparams == null)
             {
                 jparams = (DicomJpegLsParams)GetDefaultParameters();
@@ -181,7 +179,7 @@ namespace Efferent.Native.Codec
             //IMPORT JLSPARAMETERS (DLLIMPORT)
 
             JlsParameters jls = new JlsParameters
-            {
+            {  
                 width = oldPixelData.Width,
                 height = oldPixelData.Height,
                 bitsPerSample = oldPixelData.BitsStored,
@@ -197,12 +195,23 @@ namespace Efferent.Native.Codec
 
             if (TransferSyntax == DicomTransferSyntax.JPEGLSNearLossless)
             {
-                jls.allowedLossyError = jparams.AllowedError;
+					jls.allowedLossyError = jparams.AllowedError;
             }
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer frameData = oldPixelData.GetFrame(frame);
+
+                //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                {
+                    frameData = PixelDataConverter.YbrFullToRgb(frameData);
+                }
+                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                {
+                    frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
+                }
+
                 PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
                 byte[] jpegData = new byte[frameData.Size];
@@ -213,19 +222,18 @@ namespace Efferent.Native.Codec
                 char[] errorMessage = new char[256];
 
                 // IMPORT JpegLsEncode
-                unsafe
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
+                unsafe {  
+                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    { 
+                        CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
                     }
 
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
+                    {   
+                        CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
                     }
 
-                    Array.Resize(ref jpegData, (int)jpegDataSize);
+                    Array.Resize(ref jpegData,(int)jpegDataSize);
 
                     IByteBuffer buffer;
                     if (jpegDataSize >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -248,6 +256,17 @@ namespace Efferent.Native.Codec
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
+
+                //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                {
+                    jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                }
+                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                {
+                    jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                }
+
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
 
                 byte[] frameData = new byte[newPixelData.UncompressedFrameSize];
@@ -260,22 +279,23 @@ namespace Efferent.Native.Codec
 
                 // IMPORT JpegLsDecode 
                 unsafe
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {   
+                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
                     {
-                        CharlsApiResultType err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
+                        CharlsApiResultType err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     }
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                        CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, (uint)jpegData.Size, ref jls, errorMessage);
+                         CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     }
-
+                    
                     IByteBuffer buffer;
                     if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
                         buffer = new TempFileBuffer(frameData);
                     else
                         buffer = new MemoryByteBuffer(frameData);
                     buffer = EvenLengthBuffer.Create(buffer);
+
                     newPixelData.AddFrame(buffer);
                 }
             }
