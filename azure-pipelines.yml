@@ -2,7 +2,7 @@ trigger:
 - master
 
 jobs:
-- job: Build
+- job: Build_Ubuntu
   pool:
     vmImage: 'ubuntu-latest'
   steps:
@@ -17,7 +17,7 @@ jobs:
       artifactName: 'lib'
       targetPath: 'src/Native/Linux64/build_ALL/bin'
 
-- job: Build
+- job: Build_Windows
   pool:
     vmImage: 'vs2017-win2016'
   steps:
