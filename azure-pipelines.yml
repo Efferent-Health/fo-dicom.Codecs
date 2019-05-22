@@ -24,8 +24,7 @@ jobs:
     displayName: 'Publish Windows artifacts'
     inputs:
       artifactName: 'lib-windows64'
-      targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release'
-
+      targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
 - job: Build_Ubuntu
   dependsOn: Build_Windows
   pool:
@@ -41,4 +40,30 @@ jobs:
     inputs:
       artifactName: 'lib-linux64'
       targetPath: 'src/Native/Linux64/build_ALL/bin'
-
+  - task: DotNetCoreCLI@2
+    displayName: Compile managed library
+    inputs:
+      command: 'build'
+      projects: 'src/efferent-native.csproj'
+      feedsToUse: 'select'
+      versioningScheme: 'off'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Build.ArtifactStagingDirectory)/lib-linux64'
+      Contents: '*.so'
+      TargetFolder: '$(Build.SourcesDirectory)/test/lib'
+      flattenFolders: true
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Build.ArtifactStagingDirectory)/lib-windows64'
+      Contents: '*.dll'
+      TargetFolder: '$(Build.SourcesDirectory)/test/lib'
+      flattenFolders: true
+  - task: DotNetCoreCLI@2
+    displayName: Unit tests
+    inputs:
+      command: 'test'
+      projects: 'test/*.csproj'
+      testRunTitle: 'dicom-native unit tests'
+      feedsToUse: 'select'
+      versioningScheme: 'off'
