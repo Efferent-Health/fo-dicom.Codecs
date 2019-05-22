@@ -2,21 +2,6 @@ trigger:
 - master
 
 jobs:
-- job: Build_Ubuntu
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - script: |
-      cd src/Native/Linux64/build_ALL
-      cmake ./CMakeLists.txt
-      make
-    displayName: 'Compile Ubuntu library'
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Ubuntu artifacts'
-    inputs:
-      artifactName: 'lib'
-      targetPath: 'src/Native/Linux64/build_ALL/bin'
-
 - job: Build_Windows
   pool:
     vmImage: 'vs2017-win2016'
@@ -26,6 +11,22 @@ jobs:
       solution: 'Dicom-native/src/Native/Windows64/build_ALL/libijg*.x64.vcxproj'
       msbuildArchitecture: 'x64'
       configuration: 'Release'
+  - task: PublishPipelineArtifact@0
+    displayName: 'Publish Ubuntu artifacts'
+    inputs:
+      artifactName: 'lib'
+      targetPath: 'src/Native/Linux64/build_ALL/bin'
+
+- job: Build_Ubuntu
+  dependsOn: Build_Windows
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - script: |
+      cd src/Native/Linux64/build_ALL
+      cmake ./CMakeLists.txt
+      make
+    displayName: 'Compile Ubuntu library'
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Ubuntu artifacts'
     inputs:
