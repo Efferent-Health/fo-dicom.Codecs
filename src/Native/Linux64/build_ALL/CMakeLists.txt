@@ -43,7 +43,7 @@ SET(CROSSPLATFORM_SRCS
 )
 
 #CharLS Library
-set(CHARLS_SRCS
+SET(CHARLS_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../CharLS/interface.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../CharLS/jpegls.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../CharLS/jpegmarkersegment.cpp
@@ -72,7 +72,7 @@ set(CHARLS_SRCS
  )
 
 #libijg8 library
-set(LIBIJG8_SRCS
+SET(LIBIJG8_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg8/jaricom.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg8/jcapimin.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg8/jcapistd.c
@@ -140,7 +140,7 @@ set(LIBIJG8_SRCS
 )
 
 #libijg12 library
-set(LIBIJG12_SRCS
+SET(LIBIJG12_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg12/jaricom.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg12/jcapimin.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg12/jcapistd.c
@@ -208,7 +208,7 @@ set(LIBIJG12_SRCS
 )
 
 #libijg12 library
-set(LIBIJG16_SRCS
+SET(LIBIJG16_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg16/jaricom.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg16/jcapimin.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../libijg16/jcapistd.c
@@ -276,7 +276,7 @@ set(LIBIJG16_SRCS
 )
 
 #OpenJPEG Library
- set(OPENJPEG_SRCS
+SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/bio.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/cio.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/dwt.c
@@ -304,7 +304,12 @@ set(LIBIJG16_SRCS
 )
 
 add_library(Efferent.Native-linux64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
-set_target_properties(Efferent.Native-linux64 PROPERTIES PREFIX "")
 
-
+#Setting properties for shared o dynamic library 
+set_target_properties(Efferent.Native-linux64
+  PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+  PREFIX ""
+)
 
