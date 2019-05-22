@@ -47,18 +47,18 @@ jobs:
       projects: 'src/efferent-native.csproj'
       feedsToUse: 'select'
       versioningScheme: 'off'
-  - task: CopyFiles@2
+  - task: DownloadPipelineArtifact@1
     inputs:
-      SourceFolder: '$(Build.ArtifactStagingDirectory)/lib-linux64'
-      Contents: '*.so'
-      TargetFolder: '$(Build.SourcesDirectory)/test/lib'
-      flattenFolders: true
-  - task: CopyFiles@2
+      buildType: 'current'
+      artifactName: 'lib-linux64'
+      itemPattern: '**/*.so'
+      targetPath: '$(Build.SourcesDirectory)/test/lib'
+  - task: DownloadPipelineArtifact@1
     inputs:
-      SourceFolder: '$(Build.ArtifactStagingDirectory)/lib-windows64'
-      Contents: '*.dll'
-      TargetFolder: '$(Build.SourcesDirectory)/test/lib'
-      flattenFolders: true
+      buildType: 'current'
+      artifactName: 'lib-windows64'
+      itemPattern: '**/*.dll'
+      targetPath: '$(Build.SourcesDirectory)/test/lib'
   - task: DotNetCoreCLI@2
     displayName: Unit tests
     inputs:
