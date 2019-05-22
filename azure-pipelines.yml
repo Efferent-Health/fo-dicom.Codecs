@@ -6,12 +6,12 @@ jobs:
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
-  - task: PowerShell@2	
+  - task: PowerShell@2
     displayName: Install Windows 10.0.16299.0 SDK
     inputs:
-    targetType: 'filePath'
-    filePath: 'build/install-sdk.ps1'
-    arguments: '16299'
+      targetType: 'filePath'
+      filePath: 'build/install-sdk.ps1'
+      arguments: '16299'
   - task: MSBuild@1
     displayName: 'Compile libijg* libraries'
     inputs:
