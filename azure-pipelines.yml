@@ -14,5 +14,5 @@ steps:
 - task: PublishPipelineArtifact@0
   displayName: 'Publish Ubuntu artifacts'
   inputs:
-    artifactName: 'drop'
-    targetPath: 'src/Native/Linux64/build_ALL'
+    artifactName: 'lib'
+    targetPath: 'src/Native/Linux64/build_ALL/bin'
