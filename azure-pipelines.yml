@@ -6,6 +6,13 @@ pool:
 
 steps:
 - script: |
+    cd src/Native/Linux64/build_ALL
     cmake src/Native/Linux64/build_ALL/CMakeLists.txt
-  displayName: 'Compile Ubuntu'
+    cmake
+  displayName: 'Compile Ubuntu library'
 
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Ubuntu artifacts'
+  inputs:
+    artifactName: 'drop'
+    targetPath: 'src/Native/Linux64/build_ALL'
