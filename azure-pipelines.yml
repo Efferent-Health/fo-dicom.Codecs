@@ -51,13 +51,13 @@ jobs:
     inputs:
       SourceFolder: '$(Build.ArtifactStagingDirectory)/lib-linux64'
       Contents: '*.so'
-      TargetFolder: '$(Build.SourcesDirectory)/test'
+      TargetFolder: '$(Build.SourcesDirectory)/test/lib'
       flattenFolders: true
   - task: CopyFiles@2
     inputs:
       SourceFolder: '$(Build.ArtifactStagingDirectory)/lib-windows64'
       Contents: '*.dll'
-      TargetFolder: '$(Build.SourcesDirectory)/test'
+      TargetFolder: '$(Build.SourcesDirectory)/test/lib'
       flattenFolders: true
   - task: DotNetCoreCLI@2
     displayName: Unit tests
