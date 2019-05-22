@@ -41,4 +41,18 @@ jobs:
     inputs:
       artifactName: 'lib-linux64'
       targetPath: 'src/Native/Linux64/build_ALL/bin'
-
+  - task: DotNetCoreCLI@2
+    displayName: Compile managed library
+    inputs:
+      command: 'build'
+      projects: 'src/efferent-native.csproj'
+      feedsToUse: 'select'
+      versioningScheme: 'off'
+  - task: DotNetCoreCLI@2
+    displayName: Unit tests
+    inputs:
+      command: 'test'
+      projects: 'test/*.csproj'
+      testRunTitle: 'HL7-dotnetcore unit test'
+      feedsToUse: 'select'
+      versioningScheme: 'off'
