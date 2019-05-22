@@ -6,13 +6,6 @@ jobs:
   pool:
     vmImage: 'VS2017-Win2016'
   steps:
-  - task: PowerShell@2
-    enabled: 'false'
-    displayName: Install Windows 10.0.16299.0 SDK
-    inputs:
-      targetType: 'filePath'
-      filePath: 'build/install-sdk.ps1'
-      arguments: '16299'
   - task: MSBuild@1
     displayName: 'Compile libijg* libraries'
     inputs:
@@ -30,7 +23,7 @@ jobs:
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Windows artifacts'
     inputs:
-      artifactName: 'lib'
+      artifactName: 'lib-windows64'
       targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release'
 
 - job: Build_Ubuntu
@@ -46,6 +39,6 @@ jobs:
   - task: PublishPipelineArtifact@0
     displayName: 'Publish Ubuntu artifacts'
     inputs:
-      artifactName: 'lib'
+      artifactName: 'lib-linux64'
       targetPath: 'src/Native/Linux64/build_ALL/bin'
 
