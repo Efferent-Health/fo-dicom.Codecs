@@ -53,12 +53,6 @@ jobs:
       artifactName: 'lib-linux64'
       itemPattern: '**/*.so'
       targetPath: '$(Build.SourcesDirectory)/test/lib'
-  - task: DownloadPipelineArtifact@1
-    inputs:
-      buildType: 'current'
-      artifactName: 'lib-windows64'
-      itemPattern: '**/*.dll'
-      targetPath: '$(Build.SourcesDirectory)/test/lib'
   - task: DotNetCoreCLI@2
     displayName: Unit tests
     inputs:
