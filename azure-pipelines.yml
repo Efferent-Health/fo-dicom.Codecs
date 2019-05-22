@@ -7,15 +7,16 @@ jobs:
     vmImage: 'vs2017-win2016'
   steps:
   - task: MSBuild@1
+    displayName: 'Compile Windows library'
     inputs:
       solution: "Dicom-native/src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
       msbuildArchitecture: 'x64'
       configuration: 'Release'
   - task: PublishPipelineArtifact@0
-    displayName: 'Publish Ubuntu artifacts'
+    displayName: 'Publish Windows artifacts'
     inputs:
       artifactName: 'lib'
-      targetPath: 'src/Native/Linux64/build_ALL/bin'
+      targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release'
 
 - job: Build_Ubuntu
   dependsOn: Build_Windows
