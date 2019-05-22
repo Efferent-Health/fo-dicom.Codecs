@@ -97,7 +97,7 @@ function Mount-ISO
 
     if (!$isoDrive)
     {
-        Mount-DiskImage -ImagePath $isoPath -StorageType ISO | Out-Null
+        Mount-DiskImage -ImagePath $isoPath -StorageType ISO 
     }
 
     $isoDrive = Get-ISODriveLetter $isoPath
@@ -113,7 +113,7 @@ function Dismount-ISO
     if ($isoDrive)
     {
         Write-Verbose "$isoPath dismounted"
-        Dismount-DiskImage -ImagePath $isoPath | Out-Null
+        Dismount-DiskImage -ImagePath $isoPath
     }
 }
 
