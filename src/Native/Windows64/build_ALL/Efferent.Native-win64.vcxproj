@@ -48,14 +48,12 @@
     <TargetName>Efferent.Native-win64</TargetName>
     <OutDir>bin\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
-    <LinkKeyFile>$(SolutionDir)DICOM\fo-dicom.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>Efferent.Native-win64</TargetName>
     <OutDir>bin\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
-    <LinkKeyFile>$(SolutionDir)DICOM\fo-dicom.snk</LinkKeyFile>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
