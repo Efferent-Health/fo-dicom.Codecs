@@ -8,7 +8,7 @@ steps:
 - script: |
     cd src/Native/Linux64/build_ALL
     cmake ./CMakeLists.txt
-    cmake
+    make
   displayName: 'Compile Ubuntu library'
 
 - task: PublishPipelineArtifact@0
