@@ -8,3 +8,4 @@ steps:
 - script: |
     cmake src/Native/Linux64/build_ALL/CMakeLists.txt
   displayName: 'Compile Ubuntu'
+
