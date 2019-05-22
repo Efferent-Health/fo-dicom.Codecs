@@ -10,12 +10,14 @@ jobs:
     displayName: 'Compile libijg* libraries'
     inputs:
       solution: "src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
+      platform: 'x64'
       msbuildArchitecture: 'x64'
       configuration: 'Release'
   - task: MSBuild@1
     displayName: 'Compile Windows library'
     inputs:
       solution: "src/Native/Windows64/build_ALL/Efferent.Native-win64.vcxproj"
+      platform: 'x64'
       msbuildArchitecture: 'x64'
       configuration: 'Release'
   - task: PublishPipelineArtifact@0
