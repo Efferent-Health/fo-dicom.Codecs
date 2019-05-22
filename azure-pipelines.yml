@@ -8,7 +8,7 @@ jobs:
   steps:
   - task: MSBuild@1
     inputs:
-      solution: 'Dicom-native/src/Native/Windows64/build_ALL/libijg*.x64.vcxproj'
+      solution: "Dicom-native/src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
       msbuildArchitecture: 'x64'
       configuration: 'Release'
   - task: PublishPipelineArtifact@0
