@@ -28,13 +28,6 @@ stages:
         PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
-#    - task: DotNetCoreCLI@2
-#      displayName: Compile managed library
-#      inputs:
-#        command: 'build'
-#        projects: 'src/efferent-native.csproj'
-#        feedsToUse: 'select'
-#        versioningScheme: 'off'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
