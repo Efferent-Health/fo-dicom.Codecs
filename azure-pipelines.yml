@@ -103,3 +103,11 @@ stages:
         feedsToUse: 'select'
         packagesToPack: '**/efferent-native.nuspec'
         versioningScheme: 'off'
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        feedsToUse: 'select'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'Nuget.org'
+        versioningScheme: 'off'
