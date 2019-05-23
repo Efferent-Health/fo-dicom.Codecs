@@ -46,7 +46,7 @@ namespace Efferent.Native.Test
         private static string[][] resultsInverse;
 
         [ClassInitialize]
-        public void Initialization()
+        public static void Initialization(TestContext context)
         {
             TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
             resultsPerform = new string[filenames.Length][];
@@ -113,7 +113,7 @@ namespace Efferent.Native.Test
         }
 
         [ClassCleanup]
-        public void BuildReport()
+        public static void BuildReport()
         {
             string md = "# Acceptance tests\n";
             md += "## PerformTranscode\n\n";
