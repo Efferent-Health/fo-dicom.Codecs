@@ -25,6 +25,21 @@ jobs:
     inputs:
       artifactName: 'lib-windows64'
       targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
+  - task: DotNetCoreCLI@2
+    displayName: Compile managed library
+    inputs:
+      command: 'build'
+      projects: 'src/efferent-native.csproj'
+      feedsToUse: 'select'
+      versioningScheme: 'off'
+  - task: DotNetCoreCLI@2
+    displayName: Unit tests
+    inputs:
+      command: 'test'
+      projects: 'test/*.csproj'
+      testRunTitle: 'dicom-native unit tests'
+      feedsToUse: 'select'
+      versioningScheme: 'off'      
 - job: Build_Ubuntu
   dependsOn: Build_Windows
   pool:
