@@ -22,11 +22,12 @@ stages:
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
-    - task: PublishPipelineArtifact@0
-      displayName: 'Publish Windows artifacts'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Windows artifacts
       inputs:
-        artifactName: 'lib-windows64'
-        targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
+        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
+        ArtifactName: 'lib-windows64'
+        publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Compile managed library
       inputs:
@@ -41,7 +42,8 @@ stages:
         projects: 'test/*.csproj'
         testRunTitle: 'dicom-native unit tests'
         feedsToUse: 'select'
-        versioningScheme: 'off'      
+        versioningScheme: 'off'
+    
   - job: Build_Ubuntu
     dependsOn: Build_Windows
     pool:
@@ -52,11 +54,12 @@ stages:
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile Ubuntu library'
-    - task: PublishPipelineArtifact@0
-      displayName: 'Publish Ubuntu artifacts'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Linux artifacts
       inputs:
-        artifactName: 'lib-linux64'
-        targetPath: 'src/Native/Linux64/build_ALL/bin'
+        PathtoPublish: 'src/Native/Linux64/build_ALL/bin'
+        ArtifactName: 'lib-linux64'
+        publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Compile managed library
       inputs:
