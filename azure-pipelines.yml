@@ -4,7 +4,7 @@ trigger:
 stages:
 - stage: Build
   jobs:
-  - job: Build_Windows
+  - job: Windows
     pool:
       vmImage: 'VS2017-Win2016'
     steps:
@@ -44,8 +44,8 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
     
-  - job: Build_Ubuntu
-    dependsOn: Build_Windows
+  - job: Ubuntu
+    dependsOn: Windows
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -86,7 +86,7 @@ stages:
 
 - stage: Deploy
   jobs:
-  - job: Release_Nuget
+  - job: Nuget
     pool:
       vmImage: 'VS2017-Win2016'
     steps:
