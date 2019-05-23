@@ -28,13 +28,13 @@ stages:
         PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
-    - task: DotNetCoreCLI@2
-      displayName: Compile managed library
-      inputs:
-        command: 'build'
-        projects: 'src/efferent-native.csproj'
-        feedsToUse: 'select'
-        versioningScheme: 'off'
+#    - task: DotNetCoreCLI@2
+#      displayName: Compile managed library
+#      inputs:
+#        command: 'build'
+#        projects: 'src/efferent-native.csproj'
+#        feedsToUse: 'select'
+#        versioningScheme: 'off'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -43,7 +43,34 @@ stages:
         testRunTitle: 'dicom-native unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-    
+  - job: Acceptance
+    dependsOn: Windows
+    pool:
+      vmImage: 'VS2017-Win2016'
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Compliance tests
+      inputs:
+        command: 'test'
+        projects: 'test1/*.csproj'
+        testRunTitle: 'Compliance tests for GitHub'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - task: ArchiveFiles@2
+      displayName: Zip files
+      inputs:
+        rootFolderOrFile: 'test1/bin/debug/netcoreapp2.1/out'
+        archiveType: 'zip'
+        archiveFile: 'test1/out/AcceptanceImages-win64-$(Build.BuildId).zip'
+    - task: GitHubRelease@0
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: Efferent-Health
+        repositoryName: '$(Build.Repository.Name)'         
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'auto'
+        assets: 'test1/out/*.zip'  
   - job: Ubuntu
     dependsOn: Windows
     pool:

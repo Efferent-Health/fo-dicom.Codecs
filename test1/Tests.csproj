@@ -15,5 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="./*.dcm" CopyToOutputDirectory="Always"/>
+    <None Include="../src/Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>
