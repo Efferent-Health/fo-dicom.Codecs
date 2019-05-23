@@ -65,6 +65,7 @@ stages:
       inputs:
         command: 'build'
         projects: 'src/efferent-native.csproj'
+        configuration: 'Release'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - task: PublishBuildArtifacts@1
