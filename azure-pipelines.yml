@@ -47,18 +47,6 @@ jobs:
       projects: 'src/efferent-native.csproj'
       feedsToUse: 'select'
       versioningScheme: 'off'
-  - task: DownloadPipelineArtifact@1
-    inputs:
-      buildType: 'current'
-      artifactName: 'lib-linux64'
-      itemPattern: '**/*.so'
-      targetPath: '$(Build.SourcesDirectory)/test/lib'
-  - task: DownloadPipelineArtifact@1
-    inputs:
-      buildType: 'current'
-      artifactName: 'lib-linux64'
-      itemPattern: '**/*.so'
-      targetPath: '$(Build.SourcesDirectory)/test'
   - task: DotNetCoreCLI@2
     displayName: Unit tests
     inputs:
