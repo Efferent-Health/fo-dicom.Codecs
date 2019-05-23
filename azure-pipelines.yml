@@ -75,10 +75,16 @@ stages:
 
 - stage: Deploy
   jobs:
-  - job: Release dicom-native
+  - job: Release_Nuget
     pool:
       vmImage: 'VS2017-Win2016'
     steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: Retrieving build artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: 'bin'
     - task: NuGetCommand@2
       displayName: Prepare nuget package
       inputs:
