@@ -1,72 +1,88 @@
 trigger:
 - master
 
-jobs:
-- job: Build_Windows
-  pool:
-    vmImage: 'VS2017-Win2016'
-  steps:
-  - task: MSBuild@1
-    displayName: 'Compile libijg* libraries'
-    inputs:
-      solution: "src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
-      platform: 'x64'
-      msbuildArchitecture: 'x64'
-      configuration: 'Release'
-  - task: MSBuild@1
-    displayName: 'Compile Windows library'
-    inputs:
-      solution: "src/Native/Windows64/build_ALL/Efferent.Native-win64.vcxproj"
-      platform: 'x64'
-      msbuildArchitecture: 'x64'
-      configuration: 'Release'
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Windows artifacts'
-    inputs:
-      artifactName: 'lib-windows64'
-      targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
-  - task: DotNetCoreCLI@2
-    displayName: Compile managed library
-    inputs:
-      command: 'build'
-      projects: 'src/efferent-native.csproj'
-      feedsToUse: 'select'
-      versioningScheme: 'off'
-  - task: DotNetCoreCLI@2
-    displayName: Unit tests
-    inputs:
-      command: 'test'
-      projects: 'test/*.csproj'
-      testRunTitle: 'dicom-native unit tests'
-      feedsToUse: 'select'
-      versioningScheme: 'off'      
-- job: Build_Ubuntu
-  dependsOn: Build_Windows
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - script: |
-      cd src/Native/Linux64/build_ALL
-      cmake ./CMakeLists.txt
-      make
-    displayName: 'Compile Ubuntu library'
-  - task: PublishPipelineArtifact@0
-    displayName: 'Publish Ubuntu artifacts'
-    inputs:
-      artifactName: 'lib-linux64'
-      targetPath: 'src/Native/Linux64/build_ALL/bin'
-  - task: DotNetCoreCLI@2
-    displayName: Compile managed library
-    inputs:
-      command: 'build'
-      projects: 'src/efferent-native.csproj'
-      feedsToUse: 'select'
-      versioningScheme: 'off'
-  - task: DotNetCoreCLI@2
-    displayName: Unit tests
-    inputs:
-      command: 'test'
-      projects: 'test/*.csproj'
-      testRunTitle: 'dicom-native unit tests'
-      feedsToUse: 'select'
-      versioningScheme: 'off'
+stages:
+- stage: Build
+  jobs:
+  - job: Build_Windows
+    pool:
+      vmImage: 'VS2017-Win2016'
+    steps:
+    - task: MSBuild@1
+      displayName: 'Compile libijg* libraries'
+      inputs:
+        solution: "src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
+        platform: 'x64'
+        msbuildArchitecture: 'x64'
+        configuration: 'Release'
+    - task: MSBuild@1
+      displayName: 'Compile Windows library'
+      inputs:
+        solution: "src/Native/Windows64/build_ALL/Efferent.Native-win64.vcxproj"
+        platform: 'x64'
+        msbuildArchitecture: 'x64'
+        configuration: 'Release'
+    - task: PublishPipelineArtifact@0
+      displayName: 'Publish Windows artifacts'
+      inputs:
+        artifactName: 'lib-windows64'
+        targetPath: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
+    - task: DotNetCoreCLI@2
+      displayName: Compile managed library
+      inputs:
+        command: 'build'
+        projects: 'src/efferent-native.csproj'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: 'test'
+        projects: 'test/*.csproj'
+        testRunTitle: 'dicom-native unit tests'
+        feedsToUse: 'select'
+        versioningScheme: 'off'      
+  - job: Build_Ubuntu
+    dependsOn: Build_Windows
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        cd src/Native/Linux64/build_ALL
+        cmake ./CMakeLists.txt
+        make
+      displayName: 'Compile Ubuntu library'
+    - task: PublishPipelineArtifact@0
+      displayName: 'Publish Ubuntu artifacts'
+      inputs:
+        artifactName: 'lib-linux64'
+        targetPath: 'src/Native/Linux64/build_ALL/bin'
+    - task: DotNetCoreCLI@2
+      displayName: Compile managed library
+      inputs:
+        command: 'build'
+        projects: 'src/efferent-native.csproj'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: 'test'
+        projects: 'test/*.csproj'
+        testRunTitle: 'dicom-native unit tests'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+
+- stage: Deploy
+  jobs:
+  - job: Release dicom-native
+    pool:
+      vmImage: 'VS2017-Win2016'
+    steps:
+    - task: NuGetCommand@2
+      displayName: Prepare nuget package
+      inputs:
+        command: 'pack'
+        feedsToUse: 'select'
+        packagesToPack: '**/efferent-native.nuspec'
+        versioningScheme: 'off'

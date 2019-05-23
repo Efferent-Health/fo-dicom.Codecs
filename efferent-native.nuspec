@@ -16,8 +16,8 @@
 		</dependencies>
     </metadata>
     <files>
-        <file src="./src/bin/Debug/netstandard2.0/Efferent.Native.dll" target="lib/netstandard2.0" />
-        <file src="./src/Native/Windows64/Efferent.Native-win64.dll" target="runtimes/win-x64/native" />
-        <file src="./src/Native/Linux64/linux-x64/Efferent.Native-linux64.so" target="runtimes/linux-x64/native" />
+        <file src="./bin/Efferent.Native.dll" target="lib/netstandard2.0" />
+        <file src="./bin/Efferent.Native-win64.dll" target="runtimes/win-x64/native" />
+        <file src="./bin/Efferent.Native-linux64.so" target="runtimes/linux-x64/native" />
     </files>
 </package>
