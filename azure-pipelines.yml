@@ -63,8 +63,10 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'manual'
-        tag: 'v$(MajorVersion).$(MinorVersion).$(PatchVersion)'
+        tag: 'v$(Build.SourceVersion)'
         assets: 'test1/out/*.zip'  
+        releaseNotesSource: 'file'
+        releaseNotesFile: 'test1/out/Results.md'
   - job: Ubuntu
     dependsOn: Windows
     pool:
