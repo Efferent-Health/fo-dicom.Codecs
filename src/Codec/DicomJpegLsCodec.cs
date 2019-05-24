@@ -206,10 +206,12 @@ namespace Efferent.Native.Codec
                 if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
                     frameData = PixelDataConverter.YbrFullToRgb(frameData);
+                    oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                 }
                 else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                 {
                     frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
+                    oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                 }
 
                 PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
@@ -261,10 +263,12 @@ namespace Efferent.Native.Codec
                 if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
                     jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                    oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                 }
                 else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                 {
                     jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                    oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                 }
 
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);

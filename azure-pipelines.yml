@@ -57,8 +57,8 @@ stages:
       inputs:
         command: 'build'
         projects: 'src/efferent-native.csproj'
-        arguments: '--configuration Release'
-        configuration: 'Release'
+        arguments: '--configuration Debug'
+        configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
@@ -67,7 +67,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'src/bin/Release/netstandard2.0'
+        PathtoPublish: 'src/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
