@@ -2,6 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Efferent.Native.svg)](https://www.nuget.org/packages/Efferent.Native/)
 [![github](https://img.shields.io/github/stars/Efferent-Health/Dicom-native.svg)]()
+[![Build Status](https://dev.azure.com/efferent/open-source/_apis/build/status/Efferent-Health.Dicom-native?branchName=master)](https://dev.azure.com/efferent/open-source/_build/latest?definitionId=9&branchName=master)
 
 This is an alternative `TranscoderManager` class to be used along with the well-known [fo-dicom](https://github.com/fo-dicom/fo-dicom) project. It is associated to C++ libraries compiled natively for several platforms. So far:
 - Windows 64 (similar to Native64.dll)
