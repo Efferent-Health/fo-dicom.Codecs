@@ -36,37 +36,6 @@ stages:
         testRunTitle: 'dicom-native unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: Acceptance
-    dependsOn: Windows
-    pool:
-      vmImage: 'VS2017-Win2016'
-    steps:
-    - task: DotNetCoreCLI@2
-      displayName: Compliance tests
-      inputs:
-        command: 'test'
-        projects: 'test1/*.csproj'
-        testRunTitle: 'Compliance tests for GitHub'
-        feedsToUse: 'select'
-        versioningScheme: 'off'
-    - task: ArchiveFiles@2
-      displayName: Zip files
-      inputs:
-        rootFolderOrFile: 'test1/bin/debug/netcoreapp2.1/out'
-        archiveType: 'zip'
-        archiveFile: 'test1/out/AcceptanceImages-win64-$(Build.BuildId).zip'
-    - task: GitHubRelease@0
-      displayName: Release to GitHub
-      inputs:
-        gitHubConnection: Efferent-Open-Source
-        repositoryName: '$(Build.Repository.Name)'         
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'manual'
-        tag: 'v$(Build.SourceVersion)'
-        assets: 'test1/out/*.zip'  
-        releaseNotesSource: 'file'
-        releaseNotesFile: 'test1/bin/debug/netcoreapp2.1/out/Results.md'
   - job: Ubuntu
     dependsOn: Windows
     pool:
@@ -92,6 +61,9 @@ stages:
         configuration: 'Release'
         feedsToUse: 'select'
         versioningScheme: 'off'
+    - script: |
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/efferent-native.csproj
+      name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
@@ -106,6 +78,39 @@ stages:
         testRunTitle: 'dicom-native unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
+  - job: Acceptance
+    dependsOn: Ubuntu
+    pool:
+      vmImage: 'VS2017-Win2016'
+    variables:
+      csprojVersion: $[ dependencies.Ubuntu.outputs['setvarStep.csprojVersion'] ]
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Compliance tests
+      inputs:
+        command: 'test'
+        projects: 'test1/*.csproj'
+        testRunTitle: 'Compliance tests for GitHub'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - task: ArchiveFiles@2
+      displayName: Zip files
+      inputs:
+        rootFolderOrFile: 'test1/bin/debug/netcoreapp2.1/out'
+        archiveType: 'zip'
+        archiveFile: 'test1/out/AcceptanceImages-win64-$(Build.BuildId).zip'
+    - task: GitHubRelease@0
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: Efferent-Open-Source
+        repositoryName: '$(Build.Repository.Name)'         
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'manual'
+        tag: 'v$(csprojVersion)'
+        assets: 'test1/out/*.zip'  
+        releaseNotesSource: 'file'
+        releaseNotesFile: 'test1/bin/debug/netcoreapp2.1/out/Results.md'
 
 - stage: Deploy
   jobs:

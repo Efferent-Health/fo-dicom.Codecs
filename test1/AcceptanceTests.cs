@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -116,8 +117,9 @@ namespace Efferent.Native.Test
         public static void BuildReport()
         {
             string md = "# Acceptance tests\n";
+            md += "The following results indicate the conversions that didn't break, but not the correctness of them. Inspect the Dicom files visually for correctness.\n";
             md += "## PerformTranscode\n\n";
-            md += "Filename|" + string.Join(" | ", transferSyntaxes) + "\n";
+            md += "Filename|" + string.Join(" | ", transferSyntaxes.Select(ts => splitName(ts))) + "\n";
             md += "-- | " + string.Join(" | ", transferSyntaxes.Select(ts=>":--:")) + "\n";
 
             for (int i=0; i < filenames.Length; i++)
@@ -126,7 +128,7 @@ namespace Efferent.Native.Test
             }
 
             md += "\n## InverseTranscode\n\n";
-            md += "Filename|" + string.Join(" | ", transferSyntaxes) + "\n";
+            md += "Filename|" + string.Join(" | ", transferSyntaxes.Select(ts => splitName(ts))) + "\n";
             md += "-- | " + string.Join(" | ", transferSyntaxes.Select(ts=>":--:")) + "\n";
 
             for (int i=0; i < filenames.Length; i++)
@@ -150,5 +152,10 @@ namespace Efferent.Native.Test
                 }
             }
         }
+	
+        private static string splitName(string name)
+        {		
+            return Regex.Replace(name, "([A-Z][a-z])", " $1");
+        }	
     }
 }
