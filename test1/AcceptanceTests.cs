@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using System.Drawing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Dicom;
@@ -45,13 +46,19 @@ namespace Efferent.Native.Test
 
         private static string[][] resultsPerform;
         private static string[][] resultsInverse;
+        private static string[] resultsRender;
 
         [ClassInitialize]
         public static void Initialization(TestContext context)
         {
             TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
+
+            // Required for RenderImages test
+            ImageManager.SetImplementation(WinFormsImageManager.Instance);
+
             resultsPerform = new string[filenames.Length][];
             resultsInverse = new string[filenames.Length][];
+            resultsRender = new string[filenames.Length];
 
             for (int i = 0; i < filenames.Length; i++)
             {
@@ -84,6 +91,7 @@ namespace Efferent.Native.Test
                 resultsPerform[index0][index1] = "FAIL";
 
                 File.WriteAllText(output, e.Message);
+                Assert.Fail();
             }
         }
 
@@ -110,6 +118,29 @@ namespace Efferent.Native.Test
                 resultsInverse[index0][index1] = "FAIL";
 
                 File.WriteAllText(output, e.Message);
+                Assert.Fail();
+            }
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(ImageData), DynamicDataSourceType.Property)]
+        public void RenderImages(int index0)
+        {
+            var outputFile = Path.ChangeExtension(Path.GetFileNameWithoutExtension(filenames[index0]), ".png");
+
+            try
+            {
+                var img = new DicomImage(filenames[index0]);
+                img.RenderImage().As<Bitmap>().Save(Path.Combine($"out", outputFile));
+                
+                resultsRender[index0] = "OK";
+            }
+            catch (Exception e)
+            {
+                resultsRender[index0] = "FAIL";
+
+                File.WriteAllText(outputFile, e.Message);
+                Assert.Fail();
             }
         }
 
@@ -136,6 +167,14 @@ namespace Efferent.Native.Test
                 md += filenames[i] + " | " + string.Join(" | ", resultsInverse[i]) + "\n";
             }
 
+            md += "\n## RenderImages\n\n";
+            md += "Filename|Rendering\n";
+            md += "-- | --\n";
+
+            for (int i = 0; i < filenames.Length; i++)
+            {
+                md += filenames[i] + " | " + string.Join(" | ", resultsRender[i]) + "\n";
+            }
             File.WriteAllText("out/Results.md", md);
         }
 
@@ -152,7 +191,18 @@ namespace Efferent.Native.Test
                 }
             }
         }
-	
+
+        public static IEnumerable<object[]> ImageData
+        {
+            get
+            {
+                for (int i = 0; i < filenames.Length; i++)
+                {
+                        yield return new object[] { i };
+                }
+            }
+        }
+
         private static string splitName(string name)
         {		
             return Regex.Replace(name, "([A-Z][a-z])", " $1");
