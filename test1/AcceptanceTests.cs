@@ -91,7 +91,6 @@ namespace Efferent.Native.Test
                 resultsPerform[index0][index1] = "FAIL";
 
                 File.WriteAllText(output, e.Message);
-                Assert.Fail();
             }
         }
 
@@ -118,7 +117,6 @@ namespace Efferent.Native.Test
                 resultsInverse[index0][index1] = "FAIL";
 
                 File.WriteAllText(output, e.Message);
-                Assert.Fail();
             }
         }
 
@@ -140,7 +138,6 @@ namespace Efferent.Native.Test
                 resultsRender[index0] = "FAIL";
 
                 File.WriteAllText(outputFile, e.Message);
-                Assert.Fail();
             }
         }
 
