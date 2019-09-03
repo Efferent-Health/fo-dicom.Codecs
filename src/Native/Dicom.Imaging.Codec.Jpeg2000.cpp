@@ -20,8 +20,8 @@ extern "C"{
     #ifdef TARGET_OS_MAC
         #define EXPORT_OpenJPEG extern
 		extern "C"{
-            #include "./MacOS/OpenJPEG/openjpeg.h"
-            #include "./MacOS/OpenJPEG/j2k.h"
+        #include "./MacOS/OpenJPEG/openjpeg.h"
+        #include "./MacOS/OpenJPEG/j2k.h"
 		}
     #endif
 
