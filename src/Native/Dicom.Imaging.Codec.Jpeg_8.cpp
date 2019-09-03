@@ -21,7 +21,21 @@ extern "C"{
 #include "./Linux64/libijg8/jpeglib8.h"
 #include "./Linux64/libijg8/jerror8.h"
 #include "./Linux64/libijg8/jpegint8.h"
-} 
+}
+
+#elif defined(__APPLE__)
+#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+        #define EXPORT_libijg8 extern
+		extern "C"{
+		#include "stdio.h"
+		#include "string.h"
+		#include "setjmp.h"
+		#include "./MacOS/libijg8/jpeglib8.h"
+		#include "./MacOS/libijg8/jerror8.h"
+		#include "./MacOS/libijg8/jpegint8.h"
+		}
+    #endif
 
 #endif
 

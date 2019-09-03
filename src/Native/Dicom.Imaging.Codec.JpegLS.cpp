@@ -10,6 +10,13 @@
 #include "./Linux64/CharLS/charls.h"
 #define EXPORT_Charls extern 
 
+#elif defined(__APPLE__)
+#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+        #define EXPORT_Charls extern
+		#include "./MacOS/CharLS/charls.h"
+    #endif
+
 #endif
 
 namespace Dicom {

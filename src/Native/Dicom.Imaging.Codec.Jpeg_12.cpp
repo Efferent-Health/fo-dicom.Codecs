@@ -23,6 +23,20 @@ extern "C" {
 #include "./Linux64/libijg12/jpegint12.h"
 } 
 
+#elif defined(__APPLE__)
+#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+        #define EXPORT_libijg12 extern
+		extern "C"{
+		#include "stdio.h"
+		#include "string.h"
+		#include "setjmp.h"
+		#include "./MacOS/libijg12/jpeglib12.h"
+		#include "./MacOS/libijg12/jerror12.h"
+		#include "./MacOS/libijg12/jpegint12.h"
+		}
+    #endif
+
 #endif
 
 namespace Dicom {

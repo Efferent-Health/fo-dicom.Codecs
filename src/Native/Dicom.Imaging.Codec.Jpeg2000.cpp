@@ -14,6 +14,17 @@ extern "C"{
 #include "./Linux64/OpenJPEG/openjpeg.h"
 #include "./Linux64/OpenJPEG/j2k.h"
 }
+
+#elif defined(__APPLE__)
+#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+        #define EXPORT_OpenJPEG extern
+		extern "C"{
+            #include "./MacOS/OpenJPEG/openjpeg.h"
+            #include "./MacOS/OpenJPEG/j2k.h"
+		}
+    #endif
+
 #endif
 
 

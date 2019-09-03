@@ -22,6 +22,20 @@ extern "C" {
 #include "./Linux64/libijg16/jpegint16.h"
 }
 
+#elif defined(__APPLE__)
+#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+        #define EXPORT_libijg16 extern
+		extern "C"{
+		#include "stdio.h"
+		#include "string.h"
+		#include "setjmp.h"
+		#include "./MacOS/libijg16/jpeglib16.h"
+		#include "./MacOS/libijg16/jerror16.h"
+		#include "./MacOS/libijg16/jpegint16.h"
+		}
+    #endif
+
 #endif
 
 
