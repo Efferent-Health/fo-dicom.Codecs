@@ -103,9 +103,6 @@ stages:
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
-    - script: |
-        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/efferent-native.csproj
-      name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
