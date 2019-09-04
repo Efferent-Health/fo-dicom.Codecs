@@ -42,14 +42,14 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - script: |
-        cd src/Native/Linux/build_ALL
+        cd src/Native/Linux64/build_ALL
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile Ubuntu library'
     - task: PublishBuildArtifacts@1
       displayName: Publish Linux artifacts
       inputs:
-        PathtoPublish: 'src/Native/Linux/build_ALL/bin'
+        PathtoPublish: 'src/Native/Linux64/build_ALL/bin'
         ArtifactName: 'lib-linux64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2

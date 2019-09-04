@@ -18,9 +18,9 @@ extern "C" {
 #include "stdio.h"
 #include "string.h"
 #include "setjmp.h"
-#include "./Linux/libijg12/jpeglib12.h"
-#include "./Linux/libijg12/jerror12.h"
-#include "./Linux/libijg12/jpegint12.h"
+#include "./Linux64/libijg12/jpeglib12.h"
+#include "./Linux64/libijg12/jerror12.h"
+#include "./Linux64/libijg12/jpegint12.h"
 } 
 
 #elif defined(__APPLE__)
