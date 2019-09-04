@@ -36,7 +36,7 @@ stages:
         testRunTitle: 'dicom-native unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: Ubuntu
+  - job: Linux
     dependsOn: Windows
     pool:
       vmImage: 'ubuntu-latest'
@@ -45,7 +45,7 @@ stages:
         cd src/Native/Linux64/build_ALL
         cmake ./CMakeLists.txt
         make
-      displayName: 'Compile Ubuntu library'
+      displayName: 'Compile Linux library'
     - task: PublishBuildArtifacts@1
       displayName: Publish Linux artifacts
       inputs:
@@ -79,7 +79,7 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: MacOS
-    dependsOn: Ubuntu
+    dependsOn: Linux
     pool:
       vmImage: 'macOS-10.13'
     steps:
@@ -125,7 +125,7 @@ stages:
     pool:
       vmImage: 'VS2017-Win2016'
     variables:
-      csprojVersion: $[ dependencies.Ubuntu.outputs['setvarStep.csprojVersion'] ]
+      csprojVersion: $[ dependencies.Linux.outputs['setvarStep.csprojVersion'] ]
     steps:
     - task: DotNetCoreCLI@2
       displayName: Compliance tests
