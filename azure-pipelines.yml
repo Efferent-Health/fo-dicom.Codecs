@@ -11,21 +11,21 @@ stages:
     - task: MSBuild@1
       displayName: 'Compile libijg* libraries'
       inputs:
-        solution: "src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
+        solution: "src/Native/Windows/build_ALL/libijg*.x64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: MSBuild@1
       displayName: 'Compile Windows library'
       inputs:
-        solution: "src/Native/Windows64/build_ALL/Efferent.Native-win64.vcxproj"
+        solution: "src/Native/Windows/build_ALL/Efferent.Native-win64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
       displayName: Publish Windows artifacts
       inputs:
-        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
+        PathtoPublish: 'src/Native/Windows/build_ALL/bin/x64/Release/Efferent.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -42,14 +42,14 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - script: |
-        cd src/Native/Linux64/build_ALL
+        cd src/Native/Linux/build_ALL
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile Ubuntu library'
     - task: PublishBuildArtifacts@1
       displayName: Publish Linux artifacts
       inputs:
-        PathtoPublish: 'src/Native/Linux64/build_ALL/bin'
+        PathtoPublish: 'src/Native/Linux/build_ALL/bin'
         ArtifactName: 'lib-linux64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -78,8 +78,50 @@ stages:
         testRunTitle: 'dicom-native unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: Acceptance
+  - job: MacOS
     dependsOn: Ubuntu
+    pool:
+      vmImage: 'macOS-10.13'
+    steps:
+    - script: |
+        cd src/Native/MacOS/build_ALL
+        cmake ./CMakeLists.txt
+        make
+      displayName: 'Compile MacOS library'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish MacOS artifacts
+      inputs:
+        PathtoPublish: 'src/Native/MacOS/build_ALL/bin'
+        ArtifactName: 'lib-macOS'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Compile managed library
+      inputs:
+        command: 'build'
+        projects: 'src/efferent-native.csproj'
+        arguments: '--configuration Debug'
+        configuration: 'Debug'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - script: |
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/efferent-native.csproj
+      name: setvarStep
+    - task: PublishBuildArtifacts@1
+      displayName: Publish managed artifacts
+      inputs:
+        PathtoPublish: 'src/bin/Debug/netstandard2.0'
+        ArtifactName: 'lib-managed'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: 'test'
+        projects: 'test/*.csproj'
+        testRunTitle: 'dicom-native unit tests'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+  - job: Acceptance
+    dependsOn: MacOS
     pool:
       vmImage: 'VS2017-Win2016'
     variables:

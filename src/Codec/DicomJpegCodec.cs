@@ -1166,6 +1166,7 @@ namespace Efferent.Native.Codec
 
             public static extern unsafe void jpeg_destroy_compress_12_Linux64(ref j_compress_ptr cinfo);
 
+            
             //Decode Native functions
 
             [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
@@ -1245,6 +1246,7 @@ namespace Efferent.Native.Codec
 
             public static extern unsafe void jpeg_destroy_compress_12_MacOS(ref j_compress_ptr cinfo);
 
+            
             //Decode Native functions
 
             [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
@@ -1484,6 +1486,7 @@ namespace Efferent.Native.Codec
 
             public static extern unsafe void jpeg_destroy_compress_16_MacOS(ref j_compress_ptr cinfo);
 
+            
             //Decode Native functions
 
             [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
@@ -1521,7 +1524,6 @@ namespace Efferent.Native.Codec
                 PointTransform = point_transform;
                 Bits = bits;
             }
-
 
             public static unsafe void initDestination(ref j_compress_ptr cinfo)
             {

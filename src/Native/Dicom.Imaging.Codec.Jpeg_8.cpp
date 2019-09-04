@@ -18,9 +18,9 @@ extern "C"{
 #include "stdio.h"
 #include "string.h"
 #include "setjmp.h"
-#include "./Linux64/libijg8/jpeglib8.h"
-#include "./Linux64/libijg8/jerror8.h"
-#include "./Linux64/libijg8/jpegint8.h"
+#include "./Linux/libijg8/jpeglib8.h"
+#include "./Linux/libijg8/jerror8.h"
+#include "./Linux/libijg8/jpegint8.h"
 }
 
 #elif defined(__APPLE__)

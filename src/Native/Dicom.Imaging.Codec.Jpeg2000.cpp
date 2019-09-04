@@ -11,8 +11,8 @@ extern "C"{
 #elif defined(__linux__)
 #define EXPORT_OpenJPEG extern 
 extern "C"{
-#include "./Linux64/OpenJPEG/openjpeg.h"
-#include "./Linux64/OpenJPEG/j2k.h"
+#include "./Linux/OpenJPEG/openjpeg.h"
+#include "./Linux/OpenJPEG/j2k.h"
 }
 
 #elif defined(__APPLE__)
