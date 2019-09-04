@@ -2,5 +2,5 @@
 **/obj
 /test/JPEG2000.dcm
 /src/Native/Linux/build_ALL/
-/src/Native/Windows/build_ALL/
+/src/Native/Windows64/build_ALL/
 /src/Native/MacOS/build_ALL/

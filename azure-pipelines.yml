@@ -11,21 +11,21 @@ stages:
     - task: MSBuild@1
       displayName: 'Compile libijg* libraries'
       inputs:
-        solution: "src/Native/Windows/build_ALL/libijg*.x64.vcxproj"
+        solution: "src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: MSBuild@1
       displayName: 'Compile Windows library'
       inputs:
-        solution: "src/Native/Windows/build_ALL/Efferent.Native-win64.vcxproj"
+        solution: "src/Native/Windows64/build_ALL/Efferent.Native-win64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
       displayName: Publish Windows artifacts
       inputs:
-        PathtoPublish: 'src/Native/Windows/build_ALL/bin/x64/Release/Efferent.Native-win64'
+        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
