@@ -103,6 +103,9 @@ stages:
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
+    - script: |
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/efferent-native.csproj
+      name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
@@ -118,11 +121,11 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: Acceptance
-    dependsOn: Linux
+    dependsOn: MacOS
     pool:
       vmImage: 'VS2017-Win2016'
     variables:
-      csprojVersion: $[ dependencies.Linux.outputs['setvarStep.csprojVersion'] ]
+      csprojVersion: $[ dependencies.MacOS.outputs['setvarStep.csprojVersion'] ]
     steps:
     - task: DotNetCoreCLI@2
       displayName: Compliance tests

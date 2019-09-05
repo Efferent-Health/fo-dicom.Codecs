@@ -7,7 +7,7 @@
 This is an alternative `TranscoderManager` class to be used along with the well-known [fo-dicom](https://github.com/fo-dicom/fo-dicom) project. It is associated to C/C++ libraries compiled natively for several platforms. So far:
 - Windows 64-bits (similar to Dicom.Native64.dll)
 - Linux 64-bits (tested with Ubuntu 16/18 Desktop and Server)
-- MacOS (work in progress)
+- MacOS (tested with macOS High Sierra Version 10.13)
 
 This transcoder differs from the existing fo-dicom implementations in the following:
 - Unified C/C++ source code for all platforms.
@@ -29,8 +29,8 @@ The following CODECS are implemented:
 
 ## Usage
 
-- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard project 
-- Add the standard fo-dicom nuget packages to your project (tested with 4.0.1)
+- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard or .NetCore project 
+- Add the standard fo-dicom nuget packages to your project (tested with 4.0.2)
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
