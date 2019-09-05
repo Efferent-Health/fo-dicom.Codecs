@@ -118,7 +118,7 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: Acceptance
-    dependsOn: MacOS
+    dependsOn: Linux
     pool:
       vmImage: 'VS2017-Win2016'
     variables:
