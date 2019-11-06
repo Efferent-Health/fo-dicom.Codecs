@@ -2559,16 +2559,31 @@ namespace Efferent.Native.Codec
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_Windows64(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_Linux64(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_MacOS(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
 
@@ -2576,16 +2591,31 @@ namespace Efferent.Native.Codec
                             else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Windows64(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Linux64(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_MacOS(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines on pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
 
@@ -2593,16 +2623,31 @@ namespace Efferent.Native.Codec
                             else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Windows64(ref dinfo, (byte**)&framePtr, 1));
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Linux64(ref dinfo, (byte**)&framePtr, 1));
-                                framePtr += rows * rowSize;
+                                
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
+                                }
+                                framePtr += rows * rowSize;;
                             }
                             else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_MacOS(ref dinfo, (byte**)&framePtr, 1));
+
+                                if (rows == 0)
+                                {
+                                    throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
+                                }
                                 framePtr += rows * rowSize;
                             }
 
