@@ -2471,7 +2471,10 @@ namespace Efferent.Native.Codec
                             }
                         }
 
-                        jpegParams.ConvertColorspaceToRGB = true;
+                        if(oldPixelData.PhotometricInterpretation != PhotometricInterpretation.Rgb)
+                        {
+                            jpegParams.ConvertColorspaceToRGB = true;
+                        }
                         
                         newPixelData.PhotometricInterpretation = oldPixelData.PhotometricInterpretation;
                         if (jpegParams.ConvertColorspaceToRGB && (dinfo.out_color_space == J_COLOR_SPACE.JCS_YCbCr || dinfo.out_color_space == J_COLOR_SPACE.JCS_RGB))
