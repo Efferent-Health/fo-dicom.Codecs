@@ -2405,21 +2405,51 @@ namespace Efferent.Native.Codec
                         //jpeg_read_header_8 for Linux, Windows and MacOS for 64 bits
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if (jpeg_read_header_8_Windows64(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
+                            {
+                                jpeg_read_header_value = jpeg_read_header_8_Windows64(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
                             {
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            if (jpeg_read_header_8_Linux64(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
+                            {
+                                jpeg_read_header_value = jpeg_read_header_8_Linux64(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
                             {
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
-                            if (jpeg_read_header_8_MacOS(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
+                            {
+                                jpeg_read_header_value = jpeg_read_header_8_MacOS(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
                             {
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
@@ -2428,21 +2458,51 @@ namespace Efferent.Native.Codec
                         //jpeg_read_header_12 for Linux, Windows and MacOS for 64 bits
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if (jpeg_read_header_12_Windows64(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
+                            {
+                                jpeg_read_header_value = jpeg_read_header_12_Windows64(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
                             {
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            if (jpeg_read_header_12_Linux64(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
+                            {
+                                jpeg_read_header_value = jpeg_read_header_12_Linux64(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
                             {
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
-                            if (jpeg_read_header_12_MacOS(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
+                            {
+                                jpeg_read_header_value = jpeg_read_header_12_MacOS(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
                             {
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
@@ -2451,23 +2511,53 @@ namespace Efferent.Native.Codec
                         //jpeg_read_header_12 for Linux, Windows and MacOS for 64 bits
                         else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if (jpeg_read_header_16_Windows64(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
                             {
-                                throw new DicomCodecException("Unable to read JPEG header: Suspended");
+                                jpeg_read_header_value = jpeg_read_header_16_Windows64(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
+                            {
+                                throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            if (jpeg_read_header_16_Linux64(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
                             {
-                                throw new DicomCodecException("Unable to read JPEG header: Suspended");
+                                jpeg_read_header_value = jpeg_read_header_16_Linux64(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
+                            {
+                                throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
-                            if (jpeg_read_header_16_MacOS(ref dinfo, 1) == 0)
+                            int jpeg_read_header_value = 0;
+                            try
                             {
-                                throw new DicomCodecException("Unable to read JPEG header: Suspended");
+                                jpeg_read_header_value = jpeg_read_header_16_MacOS(ref dinfo, 1);
+                            }
+                            catch
+                            {
+                                throw new DicomCodecException("Unable to read header value : Suspended");
+                            }
+
+                            if (jpeg_read_header_value == 0)
+                            {
+                                throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
 
