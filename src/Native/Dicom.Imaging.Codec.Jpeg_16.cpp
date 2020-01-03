@@ -271,6 +271,10 @@ namespace Dicom {
 					
 				}
 
+				EXPORT_libijg16 void format_message_16(j_common_ptr cinfo, char* buffer){
+					(*cinfo->err->format_message)((jpeg_common_struct *)cinfo, buffer);
+				}
+
 #ifdef __cplusplus
 			}
 #endif
