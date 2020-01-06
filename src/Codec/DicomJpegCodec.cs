@@ -2879,7 +2879,8 @@ namespace Efferent.Native.Codec
 
                 SourceManagerStruct src;
 
-                src.pub.init_source = IntPtr.Zero;
+                Init_source init_Source_ = initSource;
+                src.pub.init_source = Marshal.GetFunctionPointerForDelegate(init_Source_);
 
                 Fill_input_buffer fillInputBuffer_ = fillInputBuffer;
                 src.pub.fill_input_buffer = Marshal.GetFunctionPointerForDelegate(fillInputBuffer_);
@@ -3007,69 +3008,96 @@ namespace Efferent.Native.Codec
                 if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     if (jpeg_read_header_8_Windows64(ref dinfo, 1) == 0)
-                    {
-                        throw new DicomCodecException("Unable to decompress JPEG: Suspended");
+                    {   
+                        jpeg_destroy_decompress_8_Windows64(ref dinfo);
+                        throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_8_Windows64(ref dinfo);
                 }
                 else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     if (jpeg_read_header_8_Linux64(ref dinfo, 1) == 0)
-                    {
-                        throw new DicomCodecException("Unable to decompress JPEG: Suspended");
+                    {   
+                        jpeg_destroy_decompress_8_Linux64(ref dinfo);
+                        throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_8_Linux64(ref dinfo);
                 }
                 else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     if (jpeg_read_header_8_MacOS(ref dinfo, 1) == 0)
-                    {
-                        throw new DicomCodecException("Unable to decompress JPEG: Suspended");
+                    {   
+                        jpeg_destroy_decompress_8_MacOS(ref dinfo);
+                        throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_8_MacOS(ref dinfo);
                 }
 
                 //jpeg_read_header_12 for Linux, Windows and MacOS for 64 bits
                 if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     if (jpeg_read_header_12_Windows64(ref dinfo, 1) == 0)
-                    {
-                        throw new DicomCodecException("Unable to decompress JPEG: Suspended");
+                    {   
+                        jpeg_destroy_decompress_12_Windows64(ref dinfo);
+                        throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_12_Windows64(ref dinfo);
                 }
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     if (jpeg_read_header_12_Linux64(ref dinfo, 1) == 0)
-                    {
-                        throw new DicomCodecException("Unable to decompress JPEG: Suspended");
+                    {   
+                        jpeg_destroy_decompress_12_Linux64(ref dinfo);
+                        throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_12_Linux64(ref dinfo);
                 }
                 else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     if (jpeg_read_header_12_MacOS(ref dinfo, 1) == 0)
-                    {
-                        throw new DicomCodecException("Unable to decompress JPEG: Suspended");
+                    {   
+                        jpeg_destroy_decompress_12_MacOS(ref dinfo);
+                        throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_12_MacOS(ref dinfo);
                 }
 
                 //jpeg_read_header_12 for Linux, Windows and MacOS for 64 bits
                 if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     if (jpeg_read_header_16_Windows64(ref dinfo, 1) == 0)
-                    {
+                    {   
+                        jpeg_destroy_decompress_16_Windows64(ref dinfo);
                         throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_16_Windows64(ref dinfo);
                 }
                 if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     if (jpeg_read_header_16_Linux64(ref dinfo, 1) == 0)
-                    {
+                    {   
+                        jpeg_destroy_decompress_16_Linux64(ref dinfo);
                         throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_16_Linux64(ref dinfo);
                 }
                 if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     if (jpeg_read_header_16_MacOS(ref dinfo, 1) == 0)
-                    {
+                    {   
+                        jpeg_destroy_decompress_16_MacOS(ref dinfo);
                         throw new DicomCodecException("Unable to read JPEG header: Suspended");
                     }
+
+                    jpeg_destroy_decompress_16_MacOS(ref dinfo);
                 }
 
                 return dinfo.data_precision;
