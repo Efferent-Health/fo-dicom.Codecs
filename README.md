@@ -39,3 +39,4 @@ The following CODECS are implemented:
 - Determine if the same source code can be used for regular .net Framework
 - Roadmap for increasing the platform coverage: iOS, Android, etc.
 - Better testing strategy (consider codecs, color resolution, color encoding, LUT, palette, etc.)
+- Add parallel processing capability
