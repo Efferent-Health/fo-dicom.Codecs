@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Cross-platform Dicom codecs for fo-dicom</Description>
-    <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
+    <Description>Cross-platform Dicom native transcoder for fo-dicom</Description>
+    <Copyright>(c) Efferent Health, LLC</Copyright>
     <VersionPrefix>3.10.1</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Dicom.Codecs</RootNamespace>
-    <AssemblyName>fo-dicom.Codecs</AssemblyName>
-    <PackageId>fo-dicom.Codecs</PackageId>
+    <RootNamespace>Efferent.Native</RootNamespace>
+    <AssemblyName>Efferent.Native</AssemblyName>
+    <PackageId>Efferent.Native</PackageId>
     <PackageTags>dicom;dotnetcore;fo-dicom;codec;transfer-syntax</PackageTags>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Efferent-Health/fo-dicom-codecs</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Efferent-Health/Dicom-native</RepositoryUrl>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
