@@ -140,27 +140,38 @@ namespace Efferent.Native.Codec
 
     public abstract class DicomJpegLsNativeCodec : DicomJpegLsCodec
     {
-        //For JPEGLS Windows
+        //For Encode JPEGLS Windows
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
 
         public static extern unsafe CharlsApiResultType JpegLSEncode_Windows64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
+        //For Encode JPEGLS Windows
         [DllImport("Efferent.Native-win64.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
         public static extern unsafe CharlsApiResultType JpegLSDecode_Windows64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        //For JPEGLS Linux
+        //For Encode JPEGLS Linux
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
 
         public static extern unsafe CharlsApiResultType JpegLSEncode_Linux64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
+        //For Encode JPEGLS Linux
         [DllImport("Efferent.Native-linux64.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
         public static extern unsafe CharlsApiResultType JpegLSDecode_Linux64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
+        //For Encode JPEGLS MacOS
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
+
+        public static extern unsafe CharlsApiResultType JpegLSEncode_MacOS(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+
+        //For Encode JPEGLS Linux
+        [DllImport("Efferent.Native-macOS.dylib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
+
+        public static extern unsafe CharlsApiResultType JpegLSDecode_MacOS(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -170,6 +181,7 @@ namespace Efferent.Native.Codec
             {
                 throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG-LS encoder", oldPixelData.PhotometricInterpretation);
             }
+
             DicomJpegLsParams jparams = (DicomJpegLsParams)parameters;
             if (jparams == null)
             {
@@ -229,10 +241,13 @@ namespace Efferent.Native.Codec
                     { 
                         CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
                     }
-
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {   
                         CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        CharlsApiResultType err = JpegLSEncode_MacOS((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
                     }
 
                     Array.Resize(ref jpegData,(int)jpegDataSize);
@@ -250,7 +265,7 @@ namespace Efferent.Native.Codec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -291,6 +306,10 @@ namespace Efferent.Native.Codec
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                          CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                         CharlsApiResultType err = JpegLSDecode_MacOS((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     }
                     
                     IByteBuffer buffer;

@@ -17,12 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom.NetCore" Version="4.0.1"/>
+    <PackageReference Include="fo-dicom.NetCore" Version="4.0.2"/>
   </ItemGroup>
 
   <ItemGroup>
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
     <None Include="../src/Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../src/Native/MacOS/build_ALL/bin/*.dylib" CopyToOutputDirectory="Always" />
     <None Include="../src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 

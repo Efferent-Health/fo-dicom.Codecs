@@ -1,6 +1,8 @@
-// Copyright (c) 2012-2018 fo-dicom contributors.
+// Copyright (c) 2012-2019 fo-dicom contributors.
 // Licensed under the Microsoft Public License (MS-PL).
 
+#include <iostream>
+#include <new>
 
 #if defined (_WIN32)
 #include "CharLS/charls.h"
@@ -9,6 +11,13 @@
 #elif defined(__linux__)
 #include "./Linux64/CharLS/charls.h"
 #define EXPORT_Charls extern 
+
+#elif defined(__APPLE__)
+#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+        #define EXPORT_Charls extern
+		#include "./MacOS/CharLS/charls.h"
+    #endif
 
 #endif
 
@@ -26,11 +35,27 @@ extern "C" {
 #endif
 
 EXPORT_Charls CharlsApiResultType JpegLSEncode(void* destination, size_t destinationLength, size_t* bytesWritten, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage){
-    return JpegLsEncode(destination, destinationLength, bytesWritten, source, sourceLength, obj, errorMessage);
+    try
+    {
+        return JpegLsEncode(destination, destinationLength, bytesWritten, source, sourceLength, obj, errorMessage);
+    }
+    catch(const std::bad_alloc& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
 }
 
 EXPORT_Charls CharlsApiResultType JpegLSDecode(void * destination, int destinationLength, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage){
-    return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage );
+    try
+    {
+        return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage );
+    }
+    catch(const std::bad_alloc& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
 }
 
 #ifdef __cplusplus

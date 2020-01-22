@@ -682,6 +682,66 @@ namespace Efferent.Native.Codec
         public static extern unsafe void Opj_destroy_decompress_Linux64(opj_dinfo_t* dinfo);
 
 
+        //Encode JPEG2000 for MacOS
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
+
+        public static extern unsafe opj_cinfo_t* Opj_create_compress_MacOS(OPJ_CODEC_FORMAT format);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
+
+        public static extern unsafe opj_event_mgr_t* Opj_set_event_mgr_MacOS(opj_common_ptr* cinfo, opj_event_mgr_t* e, void* context);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
+
+        public static extern unsafe opj_image_t* Opj_image_create_MacOS(int numcmpts, ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
+
+        public static extern unsafe void Opj_setup_encoder_MacOS(opj_cinfo_t* cinfo, ref opj_cparameters_t parameters, opj_image_t* image);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
+
+        public static extern unsafe opj_cio_t* Opj_cio_open_MacOS(opj_common_ptr* cinfo, byte* buffer, int length);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
+
+        public static extern unsafe int Opj_encode_MacOS(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
+
+        public static extern unsafe void Opj_cio_close_MacOS(opj_cio_t* cio);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
+
+        public static extern unsafe void Opj_image_destroy_MacOS(opj_image_t* image);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
+
+        public static extern unsafe void Opj_destroy_compress_MacOS(opj_cinfo_t* cinfo);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
+
+        public static extern unsafe int Cio_tell_MacOS(opj_cio_t* cio);
+
+
+        //Decode JPEG2000 for Linux
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
+
+        public static extern unsafe opj_dinfo_t* Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT format);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
+
+        public static extern unsafe void Opj_setup_decoder_MacOS(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
+
+        public static extern unsafe opj_image_t* Opj_decode_MacOS(opj_dinfo_t* dinfo, opj_cio_t* cio);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
+
+        public static extern unsafe void Opj_destroy_decompress_MacOS(opj_dinfo_t* dinfo);
+
         public static OPJ_COLOR_SPACE getOpenJpegColorSpace(PhotometricInterpretation photometricInterpretation)
         {
             if (photometricInterpretation == PhotometricInterpretation.Rgb)
@@ -698,7 +758,7 @@ namespace Efferent.Native.Codec
 
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -755,11 +815,15 @@ namespace Efferent.Native.Codec
                         cinfo = Opj_create_compress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Linux64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         cinfo = Opj_create_compress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Windows64((opj_common_ptr*)cinfo, &event_mgr, null);
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        cinfo = Opj_create_compress_MacOS(OPJ_CODEC_FORMAT.CODEC_J2K);
+                        Opj_set_event_mgr_MacOS((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
                     
                     eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
@@ -831,6 +895,10 @@ namespace Efferent.Native.Codec
                         else if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             image = Opj_image_create_Windows64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
+                        }
+                        else if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            image = Opj_image_create_MacOS(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
 
                         image->x0 = eparams.image_offset_x0;
@@ -933,12 +1001,17 @@ namespace Efferent.Native.Codec
                         
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null , 0);
                         }
-
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             Opj_setup_encoder_Windows64(cinfo, ref eparams, image);
                         
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null , 0);
+                        }
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            Opj_setup_encoder_MacOS(cinfo, ref eparams, image);
+                        
+                            cio = Opj_cio_open_MacOS((opj_common_ptr*)cinfo, null , 0);
                         }
 
 
@@ -981,6 +1054,26 @@ namespace Efferent.Native.Codec
                             }
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
+                        }
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            if(Convert.ToBoolean(Opj_encode_MacOS(cinfo, cio, image, eparams.index)))
+                            {
+                                int clen = Cio_tell_MacOS(cio);
+                                byte[] cbuf = new byte[clen];
+
+                                Marshal.Copy((IntPtr)cio->buffer, cbuf, 0, clen);
+
+                                IByteBuffer buffer;
+                                if (clen >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
+                                    buffer = new TempFileBuffer(cbuf);
+                                else
+                                    buffer = new MemoryByteBuffer(cbuf);
+                                buffer = EvenLengthBuffer.Create(buffer);
+                                newPixelData.AddFrame(buffer);
+                            }
+                            else
+                                throw new DicomCodecException("Unable to JPEG 2000 encode image");
                         }                      
                     }
 
@@ -989,19 +1082,22 @@ namespace Efferent.Native.Codec
                         if (cio != null)
                         {
                             if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);                           
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_cio_close_MacOS(cio);                           
                         }
 
                         if (image != null)
                         {
                             if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);                            
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_image_destroy_MacOS(image);                            
                         }                       
 
                         if (cinfo != null)
                         {
                             if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);      
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);                      
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_destroy_compress_MacOS(cinfo);                      
                         }
                     }
                 }
@@ -1024,7 +1120,7 @@ namespace Efferent.Native.Codec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -1108,6 +1204,14 @@ namespace Efferent.Native.Codec
 
                             Opj_setup_decoder_Windows64(dinfo, &dparams);
                         }
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            dinfo = Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT.CODEC_J2K);
+
+                            Opj_set_event_mgr_MacOS((opj_common_ptr*)dinfo, null, null);
+
+                            Opj_setup_decoder_MacOS(dinfo, &dparams);
+                        }
 
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
@@ -1121,6 +1225,11 @@ namespace Efferent.Native.Codec
                         {
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
                             image = Opj_decode_Windows64(dinfo, cio);
+                        }
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        {
+                            cio = Opj_cio_open_MacOS((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
+                            image = Opj_decode_MacOS(dinfo, cio);
                         }
 
                         if (image == null)
@@ -1215,6 +1324,8 @@ namespace Efferent.Native.Codec
                                 Opj_cio_close_Linux64(cio);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
                                 Opj_cio_close_Windows64(cio);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) 
+                                Opj_cio_close_MacOS(cio);
                         }
 
                         if (dinfo != null)
@@ -1223,6 +1334,8 @@ namespace Efferent.Native.Codec
                                 Opj_destroy_decompress_Linux64(dinfo);
                             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
                                 Opj_destroy_decompress_Windows64(dinfo);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) 
+                                Opj_destroy_decompress_MacOS(dinfo);
                         }
 
                         if (image != null)
@@ -1231,6 +1344,8 @@ namespace Efferent.Native.Codec
                                 Opj_image_destroy_Linux64(image);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
                                 Opj_image_destroy_Windows64(image);
+                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) 
+                                Opj_image_destroy_MacOS(image);
                         }
                     }
                 }

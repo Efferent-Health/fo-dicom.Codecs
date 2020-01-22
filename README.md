@@ -4,15 +4,15 @@
 [![github](https://img.shields.io/github/stars/Efferent-Health/Dicom-native.svg)]()
 [![Build Status](https://dev.azure.com/efferent/open-source/_apis/build/status/Efferent-Health.Dicom-native?branchName=master)](https://dev.azure.com/efferent/open-source/_build/latest?definitionId=9&branchName=master)
 
-This is an alternative `TranscoderManager` class to be used along with the well-known [fo-dicom](https://github.com/fo-dicom/fo-dicom) project. It is associated to C++ libraries compiled natively for several platforms. So far:
-- Windows 64 (similar to Native64.dll)
-- Linux 64 (tested with Ubuntu 16/18 Desktop and Server)
-- macOS (work in progress)
+This is an alternative `TranscoderManager` class to be used along with the well-known [fo-dicom](https://github.com/fo-dicom/fo-dicom) project. It is associated to C/C++ libraries compiled natively for several platforms. So far:
+- Windows 64-bit (similar to Dicom.Native64.dll)
+- Linux 64-bit (tested with Ubuntu 16/18 Desktop and Server)
+- MacOS (tested with macOS High Sierra Version 10.13)
 
 This transcoder differs from the existing fo-dicom implementations in the following:
-- Unified C++ source code for all platforms
-- Doesn't implement a Managed C++ middleware. Direct C# to C++ integration.
-- Avoids pure C# implementation for performance reasons (with exception of RLE)
+- Unified C/C++ source code for all platforms.
+- Does not implement a Managed C/C++ middleware. Direct C# to C/C++ integration.
+- Avoids pure C# implementation for performance reasons (with exception of RLE).
 
 ## Supported CODECs
 
@@ -29,10 +29,10 @@ The following CODECS are implemented:
 
 ## Usage
 
-- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard project 
-- Add the standard fo-dicom nuget packages to your project (tested with 4.0.1)
+- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard or .NetCore project 
+- Add the standard fo-dicom nuget packages to your project (tested with 4.0.2)
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
   ````
-- Continue using any fo-dicom image manipulation function
+- Continue using any fo-dicom image manipulation function.
