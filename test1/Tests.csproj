@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>Acceptance tests for Efferent.Native</Description>
+    <Description>Acceptance tests for fo-dicom.Codecs</Description>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsPackable>false</IsPackable>
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../src/efferent-native.csproj" />
+    <ProjectReference Include="../src/fo-dicom.Codecs.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(Efferent.Native)
+project(Dicom.Codec)
 
 set (CMAKE_CXX_STANDARD 17)
 
@@ -316,10 +316,10 @@ SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/openjpeg.h
 )
 
-add_library(Efferent.Native-macOS SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+add_library(Dicom.Codec.macOS SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
 
 #Setting properties for shared o dynamic library 
-set_target_properties(Efferent.Native-macOS
+set_target_properties(Dicom.Codec.macOS
   PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"

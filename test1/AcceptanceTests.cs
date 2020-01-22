@@ -10,7 +10,7 @@ using Dicom;
 using Dicom.Imaging.Codec;
 using Dicom.Imaging;
 
-namespace Efferent.Native.Test
+namespace Dicom.Imaging.NativeCodec.Test
 {
     [TestClass]
     public class AcceptanceTests
@@ -49,7 +49,7 @@ namespace Efferent.Native.Test
         [ClassInitialize]
         public static void Initialization(TestContext context)
         {
-            TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
+            TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
             resultsPerform = new string[filenames.Length][];
             resultsInverse = new string[filenames.Length][];
 

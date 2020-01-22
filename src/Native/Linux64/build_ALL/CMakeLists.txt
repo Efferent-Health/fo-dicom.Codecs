@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(Efferent.Native)
+project(Dicom.Codec)
 
 if (CMAKE_COMPILER_IS_GNUCC)
     # the following is optimization micromanagement that made better code for x86
@@ -303,10 +303,10 @@ SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/openjpeg.h
 )
 
-add_library(Efferent.Native-linux64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+add_library(Dicom.Codec.linux64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
 
 #Setting properties for shared o dynamic library 
-set_target_properties(Efferent.Native-linux64
+set_target_properties(Dicom.Codec.linux64
   PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"

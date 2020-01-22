@@ -18,14 +18,14 @@ stages:
     - task: MSBuild@1
       displayName: 'Compile Windows library'
       inputs:
-        solution: "src/Native/Windows64/build_ALL/Efferent.Native-win64.vcxproj"
+        solution: "src/Native/Windows64/build_ALL/Dicom.Codec.win64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
       displayName: Publish Windows artifacts
       inputs:
-        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Efferent.Native-win64'
+        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Dicom.Codec.win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -33,7 +33,7 @@ stages:
       inputs:
         command: 'test'
         projects: 'test/*.csproj'
-        testRunTitle: 'dicom-native unit tests'
+        testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: Linux
@@ -56,13 +56,13 @@ stages:
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'src/efferent-native.csproj'
+        projects: 'src/fo-dicom.Codecs.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/efferent-native.csproj
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/fo-dicom.Codecs.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
@@ -75,7 +75,7 @@ stages:
       inputs:
         command: 'test'
         projects: 'test/*.csproj'
-        testRunTitle: 'dicom-native unit tests'
+        testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: MacOS
@@ -98,13 +98,13 @@ stages:
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'src/efferent-native.csproj'
+        projects: 'src/fo-dicom.Codecs.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/efferent-native.csproj
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/fo-dicom.Codecs.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
@@ -117,7 +117,7 @@ stages:
       inputs:
         command: 'test'
         projects: 'test/*.csproj'
-        testRunTitle: 'dicom-native unit tests'
+        testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: Acceptance
@@ -171,7 +171,7 @@ stages:
       inputs:
         command: 'pack'
         feedsToUse: 'select'
-        packagesToPack: '**/efferent-native.nuspec'
+        packagesToPack: '**/fo-dicom.Codecs.nuspec'
         versioningScheme: 'off'
     - task: NuGetCommand@2
       inputs:

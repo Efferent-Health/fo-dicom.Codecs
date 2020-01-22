@@ -7,7 +7,7 @@ using System.Reflection;
 using Dicom.Imaging.Codec;
 using Dicom.Log;
 
-namespace Efferent.Native.Codec
+namespace Dicom.Imaging.NativeCodec
 {
     /// <summary>
     /// Implementation of <see cref="TranscoderManager"/> for Windows desktop (.NET) applications.
@@ -63,7 +63,7 @@ namespace Efferent.Native.Codec
             var assembly = Assembly.GetExecutingAssembly();
             var types = assembly.GetTypes();
             var codecTypes = types.Where(t => typeof(IDicomCodec).IsAssignableFrom(t) && !t.IsAbstract);
-            var log = LogManager.GetLogger("Efferent.Native.Codec");
+            var log = LogManager.GetLogger("fo-dicom.Codecs");
 
             foreach (var codecType in codecTypes)
             {

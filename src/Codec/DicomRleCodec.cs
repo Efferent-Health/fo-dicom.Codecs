@@ -2,7 +2,7 @@
 
 using Dicom.Imaging.Codec;
 
-namespace Efferent.Native.Codec
+namespace Dicom.Imaging.NativeCodec
 {    
     [Export(typeof(IDicomCodec))]
     public class DicomRleNativeCodec : DicomRleCodecImpl

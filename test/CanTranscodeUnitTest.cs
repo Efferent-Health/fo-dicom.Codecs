@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dicom;
 using Dicom.Imaging.Codec;
 
-namespace Efferent.Native.Test
+namespace Dicom.Imaging.NativeCodec.Test
 {
     [TestClass]
     public class CanTranscodeUnitTest
@@ -12,7 +12,7 @@ namespace Efferent.Native.Test
         [TestInitialize]
         public void Initialization()
         {
-            TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
+            TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
         }
 
         [DataTestMethod]

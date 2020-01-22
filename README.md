@@ -1,4 +1,4 @@
-# fo-dicom-codecs
+# fo-dicom.Codecs
 
 [![NuGet](https://img.shields.io/nuget/v/Efferent.Native.svg)](https://www.nuget.org/packages/Efferent.Native/)
 [![github](https://img.shields.io/github/stars/Efferent-Health/Dicom-native.svg)]()

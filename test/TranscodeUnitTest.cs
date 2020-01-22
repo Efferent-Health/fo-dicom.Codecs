@@ -8,7 +8,7 @@ using Dicom;
 using Dicom.Imaging.Codec;
 using Dicom.Imaging;
 
-namespace Efferent.Native.Test
+namespace Dicom.Imaging.NativeCodec.Test
 {
     [TestClass]
     public class TranscodeUnitTest
@@ -18,7 +18,7 @@ namespace Efferent.Native.Test
         [TestInitialize]
         public void Initialization()
         {
-            TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
+            TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
 
             Directory.CreateDirectory("out");
         }
