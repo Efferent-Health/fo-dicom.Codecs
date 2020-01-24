@@ -316,10 +316,10 @@ SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/openjpeg.h
 )
 
-add_library(Dicom.Codec.macOS SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+add_library(fo-dicom.Codecs.Native-macOS SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
 
 #Setting properties for shared o dynamic library 
-set_target_properties(Dicom.Codec.macOS
+set_target_properties(fo-dicom.Codecs.Native-macOS
   PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"

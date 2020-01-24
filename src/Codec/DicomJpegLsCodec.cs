@@ -141,32 +141,32 @@ namespace Dicom.Imaging.NativeCodec
     public abstract class DicomJpegLsNativeCodec : DicomJpegLsCodec
     {
         //For Encode JPEGLS Windows
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
 
         public static extern unsafe CharlsApiResultType JpegLSEncode_Windows64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS Windows
-        [DllImport("Dicom.Codec.win64.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
         public static extern unsafe CharlsApiResultType JpegLSDecode_Windows64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS Linux
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
 
         public static extern unsafe CharlsApiResultType JpegLSEncode_Linux64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS Linux
-        [DllImport("Dicom.Codec.linux64.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
         public static extern unsafe CharlsApiResultType JpegLSDecode_Linux64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS MacOS
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
 
         public static extern unsafe CharlsApiResultType JpegLSEncode_MacOS(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS Linux
-        [DllImport("Dicom.Codec.macOS.dylib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
 
         public static extern unsafe CharlsApiResultType JpegLSDecode_MacOS(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)

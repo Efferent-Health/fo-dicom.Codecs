@@ -18,14 +18,14 @@ stages:
     - task: MSBuild@1
       displayName: 'Compile Windows library'
       inputs:
-        solution: "src/Native/Windows64/build_ALL/Dicom.Codec.win64.vcxproj"
+        solution: "src/Native/Windows64/build_ALL/fo-dicom.Codecs.Native-win64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
       displayName: Publish Windows artifacts
       inputs:
-        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Dicom.Codec.win64'
+        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/fo-dicom.Codecs.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2

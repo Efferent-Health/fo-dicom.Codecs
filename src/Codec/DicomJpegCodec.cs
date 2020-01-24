@@ -806,82 +806,82 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_8_Windows64(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_8")]
 
             public static extern unsafe void jpeg_create_compress_8_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_8")]
 
             public static extern unsafe void jpeg_set_defaults_8_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_8")]
 
             public static extern unsafe void jpeg_set_quality_8_Windows64(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_8")]
 
             public static extern unsafe void jpeg_simple_progression_8_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_8")]
 
             public static extern unsafe void jpeg_simple_lossless_8_Windows64(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_8")]
 
             public static extern unsafe void jpeg_set_colorspace_8_Windows64(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_8")]
 
             public static extern unsafe void jpeg_start_compress_8_Windows64(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_8")]
 
             public static extern unsafe void jpeg_write_scanlines_8_Windows64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_8")]
 
             public static extern unsafe void jpeg_finish_compress_8_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_8")]
 
             public static extern unsafe void jpeg_destroy_compress_8_Windows64(ref j_compress_ptr cinfo);
 
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_8")]
 
             public static extern unsafe void jpeg_create_decompress_8_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_8")]
 
             public static extern unsafe int jpeg_read_header_8_Windows64(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_8")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_8_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_8")]
 
             public static extern unsafe int jpeg_start_decompress_8_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_8")]
 
             public static extern unsafe uint jpeg_read_scanlines_8_Windows64(ref j_decompress_ptr dinfo, byte** scanlines,
                     uint max_lines);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_8")]
 
             public static extern unsafe void jpeg_destroy_decompress_8_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_8")]
 
             public static extern unsafe int jpeg_resync_to_restart_8_Windows64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
 
             public static extern unsafe void format_message_8_Windows64(ref j_common_ptr cinfo, char[] buffer);
 
@@ -890,83 +890,83 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_8_Linux64(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_8")]
 
             public static extern unsafe void jpeg_create_compress_8_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_8")]
 
             public static extern unsafe void jpeg_set_defaults_8_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_8")]
 
             public static extern unsafe void jpeg_set_quality_8_Linux64(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_8")]
 
             public static extern unsafe void jpeg_simple_progression_8_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_8")]
 
             public static extern unsafe void jpeg_simple_lossless_8_Linux64(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_8")]
 
             public static extern unsafe void jpeg_set_colorspace_8_Linux64(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_8")]
 
             public static extern unsafe void jpeg_start_compress_8_Linux64(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_8")]
 
             public static extern unsafe void jpeg_write_scanlines_8_Linux64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_8")]
 
             public static extern unsafe void jpeg_finish_compress_8_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_8")]
 
             public static extern unsafe void jpeg_destroy_compress_8_Linux64(ref j_compress_ptr cinfo);
 
 
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_8")]
 
             public static extern unsafe void jpeg_create_decompress_8_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_8")]
 
             public static extern unsafe int jpeg_read_header_8_Linux64(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_8")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_8_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_8")]
 
             public static extern unsafe int jpeg_start_decompress_8_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_8")]
 
             public static extern unsafe uint jpeg_read_scanlines_8_Linux64(ref j_decompress_ptr dinfo, byte** scanlines,
                     uint max_lines);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_8")]
 
             public static extern unsafe void jpeg_destroy_decompress_8_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_8")]
 
             public static extern unsafe int jpeg_resync_to_restart_8_Linux64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
 
             public static extern unsafe void format_message_8_Linux64(ref j_common_ptr cinfo, char[] buffer);
 
@@ -975,82 +975,82 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_8_MacOS(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_8")]
 
             public static extern unsafe void jpeg_create_compress_8_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_8")]
 
             public static extern unsafe void jpeg_set_defaults_8_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_8")]
 
             public static extern unsafe void jpeg_set_quality_8_MacOS(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_8")]
 
             public static extern unsafe void jpeg_simple_progression_8_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_8")]
 
             public static extern unsafe void jpeg_simple_lossless_8_MacOS(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_8")]
 
             public static extern unsafe void jpeg_set_colorspace_8_MacOS(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_8")]
 
             public static extern unsafe void jpeg_start_compress_8_MacOS(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_8")]
 
             public static extern unsafe void jpeg_write_scanlines_8_MacOS(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_8")]
 
             public static extern unsafe void jpeg_finish_compress_8_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_8")]
 
             public static extern unsafe void jpeg_destroy_compress_8_MacOS(ref j_compress_ptr cinfo);
 
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_8")]
 
             public static extern unsafe void jpeg_create_decompress_8_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_8")]
 
             public static extern unsafe int jpeg_read_header_8_MacOS(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_8")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_8_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_8")]
 
             public static extern unsafe int jpeg_start_decompress_8_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_8")]
 
             public static extern unsafe uint jpeg_read_scanlines_8_MacOS(ref j_decompress_ptr dinfo, byte** scanlines,
                     uint max_lines);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_8")]
 
             public static extern unsafe void jpeg_destroy_decompress_8_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_8")]
 
             public static extern unsafe int jpeg_resync_to_restart_8_MacOS(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
 
             public static extern unsafe void format_message_8_MacOS(ref j_common_ptr cinfo, char[] buffer);
 
@@ -1059,81 +1059,81 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_12")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_12_Windows64(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_12")]
 
             public static extern unsafe void jpeg_create_compress_12_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_12")]
 
             public static extern unsafe void jpeg_set_defaults_12_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_12")]
 
             public static extern unsafe void jpeg_set_quality_12_Windows64(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_12")]
 
             public static extern unsafe void jpeg_simple_progression_12_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_12")]
 
             public static extern unsafe void jpeg_simple_lossless_12_Windows64(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_12")]
 
             public static extern unsafe void jpeg_set_colorspace_12_Windows64(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_12")]
 
             public static extern unsafe void jpeg_start_compress_12_Windows64(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
 
             public static extern unsafe uint jpeg_write_scanlines_12_Windows64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
 
             public static extern unsafe void jpeg_finish_compress_12_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_12")]
 
             public static extern unsafe void jpeg_destroy_compress_12_Windows64(ref j_compress_ptr cinfo);
 
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
 
             public static extern unsafe void jpeg_create_decompress_12_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
 
             public static extern unsafe int jpeg_read_header_12_Windows64(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_12_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
 
             public static extern unsafe int jpeg_start_decompress_12_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
 
             public static extern unsafe uint jpeg_read_scanlines_12_Windows64(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
 
             public static extern unsafe void jpeg_destroy_decompress_12_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
 
             public static extern unsafe int jpeg_resync_to_restart_12_Windows64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
 
             public static extern unsafe void format_message_12_Windows64(ref j_common_ptr cinfo, char[] buffer);
 
@@ -1142,82 +1142,82 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_12")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_12_Linux64(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_12")]
 
             public static extern unsafe void jpeg_create_compress_12_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_12")]
 
             public static extern unsafe void jpeg_set_defaults_12_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_12")]
 
             public static extern unsafe void jpeg_set_quality_12_Linux64(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_12")]
 
             public static extern unsafe void jpeg_simple_progression_12_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_12")]
 
             public static extern unsafe void jpeg_simple_lossless_12_Linux64(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_12")]
 
             public static extern unsafe void jpeg_set_colorspace_12_Linux64(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_12")]
 
             public static extern unsafe void jpeg_start_compress_12_Linux64(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
 
             public static extern unsafe uint jpeg_write_scanlines_12_Linux64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
 
             public static extern unsafe void jpeg_finish_compress_12_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_12")]
 
             public static extern unsafe void jpeg_destroy_compress_12_Linux64(ref j_compress_ptr cinfo);
 
             
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
 
             public static extern unsafe void jpeg_create_decompress_12_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
 
             public static extern unsafe int jpeg_read_header_12_Linux64(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_12_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
 
             public static extern unsafe int jpeg_start_decompress_12_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
 
             public static extern unsafe uint jpeg_read_scanlines_12_Linux64(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
 
             public static extern unsafe void jpeg_destroy_decompress_12_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
 
             public static extern unsafe int jpeg_resync_to_restart_12_Linux64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
 
             public static extern unsafe void format_message_12_Linux64(ref j_common_ptr cinfo, char[] buffer);
 
@@ -1226,82 +1226,82 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_12")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_12_MacOS(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_12")]
 
             public static extern unsafe void jpeg_create_compress_12_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_12")]
 
             public static extern unsafe void jpeg_set_defaults_12_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_12")]
 
             public static extern unsafe void jpeg_set_quality_12_MacOS(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_12")]
 
             public static extern unsafe void jpeg_simple_progression_12_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_12")]
 
             public static extern unsafe void jpeg_simple_lossless_12_MacOS(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_12")]
 
             public static extern unsafe void jpeg_set_colorspace_12_MacOS(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_12")]
 
             public static extern unsafe void jpeg_start_compress_12_MacOS(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
 
             public static extern unsafe uint jpeg_write_scanlines_12_MacOS(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
 
             public static extern unsafe void jpeg_finish_compress_12_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_12")]
 
             public static extern unsafe void jpeg_destroy_compress_12_MacOS(ref j_compress_ptr cinfo);
 
             
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
 
             public static extern unsafe void jpeg_create_decompress_12_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
 
             public static extern unsafe int jpeg_read_header_12_MacOS(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_12_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
 
             public static extern unsafe int jpeg_start_decompress_12_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
 
             public static extern unsafe uint jpeg_read_scanlines_12_MacOS(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
 
             public static extern unsafe void jpeg_destroy_decompress_12_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
 
             public static extern unsafe int jpeg_resync_to_restart_12_MacOS(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
 
             public static extern unsafe void format_message_12_MacOS(ref j_common_ptr cinfo, char[] buffer);
 
@@ -1309,82 +1309,82 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_16")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_16_Windows64(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_16")]
 
             public static extern unsafe void jpeg_create_compress_16_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_16")]
 
             public static extern unsafe void jpeg_set_defaults_16_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_16")]
 
             public static extern unsafe void jpeg_set_quality_16_Windows64(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_16")]
 
             public static extern unsafe void jpeg_simple_progression_16_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_16")]
 
             public static extern unsafe void jpeg_simple_lossless_16_Windows64(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_16")]
 
             public static extern unsafe void jpeg_set_colorspace_16_Windows64(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_16")]
 
             public static extern unsafe void jpeg_start_compress_16_Windows64(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_16")]
 
             public static extern unsafe void jpeg_write_scanlines_16_Windows64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_16")]
 
             public static extern unsafe void jpeg_finish_compress_16_Windows64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_16")]
 
             public static extern unsafe void jpeg_destroy_compress_16_Windows64(ref j_compress_ptr cinfo);
 
             //Decode native functions
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
 
             public static extern unsafe void jpeg_create_decompress_16_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_16")]
 
             public static extern unsafe int jpeg_read_header_16_Windows64(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_16")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_16_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_16")]
 
             public static extern unsafe int jpeg_start_decompress_16_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
 
             public static extern unsafe uint jpeg_read_scanlines_16_Windows64(ref j_decompress_ptr dinfo, byte** scanlines,
                     uint max_lines);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
 
             public static extern unsafe void jpeg_destroy_decompress_16_Windows64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
 
             public static extern unsafe int jpeg_resync_to_restart_16_Windows64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
+            [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
 
             public static extern unsafe void format_message_16_Windows64(ref j_common_ptr cinfo, char[] buffer);
 
@@ -1392,83 +1392,83 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_16")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_16_Linux64(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_compress_16")]
 
             public static extern unsafe void jpeg_create_compress_16_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_defaults_16")]
 
             public static extern unsafe void jpeg_set_defaults_16_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_quality_16")]
 
             public static extern unsafe void jpeg_set_quality_16_Linux64(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_progression_16")]
 
             public static extern unsafe void jpeg_simple_progression_16_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_simple_lossless_16")]
 
             public static extern unsafe void jpeg_simple_lossless_16_Linux64(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_set_colorspace_16")]
 
             public static extern unsafe void jpeg_set_colorspace_16_Linux64(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_compress_16")]
 
             public static extern unsafe void jpeg_start_compress_16_Linux64(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_16")]
 
             public static extern unsafe void jpeg_write_scanlines_16_Linux64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_16")]
 
             public static extern unsafe void jpeg_finish_compress_16_Linux64(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_compress_16")]
 
             public static extern unsafe void jpeg_destroy_compress_16_Linux64(ref j_compress_ptr cinfo);
 
             //Decode native functions
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
 
             public static extern unsafe void jpeg_create_decompress_16_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_16")]
 
             public static extern unsafe int jpeg_read_header_16_Linux64(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_16")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_16_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_16")]
 
             public static extern unsafe int jpeg_start_decompress_16_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
 
             public static extern unsafe uint jpeg_read_scanlines_16_Linux64(ref j_decompress_ptr dinfo, byte** scanlines,
                     uint max_lines);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
 
             public static extern unsafe void jpeg_destroy_decompress_16_Linux64(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
 
             public static extern unsafe int jpeg_resync_to_restart_16_Linux64(ref j_decompress_ptr dinfo, int desired);
 
 
-            [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
+            [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
 
             public static extern unsafe void format_message_16_Linux64(ref j_common_ptr cinfo, char[] buffer);
 
@@ -1477,83 +1477,83 @@ namespace Dicom.Imaging.NativeCodec
 
             //Encode Native functions
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_std_error_16")]
 
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_16_MacOS(ref jpeg_error_mgr err);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_create_compress_16")]
 
             public static extern unsafe void jpeg_create_compress_16_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_defaults_16")]
 
             public static extern unsafe void jpeg_set_defaults_16_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_quality_16")]
 
             public static extern unsafe void jpeg_set_quality_16_MacOS(ref j_compress_ptr cinfo, int quality, int force_baseline);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_progression_16")]
 
             public static extern unsafe void jpeg_simple_progression_16_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_simple_lossless_16")]
 
             public static extern unsafe void jpeg_simple_lossless_16_MacOS(ref j_compress_ptr cinfo, int predictor, int point_transform);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_set_colorspace_16")]
 
             public static extern unsafe void jpeg_set_colorspace_16_MacOS(ref j_compress_ptr cinfo, J_COLOR_SPACE in_color_space);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_start_compress_16")]
 
             public static extern unsafe void jpeg_start_compress_16_MacOS(ref j_compress_ptr cinfo, int write_all_tables);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_16")]
 
             public static extern unsafe uint jpeg_write_scanlines_16_MacOS(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_16")]
 
             public static extern unsafe void jpeg_finish_compress_16_MacOS(ref j_compress_ptr cinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, EntryPoint = "jpeg_destroy_compress_16")]
 
             public static extern unsafe void jpeg_destroy_compress_16_MacOS(ref j_compress_ptr cinfo);
 
             
             //Decode Native functions
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_16")]
 
             public static extern unsafe void jpeg_create_decompress_16_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_16")]
 
             public static extern unsafe int jpeg_read_header_16_MacOS(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_16")]
 
             public static extern unsafe void jpeg_calc_output_dimensions_16_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_16")]
 
             public static extern unsafe int jpeg_start_decompress_16_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
 
             public static extern unsafe uint jpeg_read_scanlines_16_MacOS(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
 
             public static extern unsafe void jpeg_destroy_decompress_16_MacOS(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
 
             public static extern unsafe int jpeg_resync_to_restart_16_MacOS(ref j_decompress_ptr dinfo, int desired);
 
 
-            [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
+            [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
 
             public static extern unsafe void format_message_16_MacOS(ref j_common_ptr cinfo, char[] buffer);
 

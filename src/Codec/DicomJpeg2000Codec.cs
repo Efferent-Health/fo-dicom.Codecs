@@ -560,183 +560,183 @@ namespace Dicom.Imaging.NativeCodec
     public abstract class DicomJpeg2000NativeCodec : DicomJpeg2000Codec
     {
         //Encode JPEG2000 for Windows
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
 
         public static extern unsafe opj_cinfo_t* Opj_create_compress_Windows64(OPJ_CODEC_FORMAT format);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
 
         public static extern unsafe opj_event_mgr_t* Opj_set_event_mgr_Windows64(opj_common_ptr* cinfo, opj_event_mgr_t* e, void* context);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
 
         public static extern unsafe opj_image_t* Opj_image_create_Windows64(int numcmpts, ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
 
         public static extern unsafe void Opj_setup_encoder_Windows64(opj_cinfo_t* cinfo, ref opj_cparameters_t parameters, opj_image_t* image);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
         public static extern unsafe opj_cio_t* Opj_cio_open_Windows64(opj_common_ptr* cinfo, byte* buffer, int length);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
         public static extern unsafe int Opj_encode_Windows64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
 
         public static extern unsafe void Opj_cio_close_Windows64(opj_cio_t* cio);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
 
         public static extern unsafe void Opj_image_destroy_Windows64(opj_image_t* image);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
 
         public static extern unsafe void Opj_destroy_compress_Windows64(opj_cinfo_t* cinfo);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
 
         public static extern unsafe int Cio_tell_Windows64(opj_cio_t* cio);
 
 
         //Decode JPEG2000 for Windows
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
 
         public static extern unsafe opj_dinfo_t* Opj_create_decompress_Windows64(OPJ_CODEC_FORMAT format);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
 
         public static extern unsafe void Opj_setup_decoder_Windows64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
         public static extern unsafe opj_image_t* Opj_decode_Windows64(opj_dinfo_t* dinfo, opj_cio_t* cio);
 
-        [DllImport("Dicom.Codec.win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
+        [DllImport("fo-dicom.Codecs.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
         public static extern unsafe void Opj_destroy_decompress_Windows64(opj_dinfo_t* dinfo);
 
 
         //Encode JPEG2000 for Linux
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
 
         public static extern unsafe opj_cinfo_t* Opj_create_compress_Linux64(OPJ_CODEC_FORMAT format);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
 
         public static extern unsafe opj_event_mgr_t* Opj_set_event_mgr_Linux64(opj_common_ptr* cinfo, opj_event_mgr_t* e, void* context);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
 
         public static extern unsafe opj_image_t* Opj_image_create_Linux64(int numcmpts, ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
 
         public static extern unsafe void Opj_setup_encoder_Linux64(opj_cinfo_t* cinfo, ref opj_cparameters_t parameters, opj_image_t* image);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
         public static extern unsafe opj_cio_t* Opj_cio_open_Linux64(opj_common_ptr* cinfo, byte* buffer, int length);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
         public static extern unsafe int Opj_encode_Linux64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
 
         public static extern unsafe void Opj_cio_close_Linux64(opj_cio_t* cio);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
 
         public static extern unsafe void Opj_image_destroy_Linux64(opj_image_t* image);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
 
         public static extern unsafe void Opj_destroy_compress_Linux64(opj_cinfo_t* cinfo);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
 
         public static extern unsafe int Cio_tell_Linux64(opj_cio_t* cio);
 
 
         //Decode JPEG2000 for Linux
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
 
         public static extern unsafe opj_dinfo_t* Opj_create_decompress_Linux64(OPJ_CODEC_FORMAT format);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
 
         public static extern unsafe void Opj_setup_decoder_Linux64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
         public static extern unsafe opj_image_t* Opj_decode_Linux64(opj_dinfo_t* dinfo, opj_cio_t* cio);
 
-        [DllImport("Dicom.Codec.linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
+        [DllImport("fo-dicom.Codecs.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
         public static extern unsafe void Opj_destroy_decompress_Linux64(opj_dinfo_t* dinfo);
 
 
         //Encode JPEG2000 for MacOS
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
 
         public static extern unsafe opj_cinfo_t* Opj_create_compress_MacOS(OPJ_CODEC_FORMAT format);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_event_mgr")]
 
         public static extern unsafe opj_event_mgr_t* Opj_set_event_mgr_MacOS(opj_common_ptr* cinfo, opj_event_mgr_t* e, void* context);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_create")]
 
         public static extern unsafe opj_image_t* Opj_image_create_MacOS(int numcmpts, ref opj_image_cmptparm_t cmptparms, OPJ_COLOR_SPACE clrspc);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
 
         public static extern unsafe void Opj_setup_encoder_MacOS(opj_cinfo_t* cinfo, ref opj_cparameters_t parameters, opj_image_t* image);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
         public static extern unsafe opj_cio_t* Opj_cio_open_MacOS(opj_common_ptr* cinfo, byte* buffer, int length);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
         public static extern unsafe int Opj_encode_MacOS(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
 
         public static extern unsafe void Opj_cio_close_MacOS(opj_cio_t* cio);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
 
         public static extern unsafe void Opj_image_destroy_MacOS(opj_image_t* image);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
 
         public static extern unsafe void Opj_destroy_compress_MacOS(opj_cinfo_t* cinfo);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
 
         public static extern unsafe int Cio_tell_MacOS(opj_cio_t* cio);
 
         // Decode JPEG2000 for Linux
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
 
         public static extern unsafe opj_dinfo_t* Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT format);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
 
         public static extern unsafe void Opj_setup_decoder_MacOS(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
         public static extern unsafe opj_image_t* Opj_decode_MacOS(opj_dinfo_t* dinfo, opj_cio_t* cio);
 
-        [DllImport("Dicom.Codec.macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
+        [DllImport("fo-dicom.Codecs.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
         public static extern unsafe void Opj_destroy_decompress_MacOS(opj_dinfo_t* dinfo);
 
