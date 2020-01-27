@@ -3,8 +3,6 @@ using System.IO;
 using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
 
-using Dicom;
-using Dicom.Imaging;
 using Dicom.Imaging.Codec;
 using Dicom.Imaging.Codec.Jpeg;
 using Dicom.IO;

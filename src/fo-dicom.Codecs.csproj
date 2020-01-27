@@ -6,7 +6,7 @@
     <VersionPrefix>4.0.0-test1</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Dicom.Imaging.NativeCodec</RootNamespace>
-    <AssemblyName>fo-dicom.Codecs</AssemblyName>
+    <AssemblyName>Dicom.NativeCodecs</AssemblyName>
     <PackageId>fo-dicom.Codecs</PackageId>
     <PackageTags>dicom;dotnetcore;fo-dicom;codec;transfer-syntax</PackageTags>
     <RepositoryType>git</RepositoryType>

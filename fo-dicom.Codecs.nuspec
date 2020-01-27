@@ -16,7 +16,7 @@
 		</dependencies>
     </metadata>
     <files>
-        <file src="./bin/lib-managed/fo-dicom.Codecs.dll" target="lib/netstandard2.0" />
+        <file src="./bin/lib-managed/Dicom.NativeCodecs.dll" target="lib/netstandard2.0" />
         <file src="./bin/lib-windows64/fo-dicom.Codecs.Native-win64.dll" target="runtimes/win-x64/native" />
         <file src="./bin/lib-linux64/fo-dicom.Codecs.Native-linux64.so" target="runtimes/linux-x64/native" />
         <file src="./bin/lib-macOS/fo-dicom.Codecs.Native-macOS.dylib" target="runtimes/osx/native" />

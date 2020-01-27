@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Composition;
-using System.IO;
-using System.Reflection;
 
-using Dicom;
-using Dicom.Imaging;
 using Dicom.Imaging.Codec;
 using Dicom.IO;
 using Dicom.IO.Buffer;
