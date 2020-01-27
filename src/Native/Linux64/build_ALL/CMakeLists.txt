@@ -303,7 +303,7 @@ SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../OpenJPEG/openjpeg.h
 )
 
-add_library(fo-dicom.Codecs.Native-linux64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+add_library(Dicom.Native-linux64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
 
 #Setting properties for shared o dynamic library 
 set_target_properties(Dicom.Native-linux64
