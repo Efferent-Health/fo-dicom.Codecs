@@ -25,6 +25,6 @@
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
     <None Include="../src/Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
     <None Include="../src/Native/MacOS/build_ALL/bin/*.dylib" CopyToOutputDirectory="Always" />
-    <None Include="../src/Native/Windows64/build_ALL/bin/x64/Release/fo-dicom.Codecs.Native-win64/*.dll" CopyToOutputDirectory="Always" />
+    <None Include="../src/Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>
