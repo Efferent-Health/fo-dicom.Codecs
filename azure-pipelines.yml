@@ -1,5 +1,5 @@
 trigger:
-- master
+- transition
 
 stages:
 - stage: Build
