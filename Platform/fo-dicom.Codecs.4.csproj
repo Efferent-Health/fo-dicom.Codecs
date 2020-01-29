@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom codecs for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
-    <VersionPrefix>4.0.0-test1</VersionPrefix>
+    <VersionPrefix>4.0.0</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Dicom.Imaging.NativeCodec</RootNamespace>
     <AssemblyName>Dicom.NativeCodecs</AssemblyName>
     <PackageId>fo-dicom.Codecs</PackageId>
-    <PackageTags>dicom;dotnetcore;fo-dicom;codec;transfer-syntax</PackageTags>
+    <PackageTags>dicom;netcore;netstandard;fo-dicom;codec;transfer-syntax</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Efferent-Health/fo-dicom.Codecs</RepositoryUrl>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -18,6 +18,10 @@
   <ItemGroup>
     <PackageReference Include="fo-dicom.NetCore" Version="4.0.4"/>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../Codec/*.cs" />
   </ItemGroup>
 
 </Project>

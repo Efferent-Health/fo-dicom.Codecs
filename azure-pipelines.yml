@@ -11,21 +11,21 @@ stages:
     - task: MSBuild@1
       displayName: 'Compile libijg* libraries'
       inputs:
-        solution: "src/Native/Windows64/build_ALL/libijg*.x64.vcxproj"
+        solution: "Native/Windows64/build_ALL/libijg*.x64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: MSBuild@1
       displayName: 'Compile Windows library'
       inputs:
-        solution: "src/Native/Windows64/build_ALL/Dicom.Native-win64.vcxproj"
+        solution: "Native/Windows64/build_ALL/Dicom.Native-win64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
       displayName: Publish Windows artifacts
       inputs:
-        PathtoPublish: 'src/Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64'
+        PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -42,32 +42,32 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - script: |
-        cd src/Native/Linux64/build_ALL
+        cd Native/Linux64/build_ALL
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile Linux library'
     - task: PublishBuildArtifacts@1
       displayName: Publish Linux artifacts
       inputs:
-        PathtoPublish: 'src/Native/Linux64/build_ALL/bin'
+        PathtoPublish: 'Native/Linux64/build_ALL/bin'
         ArtifactName: 'lib-linux64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'src/fo-dicom.Codecs.csproj'
+        projects: 'fo-dicom.Codecs.4.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/fo-dicom.Codecs.csproj
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.Codecs.4.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'src/bin/Debug/netstandard2.0'
+        PathtoPublish: 'bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -84,32 +84,32 @@ stages:
       vmImage: 'macOS-10.13'
     steps:
     - script: |
-        cd src/Native/MacOS/build_ALL
+        cd Native/MacOS/build_ALL
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile MacOS library'
     - task: PublishBuildArtifacts@1
       displayName: Publish MacOS artifacts
       inputs:
-        PathtoPublish: 'src/Native/MacOS/build_ALL/bin'
+        PathtoPublish: 'Native/MacOS/build_ALL/bin'
         ArtifactName: 'lib-macOS'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'src/fo-dicom.Codecs.csproj'
+        projects: 'fo-dicom.Codecs.4.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' src/fo-dicom.Codecs.csproj
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.Codecs.4.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'src/bin/Debug/netstandard2.0'
+        PathtoPublish: 'bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -171,7 +171,7 @@ stages:
       inputs:
         command: 'pack'
         feedsToUse: 'select'
-        packagesToPack: '**/fo-dicom.Codecs.nuspec'
+        packagesToPack: '**/fo-dicom.Codecs.4.nuspec'
         versioningScheme: 'off'
     - task: NuGetCommand@2
       inputs:

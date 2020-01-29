@@ -18,13 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../src/fo-dicom.Codecs.csproj" />
+    <ProjectReference Include="../../Platform/fo-dicom.Codecs.4.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
-    <None Include="../src/Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
-    <None Include="../src/Native/MacOS/build_ALL/bin/*.dylib" CopyToOutputDirectory="Always" />
-    <None Include="../src/Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64/*.dll" CopyToOutputDirectory="Always" />
+    <None Include="../Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../Native/MacOS/build_ALL/bin/*.dylib" CopyToOutputDirectory="Always" />
+    <None Include="../Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>
