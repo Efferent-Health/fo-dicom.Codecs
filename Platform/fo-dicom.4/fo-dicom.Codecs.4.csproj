@@ -21,7 +21,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../Codec/*.cs" />
+    <Compile Include="../../Codec/DicomJpeg2000Codec.cs" >
+      <Link>Codec\DicomJpeg2000Codec.cs</Link>
+    </Compile>
+    <Compile Include="../../Codec/DicomJpegCodec.cs" >
+      <Link>Codec\DicomJpegCodec.cs</Link>
+    </Compile>
+    <Compile Include="../../Codec/DicomJpegLsCodec.cs" >
+      <Link>Codec\DicomJpegLsCodec.cs</Link>
+    </Compile>
+    <Compile Include="../../Codec/DicomRleCodec.cs" >
+      <Link>Codec\DicomRleCodec.cs</Link>
+    </Compile>
+    <Compile Include="../../Codec/NativeTranscoderManager.cs" >
+      <Link>Codec\NativeTranscoderManager.cs</Link>
+    </Compile>
   </ItemGroup>
 
 </Project>
