@@ -6,13 +6,13 @@
     "configurations": [
         
         {
-            "name": ".NET Core Test",
+            "name": ".NET Core Unit Test",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-test",
-            "program": "${workspaceFolder}/test/bin/Debug/netcoreapp2.1/Tests.dll",
+            "program": "${workspaceFolder}/Tests/Unit/bin/Debug/netcoreapp2.1/UnitTests.4.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/test",
+            "cwd": "${workspaceFolder}/Tests/Unit",
             "console": "internalConsole",
             "stopAtEntry": false
         },

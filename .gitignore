@@ -1,6 +1,5 @@
 **/bin
 **/obj
-/test/JPEG2000.dcm
 /Native/Linux64/build_ALL/
 /Native/Windows64/build_ALL/
 /Native/MacOS/build_ALL/

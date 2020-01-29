@@ -32,7 +32,7 @@ stages:
       displayName: Unit tests
       inputs:
         command: 'test'
-        projects: 'test/*.csproj'
+        projects: 'Tests/*.csproj'
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
@@ -62,7 +62,7 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.Codecs.4.csproj
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
@@ -104,7 +104,7 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.Codecs.4.csproj
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts

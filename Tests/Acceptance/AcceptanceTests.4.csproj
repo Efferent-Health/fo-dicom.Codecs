@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Platform/fo-dicom.Codecs.4.csproj" />
+    <ProjectReference Include="../../Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj" />
   </ItemGroup>
 
   <ItemGroup>

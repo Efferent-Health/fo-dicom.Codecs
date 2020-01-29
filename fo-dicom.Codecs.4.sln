@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fo-dicom.Codecs", "Platform\fo-dicom.Codecs.4.csproj", "{483BF66D-5662-4869-BC62-34FD0A86D8A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fo-dicom.Codecs", "Platform\fo-dicom.4\fo-dicom.Codecs.4.csproj", "{483BF66D-5662-4869-BC62-34FD0A86D8A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
