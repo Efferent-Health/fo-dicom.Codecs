@@ -1,5 +1,5 @@
 trigger:
-- transition
+- master
 
 stages:
 - stage: Build
@@ -32,7 +32,7 @@ stages:
       displayName: Unit tests
       inputs:
         command: 'test'
-        projects: 'Tests/*.csproj'
+        projects: 'Tests/Unit/*.csproj'
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
@@ -74,7 +74,7 @@ stages:
       displayName: Unit tests
       inputs:
         command: 'test'
-        projects: 'test/*.csproj'
+        projects: 'Tests/Unit/*.csproj'
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
@@ -116,7 +116,7 @@ stages:
       displayName: Unit tests
       inputs:
         command: 'test'
-        projects: 'test/*.csproj'
+        projects: 'Tests/Unit/*.csproj'
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
@@ -131,16 +131,16 @@ stages:
       displayName: Compliance tests
       inputs:
         command: 'test'
-        projects: 'test1/*.csproj'
-        testRunTitle: 'Compliance tests for GitHub'
+        projects: 'Tests/Acceptance/*.csproj'
+        testRunTitle: 'Acceptance tests for GitHub'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - task: ArchiveFiles@2
       displayName: Zip files
       inputs:
-        rootFolderOrFile: 'test1/bin/debug/netcoreapp2.1/out'
+        rootFolderOrFile: 'Tests/Acceptance/bin/debug/netcoreapp2.1/out'
         archiveType: 'zip'
-        archiveFile: 'test1/out/AcceptanceImages-win64-$(Build.BuildId).zip'
+        archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win64-$(Build.BuildId).zip'
     - task: GitHubRelease@0
       displayName: Release to GitHub
       inputs:
@@ -150,7 +150,7 @@ stages:
         target: '$(Build.SourceVersion)'
         tagSource: 'manual'
         tag: 'v$(csprojVersion)'
-        assets: 'test1/out/*.zip'  
+        assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
         releaseNotesFile: 'test1/bin/debug/netcoreapp2.1/out/Results.md'
 
