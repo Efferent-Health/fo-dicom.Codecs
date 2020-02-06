@@ -42,6 +42,8 @@ EXPORT_Charls CharlsApiResultType JpegLSEncode(void* destination, size_t destina
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
+
+		return CharlsApiResultType::UnsupportedEncoding;
     }
     
 }
@@ -54,6 +56,8 @@ EXPORT_Charls CharlsApiResultType JpegLSDecode(void * destination, int destinati
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
+
+		return CharlsApiResultType::UnexpectedFailure;
     }
     
 }

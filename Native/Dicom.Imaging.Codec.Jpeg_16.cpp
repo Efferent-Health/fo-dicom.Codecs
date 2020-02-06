@@ -60,6 +60,7 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
 					
 				}
@@ -85,7 +86,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_set_quality_16(j_compress_ptr cinfo, int quality, bool b) {
@@ -97,7 +97,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_simple_progression_16(j_compress_ptr cinfo) {
@@ -109,7 +108,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_simple_lossless_16(j_compress_ptr cinfo, int predictor, int point_transform) {
@@ -121,7 +119,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_set_colorspace_16(j_compress_ptr cinfo, J_COLOR_SPACE in_color_space) {
@@ -133,7 +130,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_start_compress_16(j_compress_ptr cinfo, bool b) {
@@ -145,7 +141,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-
 				}
 
 				EXPORT_libijg16 void jpeg_write_scanlines_16(j_compress_ptr cinfo, JSAMPARRAY scanlines, JDIMENSION num_lines) {
@@ -157,7 +152,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}					
-					
 				}
 
 				EXPORT_libijg16 void jpeg_finish_compress_16(j_compress_ptr cinfo) {
@@ -169,7 +163,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_destroy_compress_16(j_compress_ptr cinfo) {
@@ -181,7 +174,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				//Decode JPEG_16
@@ -195,7 +187,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 int jpeg_read_header_16(j_decompress_ptr dinfo, boolean require_image) {
@@ -206,8 +197,8 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
-					
 				}
 
 				EXPORT_libijg16 void jpeg_calc_output_dimensions_16(j_decompress_ptr dinfo) {
@@ -219,7 +210,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 int jpeg_start_decompress_16(j_decompress_ptr dinfo) {
@@ -230,8 +220,8 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
-					
 				} 
 
 				EXPORT_libijg16 unsigned int jpeg_read_scanlines_16(j_decompress_ptr dinfo, JSAMPARRAY scanlines,
@@ -243,8 +233,8 @@ namespace Dicom {
 						catch(const std::bad_alloc& e)
 						{
 							std::cerr << e.what() << '\n';
+							return NULL;
 						}
-						
 				}
 
 				EXPORT_libijg16 void jpeg_destroy_decompress_16(j_decompress_ptr dinfo) {
@@ -256,7 +246,6 @@ namespace Dicom {
 					{
 						std::cerr << e.what() << '\n';
 					}
-					
 				}
 
 				EXPORT_libijg16 boolean jpeg_resync_to_restart_16(j_decompress_ptr dinfo, int desired) {
@@ -267,8 +256,8 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
-					
 				}
 
 				EXPORT_libijg16 void format_message_16(j_common_ptr cinfo, char* buffer){

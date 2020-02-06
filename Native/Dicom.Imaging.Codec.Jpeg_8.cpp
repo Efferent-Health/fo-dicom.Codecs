@@ -60,6 +60,7 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
 					
 				}
@@ -72,8 +73,7 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
-					}
-					
+					}					
 				}
 
 				EXPORT_libijg8 void jpeg_set_defaults_8(j_compress_ptr cinfo) {
@@ -84,8 +84,7 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
-					}
-					
+					}					
 				}
 
 				EXPORT_libijg8 void jpeg_set_quality_8(j_compress_ptr cinfo, int quality, boolean force_baseline) {
@@ -156,8 +155,7 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
-					}
-					
+					}				
 				}
 
 				EXPORT_libijg8 void jpeg_finish_compress_8(j_compress_ptr cinfo) {
@@ -206,8 +204,8 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
-					}
-					
+						return NULL;
+					}				
 				}
 
 				EXPORT_libijg8 void jpeg_calc_output_dimensions_8(j_decompress_ptr dinfo) {
@@ -230,6 +228,7 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
 					
 				}
@@ -243,6 +242,7 @@ namespace Dicom {
 						catch(const std::bad_alloc& e)
 						{
 							std::cerr << e.what() << '\n';
+							return NULL;
 						}
 						
 				}
@@ -267,8 +267,8 @@ namespace Dicom {
 					catch(const std::bad_alloc& e)
 					{
 						std::cerr << e.what() << '\n';
+						return NULL;
 					}
-					
 				}
 
 				EXPORT_libijg8 void format_message_8(j_common_ptr cinfo, char* buffer){

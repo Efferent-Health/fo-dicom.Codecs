@@ -45,13 +45,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>Efferent.Native-win64</TargetName>
+    <TargetName>Dicom.Native-win64</TargetName>
     <OutDir>bin\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>Efferent.Native-win64</TargetName>
+    <TargetName>Dicom.Native-win64</TargetName>
     <OutDir>bin\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
