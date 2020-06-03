@@ -1204,12 +1204,23 @@ namespace Efferent.Native.Codec
                 unsafe
                 {
                     opj_dparameters_t dparams = new opj_dparameters_t();
-                    opj_event_mgr_t event_mgr = new opj_event_mgr_t();
+                    opj_event_mgr_t event_mgr ;//= new opj_event_mgr_t();
                     opj_image_t* image = null;
                     opj_dinfo_t* dinfo = null;
                     opj_cio_t* cio = null;
-
-                    Memset_Linux64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t) );
+                    
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        Memset_Linux64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        Memset_Windows64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        Memset_MacOS(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
+                    }
                     opj_msg_callback error_handler = opj_error_callback;
                     event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
 
@@ -1229,8 +1240,19 @@ namespace Efferent.Native.Codec
                     dparams.decod_format = -1;
                     dparams.cod_format = -1;
                     dparams.flags = 0;*/
-                    Opj_set_default_decoder_parameters_Linux64(&dparams);
-
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        Opj_set_default_decoder_parameters_Linux64(&dparams);
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        Opj_set_default_decoder_parameters_Windows64(&dparams);
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        Opj_set_default_decoder_parameters_MacOS(&dparams);
+                    }
+                    
                     dparams.cp_layer = 0;
                     dparams.cp_reduce = 0;
 
