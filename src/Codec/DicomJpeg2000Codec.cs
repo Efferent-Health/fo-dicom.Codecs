@@ -11,7 +11,12 @@ using Dicom.IO;
 using Dicom.IO.Buffer;
 
 namespace Efferent.Native.Codec
-{
+{   
+
+    [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
+    public unsafe delegate void opj_msg_callback(char *msg, void *client_data);
+
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct opj_event_mgr_t
     {
@@ -612,6 +617,10 @@ namespace Efferent.Native.Codec
 
         public static extern unsafe void Opj_setup_decoder_Windows64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
+        [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
+
+        public static extern unsafe void Opj_set_default_decoder_parameters_Windows64(opj_dparameters_t* parameters);
+
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
         public static extern unsafe opj_image_t* Opj_decode_Windows64(opj_dinfo_t* dinfo, opj_cio_t* cio);
@@ -619,6 +628,10 @@ namespace Efferent.Native.Codec
         [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
         public static extern unsafe void Opj_destroy_decompress_Windows64(opj_dinfo_t* dinfo);
+
+        [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
+
+        public static extern unsafe void Memset_Windows64(void * ptr, int value, uint num);
 
 
         //Encode JPEG2000 for Linux
@@ -673,6 +686,11 @@ namespace Efferent.Native.Codec
 
         public static extern unsafe void Opj_setup_decoder_Linux64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
+
+        [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
+
+        public static extern unsafe void Opj_set_default_decoder_parameters_Linux64(opj_dparameters_t* parameters);
+
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
         public static extern unsafe opj_image_t* Opj_decode_Linux64(opj_dinfo_t* dinfo, opj_cio_t* cio);
@@ -680,6 +698,10 @@ namespace Efferent.Native.Codec
         [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
         public static extern unsafe void Opj_destroy_decompress_Linux64(opj_dinfo_t* dinfo);
+
+        [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
+
+        public static extern unsafe void Memset_Linux64(void * ptr, int value, uint num);
 
 
         //Encode JPEG2000 for MacOS
@@ -724,15 +746,19 @@ namespace Efferent.Native.Codec
         public static extern unsafe int Cio_tell_MacOS(opj_cio_t* cio);
 
 
-        //Decode JPEG2000 for Linux
+        //Decode JPEG2000 for MacOS
 
         [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
 
         public static extern unsafe opj_dinfo_t* Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT format);
 
         [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
-
+        
         public static extern unsafe void Opj_setup_decoder_MacOS(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
+
+        public static extern unsafe void Opj_set_default_decoder_parameters_MacOS(opj_dparameters_t* parameters);
 
         [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
@@ -741,6 +767,10 @@ namespace Efferent.Native.Codec
         [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
         public static extern unsafe void Opj_destroy_decompress_MacOS(opj_dinfo_t* dinfo);
+
+        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
+
+        public static extern unsafe void Memset_MacOS(void * ptr, int value, uint num);
 
         public static OPJ_COLOR_SPACE getOpenJpegColorSpace(PhotometricInterpretation photometricInterpretation)
         {
@@ -755,6 +785,16 @@ namespace Efferent.Native.Codec
             else
                 return OPJ_COLOR_SPACE.CLRSPC_UNKNOWN;
         }
+
+        public static unsafe void opj_error_callback(char * msg, void * usr){
+            
+        }
+        public static unsafe void opj_warning_callback(char * msg, void * usr){
+
+        } 
+        public static unsafe void opj_info_callback(char * msg, void * usr){
+
+        }  
 
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
@@ -798,11 +838,12 @@ namespace Efferent.Native.Codec
                     opj_image_cmptparm_t[] cmptparm = new opj_image_cmptparm_t[3];
 
                     opj_cparameters_t eparams= new opj_cparameters_t();
-                    opj_event_mgr_t event_mgr;
+                    opj_event_mgr_t event_mgr = new opj_event_mgr_t();
                     opj_cinfo_t* cinfo= null;  /* handle to a compressor */
                     opj_image_t* image = null;
                     opj_cio_t* cio = null;
 
+                    
                     event_mgr.error_handler = IntPtr.Zero;
                     if (jparams.IsVerbose)
                     {
@@ -1163,24 +1204,32 @@ namespace Efferent.Native.Codec
                 unsafe
                 {
                     opj_dparameters_t dparams = new opj_dparameters_t();
-                    opj_event_mgr_t event_mgr;
+                    opj_event_mgr_t event_mgr = new opj_event_mgr_t();
                     opj_image_t* image = null;
                     opj_dinfo_t* dinfo = null;
                     opj_cio_t* cio = null;
 
-                    event_mgr.error_handler = IntPtr.Zero;
+                    Memset_Linux64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t) );
+                    opj_msg_callback error_handler = opj_error_callback;
+                    event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
+
                     if (jparams.IsVerbose)
-                    {
-                        event_mgr.warning_handler = IntPtr.Zero;
-                        event_mgr.info_handler = IntPtr.Zero;
+                    {   
+                        opj_msg_callback warning_handler = opj_warning_callback;
+                        event_mgr.warning_handler = Marshal.GetFunctionPointerForDelegate((warning_handler));
+
+                        opj_msg_callback info_handler = opj_info_callback;
+                        event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
                     }
 
-                    dparams.cp_layer = 0;
+                    /*dparams.cp_layer = 0;
                     dparams.cp_reduce = 0;
                     dparams.cp_limit_decoding = OPJ_LIMIT_DECODING.NO_LIMITATION;
+
                     dparams.decod_format = -1;
                     dparams.cod_format = -1;
-                    dparams.flags = 0;
+                    dparams.flags = 0;*/
+                    Opj_set_default_decoder_parameters_Linux64(&dparams);
 
                     dparams.cp_layer = 0;
                     dparams.cp_reduce = 0;
@@ -1191,7 +1240,7 @@ namespace Efferent.Native.Codec
                         {
                             dinfo = Opj_create_decompress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
 
-                            Opj_set_event_mgr_Linux64((opj_common_ptr*)dinfo, null, null);
+                            Opj_set_event_mgr_Linux64((opj_common_ptr*)dinfo, &event_mgr, null);
 
                             Opj_setup_decoder_Linux64(dinfo, &dparams);
 
@@ -1200,7 +1249,7 @@ namespace Efferent.Native.Codec
                         {
                             dinfo = Opj_create_decompress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
 
-                            Opj_set_event_mgr_Windows64((opj_common_ptr*)dinfo, null, null);
+                            Opj_set_event_mgr_Windows64((opj_common_ptr*)dinfo, &event_mgr, null);
 
                             Opj_setup_decoder_Windows64(dinfo, &dparams);
                         }
@@ -1208,17 +1257,19 @@ namespace Efferent.Native.Codec
                         {
                             dinfo = Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT.CODEC_J2K);
 
-                            Opj_set_event_mgr_MacOS((opj_common_ptr*)dinfo, null, null);
+                            Opj_set_event_mgr_MacOS((opj_common_ptr*)dinfo, &event_mgr, null);
 
                             Opj_setup_decoder_MacOS(dinfo, &dparams);
                         }
 
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
+                        Console.WriteLine("cio C# {0}",sizeof(opj_cio_t));
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
+                            Console.WriteLine("C# image {0}",sizeof(OPJ_COLOR_SPACE));
                             image = Opj_decode_Linux64(dinfo, cio);
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -1297,6 +1348,7 @@ namespace Efferent.Native.Codec
                                     {
                                         destData16[pos] = (ushort)comp->data[p];
                                         pos += offset;
+                                        //Console.WriteLine("{0}",comp->data[p]);
                                     }
                                 }
                             }

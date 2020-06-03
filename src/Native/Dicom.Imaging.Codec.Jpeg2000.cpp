@@ -16,6 +16,7 @@ extern "C"{
 extern "C"{
 #include "./Linux64/OpenJPEG/openjpeg.h"
 #include "./Linux64/OpenJPEG/j2k.h"
+# include <string.h>
 }
 
 #elif defined(__APPLE__)
@@ -210,6 +211,14 @@ EXPORT_OpenJPEG void Opj_destroy_decompress(opj_dinfo_t* dinfo){
         std::cerr << e.what() << '\n';
     }
     
+}
+
+EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parameters){
+    opj_set_default_decoder_parameters(parameters);
+}
+
+EXPORT_OpenJPEG void Memset(void * prt, int value ,size_t num){
+    memset(prt, value, num);
 }
 
 #ifdef __cplusplus
