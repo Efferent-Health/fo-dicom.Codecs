@@ -1264,12 +1264,10 @@ namespace Efferent.Native.Codec
 
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
-                        Console.WriteLine("cio C# {0}",sizeof(opj_cio_t));
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
-                            Console.WriteLine("C# image {0}",sizeof(OPJ_COLOR_SPACE));
                             image = Opj_decode_Linux64(dinfo, cio);
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
