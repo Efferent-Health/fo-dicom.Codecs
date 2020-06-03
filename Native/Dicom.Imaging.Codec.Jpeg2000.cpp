@@ -16,6 +16,7 @@ extern "C"{
 extern "C"{
 #include "./Linux64/OpenJPEG/openjpeg.h"
 #include "./Linux64/OpenJPEG/j2k.h"
+# include <string.h>
 }
 
 #elif defined(__APPLE__)
@@ -50,8 +51,8 @@ EXPORT_OpenJPEG opj_cinfo_t* Opj_create_compress(OPJ_CODEC_FORMAT format){
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_event_mgr_t* e, void* context){
@@ -62,8 +63,8 @@ EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_eve
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
-    }  
+    }
+    
 }
 
 EXPORT_OpenJPEG opj_image_t* Opj_image_create(int numcmpts, opj_image_cmptparm_t* cmptparms, OPJ_COLOR_SPACE clrspc){
@@ -74,8 +75,8 @@ EXPORT_OpenJPEG opj_image_t* Opj_image_create(int numcmpts, opj_image_cmptparm_t
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* parameters, opj_image_t* image){
@@ -98,8 +99,8 @@ EXPORT_OpenJPEG opj_cio_t* Opj_cio_open(opj_common_ptr cinfo , unsigned char* bu
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, char* index){
@@ -110,8 +111,8 @@ EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* 
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 EXPORT_OpenJPEG void Opj_cio_close(opj_cio_t* cio){
@@ -158,8 +159,8 @@ EXPORT_OpenJPEG int Cio_tell(opj_cio_t* cio){
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 //Decode OpenJPEG
@@ -172,8 +173,8 @@ EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format){
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 EXPORT_OpenJPEG void Opj_setup_decoder(opj_dinfo_t* dinfo, opj_dparameters_t* parameters){
@@ -196,8 +197,8 @@ EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_dinfo_t* dinfo, opj_cio_t* cio){
     catch(const std::bad_alloc& e)
     {
         std::cerr << e.what() << '\n';
-		return NULL;
     }
+    
 }
 
 EXPORT_OpenJPEG void Opj_destroy_decompress(opj_dinfo_t* dinfo){
@@ -210,6 +211,14 @@ EXPORT_OpenJPEG void Opj_destroy_decompress(opj_dinfo_t* dinfo){
         std::cerr << e.what() << '\n';
     }
     
+}
+
+EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parameters){
+    opj_set_default_decoder_parameters(parameters);
+}
+
+EXPORT_OpenJPEG void Memset(void * prt, int value ,size_t num){
+    memset(prt, value, num);
 }
 
 #ifdef __cplusplus
