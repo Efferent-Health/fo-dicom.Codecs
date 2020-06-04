@@ -45,7 +45,6 @@ The functions in INT.H have for goal to realize operations on integers.
 /* ----------------------------------------------------------------------- */
 
 #ifdef HAVE_STDINT_H
-#include <stdint.h>
 #else
 #if defined(_WIN32)
 typedef   signed __int8   int8_t;
@@ -56,8 +55,13 @@ typedef   signed __int32  int32_t;
 typedef unsigned __int32  uint32_t;
 typedef   signed __int64  int64_t;
 typedef unsigned __int64  uint64_t;
-#else
-#error unsupported platform
+#elif defined(__linux__)
+	#include <inttypes.h>
+#elif defined(__APPLE__)
+	#include "TargetConditionals.h"
+    #ifdef TARGET_OS_MAC
+		#include <inttypes.h>
+    #endif
 #endif
 #endif
 
