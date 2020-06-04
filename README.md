@@ -30,7 +30,7 @@ The following CODECS are implemented:
 ## Usage
 
 - Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard or .NetCore project 
-- Add the standard fo-dicom nuget packages to your project (tested with 4.0.2)
+- Add the standard fo-dicom nuget packages to your project (tested with 4.0.5)
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Efferent.Native.Codec.NativeTranscoderManager());
