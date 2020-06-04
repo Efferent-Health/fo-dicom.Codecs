@@ -1204,7 +1204,7 @@ namespace Efferent.Native.Codec
                 unsafe
                 {
                     opj_dparameters_t dparams = new opj_dparameters_t();
-                    opj_event_mgr_t event_mgr ;//= new opj_event_mgr_t();
+                    opj_event_mgr_t event_mgr = new opj_event_mgr_t();
                     opj_image_t* image = null;
                     opj_dinfo_t* dinfo = null;
                     opj_cio_t* cio = null;
@@ -1233,13 +1233,6 @@ namespace Efferent.Native.Codec
                         event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
                     }
 
-                    /*dparams.cp_layer = 0;
-                    dparams.cp_reduce = 0;
-                    dparams.cp_limit_decoding = OPJ_LIMIT_DECODING.NO_LIMITATION;
-
-                    dparams.decod_format = -1;
-                    dparams.cod_format = -1;
-                    dparams.flags = 0;*/
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         Opj_set_default_decoder_parameters_Linux64(&dparams);
