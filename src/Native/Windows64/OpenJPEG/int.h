@@ -30,21 +30,21 @@
  */
 #ifndef __INT_H
 #define __INT_H
-/**
-@file int.h
-@brief Implementation of operations on integers (INT)
+ /**
+ @file int.h
+ @brief Implementation of operations on integers (INT)
+ The functions in INT.H have for goal to realize operations on integers.
+ */
 
-The functions in INT.H have for goal to realize operations on integers.
-*/
+ /** @defgroup INT INT - Implementation of operations on integers */
+ /*@{*/
 
-/** @defgroup INT INT - Implementation of operations on integers */
-/*@{*/
-
-/** @name Exported functions (see also openjpeg.h) */
-/*@{*/
-/* ----------------------------------------------------------------------- */
+ /** @name Exported functions (see also openjpeg.h) */
+ /*@{*/
+ /* ----------------------------------------------------------------------- */
 
 #ifdef HAVE_STDINT_H
+#include <stdint.h>
 #else
 #if defined(_WIN32)
 typedef   signed __int8   int8_t;
@@ -56,12 +56,12 @@ typedef unsigned __int32  uint32_t;
 typedef   signed __int64  int64_t;
 typedef unsigned __int64  uint64_t;
 #elif defined(__linux__)
-	#include <inttypes.h>
+#include <inttypes.h>
 #elif defined(__APPLE__)
-	#include "TargetConditionals.h"
-    #ifdef TARGET_OS_MAC
-		#include <inttypes.h>
-    #endif
+#include "TargetConditionals.h"
+#ifdef TARGET_OS_MAC
+#include <inttypes.h>
+#endif
 #endif
 #endif
 
@@ -85,7 +85,7 @@ Clamp an integer inside an interval
 <ul>
 <li>Returns a if (min < a < max)
 <li>Returns max if (a > max)
-<li>Returns min if (a < min) 
+<li>Returns min if (a < min)
 </ul>
 */
 static INLINE int int_clamp(int a, int min, int max) {
@@ -113,7 +113,7 @@ Divide an integer by a power of 2 and round upwards
 @return Returns a divided by 2^b
 */
 static INLINE int int_ceildivpow2(int a, int b) {
-    return (int)((a + (int64_t)(1 << b) - 1) >> b);
+	return (int)((a + (int64_t)(1 << b) - 1) >> b);
 }
 /**
 Divide an integer by a power of 2 and round downwards
