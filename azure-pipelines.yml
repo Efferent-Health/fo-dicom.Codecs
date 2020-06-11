@@ -98,7 +98,7 @@ stages:
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'fo-dicom.Codecs.4.csproj'
+        projects: 'Platoform/fo-dicom.4/fo-dicom.Codecs.4.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
@@ -109,7 +109,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'bin/Debug/netstandard2.0'
+        PathtoPublish: 'Platform/fo-dicom.4/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
