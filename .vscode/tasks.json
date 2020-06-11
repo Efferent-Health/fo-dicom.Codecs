@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/test/Tests.csproj"
+                "${workspaceFolder}/Tests/Unit/UnitTests.4.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -20,7 +20,7 @@
             ],
             "options":
             {
-                "cwd": "${workspaceFolder}/test"
+                "cwd": "${workspaceFolder}/Tests/Unit"
             },
             "problemMatcher": "$tsc"
         },
@@ -30,7 +30,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/dicom-native.csproj"
+                "${workspaceFolder}/Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -40,7 +40,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/dicom-native.csproj"
+                "${workspaceFolder}/Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -51,7 +51,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/dicom-native.csproj"
+                "${workspaceFolder}/Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj"
             ],
             "problemMatcher": "$tsc"
         }

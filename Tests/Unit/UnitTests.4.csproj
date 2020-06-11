@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GenerateProgramFile>false</GenerateProgramFile>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+<<<<<<< HEAD:test/Tests.csproj
+    <PackageReference Include="fo-dicom.NetCore" Version="4.0.5"/>
+=======
+    <PackageReference Include="fo-dicom.NetCore" Version="4.0.4"/>
+>>>>>>> transition:Tests/Unit/UnitTests.4.csproj
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="./*.dcm" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/MacOS/build_ALL/bin/*.dylib" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64/*.dll" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+</Project>
