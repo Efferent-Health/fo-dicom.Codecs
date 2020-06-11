@@ -28,14 +28,11 @@ The following CODECS are implemented:
 
 ## Usage
 
-<<<<<<< HEAD
 - Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard or .NetCore project 
 - Add the standard fo-dicom nuget packages to your project (tested with 4.0.5)
-=======
 ### With fo-dicom 4.0
 - Add the [nuget package](https://www.nuget.org/packages/fo-dicom.Codecs) to your .Net Standard or .Net Core project (minimum version is 2.0) 
 - Add the standard fo-dicom nuget packages to your project (version 4.0.x)
->>>>>>> transition
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());

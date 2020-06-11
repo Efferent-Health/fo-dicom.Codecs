@@ -10,11 +10,8 @@ using Dicom.Imaging.Codec;
 using Dicom.IO;
 using Dicom.IO.Buffer;
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-namespace Efferent.Native.Codec
-=======
+
 namespace Dicom.Native.Codec
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 {   
 
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
@@ -621,19 +618,11 @@ namespace Dicom.Native.Codec
 
         public static extern unsafe void Opj_setup_decoder_Windows64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-        [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
-
-        public static extern unsafe void Opj_set_default_decoder_parameters_Windows64(opj_dparameters_t* parameters);
-
-        [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
-=======
         [DllImport("Dicom.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
 
         public static extern unsafe void Opj_set_default_decoder_parameters_Windows64(opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 
         public static extern unsafe opj_image_t* Opj_decode_Windows64(opj_dinfo_t* dinfo, opj_cio_t* cio);
 
@@ -641,12 +630,7 @@ namespace Dicom.Native.Codec
 
         public static extern unsafe void Opj_destroy_decompress_Windows64(opj_dinfo_t* dinfo);
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-        [DllImport("Efferent.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
-=======
         [DllImport("Dicom.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
-
         public static extern unsafe void Memset_Windows64(void * ptr, int value, uint num);
 
 
@@ -703,19 +687,11 @@ namespace Dicom.Native.Codec
         public static extern unsafe void Opj_setup_decoder_Linux64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
 
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-        [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
-
-        public static extern unsafe void Opj_set_default_decoder_parameters_Linux64(opj_dparameters_t* parameters);
-
-        [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
-=======
         [DllImport("Dicom.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
 
         public static extern unsafe void Opj_set_default_decoder_parameters_Linux64(opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 
         public static extern unsafe opj_image_t* Opj_decode_Linux64(opj_dinfo_t* dinfo, opj_cio_t* cio);
 
@@ -723,11 +699,7 @@ namespace Dicom.Native.Codec
 
         public static extern unsafe void Opj_destroy_decompress_Linux64(opj_dinfo_t* dinfo);
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-        [DllImport("Efferent.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
-=======
         [DllImport("Dicom.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 
         public static extern unsafe void Memset_Linux64(void * ptr, int value, uint num);
 
@@ -780,17 +752,6 @@ namespace Dicom.Native.Codec
 
         public static extern unsafe opj_dinfo_t* Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT format);
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
-        
-        public static extern unsafe void Opj_setup_decoder_MacOS(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
-
-        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
-
-        public static extern unsafe void Opj_set_default_decoder_parameters_MacOS(opj_dparameters_t* parameters);
-
-        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
-=======
         [DllImport("Dicom.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
         
         public static extern unsafe void Opj_setup_decoder_MacOS(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
@@ -800,7 +761,6 @@ namespace Dicom.Native.Codec
         public static extern unsafe void Opj_set_default_decoder_parameters_MacOS(opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 
         public static extern unsafe opj_image_t* Opj_decode_MacOS(opj_dinfo_t* dinfo, opj_cio_t* cio);
 
@@ -808,11 +768,7 @@ namespace Dicom.Native.Codec
 
         public static extern unsafe void Opj_destroy_decompress_MacOS(opj_dinfo_t* dinfo);
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
-        [DllImport("Efferent.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
-=======
         [DllImport("Dicom.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 
         public static extern unsafe void Memset_MacOS(void * ptr, int value, uint num);
 
@@ -1252,25 +1208,10 @@ namespace Dicom.Native.Codec
                     opj_image_t* image = null;
                     opj_dinfo_t* dinfo = null;
                     opj_cio_t* cio = null;
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
                     
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         Memset_Linux64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
-=======
-
-                    Memset_Linux64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t) );
-                    opj_msg_callback error_handler = opj_error_callback;
-                    event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
-
-                    if (jparams.IsVerbose)
-                    {   
-                        opj_msg_callback warning_handler = opj_warning_callback;
-                        event_mgr.warning_handler = Marshal.GetFunctionPointerForDelegate((warning_handler));
-
-                        opj_msg_callback info_handler = opj_info_callback;
-                        event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
                     }
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -1283,7 +1224,6 @@ namespace Dicom.Native.Codec
                     opj_msg_callback error_handler = opj_error_callback;
                     event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
 
-<<<<<<< HEAD:src/Codec/DicomJpeg2000Codec.cs
                     if (jparams.IsVerbose)
                     {   
                         opj_msg_callback warning_handler = opj_warning_callback;
@@ -1292,16 +1232,6 @@ namespace Dicom.Native.Codec
                         opj_msg_callback info_handler = opj_info_callback;
                         event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
                     }
-=======
-                    /*dparams.cp_layer = 0;
-                    dparams.cp_reduce = 0;
-                    dparams.cp_limit_decoding = OPJ_LIMIT_DECODING.NO_LIMITATION;
-
-                    dparams.decod_format = -1;
-                    dparams.cod_format = -1;
-                    dparams.flags = 0;*/
-                    Opj_set_default_decoder_parameters_Linux64(&dparams);
->>>>>>> transition:Codec/DicomJpeg2000Codec.cs
 
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {

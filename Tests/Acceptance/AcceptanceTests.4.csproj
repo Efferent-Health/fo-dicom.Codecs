@@ -14,15 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD:test1/Tests.csproj
     <PackageReference Include="fo-dicom.NetCore" Version="4.0.5" />
-=======
-    <PackageReference Include="fo-dicom.NetCore" Version="4.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj" />
->>>>>>> transition:Tests/Acceptance/AcceptanceTests.4.csproj
   </ItemGroup>
 
   <ItemGroup>

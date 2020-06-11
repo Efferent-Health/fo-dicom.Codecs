@@ -17,11 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD:test/Tests.csproj
     <PackageReference Include="fo-dicom.NetCore" Version="4.0.5"/>
-=======
-    <PackageReference Include="fo-dicom.NetCore" Version="4.0.4"/>
->>>>>>> transition:Tests/Unit/UnitTests.4.csproj
   </ItemGroup>
 
   <ItemGroup>
