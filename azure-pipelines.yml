@@ -98,7 +98,7 @@ stages:
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'Platoform/fo-dicom.4/fo-dicom.Codecs.4.csproj'
+        projects: 'Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
