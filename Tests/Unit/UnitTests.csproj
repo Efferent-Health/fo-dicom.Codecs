@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj" />
+    <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom.NetCore" Version="4.0.5"/>
+    <PackageReference Include="fo-dicom.NetCore" Version="4.0.5"/> <!-- TODO: Reference version 5 -->
   </ItemGroup>
 
   <ItemGroup>

@@ -28,10 +28,10 @@ The following CODECS are implemented:
 
 ## Usage
 
-- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .Net Standard or .NetCore project 
+- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native) to your .net Standard or .net Core project 
 - Add the standard fo-dicom nuget packages to your project (tested with 4.0.5)
 ### With fo-dicom 4.0
-- Add the [nuget package](https://www.nuget.org/packages/fo-dicom.Codecs) to your .Net Standard or .Net Core project (minimum version is 2.0) 
+- Add the [nuget package](https://www.nuget.org/packages/fo-dicom.Codecs) to your .net Standard or .net Core project (minimum version is 2.0) 
 - Add the standard fo-dicom nuget packages to your project (version 4.0.x)
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#

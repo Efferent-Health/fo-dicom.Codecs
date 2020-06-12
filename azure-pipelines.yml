@@ -56,18 +56,18 @@ stages:
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj'
+        projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'Platform/fo-dicom.4/bin/Debug/netstandard2.0'
+        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -98,18 +98,18 @@ stages:
       displayName: Compile managed library
       inputs:
         command: 'build'
-        projects: 'Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj'
+        projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
         arguments: '--configuration Debug'
         configuration: 'Debug'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
-        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom.4/fo-dicom.Codecs.4.csproj
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
       name: setvarStep
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'Platform/fo-dicom.4/bin/Debug/netstandard2.0'
+        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -152,7 +152,7 @@ stages:
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
-        releaseNotesFile: 'test1/bin/debug/netcoreapp2.1/out/Results.md'
+        releaseNotesFile: 'Tests/bin/debug/netcoreapp2.1/out/Results.md'
 
 - stage: Deploy
   jobs:
@@ -171,7 +171,7 @@ stages:
       inputs:
         command: 'pack'
         feedsToUse: 'select'
-        packagesToPack: '**/fo-dicom.Codecs.4.nuspec'
+        packagesToPack: '**/fo-dicom.Codecs.nuspec'
         versioningScheme: 'off'
     - task: NuGetCommand@2
       inputs:
