@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Composition;
-using System.IO;
-using System.Reflection;
 
-using Dicom;
 using Dicom.Imaging;
 using Dicom.Imaging.Codec;
 using Dicom.IO;
 using Dicom.IO.Buffer;
 
-
 namespace Dicom.Native.Codec
 {   
-
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate void opj_msg_callback(char *msg, void *client_data);
-
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct opj_event_mgr_t
@@ -68,7 +62,6 @@ namespace Dicom.Native.Codec
     {
         /** open mode (read/write) either OPJ_STREAM_READ or OPJ_STREAM_WRITE */
         public opj_common_ptr* cinfo;
-
         public int openmode;
         /** pointer to the start of the buffer */
         public byte* buffer;
@@ -120,6 +113,7 @@ namespace Dicom.Native.Codec
         /** image component data */
         public int* data;
     }
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct opj_image_t
     {
@@ -150,6 +144,7 @@ namespace Dicom.Native.Codec
         CINEMA2K = 3,       /** Profile name for a 2K image*/
         CINEMA4K = 4		/** Profile name for a 4K image*/
     }
+
     [Flags]
     public enum OPJ_CINEMA_MODE
     {
@@ -174,7 +169,6 @@ namespace Dicom.Native.Codec
     public unsafe struct opj_cparameters_t
     {
         public int tile_size_on;
-
         public int cp_tx0;
         /** YTOsiz */
         public int cp_ty0;
@@ -194,9 +188,7 @@ namespace Dicom.Native.Codec
         public unsafe int* cp_comment;
         /** csty : coding style */
         public int csty;
-
         public OPJ_PROG_ORDER prog_order;
-
         public opj_poc_t POC1;
         public opj_poc_t POC2;
         public opj_poc_t POC3;
@@ -229,7 +221,6 @@ namespace Dicom.Native.Codec
         public opj_poc_t POC30;
         public opj_poc_t POC31;
         public opj_poc_t POC32;
-
         public int numpocs;
         /** number of layers */
         public int tcp_numlayers;
@@ -253,7 +244,6 @@ namespace Dicom.Native.Codec
         public int roi_shift;
         /* number of precinct size specifications */
         public int res_spec;
-
         public unsafe fixed int prcw_init[33];
         /** initial precinct height */
         public unsafe fixed int prch_init[33];
@@ -277,7 +267,6 @@ namespace Dicom.Native.Codec
         public int decod_format;
         /** output file format 0: J2K, 1: JP2, 2: JPT */
         public int cod_format;
-
         public int jpwl_epc_on;
         /** error protection method for MH (0,1,16,32,37-128) */
         public int jpwl_hprot_MH;
@@ -303,7 +292,6 @@ namespace Dicom.Native.Codec
         public unsafe fixed int jpwl_sens_TPH_tileno[16];
         /** sensitivity methods for TPHs (-1=no,0-7) */
         public unsafe fixed int jpwl_sens_TPH[16];
-
         public OPJ_CINEMA_MODE cp_cinema;
         /** Maximum rate for each component. If == 0, component size limitation is not considered */
         public int max_comp_size;
@@ -379,25 +367,15 @@ namespace Dicom.Native.Codec
     public unsafe struct opj_dparameters_t
     {
         public int cp_reduce;
-
         public int cp_layer;
-
         public unsafe fixed sbyte infile[4096];
-
         public unsafe fixed sbyte outfile[4096];
-
         public int decod_format;
-
         public int cod_format;
-
         public int jpwl_correct;
-
         public int jpwl_exp_comps;
-
         public int jpwl_max_tiles;
-
         public OPJ_LIMIT_DECODING cp_limit_decoding;
-
         public uint flags;
     }
 
@@ -415,28 +393,16 @@ namespace Dicom.Native.Codec
 
     public class DicomJpeg2000Params : DicomCodecParams
     {
-        private bool _irreversible;
-
-        private int _rate;
-
         private int[] _rates;
-
-        private bool _isVerbose;
-
-        private bool _enableMct;
-
-        private bool _updatePmi;
-
-        private bool _signedAsUnsigned;
 
         public DicomJpeg2000Params()
         {
-            _irreversible = true;
-            _rate = 20;
-            _isVerbose = false;
-            _enableMct = true;
-            _updatePmi = true;
-            _signedAsUnsigned = false;
+            Irreversible = true;
+            Rate = 20;
+            IsVerbose = false;
+            AllowMCT = true;
+            UpdatePhotometricInterpretation = true;
+            EncodeSignedPixelValuesAsUnsigned = false;
 
             _rates = new int[9];
             _rates[0] = 1280;
@@ -450,89 +416,13 @@ namespace Dicom.Native.Codec
             _rates[8] = 5;
         }
 
-        public bool Irreversible
-        {
-            get
-            {
-                return _irreversible;
-            }
-            set
-            {
-                _irreversible = value;
-            }
-        }
-
-        public int Rate
-        {
-            get
-            {
-                return _rate;
-            }
-            set
-            {
-                _rate = value;
-            }
-        }
-
-        public int[] RateLevels
-        {
-            get
-            {
-                return _rates;
-            }
-            set
-            {
-                _rates = value;
-            }
-        }
-
-        public bool IsVerbose
-        {
-            get
-            {
-                return _isVerbose;
-            }
-            set
-            {
-                _isVerbose = value;
-            }
-        }
-
-        public bool AllowMCT
-        {
-            get
-            {
-                return _enableMct;
-            }
-            set
-            {
-                _enableMct = value;
-            }
-        }
-
-        public bool UpdatePhotometricInterpretation
-        {
-            get
-            {
-                return _updatePmi;
-            }
-            set
-            {
-                _updatePmi = value;
-            }
-        }
-
-        public bool EncodeSignedPixelValuesAsUnsigned
-        {
-            get
-            {
-                return _signedAsUnsigned;
-            }
-            set
-            {
-                _signedAsUnsigned = value;
-            }
-        }
+        public bool Irreversible { get; set; }
+        public int Rate { get; set; }
+        public int[] RateLevels { get; set; }
+        public bool IsVerbose { get; set; }
+        public bool AllowMCT { get; set; }
+        public bool UpdatePhotometricInterpretation { get; set; }
+        public bool EncodeSignedPixelValuesAsUnsigned { get; set; }
     }
 
     public abstract class DicomJpeg2000Codec : IDicomCodec
@@ -563,7 +453,6 @@ namespace Dicom.Native.Codec
             DicomCodecParams parameters);
     };
 
-    //
     public abstract class DicomJpeg2000NativeCodec : DicomJpeg2000Codec
     {
         //Encode JPEG2000 for Windows

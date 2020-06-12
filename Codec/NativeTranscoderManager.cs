@@ -8,21 +8,16 @@ using Dicom.Log;
 namespace Dicom.Imaging.NativeCodec
 {
     /// <summary>
-    /// Implementation of <see cref="TranscoderManager"/> for Windows desktop (.NET) applications.
+    /// Implementation of <see cref="TranscoderManager"/>
     /// </summary>
     public sealed class NativeTranscoderManager : TranscoderManager
     {
-        #region FIELDS
         private static bool IsLoaded = false;
 
         /// <summary>
         /// Singleton instance of the <see cref="NativeTranscodeManager"/>.
         /// </summary>
         public static readonly TranscoderManager Instance;
-
-        #endregion
-
-        #region CONSTRUCTORS
 
         /// <summary>
         /// Initializes the static fields of <see cref="NativeTranscodeManager"/>.
@@ -39,10 +34,6 @@ namespace Dicom.Imaging.NativeCodec
         {
             this.LoadCodecsImpl(null, null);
         }
-
-        #endregion
-
-        #region METHODS
 
         /// <summary>
         /// Implementation of method to load codecs from assembly(ies) at the specified <paramref name="path"/> and 
@@ -82,7 +73,5 @@ namespace Dicom.Imaging.NativeCodec
                 System.Diagnostics.Debug.WriteLine($"Codecs found:\n{codecNames}");
             }
         }
-
-        #endregion
     }
 }
