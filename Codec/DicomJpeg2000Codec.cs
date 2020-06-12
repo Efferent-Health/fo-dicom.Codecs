@@ -414,6 +414,8 @@ namespace Dicom.Native.Codec
             _rates[6] = 20;
             _rates[7] = 10;
             _rates[8] = 5;
+
+            RateLevels = _rates;
         }
 
         public bool Irreversible { get; set; }
