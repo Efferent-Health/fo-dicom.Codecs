@@ -152,7 +152,7 @@ stages:
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
-        releaseNotesFile: 'Tests/bin/debug/netcoreapp2.1/out/Results.md'
+        releaseNotesFile: 'Tests/Acceptance/bin/debug/netcoreapp2.1/out/Results.md'
 
 - stage: Deploy
   jobs:
