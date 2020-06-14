@@ -16,9 +16,9 @@
 		</dependencies>
     </metadata>
     <files>
-        <file src="./bin/lib-managed/Dicom.NativeCodecs.dll" target="lib/netstandard2.0" />
-        <file src="./bin/lib-windows64/Dicom.Native-win64.dll" target="runtimes/win-x64/native" />
-        <file src="./bin/lib-linux64/Dicom.Native-linux64.so" target="runtimes/linux-x64/native" />
-        <file src="./bin/lib-macOS/Dicom.Native-macOS.dylib" target="runtimes/osx/native" />
+        <file src="../bin/lib-managed/Dicom.NativeCodecs.dll" target="lib/netstandard2.0" />
+        <file src="../bin/lib-windows64/Dicom.Native-win64.dll" target="runtimes/win-x64/native" />
+        <file src="../bin/lib-linux64/Dicom.Native-linux64.so" target="runtimes/linux-x64/native" />
+        <file src="../bin/lib-macOS/Dicom.Native-macOS.dylib" target="runtimes/osx/native" />
     </files>
 </package>
