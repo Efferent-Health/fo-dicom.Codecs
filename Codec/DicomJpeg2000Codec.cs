@@ -2,12 +2,13 @@
 using System.Runtime.InteropServices;
 using System.ComponentModel.Composition;
 
-using Dicom.Imaging;
-using Dicom.Imaging.Codec;
-using Dicom.IO;
-using Dicom.IO.Buffer;
+using FellowOakDicom.Imaging;
+using FellowOakDicom.Imaging.Codec;
+using FellowOakDicom.IO;
+using FellowOakDicom.IO.Buffer;
 
-namespace Dicom.Native.Codec
+
+namespace FellowOakDicom.Native.Codec
 {   
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate void opj_msg_callback(char *msg, void *client_data);

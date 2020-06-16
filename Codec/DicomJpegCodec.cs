@@ -3,15 +3,15 @@ using System.IO;
 using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
 
-using Dicom.Imaging.Codec;
-using Dicom.Imaging.Codec.Jpeg;
-using Dicom.IO;
-using Dicom.IO.Buffer;
-using Dicom.Log;
+using FellowOakDicom.Imaging.Codec;
+using FellowOakDicom.Imaging.Codec.Jpeg;
+using FellowOakDicom.IO;
+using FellowOakDicom.IO.Buffer;
+using FellowOakDicom.Log;
 
-using Dicom.Imaging.NativeCodec.Jpeg;
+using FellowOakDicom.Imaging.NativeCodec.Jpeg;
 
-namespace Dicom.Imaging.NativeCodec
+namespace FellowOakDicom.Imaging.NativeCodec
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct SourceManagerStruct

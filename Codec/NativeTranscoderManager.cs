@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Reflection;
 
-using Dicom.Imaging.Codec;
-using Dicom.Log;
+using FellowOakDicom.Imaging.Codec;
+using FellowOakDicom.Log;
 
 namespace Dicom.Imaging.NativeCodec
 {

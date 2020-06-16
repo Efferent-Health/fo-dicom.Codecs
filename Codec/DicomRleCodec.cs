@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 
-using Dicom.Imaging.Codec;
+using FellowOakDicom.Imaging.Codec;
 
-namespace Dicom.Imaging.NativeCodec
+namespace FellowOakDicom.Imaging.NativeCodec
 {    
     [Export(typeof(IDicomCodec))]
     public class DicomRleNativeCodec : DicomRleCodecImpl
