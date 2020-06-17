@@ -1248,7 +1248,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     format_message_8_MacOS(ref cinfo, buffer);
                 
-                LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
+                //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
             }
 
             public static unsafe int fillInputBuffer(ref j_decompress_ptr dinfo)
@@ -1439,7 +1439,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct) || (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct))
-                    throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG encoder!", oldPixelData.PhotometricInterpretation);
+                    throw new DicomCodecException($"Photometric Interpretation {oldPixelData.PhotometricInterpretation} not supported by JPEG encoder!");
 
                 PinnedByteArray frameArray = null;
 

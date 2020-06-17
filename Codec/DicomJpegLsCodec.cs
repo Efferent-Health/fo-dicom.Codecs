@@ -110,6 +110,78 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public abstract DicomTransferSyntax TransferSyntax { get; }
 
+            public enum DicomJpegLsInterleaveMode
+    {
+        None = 0,
+
+        Line = 1,
+
+        Sample = 2
+    };
+
+    public enum DicomJpegLsColorTransform
+    {
+        None = 0,
+
+        HP1 = 1,
+
+        HP2 = 2,
+
+        HP3 = 3
+    };
+
+    public class DicomJpegLsParams : DicomCodecParams
+    {
+        private int _allowedError;
+
+        private DicomJpegLsInterleaveMode _ilMode;
+
+        private DicomJpegLsColorTransform _colorTransform;
+
+        public DicomJpegLsParams()
+        {
+            _allowedError = 3;
+            _ilMode = DicomJpegLsInterleaveMode.Line;
+            _colorTransform = DicomJpegLsColorTransform.HP1;
+        }
+
+        public int AllowedError
+        {
+            get
+            {
+                return _allowedError;
+            }
+            set
+            {
+                _allowedError = value;
+            }
+        }
+
+        public DicomJpegLsInterleaveMode InterleaveMode
+        {
+            get
+            {
+                return _ilMode;
+            }
+            set
+            {
+                _ilMode = value;
+            }
+        }
+
+        public DicomJpegLsColorTransform ColorTransform
+        {
+            get
+            {
+                return _colorTransform;
+            }
+            set
+            {
+                _colorTransform = value;
+            }
+        }
+    }
+
         public DicomCodecParams GetDefaultParameters()
         {
             return new DicomJpegLsParams();
@@ -162,7 +234,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
             (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
             {
-                throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG-LS encoder", oldPixelData.PhotometricInterpretation);
+                throw new DicomCodecException($"Photometric Interpretation {oldPixelData.PhotometricInterpretation} not supported by JPEG-LS encoder");
             }
 
             DicomJpegLsParams jparams = (DicomJpegLsParams)parameters;

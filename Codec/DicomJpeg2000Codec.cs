@@ -698,10 +698,8 @@ namespace FellowOakDicom.Native.Codec
             unsafe {
                 if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
-                    throw new DicomCodecException("Photometric Interpretation '{0}' not supported by JPEG 2000 encoder",
-                    oldPixelData.PhotometricInterpretation);
-
-    
+                    throw new DicomCodecException($"Photometric Interpretation {oldPixelData.PhotometricInterpretation} not supported by JPEG 2000 encoder");
+ 
                 DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
 
                 if (jparams == null)
