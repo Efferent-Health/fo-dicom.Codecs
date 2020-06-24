@@ -7,11 +7,11 @@ using System.Reflection;
 using System.Drawing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Dicom;
-using Dicom.Imaging.Codec;
-using Dicom.Imaging;
+using FellowOakDicom;
+using FellowOakDicom.Imaging.Codec;
+using FellowOakDicom.Imaging;
 
-namespace Dicom.Imaging.NativeCodec.Test
+namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
     [TestClass]
     public class AcceptanceTests
@@ -51,7 +51,7 @@ namespace Dicom.Imaging.NativeCodec.Test
         [ClassInitialize]
         public static void Initialization(TestContext context)
         {
-            TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
+            //TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
             // Required for RenderImages test
             ImageManager.SetImplementation(WinFormsImageManager.Instance);
 
