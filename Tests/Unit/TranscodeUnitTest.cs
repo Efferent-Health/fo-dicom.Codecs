@@ -4,11 +4,12 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Dicom;
-using Dicom.Imaging.Codec;
-using Dicom.Imaging;
+using FellowOakDicom;
+using FellowOakDicom.Imaging.Codec;
+using FellowOakDicom.Imaging;
+using FellowOakDicom.Imaging.NativeCodec;
 
-namespace Dicom.Imaging.NativeCodec.Test
+namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
     [TestClass]
     public class TranscodeUnitTest
@@ -18,7 +19,7 @@ namespace Dicom.Imaging.NativeCodec.Test
         [TestInitialize]
         public void Initialization()
         {
-            TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
+            NativeTranscoderManager.SetImplementation();
 
             Directory.CreateDirectory("out");
         }
@@ -34,7 +35,7 @@ namespace Dicom.Imaging.NativeCodec.Test
         [DataRow("JPEGProcess1")]
         [DataRow("JPEGProcess2_4")]
         public void PerformTranscode8bits(string name)
-        {
+        {   
             var output = $"out/{name}8bits.dcm";
             var data = DicomFile.Open("test8bits.dcm");
 

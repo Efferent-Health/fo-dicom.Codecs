@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom.NetCore" Version="4.0.5"/> <!-- TODO: Reference version 5 -->
+    <PackageReference Include="fo-dicom" Version="5.0.0-alpha1"/>
   </ItemGroup>
 
   <ItemGroup>

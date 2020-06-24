@@ -1,6 +1,6 @@
-using Dicom.Imaging.Codec;
+using FellowOakDicom.Imaging.Codec;
 
-namespace Dicom.Imaging.NativeCodec.Test
+namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
     class Program
     {

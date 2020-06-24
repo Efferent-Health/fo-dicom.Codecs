@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 using FellowOakDicom.Imaging.Codec;
-using FellowOakDicom.Log;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
@@ -21,6 +21,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public NativeTranscoderManager()
         {
             LoadCodecs(null, null);
+        }
+
+        public static void SetImplementation()
+        {
+            var sc = new ServiceCollection();
+            sc.AddFellowOakDicom();
+            sc.AddTranscoderManager<NativeTranscoderManager>();
+            var pr = sc.BuildServiceProvider();
+            var h = new DefaultServiceProviderHost(pr);
+            
+            var assembly = typeof(FellowOakDicom.DicomSetupBuilder).Assembly;
+            var type = assembly.GetType("FellowOakDicom.Setup");
+            var method = type.GetMethod("SetupDI", new []{typeof(IServiceProviderHost)});
+            method.Invoke(null, new[]{h});
         }
 
         #endregion

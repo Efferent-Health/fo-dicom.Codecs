@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FellowOakDicom;
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.Imaging;
+using FellowOakDicom.Imaging.NativeCodec;
 
 namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
@@ -51,9 +52,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         [ClassInitialize]
         public static void Initialization(TestContext context)
         {
-            //TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
-            // Required for RenderImages test
-            ImageManager.SetImplementation(WinFormsImageManager.Instance);
+            NativeTranscoderManager.SetImplementation();
 
             resultsPerform = new string[filenames.Length][];
             resultsInverse = new string[filenames.Length][];

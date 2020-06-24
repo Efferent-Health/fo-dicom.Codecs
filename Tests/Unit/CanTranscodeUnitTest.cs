@@ -1,10 +1,11 @@
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Dicom;
-using Dicom.Imaging.Codec;
+using FellowOakDicom;
+using FellowOakDicom.Imaging.Codec;
+using FellowOakDicom.Imaging.NativeCodec;
 
-namespace Dicom.Imaging.NativeCodec.Test
+namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
     [TestClass]
     public class CanTranscodeUnitTest
@@ -12,7 +13,7 @@ namespace Dicom.Imaging.NativeCodec.Test
         [TestInitialize]
         public void Initialization()
         {
-            TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
+            NativeTranscoderManager.SetImplementation();
         }
 
         [DataTestMethod]
@@ -29,9 +30,11 @@ namespace Dicom.Imaging.NativeCodec.Test
         {
             const BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
             var ts = (DicomTransferSyntax)typeof(DicomTransferSyntax).GetField(name, binding).GetValue(0);
+            
+            var nativetranscoder = new NativeTranscoderManager();
+            Assert.IsTrue(nativetranscoder.CanTranscode(DicomTransferSyntax.ExplicitVRLittleEndian, ts));
+            Assert.IsTrue(nativetranscoder.CanTranscode(ts, DicomTransferSyntax.ExplicitVRLittleEndian));
 
-            Assert.IsTrue(TranscoderManager.CanTranscode(DicomTransferSyntax.ExplicitVRLittleEndian, ts));
-            Assert.IsTrue(TranscoderManager.CanTranscode(ts, DicomTransferSyntax.ExplicitVRLittleEndian));
         }
     }
 }
