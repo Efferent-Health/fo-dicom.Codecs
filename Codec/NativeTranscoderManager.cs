@@ -22,21 +22,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
             LoadCodecs(null, null);
         }
-
-        public static void SetImplementation()
-        {
-            var sc = new ServiceCollection();
-            sc.AddFellowOakDicom();
-            sc.AddTranscoderManager<NativeTranscoderManager>();
-            var pr = sc.BuildServiceProvider();
-            var h = new DefaultServiceProviderHost(pr);
-            
-            var assembly = typeof(FellowOakDicom.DicomSetupBuilder).Assembly;
-            var type = assembly.GetType("FellowOakDicom.Setup");
-            var method = type.GetMethod("SetupDI", new []{typeof(IServiceProviderHost)});
-            method.Invoke(null, new[]{h});
-        }
-
+        
         #endregion
 
         #region METHODS

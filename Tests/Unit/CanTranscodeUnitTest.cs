@@ -13,7 +13,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         [TestInitialize]
         public void Initialization()
         {
-            NativeTranscoderManager.SetImplementation();
+            //Setting fo-dicom.Codecs implementation into fo-dicom 5.0.0 
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
         }
 
         [DataTestMethod]

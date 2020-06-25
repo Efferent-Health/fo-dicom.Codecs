@@ -52,7 +52,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         [ClassInitialize]
         public static void Initialization(TestContext context)
         {
-            NativeTranscoderManager.SetImplementation();
+            //Setting fo-dicom.Codecs implementation into fo-dicom 5.0.0 
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
 
             resultsPerform = new string[filenames.Length][];
             resultsInverse = new string[filenames.Length][];
