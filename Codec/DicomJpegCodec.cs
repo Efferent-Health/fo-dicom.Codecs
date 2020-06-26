@@ -1912,7 +1912,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             jpeg_destroy_compress_16_MacOS(ref cinfo);
                         }
 
-                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && cinfo.jpeg_color_space == J_COLOR_SPACE.JCS_YCbCr)
+                        if (Mode == JpegMode.Baseline || Mode == JpegMode.Sequential)
                         {
                             if (jpegParams.SampleFactor == DicomJpegSampleFactor.SF422)
                             {
