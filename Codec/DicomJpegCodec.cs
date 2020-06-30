@@ -1912,16 +1912,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             jpeg_destroy_compress_16_MacOS(ref cinfo);
                         }
 
-                        if (Mode == JpegMode.Baseline || Mode == JpegMode.Sequential)
+                        if (jpegParams.SampleFactor == DicomJpegSampleFactor.SF422)
                         {
-                            if (jpegParams.SampleFactor == DicomJpegSampleFactor.SF422)
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                            }
-                            else
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
-                            }
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                        }
+                        else
+                        {
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
                         }
 
                         IByteBuffer buffer;
