@@ -152,7 +152,7 @@ stages:
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
-        releaseNotesFile: 'Tests/Acceptance/bin/debug/net5.0/out/Results.md'
+        releaseNotesFile: 'Tests/Acceptance/bin/Debug/net5.0/out/Results.md'
 
 - stage: Deploy
   jobs:
