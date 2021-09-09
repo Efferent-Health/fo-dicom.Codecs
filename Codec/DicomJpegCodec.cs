@@ -1912,13 +1912,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             jpeg_destroy_compress_16_MacOS(ref cinfo);
                         }
 
-                        if (jpegParams.SampleFactor == DicomJpegSampleFactor.SF422)
+                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
+                            && cinfo.jpeg_color_space == J_COLOR_SPACE.JCS_YCbCr)
                         {
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                        }
-                        else
-                        {
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
+                            if (jpegParams.SampleFactor == DicomJpegSampleFactor.SF422)
+                            {
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                            }
+                            else
+                            {
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
+                            }
                         }
 
                         IByteBuffer buffer;
