@@ -138,7 +138,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Zip files
       inputs:
-        rootFolderOrFile: 'Tests/Acceptance/bin/debug/netcoreapp2.1/out'
+        rootFolderOrFile: 'Tests/Acceptance/bin/debug/net5.0/out'
         archiveType: 'zip'
         archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win64-$(Build.BuildId).zip'
     - task: GitHubRelease@0
@@ -152,7 +152,7 @@ stages:
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
-        releaseNotesFile: 'Tests/Acceptance/bin/debug/netcoreapp2.1/out/Results.md'
+        releaseNotesFile: 'Tests/Acceptance/bin/debug/net5.0/out/Results.md'
 
 - stage: Deploy
   jobs:
