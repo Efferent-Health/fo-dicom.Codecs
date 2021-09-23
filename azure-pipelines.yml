@@ -39,7 +39,7 @@ stages:
   - job: Linux
     dependsOn: Windows
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-18.04'
     steps:
     - script: |
         cd Native/Linux64/build_ALL
