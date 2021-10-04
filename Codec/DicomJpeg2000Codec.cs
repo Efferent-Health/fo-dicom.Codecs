@@ -371,7 +371,7 @@ namespace FellowOakDicom.Native.Codec
         public int cp_layer;
         public unsafe fixed sbyte infile[4096];
         public unsafe fixed sbyte outfile[4096];
-        public int decod_format;
+        public OPJ_CODEC_FORMAT decod_format;
         public int cod_format;
         public int jpwl_correct;
         public int jpwl_exp_comps;
@@ -525,6 +525,9 @@ namespace FellowOakDicom.Native.Codec
         [DllImport("Dicom.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
         public static extern unsafe void Memset_Windows64(void * ptr, int value, uint num);
 
+        [DllImport("Dicom.Native-win64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCodecFormat")]
+        public static extern unsafe OPJ_CODEC_FORMAT GetCodecFormat_Windows64(byte* buffer);
+
 
         //Encode JPEG2000 for Linux
         [DllImport("Dicom.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
@@ -595,6 +598,9 @@ namespace FellowOakDicom.Native.Codec
 
         public static extern unsafe void Memset_Linux64(void * ptr, int value, uint num);
 
+        [DllImport("Dicom.Native-linux64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCodecFormat")]
+        public static extern unsafe OPJ_CODEC_FORMAT GetCodecFormat_Linux64(byte* buffer);
+
 
         //Encode JPEG2000 for MacOS
         [DllImport("Dicom.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_compress")]
@@ -663,6 +669,9 @@ namespace FellowOakDicom.Native.Codec
         [DllImport("Dicom.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
 
         public static extern unsafe void Memset_MacOS(void * ptr, int value, uint num);
+
+        [DllImport("Dicom.Native-macOS.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCodecFormat")]
+        public static extern unsafe OPJ_CODEC_FORMAT GetCodecFormat_MacOS(byte* buffer);
 
         public static OPJ_COLOR_SPACE getOpenJpegColorSpace(PhotometricInterpretation photometricInterpretation)
         {
@@ -1139,11 +1148,20 @@ namespace FellowOakDicom.Native.Codec
                     dparams.cp_layer = 0;
                     dparams.cp_reduce = 0;
 
+                    byte* buf = (byte*)(void*)jpegArray.Pointer;
+
+                    OPJ_CODEC_FORMAT format;
+
                     try
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                        {
-                            dinfo = Opj_create_decompress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
+                        {   
+
+                            format = GetCodecFormat_Linux64(buf);
+
+                            dinfo = Opj_create_decompress_Linux64(format);
+
+                            dparams.decod_format = format;
 
                             Opj_set_event_mgr_Linux64((opj_common_ptr*)dinfo, &event_mgr, null);
 
@@ -1151,16 +1169,24 @@ namespace FellowOakDicom.Native.Codec
 
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                        {
-                            dinfo = Opj_create_decompress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
+                        {   
+                            format = GetCodecFormat_Windows64(buf);
+
+                            dinfo = Opj_create_decompress_Windows64(format);
+
+                            dparams.decod_format = format;
 
                             Opj_set_event_mgr_Windows64((opj_common_ptr*)dinfo, &event_mgr, null);
 
                             Opj_setup_decoder_Windows64(dinfo, &dparams);
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            dinfo = Opj_create_decompress_MacOS(OPJ_CODEC_FORMAT.CODEC_J2K);
+                        {   
+                            format = GetCodecFormat_MacOS(buf);
+
+                            dinfo = Opj_create_decompress_MacOS(format);
+
+                            dparams.decod_format = format;
 
                             Opj_set_event_mgr_MacOS((opj_common_ptr*)dinfo, &event_mgr, null);
 
@@ -1172,17 +1198,17 @@ namespace FellowOakDicom.Native.Codec
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
+                            cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_Linux64(dinfo, cio);
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            cio = Opj_cio_open_Windows64((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
+                            cio = Opj_cio_open_Windows64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_Windows64(dinfo, cio);
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
-                            cio = Opj_cio_open_MacOS((opj_common_ptr*)dinfo, (byte*)(void*)jpegArray.Pointer, (int)jpegArray.ByteSize);
+                            cio = Opj_cio_open_MacOS((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_MacOS(dinfo, cio);
                         }
 

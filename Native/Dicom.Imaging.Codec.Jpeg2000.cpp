@@ -11,6 +11,12 @@ extern "C"{
 #include "OpenJPEG/j2k.h"
 }
 
+// Twelve and four first values for JPEG2000 buffer image (j2k and jp2 decode formats)
+/*----------------------------------------------------------------------------------*/
+#define JP2_RFC3745_MAGIC "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a"
+#define JP2_MAGIC "\x0d\x0a\x87\x0a"
+#define J2K_CODESTREAM_MAGIC "\xff\x4f\xff\x51"
+
 #elif defined(__linux__)
 #define EXPORT_OpenJPEG extern 
 extern "C"{
@@ -123,6 +129,36 @@ EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parame
 EXPORT_OpenJPEG void Memset(void * prt, int value ,size_t num)
 {
     memset(prt, value, num);
+}
+
+EXPORT_OpenJPEG OPJ_CODEC_FORMAT GetCodecFormat(unsigned char* buffer)
+{   
+    unsigned char buf12[12];
+
+    OPJ_CODEC_FORMAT opj_buffer_format;
+
+    //Copying 12 first values from image buffer
+    memcpy(buf12, buffer, sizeof(unsigned char)*12);
+
+    //Comparing 12 or 4 first values from image buffer to get the JPEG2000 decode format
+    if(memcmp(buf12, JP2_RFC3745_MAGIC, 12) == 0 || memcmp(buf12, JP2_MAGIC, 4) == 0)
+    {   
+        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_JP2;
+
+        return opj_buffer_format;
+    }
+    else if (memcmp(buf12, J2K_CODESTREAM_MAGIC, 4) == 0)
+    {   
+        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_J2K;
+
+        return opj_buffer_format;
+    }
+    else
+    {   
+        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_UNKNOWN;
+    }
+
+    return opj_buffer_format;
 }
 
 #ifdef __cplusplus
