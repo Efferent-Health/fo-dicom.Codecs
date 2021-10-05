@@ -28,6 +28,10 @@ stages:
         PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
+    - task: UseDotNet@2
+      input:
+        PackageType: 'sdk'
+        version: '5.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -70,6 +74,10 @@ stages:
         PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
+    - task: UseDotNet@2
+      input:
+        PackageType: 'sdk'
+        version: '5.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -112,6 +120,10 @@ stages:
         PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
+    - task: UseDotNet@2
+      input:
+        PackageType: 'sdk'
+        version: '5.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -127,6 +139,10 @@ stages:
     variables:
       csprojVersion: $[ dependencies.MacOS.outputs['setvarStep.csprojVersion'] ]
     steps:
+    - task: UseDotNet@2
+      input:
+        PackageType: 'sdk'
+        version: '5.0.x'
     - task: DotNetCoreCLI@2
       displayName: Compliance tests
       inputs:
@@ -138,7 +154,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Zip files
       inputs:
-        rootFolderOrFile: 'Tests/Acceptance/bin/debug/netcoreapp2.1/out'
+        rootFolderOrFile: 'Tests/Acceptance/bin/debug/net5.0/out'
         archiveType: 'zip'
         archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win64-$(Build.BuildId).zip'
     - task: GitHubRelease@0
@@ -152,7 +168,7 @@ stages:
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
-        releaseNotesFile: 'Tests/Acceptance/bin/debug/netcoreapp2.1/out/Results.md'
+        releaseNotesFile: 'Tests/Acceptance/bin/debug/net5.0/out/Results.md'
 
 - stage: Deploy
   jobs:

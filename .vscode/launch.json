@@ -10,7 +10,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-test",
-            "program": "${workspaceFolder}/Tests/Unit/bin/Debug/netcoreapp2.1/UnitTests.dll",
+            "program": "${workspaceFolder}/Tests/Unit/bin/Debug/net5.0/UnitTests.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Tests/Unit",
             "console": "internalConsole",
