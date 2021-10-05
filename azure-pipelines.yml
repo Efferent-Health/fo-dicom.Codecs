@@ -29,7 +29,7 @@ stages:
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: UseDotNet@2
-      input:
+      inputs:
         PackageType: 'sdk'
         version: '5.0.x'
     - task: DotNetCoreCLI@2
@@ -75,7 +75,7 @@ stages:
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: UseDotNet@2
-      input:
+      inputs:
         PackageType: 'sdk'
         version: '5.0.x'
     - task: DotNetCoreCLI@2
@@ -121,7 +121,7 @@ stages:
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: UseDotNet@2
-      input:
+      inputs:
         PackageType: 'sdk'
         version: '5.0.x'
     - task: DotNetCoreCLI@2
@@ -140,7 +140,7 @@ stages:
       csprojVersion: $[ dependencies.MacOS.outputs['setvarStep.csprojVersion'] ]
     steps:
     - task: UseDotNet@2
-      input:
+      inputs:
         PackageType: 'sdk'
         version: '5.0.x'
     - task: DotNetCoreCLI@2
