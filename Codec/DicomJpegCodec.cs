@@ -7,7 +7,7 @@ using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.Imaging.Codec.Jpeg;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
-using FellowOakDicom.Log;
+
 
 using FellowOakDicom.Imaging.NativeCodec.Jpeg;
 

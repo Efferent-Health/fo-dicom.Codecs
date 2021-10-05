@@ -1,8 +1,14 @@
-// Copyright (c) 2012-2020 fo-dicom contributors.
+// Copyright (c) 2012-2021 fo-dicom contributors.
 // Licensed under the Microsoft Public License (MS-PL).
 
 #include <iostream>
 #include <new>
+
+// Twelve and four first values for JPEG2000 buffer image (j2k and jp2 decode formats)
+/*----------------------------------------------------------------------------------*/
+#define JP2_RFC3745_MAGIC "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a"
+#define JP2_MAGIC "\x0d\x0a\x87\x0a"
+#define J2K_CODESTREAM_MAGIC "\xff\x4f\xff\x51"
 
 #if defined(_WIN32)
 #define EXPORT_OpenJPEG  __declspec(dllexport)
@@ -11,18 +17,12 @@ extern "C"{
 #include "OpenJPEG/j2k.h"
 }
 
-// Twelve and four first values for JPEG2000 buffer image (j2k and jp2 decode formats)
-/*----------------------------------------------------------------------------------*/
-#define JP2_RFC3745_MAGIC "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a"
-#define JP2_MAGIC "\x0d\x0a\x87\x0a"
-#define J2K_CODESTREAM_MAGIC "\xff\x4f\xff\x51"
-
 #elif defined(__linux__)
 #define EXPORT_OpenJPEG extern 
 extern "C"{
 #include "./Linux64/OpenJPEG/openjpeg.h"
 #include "./Linux64/OpenJPEG/j2k.h"
-# include <string.h>
+#include <string.h>
 }
 
 #elif defined(__APPLE__)
