@@ -935,7 +935,7 @@ namespace FellowOakDicom.Native.Codec
                                 throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
                         }
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             Opj_setup_encoder_Linux64(cinfo, ref eparams, image);
                         
@@ -955,9 +955,9 @@ namespace FellowOakDicom.Native.Codec
                         }
 
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            if(Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
+                            if (Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Linux64(cio);
                                 byte[] cbuf = new byte[clen];
@@ -977,7 +977,7 @@ namespace FellowOakDicom.Native.Codec
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            if(Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
+                            if (Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Windows64(cio);
                                 byte[] cbuf = new byte[clen];
@@ -997,7 +997,7 @@ namespace FellowOakDicom.Native.Codec
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
-                            if(Convert.ToBoolean(Opj_encode_MacOS(cinfo, cio, image, eparams.index)))
+                            if (Convert.ToBoolean(Opj_encode_MacOS(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_MacOS(cio);
                                 byte[] cbuf = new byte[clen];
@@ -1021,21 +1021,21 @@ namespace FellowOakDicom.Native.Codec
                     {
                         if (cio != null)
                         {
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_cio_close_MacOS(cio);                           
                         }
 
                         if (image != null)
                         {
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_image_destroy_MacOS(image);                            
                         }                       
 
                         if (cinfo != null)
                         {
-                            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);      
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);      
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);
                             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_destroy_compress_MacOS(cinfo);                      
                         }
