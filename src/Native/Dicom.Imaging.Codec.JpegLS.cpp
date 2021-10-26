@@ -5,7 +5,7 @@
 #include <new>
 
 #if defined (_WIN32)
-#include "./CharLS/charls.h"
+#include "CharLS/charls.h"
 #define EXPORT_Charls __declspec(dllexport)
 
 #elif defined(__linux__)
@@ -34,28 +34,14 @@ extern "C" {
 
 #endif
 
-EXPORT_Charls CharlsApiResultType JpegLSEncode(void* destination, size_t destinationLength, size_t* bytesWritten, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage){
-    try
-    {
-        return JpegLsEncode(destination, destinationLength, bytesWritten, source, sourceLength, obj, errorMessage);
-    }
-    catch(const std::bad_alloc& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
+EXPORT_Charls CharlsApiResultType JpegLSEncode(void* destination, size_t destinationLength, size_t* bytesWritten, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage)
+{
+    return JpegLsEncode(destination, destinationLength, bytesWritten, source, sourceLength, obj, errorMessage); 
 }
 
-EXPORT_Charls CharlsApiResultType JpegLSDecode(void * destination, int destinationLength, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage){
-    try
-    {
-        return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage );
-    }
-    catch(const std::bad_alloc& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
+EXPORT_Charls CharlsApiResultType JpegLSDecode(void * destination, int destinationLength, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage)
+{
+    return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage );     
 }
 
 #ifdef __cplusplus
