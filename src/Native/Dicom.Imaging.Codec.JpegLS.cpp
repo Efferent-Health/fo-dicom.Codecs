@@ -1,11 +1,11 @@
-// Copyright (c) 2012-2019 fo-dicom contributors.
+// Copyright (c) 2012-2021 fo-dicom contributors.
 // Licensed under the Microsoft Public License (MS-PL).
 
 #include <iostream>
 #include <new>
 
 #if defined (_WIN32)
-#include "CharLS/charls.h"
+#include "./CharLS/charls.h"
 #define EXPORT_Charls __declspec(dllexport)
 
 #elif defined(__linux__)

@@ -215,7 +215,7 @@ namespace Efferent.Native.Codec
                 IByteBuffer frameData = oldPixelData.GetFrame(frame);
 
                 //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
-                if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
                     frameData = PixelDataConverter.YbrFullToRgb(frameData);
                     oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
@@ -237,7 +237,7 @@ namespace Efferent.Native.Codec
 
                 // IMPORT JpegLsEncode
                 unsafe {  
-                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     { 
                         CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
                     }
@@ -275,7 +275,7 @@ namespace Efferent.Native.Codec
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
 
                 //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
-                if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
                     jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
                     oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
@@ -299,7 +299,7 @@ namespace Efferent.Native.Codec
                 // IMPORT JpegLsDecode 
                 unsafe
                 {   
-                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
                     {
                         CharlsApiResultType err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     }

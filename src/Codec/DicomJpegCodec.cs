@@ -66,71 +66,53 @@ namespace Efferent.Native.Codec
         public JQUANT_TBL* quant_tbl_ptrs_2;
         public JQUANT_TBL* quant_tbl_ptrs_3;
         public JQUANT_TBL* quant_tbl_ptrs_4;
-
-
         public JHUFF_TBL* dc_huff_tbl_ptrs_1;
         public JHUFF_TBL* dc_huff_tbl_ptrs_2;
         public JHUFF_TBL* dc_huff_tbl_ptrs_3;
         public JHUFF_TBL* dc_huff_tbl_ptrs_4;
-
-
         public JHUFF_TBL* ac_huff_tbl_ptrs_1;
         public JHUFF_TBL* ac_huff_tbl_ptrs_2;
         public JHUFF_TBL* ac_huff_tbl_ptrs_3;
         public JHUFF_TBL* ac_huff_tbl_ptrs_4;
-
         public fixed byte arith_dc_L[16];
         public fixed byte arith_dc_U[16];
         public fixed byte arith_ac_K[16];
-
         public int num_scans;
         public jpeg_scan_info* scan_info;
-
         public int raw_data_in;          /* TRUE=caller supplies downsampled data */
         public int arith_code;           /* TRUE=arithmetic coding, FALSE=Huffman */
         public int optimize_coding;      /* TRUE=optimize entropy encoding parms */
         public int CCIR601_sampling;     /* TRUE=first samples are cosited */
         public int smoothing_factor;
         public J_DCT_METHOD dct_method;
-
         public uint restart_interval;
         public int restart_in_rows;
-
         public int write_JFIF_header;    /* should a JFIF marker be written? */
         public byte JFIF_major_version;     /* What to write for the JFIF version number */
         public byte JFIF_minor_version;
-
         public byte density_unit;           /* JFIF code for pixel size units */
         public ushort X_density;             /* Horizontal pixel density */
         public ushort Y_density;             /* Vertical pixel density */
         public int write_Adobe_marker;
-
         public uint next_scanline;
         public int data_unit;                /* size of data unit in samples */
         public J_CODEC_PROCESS process;      /* encoding process of JPEG image */
-
         public int max_h_samp_factor;        /* largest h_samp_factor */
         public int max_v_samp_factor;
-
         public uint total_iMCU_rows;
-
         public int comps_in_scan;
         public jpeg_component_info* cur_comp_info_1;
         public jpeg_component_info* cur_comp_info_2;
         public jpeg_component_info* cur_comp_info_3;
         public jpeg_component_info* cur_comp_info_4;
-
         public uint MCUs_per_row;      /* # of MCUs across the image */
         public uint MCU_rows_in_scan;
-
         public int data_units_in_MCU;
         public fixed int MCU_membership[10];
-
         public int Ss;
         public int Se;
         public int Ah;
         public int Al;
-
         public jpeg_comp_master* master;
         public jpeg_c_main_controller* main;
         public jpeg_c_prep_controller* prep;
@@ -138,10 +120,8 @@ namespace Efferent.Native.Codec
         public jpeg_marker_writer* marker;
         public jpeg_color_converter* cconvert;
         public jpeg_downsampler* downsample;
-
         public jpeg_scan_info* script_space;
         public int script_space_size;
-
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -153,125 +133,92 @@ namespace Efferent.Native.Codec
         public void* client_data;
         public int is_decompressor;
         public int global_state;
-
         public jpeg_source_mgr* src;
-
         public uint image_width;
         public uint image_height;
         public int num_components;
         public J_COLOR_SPACE jpeg_color_space;
         public J_COLOR_SPACE out_color_space;
-
         public uint scale_num;
         public uint scale_denom;
         public double output_gamma;
-
         public int buffered_image;
         public int raw_data_out;
-
         public J_DCT_METHOD dct_method;
         public int do_fancy_upsampling;
         public int do_block_smoothing;
-
         public int quantize_colors;
         public J_DITHER_MODE dither_mode;
         public int two_pass_quantize;
-
         public int desired_number_of_colors;
-
         public int enable_1pass_quant;
         public int enable_external_quant;
         public int enable_2pass_quant;
-
         public uint output_width;
         public uint output_height;
         public int out_color_components;
         public int output_components;
-
         public int rec_outbuf_height;
-
         public int actual_number_of_colors;
-
         public short** colormap;
         public uint output_scanline;
-
         public int input_scan_number;
         public uint input_iMCU_row;
-
         public int output_scan_number;
         public uint output_iMCU_row;
 
         //int (* coef_bits)[64];
         public IntPtr coef_bits;
-
         public JQUANT_TBL* quant_tbl_ptrs_1;
         public JQUANT_TBL* quant_tbl_ptrs_2;
         public JQUANT_TBL* quant_tbl_ptrs_3;
         public JQUANT_TBL* quant_tbl_ptrs_4;
-
         public JHUFF_TBL* dc_huff_tbl_ptrs_1;
         public JHUFF_TBL* dc_huff_tbl_ptrs_2;
         public JHUFF_TBL* dc_huff_tbl_ptrs_3;
         public JHUFF_TBL* dc_huff_tbl_ptrs_4;
-
         public JHUFF_TBL* ac_huff_tbl_ptrs_1;
         public JHUFF_TBL* ac_huff_tbl_ptrs_2;
         public JHUFF_TBL* ac_huff_tbl_ptrs_3;
         public JHUFF_TBL* ac_huff_tbl_ptrs_4;
-
         public int data_precision;
         public jpeg_component_info* comp_info;
-
         public int arith_code;
-
         public fixed byte arith_dc_L[16];
         public fixed byte arith_dc_U[16];
         public fixed byte arith_dc_K[16];
-
         public uint restart_interval;
         public int saw_JFIF_marker;
         public byte JFIF_major_version;
         public byte JFIF_minor_version;
         public byte density_unit;
-
         public ushort X_density;
         public ushort Y_density;
         public int saw_Adobe_marker;
         public byte Adobe_transform;
-
         public int CCIR601_sampling;
         public jpeg_marker_struct* marker_list;
-
         public int data_unit;
         public J_CODEC_PROCESS process;
-
         public int max_h_samp_factor;
         public int max_v_samp_factor;
         public int min_codec_data_unit;
-
         public uint total_iMCU_rows;
-
         public byte* sample_range_limit;
         public int comps_in_scan;
-
         public jpeg_component_info* cur_comp_info_1;
         public jpeg_component_info* cur_comp_info_2;
         public jpeg_component_info* cur_comp_info_3;
         public jpeg_component_info* cur_comp_info_4;
-
         public uint MCUs_per_row;
         public uint MCU_rows_in_scan;
-
         public int data_units_in_MCU;
         public fixed int MCU_membership[10];
-
         public int Ss;
         public int Se;
         public int Ah;
         public int Al;
-
         public int unread_marker;
-
         public IntPtr master;
         public IntPtr main;
         public IntPtr codec;
@@ -281,7 +228,6 @@ namespace Efferent.Native.Codec
         public IntPtr upsample;
         public IntPtr cconvert;
         public IntPtr cquantize;
-
         public uint workaround_options;
     }
 
@@ -293,9 +239,7 @@ namespace Efferent.Native.Codec
         public IntPtr alloc_large;
         public IntPtr alloc_sarray;
         public IntPtr alloc_barray;
-
         public IntPtr alloc_darray;
-
         public IntPtr request_virt_sarray;
         public IntPtr request_virt_barray;
         public IntPtr realize_virt_arrays;
@@ -303,10 +247,8 @@ namespace Efferent.Native.Codec
         public IntPtr access_virt_barray;
         public IntPtr free_pool;
         public IntPtr self_destruct;
-
         public int max_memory_to_use;
         public int max_alloc_chunk;
-
     }
 
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
@@ -323,11 +265,8 @@ namespace Efferent.Native.Codec
         public IntPtr output_message;
         public IntPtr format_message;
         public IntPtr reset_error_mgr;
-
         public int msg_code;
-
         public msg_parm msg_Parm;
-
         public int trace_level;
         public int num_warnings;
         public char* jpeg_message_table;
@@ -356,7 +295,6 @@ namespace Efferent.Native.Codec
     public unsafe struct jpeg_progress_mgr
     {
         public IntPtr progress_monitor;
-
         public int pass_counter;            /* work units completed in this pass */
         public int pass_limit;              /* total number of work units in this pass */
         public int completed_passes;         /* passes completed so far */
@@ -375,7 +313,6 @@ namespace Efferent.Native.Codec
     {
         public IntPtr next_output_byte;
         public uint free_in_buffer;
-
         public IntPtr init_Destination;
         public IntPtr empty_Output_Buffer;
         public IntPtr term_Destination;
@@ -395,7 +332,6 @@ namespace Efferent.Native.Codec
     {
         public byte* next_input_byte;
         public uint bytes_in_buffer;
-
         public IntPtr init_source;
         public IntPtr fill_input_buffer;
         public IntPtr skip_input_data;
@@ -411,25 +347,20 @@ namespace Efferent.Native.Codec
         public int h_samp_factor;            /* horizontal sampling factor (1..4) */
         public int v_samp_factor;            /* vertical sampling factor (1..4) */
         public int quant_tbl_no;
-
         public int dc_tbl_no;                /* DC entropy table selector (0..3) */
         public int ac_tbl_no;
         public uint width_in_data_units;
         public uint height_in_data_units;
-
         public int codec_data_unit;
         public uint downsampled_width;
         public uint downsampled_height;
-
         public int component_needed;
-
         public int MCU_width;                /* number of data units per MCU, horizontally */
         public int MCU_height;               /* number of data units per MCU, vertically */
         public int MCU_data_units;           /* MCU_width * MCU_height */
         public int MCU_sample_width;         /* MCU width in samples, MCU_width*codec_data_unit */
         public int last_col_width;           /* # of non-dummy data_units across in last MCU */
         public int last_row_height;
-
         public void* dct_table;
         public JQUANT_TBL* quant_table;
     }
@@ -439,7 +370,6 @@ namespace Efferent.Native.Codec
     {
         public IntPtr start_pass;
         public IntPtr downsample;
-
         public int need_context_rows;
     }
 
@@ -469,7 +399,6 @@ namespace Efferent.Native.Codec
         public IntPtr write_scan_header;
         public IntPtr write_file_trailer;
         public IntPtr write_tables_only;
-
         public IntPtr write_marker_header;
         public IntPtr write_marker_byte;
 
@@ -506,7 +435,6 @@ namespace Efferent.Native.Codec
         public IntPtr prepare_for_pass;
         public IntPtr pass_startup;
         public IntPtr finish_pass;
-
         public int call_pass_startup;  /* True if pass_startup must be called */
         public int is_last_pass;
     }
@@ -593,11 +521,9 @@ namespace Efferent.Native.Codec
         public uint rowsperchunk;
         public uint cur_start_row;
         public uint first_undef_row;
-
         public int pre_zero;
         public int dirty;
         public int b_s_open;
-
         public jvirt_sarray_control* next;
         public backing_store_struct b_s_info;
 
@@ -609,7 +535,6 @@ namespace Efferent.Native.Codec
         public IntPtr read_backing_store;
         public IntPtr write_backing_store;
         public IntPtr close_backing_store;
-
         public fixed sbyte temp_name[64];
         public FILE* temp_file;
     }
@@ -631,11 +556,9 @@ namespace Efferent.Native.Codec
         public uint rowsperchunk;
         public uint cur_start_row;
         public uint first_undef_row;
-
         public int pre_zero;
         public int dirty;
         public int b_s_open;
-
         public jvirt_sarray_control* next;
         public backing_store_struct b_s_info;
     }
@@ -654,15 +577,10 @@ namespace Efferent.Native.Codec
         private int _quality;
 
         private int _smoothing;
-
         private bool _convertColorspace;
-
         private DicomJpegSampleFactor _sample;
-
         private int _predictor;
-
         private int _pointTransform;
-
         public DicomJpegParams()
         {
             _quality = 90;
@@ -787,7 +705,6 @@ namespace Efferent.Native.Codec
 
         public abstract class JpegNativeCodec
         {
-
             public abstract void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame);
             public abstract void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame);
 
@@ -1826,7 +1743,6 @@ namespace Efferent.Native.Codec
                 else
                     frameArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
 
-
                 try
                 {
                     if (oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar && oldPixelData.SamplesPerPixel > 1)
@@ -1860,7 +1776,7 @@ namespace Efferent.Native.Codec
                             cinfo.err = jpeg_std_error_12_MacOS(ref jerr);
 
                         //jpeg_std_error_16 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             cinfo.err = jpeg_std_error_16_Windows64(ref jerr);
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             cinfo.err = jpeg_std_error_16_Linux64(ref jerr);
@@ -1882,7 +1798,7 @@ namespace Efferent.Native.Codec
                             jpeg_create_compress_8_MacOS(ref cinfo);
 
                         //jpeg_create_compress_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_compress_12_Windows64(ref cinfo);
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_compress_12_Linux64(ref cinfo);
@@ -1928,7 +1844,7 @@ namespace Efferent.Native.Codec
                             jpeg_set_defaults_8_MacOS(ref cinfo);
 
                         //jpeg_set_defaults_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_12_Windows64(ref cinfo);
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_12_Linux64(ref cinfo);
@@ -1936,7 +1852,7 @@ namespace Efferent.Native.Codec
                             jpeg_set_defaults_12_MacOS(ref cinfo);
 
                         //jpeg_set_defaults_16 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_set_defaults_16_Windows64(ref cinfo);
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_set_defaults_16_Linux64(ref cinfo);
@@ -1956,7 +1872,7 @@ namespace Efferent.Native.Codec
                                 jpeg_set_quality_8_MacOS(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             //jpeg_set_quality_12 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
@@ -2021,7 +1937,7 @@ namespace Efferent.Native.Codec
                             }
 
                             //jpeg_set_quality_12 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_12_Windows64(ref cinfo);
@@ -2074,7 +1990,7 @@ namespace Efferent.Native.Codec
                                 jpeg_simple_lossless_12_MacOS(ref cinfo, Predictor, PointTransform);
 
                             //jpeg_simple_lossless_16 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_simple_lossless_16_Windows64(ref cinfo, Predictor, PointTransform);
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_simple_lossless_16_Linux64(ref cinfo, Predictor, PointTransform);
@@ -2096,7 +2012,7 @@ namespace Efferent.Native.Codec
                                 jpeg_set_colorspace_8_MacOS(ref cinfo, cinfo.in_color_space);
 
                             //jpeg_set_colorspace_12 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
@@ -2143,7 +2059,7 @@ namespace Efferent.Native.Codec
                                         jpeg_set_colorspace_8_MacOS(ref cinfo, cinfo.in_color_space);
 
                                     //jpeg_set_colorspace_12 for Linux, Windows and MacOS for 64 bits
-                                    else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                         jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
                                     else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                         jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
@@ -2181,7 +2097,7 @@ namespace Efferent.Native.Codec
                             jpeg_start_compress_8_MacOS(ref cinfo, Convert.ToInt32(true));
 
                         //jpeg_start_compress_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_12_Windows64(ref cinfo, Convert.ToInt32(true));
                         else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_start_compress_12_Linux64(ref cinfo, Convert.ToInt32(true));
@@ -2189,7 +2105,7 @@ namespace Efferent.Native.Codec
                             jpeg_start_compress_12_MacOS(ref cinfo, Convert.ToInt32(true));
 
                         //jpeg_start_compress_16 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_start_compress_16_Windows64(ref cinfo, Convert.ToInt32(true));
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_start_compress_16_Linux64(ref cinfo, Convert.ToInt32(true));
@@ -2214,7 +2130,7 @@ namespace Efferent.Native.Codec
                                 jpeg_write_scanlines_8_MacOS(ref cinfo, &row_pointer, 1);
 
                             //jpeg_write_scanlines_12 for Linux, Windows and MacOS for 64 bits   
-                            else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_12_Windows64(ref cinfo, &row_pointer, 1);
                             else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_12_Linux64(ref cinfo, &row_pointer, 1);
@@ -2222,13 +2138,12 @@ namespace Efferent.Native.Codec
                                 jpeg_write_scanlines_12_MacOS(ref cinfo, &row_pointer, 1);
 
                             //jpeg_write_scanlines_16 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                                 jpeg_write_scanlines_16_Windows64(ref cinfo, &row_pointer, 1);
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_16_Linux64(ref cinfo, &row_pointer, 1);
                             else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                                 jpeg_write_scanlines_16_MacOS(ref cinfo, &row_pointer, 1);
-                        
                         }
 
                         //jpeg_finish_compress_8 and jpeg_destroy_compress_8 for Linux, Windows and MacOS for 64 bits
@@ -2252,7 +2167,7 @@ namespace Efferent.Native.Codec
                         }
 
                         //jpeg_finish_compress_12 and jpeg_destroy_compress_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             jpeg_finish_compress_12_Windows64(ref cinfo);
 
@@ -2323,7 +2238,8 @@ namespace Efferent.Native.Codec
                 {
                     MemoryBuffer = null;
                     if (frameArray != null)
-                    {
+                    {   
+                        frameArray.Dispose();
                         frameArray = null;
                     }
                 }
@@ -2373,7 +2289,7 @@ namespace Efferent.Native.Codec
                         }
 
                         //jpeg_resync_to_restart_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Windows64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
@@ -2390,7 +2306,7 @@ namespace Efferent.Native.Codec
                         }
 
                         //jpeg_resync_to_restart_16 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Windows64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
@@ -2424,7 +2340,7 @@ namespace Efferent.Native.Codec
                             dinfo.err = jpeg_std_error_8_MacOS(ref jerr);
 
                         //jpeg_std_error_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             dinfo.err = jpeg_std_error_12_Windows64(ref jerr);
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             dinfo.err = jpeg_std_error_12_Linux64(ref jerr);
@@ -2432,7 +2348,7 @@ namespace Efferent.Native.Codec
                             dinfo.err = jpeg_std_error_12_MacOS(ref jerr);
 
                         //jpeg_std_error_16 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
@@ -2454,7 +2370,7 @@ namespace Efferent.Native.Codec
                             jpeg_create_decompress_8_MacOS(ref dinfo);
 
                         //jpeg_create_decompress_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_decompress_12_Windows64(ref dinfo);
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_12_Linux64(ref dinfo);
@@ -2462,7 +2378,7 @@ namespace Efferent.Native.Codec
                             jpeg_create_decompress_12_MacOS(ref dinfo);
 
                         //jpeg_create_decompress_16 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             jpeg_create_decompress_16_Windows64(ref dinfo);
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                             jpeg_create_decompress_16_Linux64(ref dinfo);
@@ -2578,7 +2494,7 @@ namespace Efferent.Native.Codec
                         }
 
                         //jpeg_read_header_12 for Linux, Windows and MacOS for 64 bits
-                        else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             int jpeg_read_header_value = 0;
                             try
@@ -2630,7 +2546,7 @@ namespace Efferent.Native.Codec
                             }
                         }
 
-                        if(oldPixelData.PhotometricInterpretation != PhotometricInterpretation.Rgb)
+                        if (oldPixelData.PhotometricInterpretation != PhotometricInterpretation.Rgb)
                         {
                             jpegParams.ConvertColorspaceToRGB = true;
                         }
@@ -2750,7 +2666,7 @@ namespace Efferent.Native.Codec
                             }
 
                             //jpeg_read_scanlines_12 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2782,7 +2698,7 @@ namespace Efferent.Native.Codec
                             }
 
                             //jpeg_read_scanlines_12 for Linux, Windows and MacOS for 64 bits
-                            else if(Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2860,11 +2776,13 @@ namespace Efferent.Native.Codec
                     finally
                     {
                         if (frameArray != null)
-                        {
+                        {   
+                            frameArray.Dispose();
                             frameArray = null;
                         }
                         if (jpegArray != null)
-                        {
+                        {   
+                            jpegArray.Dispose();
                             jpegArray = null;
                         }
                     }
@@ -3203,7 +3121,6 @@ namespace Efferent.Native.Codec
             {
                 return DicomTransferSyntax.JPEGProcess1;
             }
-
         }
 
         protected override JpegNativeCodec GetCodec(int bits, DicomJpegParams jparams)
@@ -3214,13 +3131,11 @@ namespace Efferent.Native.Codec
             else
                 throw new DicomCodecException(String.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
         }
-
     };
 
     [Export(typeof(IDicomCodec))]
     public class DicomJpegProcess4Codec : DicomJpegNativeCodec
     {
-
         public override DicomTransferSyntax TransferSyntax
         {
             get
