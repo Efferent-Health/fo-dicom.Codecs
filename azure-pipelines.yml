@@ -1,5 +1,5 @@
 trigger:
-- master
+- Efferent-Native-4.1.0
 
 stages:
 - stage: Build
