@@ -42,15 +42,7 @@ The following CODECS are implemented:
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   new DicomSetupBuilder()
-                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<FellowOakDicom.Imaging.NativeCodec.NativeTranscoderManager>())
-                .SkipValidation()
-                .Build();
+    .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<FellowOakDicom.Imaging.NativeCodec.NativeTranscoderManager>())
+    .SkipValidation()
+    .Build();
   ````
-  
-## Discussion topics
-
-- Evaluate the coupling of fo-dicom with fo-dicom.Codecs (both directions)
-- Determine if the same source code can be used for regular .net Framework
-- Roadmap for increasing the platform coverage: iOS, Android, etc.
-- Better testing strategy (consider codecs, color resolution, color encoding, LUT, palette, etc.)
-- Add parallel processing capability
