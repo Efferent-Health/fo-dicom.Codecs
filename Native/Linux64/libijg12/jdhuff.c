@@ -12,9 +12,9 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossy12.h"		/* Private declarations for lossy codec */
-#include "jlossls12.h"		/* Private declarations for lossless codec */
-#include "jdhuff12.h"		/* Declarations shared with jd*huff.c */
+#include "jlossy12.h"       /* Private declarations for lossy codec */
+#include "jlossls12.h"      /* Private declarations for lossless codec */
+#include "jdhuff12.h"       /* Declarations shared with jd*huff.c */
 
 
 /*
@@ -52,14 +52,14 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
 				  SIZEOF(d_derived_tbl));
   dtbl = *pdtbl;
-  dtbl->pub = htbl;		/* fill in back link */
+  dtbl->pub = htbl;     /* fill in back link */
   
   /* Figure C.1: make table of Huffman code length for each symbol */
 
   p = 0;
   for (l = 1; l <= 16; l++) {
     i = (int) htbl->bits[l];
-    if (i < 0 || p + i > 256)	/* protect against table overrun */
+    if (i < 0 || p + i > 256)   /* protect against table overrun */
       ERREXIT(cinfo, JERR_BAD_HUFF_TABLE);
     while (i--)
       huffsize[p++] = (char) l;
@@ -99,7 +99,7 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
       p += htbl->bits[l];
       dtbl->maxcode[l] = huffcode[p-1]; /* maximum code of length l */
     } else {
-      dtbl->maxcode[l] = -1;	/* -1 if no codes of this length */
+      dtbl->maxcode[l] = -1;    /* -1 if no codes of this length */
     }
   }
   dtbl->maxcode[17] = 0xFFFFFL; /* ensures jpeg_huff_decode terminates */
@@ -159,7 +159,7 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
  */
 
 #ifdef SLOW_SHIFT_32
-#define MIN_GET_BITS  15	/* minimum allowable value */
+#define MIN_GET_BITS  15    /* minimum allowable value */
 #else
 #define MIN_GET_BITS  (BIT_BUF_SIZE-7)
 #endif
@@ -180,7 +180,7 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
   /* (It is assumed that no request will be for more than that many bits.) */
   /* We fail to do so only if we hit a marker or are forced to suspend. */
 
-  if (cinfo->unread_marker == 0) {	/* cannot advance past a marker */
+  if (cinfo->unread_marker == 0) {  /* cannot advance past a marker */
     while (bits_left < MIN_GET_BITS) {
       register int c;
 
@@ -308,7 +308,7 @@ jpeg_huff_decode (bitread_working_state * state,
 
   if (l > 16) {
     WARNMS(state->cinfo, JWRN_HUFF_BAD_CODE);
-    return 0;			/* fake a zero as the safest result */
+    return 0;           /* fake a zero as the safest result */
   }
 
   return htbl->pub->huffval[ (int) (code + htbl->valoffset[l]) ];

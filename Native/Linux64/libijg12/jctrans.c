@@ -13,7 +13,7 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossy12.h"		/* Private declarations for lossy codec */
+#include "jlossy12.h"       /* Private declarations for lossy codec */
 
 
 /* Forward declarations */
@@ -196,10 +196,10 @@ transencode_master_selection (j_compress_ptr cinfo,
 /* Private buffer controller object */
 
 typedef struct {
-  JDIMENSION iMCU_row_num;	/* iMCU row # within image */
-  JDIMENSION mcu_ctr;		/* counts MCUs processed in current row */
-  int MCU_vert_offset;		/* counts MCU rows within iMCU row */
-  int MCU_rows_per_iMCU_row;	/* number of such rows needed */
+  JDIMENSION iMCU_row_num;  /* iMCU row # within image */
+  JDIMENSION mcu_ctr;       /* counts MCUs processed in current row */
+  int MCU_vert_offset;      /* counts MCU rows within iMCU row */
+  int MCU_rows_per_iMCU_row;    /* number of such rows needed */
 
   /* Virtual block array for each component. */
   jvirt_barray_ptr * whole_image;
@@ -269,7 +269,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 {
   j_lossy_c_ptr lossyc = (j_lossy_c_ptr) cinfo->codec;
   c_coef_ptr coef = (c_coef_ptr) lossyc->coef_private;
-  JDIMENSION MCU_col_num;	/* index of current MCU within row */
+  JDIMENSION MCU_col_num;   /* index of current MCU within row */
   JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
   int blkn, ci, xindex, yindex, yoffset, blockcnt;
@@ -294,7 +294,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     for (MCU_col_num = coef->mcu_ctr; MCU_col_num < cinfo->MCUs_per_row;
 	 MCU_col_num++) {
       /* Construct list of pointers to DCT blocks belonging to this MCU */
-      blkn = 0;			/* index of current DCT block within MCU */
+      blkn = 0;         /* index of current DCT block within MCU */
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
 	compptr = cinfo->cur_comp_info[ci];
 	start_col = MCU_col_num * compptr->MCU_width;

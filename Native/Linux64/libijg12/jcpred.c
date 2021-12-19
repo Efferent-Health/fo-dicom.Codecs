@@ -21,7 +21,7 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossls12.h"		/* Private declarations for lossless codec */
+#include "jlossls12.h"      /* Private declarations for lossless codec */
 
 
 #ifdef C_LOSSLESS_SUPPORTED
@@ -43,10 +43,10 @@ METHODDEF(void) start_pass
 
 
 /* Predictor for the first column of the first row: 2^(P-Pt-1) */
-#define INITIAL_PREDICTORx	(1 << (cinfo->data_precision - cinfo->Al - 1))
+#define INITIAL_PREDICTORx  (1 << (cinfo->data_precision - cinfo->Al - 1))
 
 /* Predictor for the first column of the remaining rows: Rb */
-#define INITIAL_PREDICTOR2	GETJSAMPLE(prev_row[0])
+#define INITIAL_PREDICTOR2  GETJSAMPLE(prev_row[0])
 
 
 /*

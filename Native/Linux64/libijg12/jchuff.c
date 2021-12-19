@@ -12,7 +12,7 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jchuff12.h"		/* Declarations shared with jc*huff.c */
+#include "jchuff12.h"       /* Declarations shared with jc*huff.c */
 
 
 /*
@@ -55,7 +55,7 @@ jpeg_make_c_derived_tbl (j_compress_ptr cinfo, boolean isDC, int tblno,
   p = 0;
   for (l = 1; l <= 16; l++) {
     i = (int) htbl->bits[l];
-    if (i < 0 || p + i > 256)	/* protect against table overrun */
+    if (i < 0 || p + i > 256)   /* protect against table overrun */
       ERREXIT(cinfo, JERR_BAD_HUFF_TABLE);
     while (i--)
       huffsize[p++] = (char) l;
@@ -139,10 +139,10 @@ jpeg_make_c_derived_tbl (j_compress_ptr cinfo, boolean isDC, int tblno,
 GLOBAL(void)
 jpeg_gen_optimal_table (j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[])
 {
-#define MAX_CLEN 32		/* assumed maximum initial code length */
-  UINT8 bits[MAX_CLEN+1];	/* bits[k] = # of symbols with code length k */
-  int codesize[257];		/* codesize[k] = code length of symbol k */
-  int others[257];		/* next symbol in current branch of tree */
+#define MAX_CLEN 32     /* assumed maximum initial code length */
+  UINT8 bits[MAX_CLEN+1];   /* bits[k] = # of symbols with code length k */
+  int codesize[257];        /* codesize[k] = code length of symbol k */
+  int others[257];      /* next symbol in current branch of tree */
   int c1, c2;
   int p, i, j;
   long v;
@@ -152,9 +152,9 @@ jpeg_gen_optimal_table (j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[])
   MEMZERO(bits, SIZEOF(bits));
   MEMZERO(codesize, SIZEOF(codesize));
   for (i = 0; i < 257; i++)
-    others[i] = -1;		/* init links to empty */
+    others[i] = -1;     /* init links to empty */
   
-  freq[256] = 1;		/* make sure 256 has a nonzero count */
+  freq[256] = 1;        /* make sure 256 has a nonzero count */
   /* Including the pseudo-symbol 256 in the Huffman procedure guarantees
    * that no real symbol is given code-value of all ones, because 256
    * will be placed last in the largest codeword category.
@@ -200,7 +200,7 @@ jpeg_gen_optimal_table (j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[])
       codesize[c1]++;
     }
     
-    others[c1] = c2;		/* chain c2 onto c1's tree branch */
+    others[c1] = c2;        /* chain c2 onto c1's tree branch */
     
     /* Increment the codesize of everything in c2's tree branch */
     codesize[c2]++;
@@ -235,19 +235,19 @@ jpeg_gen_optimal_table (j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[])
   
   for (i = MAX_CLEN; i > 16; i--) {
     while (bits[i] > 0) {
-      j = i - 2;		/* find length of new prefix to be used */
+      j = i - 2;        /* find length of new prefix to be used */
       while (bits[j] == 0)
 	j--;
       
-      bits[i] -= 2;		/* remove two symbols */
-      bits[i-1]++;		/* one goes in this length */
-      bits[j+1] += 2;		/* two new symbols in this length */
-      bits[j]--;		/* symbol of this length is now a prefix */
+      bits[i] -= 2;        /* remove two symbols */
+      bits[i-1]++;                   /* one goes in this length */
+      bits[j+1] += 2;    /* two new symbols in this length */
+      bits[j]--;                     /* symbol of this length is now a prefix */
     }
   }
 
   /* Remove the count for the pseudo-symbol 256 from the largest codelength */
-  while (bits[i] == 0)		/* find largest codelength still in use */
+  while (bits[i] == 0)      /* find largest codelength still in use */
     i--;
   bits[i]--;
   

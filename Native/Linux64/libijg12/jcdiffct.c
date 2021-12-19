@@ -14,7 +14,7 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossls12.h"		/* Private declarations for lossless codec */
+#include "jlossls12.h"      /* Private declarations for lossless codec */
 
 
 #ifdef C_LOSSLESS_SUPPORTED
@@ -36,14 +36,14 @@
 /* Private buffer controller object */
 
 typedef struct {
-  JDIMENSION iMCU_row_num;	/* iMCU row # within image */
-  JDIMENSION mcu_ctr;		/* counts MCUs processed in current row */
-  int MCU_vert_offset;		/* counts MCU rows within iMCU row */
-  int MCU_rows_per_iMCU_row;	/* number of such rows needed */
+  JDIMENSION iMCU_row_num;  /* iMCU row # within image */
+  JDIMENSION mcu_ctr;       /* counts MCUs processed in current row */
+  int MCU_vert_offset;      /* counts MCU rows within iMCU row */
+  int MCU_rows_per_iMCU_row;    /* number of such rows needed */
 
-  JSAMPROW cur_row[MAX_COMPONENTS];	/* row of point transformed samples */
-  JSAMPROW prev_row[MAX_COMPONENTS];	/* previous row of Pt'd samples */
-  JDIFFARRAY diff_buf[MAX_COMPONENTS];	/* iMCU row of differences */
+  JSAMPROW cur_row[MAX_COMPONENTS]; /* row of point transformed samples */
+  JSAMPROW prev_row[MAX_COMPONENTS];  /* previous row of Pt'd samples */
+  JDIFFARRAY diff_buf[MAX_COMPONENTS];  /* iMCU row of differences */
 
   /* In multi-pass modes, we need a virtual sample array for each component. */
   jvirt_sarray_ptr whole_image[MAX_COMPONENTS];
@@ -143,8 +143,8 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 {
   j_lossless_c_ptr losslsc = (j_lossless_c_ptr) cinfo->codec;
   c_diff_ptr diff = (c_diff_ptr) losslsc->diff_private;
-  JDIMENSION MCU_col_num;	/* index of current MCU within row */
-  JDIMENSION MCU_count;		/* number of MCUs encoded */
+  JDIMENSION MCU_col_num;   /* index of current MCU within row */
+  JDIMENSION MCU_count;     /* number of MCUs encoded */
   /* JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1; */
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
   int comp, ci, yoffset, samp_row, samp_rows, samps_across;
@@ -304,8 +304,8 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 {
   j_lossless_c_ptr losslsc = (j_lossless_c_ptr) cinfo->codec;
   c_diff_ptr diff = (c_diff_ptr) losslsc->diff_private;
-  /* JDIMENSION MCU_col_num; */	/* index of current MCU within row */
-  /* JDIMENSION MCU_count; */	/* number of MCUs encoded */
+  /* JDIMENSION MCU_col_num; */ /* index of current MCU within row */
+  /* JDIMENSION MCU_count; */   /* number of MCUs encoded */
   int comp, ci /* , yoffset */ ;
   JSAMPARRAY buffer[MAX_COMPONENTS];
   jpeg_component_info *compptr;

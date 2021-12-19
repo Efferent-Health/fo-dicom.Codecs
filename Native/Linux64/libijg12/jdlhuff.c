@@ -17,8 +17,8 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossls12.h"		/* Private declarations for lossless codec */
-#include "jdhuff12.h"		/* Declarations shared with jd*huff.c */
+#include "jlossls12.h"      /* Private declarations for lossless codec */
+#include "jdhuff12.h"       /* Declarations shared with jd*huff.c */
 
 
 #ifdef D_LOSSLESS_SUPPORTED
@@ -32,7 +32,7 @@ typedef struct {
  */
 
 typedef struct {
-  huffd_common_fields;		/* Fields shared with other entropy decoders */
+  huffd_common_fields;      /* Fields shared with other entropy decoders */
 
   /* Pointers to derived tables (these workspaces have image lifespan) */
   d_derived_tbl * derived_tbls[NUM_HUFF_TBLS];
@@ -241,9 +241,9 @@ decode_mcus (j_decompress_ptr cinfo, JDIFFIMAGE diff_buf,
 	/* Section H.2.2: decode the sample difference */
 	HUFF_DECODE(s, br_state, dctbl, return mcu_num, label1);
 	if (s) {
-	  if (s == 16)	/* special case: always output 32768 */
+	  if (s == 16)  /* special case: always output 32768 */
 	    s = 32768;
-	  else {	/* normal case: fetch subsequent bits */
+	  else {    /* normal case: fetch subsequent bits */
 	    CHECK_BIT_BUFFER(br_state, s, return mcu_num);
 	    r = GET_BITS(s);
 	    s = HUFF_EXTEND(r, s);

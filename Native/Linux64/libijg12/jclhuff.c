@@ -17,8 +17,8 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossls12.h"		/* Private declarations for lossless codec */
-#include "jchuff12.h"		/* Declarations shared with jc*huff.c */
+#include "jlossls12.h"      /* Private declarations for lossless codec */
+#include "jchuff12.h"       /* Declarations shared with jc*huff.c */
 
 
 /* Expanded entropy encoder object for Huffman encoding.
@@ -28,8 +28,8 @@
  */
 
 typedef struct {
-  IJG_INT32 put_buffer;		/* current bit-accumulation buffer */
-  int put_bits;			/* # of bits now in it */
+  IJG_INT32 put_buffer;     /* current bit-accumulation buffer */
+  int put_bits;         /* # of bits now in it */
 } savable_state;
 
 /* This macro is to work around compilers with missing or broken
@@ -52,11 +52,11 @@ typedef struct {
 
 
 typedef struct {
-  savable_state saved;		/* Bit buffer at start of MCU */
+  savable_state saved;      /* Bit buffer at start of MCU */
 
   /* These fields are NOT loaded into local working state. */
-  unsigned int restarts_to_go;	/* MCUs left in this restart interval */
-  int next_restart_num;		/* next restart number to write (0-7) */
+  unsigned int restarts_to_go;  /* MCUs left in this restart interval */
+  int next_restart_num;     /* next restart number to write (0-7) */
 
   /* Pointers to derived tables (these workspaces have image lifespan) */
   c_derived_tbl * derived_tbls[NUM_HUFF_TBLS];
@@ -64,7 +64,7 @@ typedef struct {
   /* Pointers to derived tables to be used for each data unit within an MCU */
   c_derived_tbl * cur_tbls[C_MAX_DATA_UNITS_IN_MCU];
 
-#ifdef ENTROPY_OPT_SUPPORTED	/* Statistics tables for optimization */
+#ifdef ENTROPY_OPT_SUPPORTED    /* Statistics tables for optimization */
   long * count_ptrs[NUM_HUFF_TBLS];
 
   /* Pointers to stats tables to be used for each data unit within an MCU */
@@ -98,10 +98,10 @@ typedef lhuff_entropy_encoder * lhuff_entropy_ptr;
  */
 
 typedef struct {
-  JOCTET * next_output_byte;	/* => next byte to write in buffer */
-  size_t free_in_buffer;	/* # of byte spaces remaining in buffer */
-  savable_state cur;		/* Current bit buffer & DC state */
-  j_compress_ptr cinfo;		/* dump_buffer needs access to this */
+  JOCTET * next_output_byte;    /* => next byte to write in buffer */
+  size_t free_in_buffer;    /* # of byte spaces remaining in buffer */
+  savable_state cur;        /* Current bit buffer & DC state */
+  j_compress_ptr cinfo;     /* dump_buffer needs access to this */
 } working_state;
 
 
@@ -253,7 +253,7 @@ emit_bits (working_state * state, unsigned int code, int size)
 
   put_buffer &= (((IJG_INT32) 1)<<size) - 1; /* mask off any extra bits in code */
   
-  put_bits += size;		/* new number of bits in buffer */
+  put_bits += size;     /* new number of bits in buffer */
   
   put_buffer <<= 24 - put_bits; /* align incoming bits */
 
@@ -263,7 +263,7 @@ emit_bits (working_state * state, unsigned int code, int size)
     int c = (int) ((put_buffer >> 16) & 0xFF);
     
     emit_byte(state, c, return FALSE);
-    if (c == 0xFF) {		/* need to stuff a zero byte? */
+    if (c == 0xFF) {        /* need to stuff a zero byte? */
       emit_byte(state, 0, return FALSE);
     }
     put_buffer <<= 8;
@@ -282,7 +282,7 @@ flush_bits (working_state * state)
 {
   if (! emit_bits(state, 0x7F, 7)) /* fill any partial byte with ones */
     return FALSE;
-  state->cur.put_buffer = 0;	/* and reset bit-buffer to empty */
+  state->cur.put_buffer = 0;    /* and reset bit-buffer to empty */
   state->cur.put_bits = 0;
   return TRUE;
 }
@@ -360,14 +360,14 @@ encode_mcus_huff (j_compress_ptr cinfo, JDIFFIMAGE diff_buf,
       /* Input the sample difference */
       temp = *entropy->input_ptr[entropy->input_ptr_index[sampn]]++;
 
-      if (temp & 0x8000) {	/* instead of temp < 0 */
+      if (temp & 0x8000) {  /* instead of temp < 0 */
 	temp = (-temp) & 0x7FFF; /* absolute value, mod 2^16 */
-	if (temp == 0)		/* special case: magnitude = 32768 */
+	if (temp == 0)      /* special case: magnitude = 32768 */
 	  temp2 = temp = 0x8000;
-	temp2 = ~ temp;		/* one's complement of magnitude */
+	temp2 = ~ temp;     /* one's complement of magnitude */
       } else {
-	temp &= 0x7FFF;		/* abs value mod 2^16 */
-	temp2 = temp;		/* magnitude */
+	temp &= 0x7FFF;     /* abs value mod 2^16 */
+	temp2 = temp;       /* magnitude */
       }
 
       /* Find the number of bits needed for the magnitude of the difference */
@@ -387,8 +387,8 @@ encode_mcus_huff (j_compress_ptr cinfo, JDIFFIMAGE diff_buf,
 
       /* Emit that number of bits of the value, if positive, */
       /* or the complement of its magnitude, if negative. */
-      if (nbits &&		/* emit_bits rejects calls with size 0 */
-	  nbits != 16)		/* special case: no bits should be emitted */
+      if (nbits &&      /* emit_bits rejects calls with size 0 */
+	  nbits != 16)      /* special case: no bits should be emitted */
 	if (! emit_bits(&state, (unsigned int) temp2, nbits))
 	  return mcu_num;
     }
@@ -503,12 +503,12 @@ encode_mcus_gather (j_compress_ptr cinfo, JDIFFIMAGE diff_buf,
       /* Input the sample difference */
       temp = *entropy->input_ptr[entropy->input_ptr_index[sampn]]++;
 
-      if (temp & 0x8000) {	/* instead of temp < 0 */
+      if (temp & 0x8000) {  /* instead of temp < 0 */
 	temp = (-temp) & 0x7FFF; /* absolute value, mod 2^16 */
-	if (temp == 0)		/* special case: magnitude = 32768 */
+	if (temp == 0)      /* special case: magnitude = 32768 */
 	  temp = 0x8000;
       } else
-	temp &= 0x7FFF;		/* abs value mod 2^16 */
+	temp &= 0x7FFF;     /* abs value mod 2^16 */
 
       /* Find the number of bits needed for the magnitude of the difference */
       nbits = 0;

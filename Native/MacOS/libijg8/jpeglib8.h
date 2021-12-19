@@ -528,7 +528,7 @@ struct jpeg_decompress_struct {
    * This pointer is NULL when reading a non-progressive file.
    */
   int (*coef_bits)[DCTSIZE2];   /* -1 or current Al value for each coef */
-
+  
   /* Internal JPEG parameters --- the application usually need not look at
    * these fields.  Note that the decompressor output side may not use
    * any parameters that can change between scans.

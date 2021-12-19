@@ -13,7 +13,7 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossy12.h"		/* Private declarations for lossy codec */
+#include "jlossy12.h"   /* Private declarations for lossy codec */
 
 
 /* We use a full-image coefficient buffer when doing Huffman optimization,
@@ -33,10 +33,10 @@
 /* Private buffer controller object */
 
 typedef struct {
-  JDIMENSION iMCU_row_num;	/* iMCU row # within image */
-  JDIMENSION mcu_ctr;		/* counts MCUs processed in current row */
-  int MCU_vert_offset;		/* counts MCU rows within iMCU row */
-  int MCU_rows_per_iMCU_row;	/* number of such rows needed */
+  JDIMENSION iMCU_row_num;  /* iMCU row # within image */
+  JDIMENSION mcu_ctr;       /* counts MCUs processed in current row */
+  int MCU_vert_offset;      /* counts MCU rows within iMCU row */
+  int MCU_rows_per_iMCU_row;    /* number of such rows needed */
 
   /* For single-pass compression, it's sufficient to buffer just one MCU
    * (although this may prove a bit slow in practice).  We allocate a
@@ -145,7 +145,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 {
   j_lossy_c_ptr lossyc = (j_lossy_c_ptr) cinfo->codec;
   c_coef_ptr coef = (c_coef_ptr) lossyc->coef_private;
-  JDIMENSION MCU_col_num;	/* index of current MCU within row */
+  JDIMENSION MCU_col_num;   /* index of current MCU within row */
   JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
   int blkn, bi, ci, yindex, yoffset, blockcnt;
@@ -262,19 +262,19 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     buffer = (*cinfo->mem->access_virt_barray)
       ((j_common_ptr) cinfo, coef->whole_image[ci],
        coef->iMCU_row_num * compptr->v_samp_factor,
-       (JDIMENSION) compptr->v_samp_factor, TRUE);
+       (JDIMENSION)compptr->v_samp_factor, TRUE);
     /* Count non-dummy DCT block rows in this iMCU row. */
     if (coef->iMCU_row_num < last_iMCU_row)
       block_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here, since may not be set! */
-      block_rows = (int) (compptr->height_in_data_units % compptr->v_samp_factor);
+      block_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (block_rows == 0) block_rows = compptr->v_samp_factor;
     }
     blocks_across = compptr->width_in_data_units;
     h_samp_factor = compptr->h_samp_factor;
     /* Count number of dummy blocks to be added at the right margin. */
-    ndummy = (int) (blocks_across % h_samp_factor);
+    ndummy = (int)(blocks_across % h_samp_factor);
     if (ndummy > 0)
       ndummy = h_samp_factor - ndummy;
     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
@@ -345,7 +345,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 {
   j_lossy_c_ptr lossyc = (j_lossy_c_ptr) cinfo->codec;
   c_coef_ptr coef = (c_coef_ptr) lossyc->coef_private;
-  JDIMENSION MCU_col_num;	/* index of current MCU within row */
+  JDIMENSION MCU_col_num;   /* index of current MCU within row */
   int blkn, ci, xindex, yindex, yoffset;
   JDIMENSION start_col;
   JBLOCKARRAY buffer[MAX_COMPS_IN_SCAN];
@@ -361,7 +361,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     buffer[ci] = (*cinfo->mem->access_virt_barray)
       ((j_common_ptr) cinfo, coef->whole_image[compptr->component_index],
        coef->iMCU_row_num * compptr->v_samp_factor,
-       (JDIMENSION) compptr->v_samp_factor, FALSE);
+       (JDIMENSION)compptr->v_samp_factor, FALSE);
   }
 
   /* Loop to process one whole iMCU row */
@@ -370,7 +370,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     for (MCU_col_num = coef->mcu_ctr; MCU_col_num < cinfo->MCUs_per_row;
 	 MCU_col_num++) {
       /* Construct list of pointers to DCT blocks belonging to this MCU */
-      blkn = 0;			/* index of current DCT block within MCU */
+      blkn = 0;         /* index of current DCT block within MCU */
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
 	compptr = cinfo->cur_comp_info[ci];
 	start_col = MCU_col_num * compptr->MCU_width;

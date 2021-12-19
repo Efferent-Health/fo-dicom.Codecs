@@ -209,7 +209,7 @@ prepare_range_limit_table (j_decompress_ptr cinfo)
 
 LOCAL(void)
 master_selection (j_decompress_ptr cinfo)
-{
+{ 
   my_master_ptr master = (my_master_ptr) cinfo->master;
   long samplesperrow;
   JDIMENSION jd_samplesperrow;
@@ -217,7 +217,6 @@ master_selection (j_decompress_ptr cinfo)
   /* Initialize dimensions and other stuff */
   jpeg_calc_output_dimensions(cinfo);
   prepare_range_limit_table(cinfo);
-
   /* Width of an output scanline must be representable as JDIMENSION. */
   samplesperrow = (long) cinfo->output_width * (long) cinfo->out_color_components;
   jd_samplesperrow = (JDIMENSION) samplesperrow;
@@ -444,14 +443,16 @@ jpeg_new_colormap (j_decompress_ptr cinfo)
 
 GLOBAL(void)
 jinit_master_decompress (j_decompress_ptr cinfo)
-{
+{ 
   my_master_ptr master;
 
   master = (my_master_ptr)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
 				  SIZEOF(my_decomp_master));
   cinfo->master = (struct jpeg_decomp_master *) master;
+
   master->pub.prepare_for_output_pass = prepare_for_output_pass;
+
   master->pub.finish_output_pass = finish_output_pass;
 
   master->pub.is_dummy_pass = FALSE;

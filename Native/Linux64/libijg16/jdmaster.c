@@ -84,7 +84,7 @@ use_merged_upsample (j_decompress_ptr cinfo)
 GLOBAL(void)
 jpeg_calc_output_dimensions (j_decompress_ptr cinfo)
 /* Do computations that are needed before master selection phase */
-{
+{ 
   /* Prevent application from calling me at wrong times */
   if (cinfo->global_state != DSTATE_READY)
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);

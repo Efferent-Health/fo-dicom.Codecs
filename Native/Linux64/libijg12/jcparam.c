@@ -51,7 +51,7 @@ jpeg_add_quant_table (j_compress_ptr cinfo, int which_tbl,
     if (temp <= 0L) temp = 1L;
     if (temp > 32767L) temp = 32767L; /* max quantizer needed for 12 bits */
     if (force_baseline && temp > 255L)
-      temp = 255L;		/* limit to baseline range if requested */
+      temp = 255L;      /* limit to baseline range if requested */
     (*qtblptr)->quantval[i] = (UINT16) temp;
   }
 
@@ -342,8 +342,8 @@ jpeg_set_defaults (j_compress_ptr cinfo)
    */
   cinfo->JFIF_major_version = 1; /* Default JFIF version = 1.01 */
   cinfo->JFIF_minor_version = 1;
-  cinfo->density_unit = 0;	/* Pixel size is unknown by default */
-  cinfo->X_density = 1;		/* Pixel aspect ratio is square by default */
+  cinfo->density_unit = 0;  /* Pixel size is unknown by default */
+  cinfo->X_density = 1;     /* Pixel aspect ratio is square by default */
   cinfo->Y_density = 1;
 
   /* Choose JPEG colorspace based on input space, set defaults accordingly */
@@ -570,9 +570,9 @@ jpeg_simple_progression (j_compress_ptr cinfo)
   } else {
     /* All-purpose script for other color spaces. */
     if (ncomps > MAX_COMPS_IN_SCAN)
-      nscans = 6 * ncomps;	/* 2 DC + 4 AC scans per component */
+      nscans = 6 * ncomps;  /* 2 DC + 4 AC scans per component */
     else
-      nscans = 2 + 4 * ncomps;	/* 2 DC scans; 4 AC scans per component */
+      nscans = 2 + 4 * ncomps;  /* 2 DC scans; 4 AC scans per component */
   }
 
   /* Allocate space for script.

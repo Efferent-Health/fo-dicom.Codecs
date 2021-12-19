@@ -28,14 +28,14 @@
 typedef struct {
   /* These variables keep track of the current location of the input side. */
   /* cinfo->input_iMCU_row is also used for this. */
-  JDIMENSION MCU_ctr;		/* counts MCUs processed in current row */
-  unsigned int restart_rows_to_go;	/* MCU-rows left in this restart interval */
-  unsigned int MCU_vert_offset;		/* counts MCU rows within iMCU row */
-  unsigned int MCU_rows_per_iMCU_row;	/* number of such rows needed */
+  JDIMENSION MCU_ctr;       /* counts MCUs processed in current row */
+  unsigned int restart_rows_to_go;  /* MCU-rows left in this restart interval */
+  unsigned int MCU_vert_offset;     /* counts MCU rows within iMCU row */
+  unsigned int MCU_rows_per_iMCU_row;   /* number of such rows needed */
 
   /* The output side's location is represented by cinfo->output_iMCU_row. */
 
-  JDIFFARRAY diff_buf[MAX_COMPONENTS];	/* iMCU row of differences */
+  JDIFFARRAY diff_buf[MAX_COMPONENTS];  /* iMCU row of differences */
   JDIFFARRAY undiff_buf[MAX_COMPONENTS]; /* iMCU row of undiff'd samples */
 
 #ifdef D_MULTISCAN_FILES_SUPPORTED
@@ -154,8 +154,8 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
 {
   j_lossless_d_ptr losslsd = (j_lossless_d_ptr) cinfo->codec;
   d_diff_ptr diff = (d_diff_ptr) losslsd->diff_private;
-  JDIMENSION MCU_col_num;	/* index of current MCU within row */
-  JDIMENSION MCU_count;		/* number of MCUs decoded */
+  JDIMENSION MCU_col_num;   /* index of current MCU within row */
+  JDIMENSION MCU_count;     /* number of MCUs decoded */
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
   int comp, ci, row, prev_row;
   unsigned int yoffset;
@@ -238,7 +238,7 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
 METHODDEF(int)
 dummy_consume_data (j_decompress_ptr cinfo)
 {
-  return JPEG_SUSPENDED;	/* Always indicate nothing was done */
+  return JPEG_SUSPENDED;    /* Always indicate nothing was done */
 }
 
 
@@ -256,8 +256,8 @@ consume_data (j_decompress_ptr cinfo)
 {
   j_lossless_d_ptr losslsd = (j_lossless_d_ptr) cinfo->codec;
   d_diff_ptr diff = (d_diff_ptr) losslsd->diff_private;
-  /* JDIMENSION MCU_col_num; */	/* index of current MCU within row */
-  /* JDIMENSION MCU_count; */	/* number of MCUs decoded */
+  /* JDIMENSION MCU_col_num; */ /* index of current MCU within row */
+  /* JDIMENSION MCU_count; */   /* number of MCUs decoded */
   /* JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1; */
   int comp, ci /* , yoffset, row, prev_row */;
   JSAMPARRAY buffer[MAX_COMPS_IN_SCAN];

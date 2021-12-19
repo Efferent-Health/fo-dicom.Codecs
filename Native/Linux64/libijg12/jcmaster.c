@@ -14,26 +14,26 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossy12.h"		/* Private declarations for lossy codec */
+#include "jlossy12.h"       /* Private declarations for lossy codec */
 
 
 /* Private state */
 
 typedef enum {
-	main_pass,		/* input data, also do first output step */
-	huff_opt_pass,		/* Huffman code optimization pass */
-	output_pass		/* data output pass */
+	main_pass,      /* input data, also do first output step */
+	huff_opt_pass,      /* Huffman code optimization pass */
+	output_pass     /* data output pass */
 } c_pass_type;
 
 typedef struct {
-  struct jpeg_comp_master pub;	/* public fields */
+  struct jpeg_comp_master pub;  /* public fields */
 
-  c_pass_type pass_type;	/* the type of the current pass */
+  c_pass_type pass_type;    /* the type of the current pass */
 
-  int pass_number;		/* # of passes completed */
-  int total_passes;		/* total # of passes needed */
+  int pass_number;      /* # of passes completed */
+  int total_passes;     /* total # of passes needed */
 
-  int scan_number;		/* current index in scan_info[] */
+  int scan_number;      /* current index in scan_info[] */
 } my_comp_master;
 
 typedef my_comp_master * my_master_ptr;
@@ -213,7 +213,7 @@ validate_script (j_compress_ptr cinfo)
        * Perhaps they really meant 0..N-1 for N-bit precision, which is what
        * we allow here.
        */
-      if (Ss < 1 || Ss > 7 ||			/* predictor selector */
+      if (Ss < 1 || Ss > 7 ||           /* predictor selector */
 	  Se != 0 || Ah != 0 ||
 	  Al < 0 || Al >= cinfo->data_precision) /* point transform */
 	ERREXIT1(cinfo, JERR_BAD_LOSSLESS_SCRIPT, scanno);
@@ -243,10 +243,10 @@ validate_script (j_compress_ptr cinfo)
 	  Ah < 0 || Ah > MAX_AH_AL || Al < 0 || Al > MAX_AH_AL)
 	ERREXIT1(cinfo, JERR_BAD_PROG_SCRIPT, scanno);
       if (Ss == 0) {
-	if (Se != 0)		/* DC and AC together not OK */
+	if (Se != 0)        /* DC and AC together not OK */
 	  ERREXIT1(cinfo, JERR_BAD_PROG_SCRIPT, scanno);
       } else {
-	if (ncomps != 1)	/* AC scans must be for only one component */
+	if (ncomps != 1)    /* AC scans must be for only one component */
 	  ERREXIT1(cinfo, JERR_BAD_PROG_SCRIPT, scanno);
       }
       for (ci = 0; ci < ncomps; ci++) {
