@@ -24,7 +24,7 @@
 
 GLOBAL(void)
 jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
-			 d_derived_tbl ** pdtbl)
+             d_derived_tbl ** pdtbl)
 {
   JHUFF_TBL *htbl;
   d_derived_tbl *dtbl;
@@ -50,10 +50,10 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
   if (*pdtbl == NULL)
     *pdtbl = (d_derived_tbl *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-				  SIZEOF(d_derived_tbl));
+                  SIZEOF(d_derived_tbl));
   dtbl = *pdtbl;
   dtbl->pub = htbl;     /* fill in back link */
-  
+
   /* Figure C.1: make table of Huffman code length for each symbol */
 
   p = 0;
@@ -66,10 +66,10 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
   }
   huffsize[p] = 0;
   numsymbols = p;
-  
+
   /* Figure C.2: generate the codes themselves */
   /* We also validate that the counts represent a legal Huffman code tree. */
-  
+
   code = 0;
   si = huffsize[0];
   p = 0;
@@ -120,9 +120,9 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
       /* Generate left-justified code followed by all possible bit sequences */
       lookbits = huffcode[p] << (HUFF_LOOKAHEAD-l);
       for (ctr = 1 << (HUFF_LOOKAHEAD-l); ctr > 0; ctr--) {
-	dtbl->look_nbits[lookbits] = l;
-	dtbl->look_sym[lookbits] = htbl->huffval[p];
-	lookbits++;
+    dtbl->look_nbits[lookbits] = l;
+    dtbl->look_sym[lookbits] = htbl->huffval[p];
+    lookbits++;
       }
     }
   }
@@ -137,7 +137,7 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
     for (i = 0; i < numsymbols; i++) {
       int sym = htbl->huffval[i];
       if (sym < 0 || sym > 16)
-	ERREXIT(cinfo, JERR_BAD_HUFF_TABLE);
+    ERREXIT(cinfo, JERR_BAD_HUFF_TABLE);
     }
   }
 }
@@ -167,8 +167,8 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
 
 GLOBAL(boolean)
 jpeg_fill_bit_buffer (bitread_working_state * state,
-		      register bit_buf_type get_buffer, register int bits_left,
-		      int nbits)
+              register bit_buf_type get_buffer, register int bits_left,
+              int nbits)
 /* Load up the bit buffer to a depth of at least nbits */
 {
   /* Copy heavily used state fields into locals (hopefully registers) */
@@ -186,48 +186,48 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
 
       /* Attempt to read a byte */
       if (bytes_in_buffer == 0) {
-	if (! (*cinfo->src->fill_input_buffer) (cinfo))
-	  return FALSE;
-	next_input_byte = cinfo->src->next_input_byte;
-	bytes_in_buffer = cinfo->src->bytes_in_buffer;
+    if (! (*cinfo->src->fill_input_buffer) (cinfo))
+      return FALSE;
+    next_input_byte = cinfo->src->next_input_byte;
+    bytes_in_buffer = cinfo->src->bytes_in_buffer;
       }
       bytes_in_buffer--;
       c = GETJOCTET(*next_input_byte++);
 
       /* If it's 0xFF, check and discard stuffed zero byte */
       if (c == 0xFF) {
-	/* Loop here to discard any padding FF's on terminating marker,
-	 * so that we can save a valid unread_marker value.  NOTE: we will
-	 * accept multiple FF's followed by a 0 as meaning a single FF data
-	 * byte.  This data pattern is not valid according to the standard.
-	 */
-	do {
-	  if (bytes_in_buffer == 0) {
-	    if (! (*cinfo->src->fill_input_buffer) (cinfo))
-	      return FALSE;
-	    next_input_byte = cinfo->src->next_input_byte;
-	    bytes_in_buffer = cinfo->src->bytes_in_buffer;
-	  }
-	  bytes_in_buffer--;
-	  c = GETJOCTET(*next_input_byte++);
-	} while (c == 0xFF);
+    /* Loop here to discard any padding FF's on terminating marker,
+     * so that we can save a valid unread_marker value.  NOTE: we will
+     * accept multiple FF's followed by a 0 as meaning a single FF data
+     * byte.  This data pattern is not valid according to the standard.
+     */
+    do {
+      if (bytes_in_buffer == 0) {
+        if (! (*cinfo->src->fill_input_buffer) (cinfo))
+          return FALSE;
+        next_input_byte = cinfo->src->next_input_byte;
+        bytes_in_buffer = cinfo->src->bytes_in_buffer;
+      }
+      bytes_in_buffer--;
+      c = GETJOCTET(*next_input_byte++);
+    } while (c == 0xFF);
 
-	if (c == 0) {
-	  /* Found FF/00, which represents an FF data byte */
-	  c = 0xFF;
-	} else {
-	  /* Oops, it's actually a marker indicating end of compressed data.
-	   * Save the marker code for later use.
-	   * Fine point: it might appear that we should save the marker into
-	   * bitread working state, not straight into permanent state.  But
-	   * once we have hit a marker, we cannot need to suspend within the
-	   * current MCU, because we will read no more bytes from the data
-	   * source.  So it is OK to update permanent state right away.
-	   */
-	  cinfo->unread_marker = c;
-	  /* See if we need to insert some fake zero bits. */
-	  goto no_more_bytes;
-	}
+    if (c == 0) {
+      /* Found FF/00, which represents an FF data byte */
+      c = 0xFF;
+    } else {
+      /* Oops, it's actually a marker indicating end of compressed data.
+       * Save the marker code for later use.
+       * Fine point: it might appear that we should save the marker into
+       * bitread working state, not straight into permanent state.  But
+       * once we have hit a marker, we cannot need to suspend within the
+       * current MCU, because we will read no more bytes from the data
+       * source.  So it is OK to update permanent state right away.
+       */
+      cinfo->unread_marker = c;
+      /* See if we need to insert some fake zero bits. */
+      goto no_more_bytes;
+    }
       }
 
       /* OK, load c into get_buffer */
@@ -248,12 +248,12 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
        */
       huffd_common_ptr huffd;
       if (cinfo->process == JPROC_LOSSLESS)
-	huffd = (huffd_common_ptr) ((j_lossless_d_ptr) cinfo->codec)->entropy_private;
+    huffd = (huffd_common_ptr) ((j_lossless_d_ptr) cinfo->codec)->entropy_private;
       else
-	huffd = (huffd_common_ptr) ((j_lossy_d_ptr) cinfo->codec)->entropy_private;
+    huffd = (huffd_common_ptr) ((j_lossy_d_ptr) cinfo->codec)->entropy_private;
       if (! huffd->insufficient_data) {
-	WARNMS(cinfo, JWRN_HIT_MARKER);
-	huffd->insufficient_data = TRUE;
+    WARNMS(cinfo, JWRN_HIT_MARKER);
+    huffd->insufficient_data = TRUE;
       }
       /* Fill the buffer with zero bits */
       get_buffer <<= MIN_GET_BITS - bits_left;
@@ -278,8 +278,8 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
 
 GLOBAL(int)
 jpeg_huff_decode (bitread_working_state * state,
-		  register bit_buf_type get_buffer, register int bits_left,
-		  d_derived_tbl * htbl, int min_bits)
+          register bit_buf_type get_buffer, register int bits_left,
+          d_derived_tbl * htbl, int min_bits)
 {
   register int l = min_bits;
   register IJG_INT32 code;

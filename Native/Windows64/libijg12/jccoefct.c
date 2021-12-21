@@ -13,7 +13,7 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossy12.h"       /* Private declarations for lossy codec */
+#include "jlossy12.h"   /* Private declarations for lossy codec */
 
 
 /* We use a full-image coefficient buffer when doing Huffman optimization,

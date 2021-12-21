@@ -105,7 +105,7 @@ sep_upsample (j_decompress_ptr cinfo,
        * to color_buf[ci], so that fullsize_upsample can change it.
        */
       (*upsample->methods[ci]) (cinfo, compptr,
-   input_buf[ci] + (*in_row_group_ctr * upsample->rowgroup_height[ci]),
+    input_buf[ci] + (*in_row_group_ctr * upsample->rowgroup_height[ci]),
     upsample->color_buf + ci);
     }
     upsample->next_row_out = 0;

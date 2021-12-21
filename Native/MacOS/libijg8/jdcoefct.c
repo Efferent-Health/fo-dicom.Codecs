@@ -165,7 +165,7 @@ decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
      MCU_col_num++) {
       /* Try to fetch an MCU.  Entropy decoder expects buffer to be zeroed. */
       jzero_far((void FAR *) coef->MCU_buffer[0],
-        (size_t) (cinfo->data_units_in_MCU * SIZEOF(JBLOCK)));
+        (size_t)(cinfo->data_units_in_MCU * SIZEOF(JBLOCK)));
       if (! (*lossyd->entropy_decode_mcu) (cinfo, coef->MCU_buffer)) {
     /* Suspension forced; update state counters and exit */
     coef->MCU_vert_offset = yoffset;
@@ -417,7 +417,7 @@ smoothing_ok (j_decompress_ptr cinfo)
   int * coef_bits;
   int * coef_bits_latch;
 
-  if ((!(cinfo->process) == JPROC_PROGRESSIVE) || cinfo->coef_bits == NULL)
+  if (!cinfo->process == JPROC_PROGRESSIVE || cinfo->coef_bits == NULL)
     return FALSE;
 
   /* Allocate latch area if not already done */

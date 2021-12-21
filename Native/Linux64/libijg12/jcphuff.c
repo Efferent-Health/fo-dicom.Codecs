@@ -76,9 +76,9 @@ typedef phuff_entropy_encoder * phuff_entropy_ptr;
 #ifdef RIGHT_SHIFT_IS_UNSIGNED
 #define ISHIFT_TEMPS    int ishift_temp;
 #define IRIGHT_SHIFT(x,shft)  \
-	((ishift_temp = (x)) < 0 ? \
-	 (ishift_temp >> (shft)) | ((~0) << (16-(shft))) : \
-	 (ishift_temp >> (shft)))
+    ((ishift_temp = (x)) < 0 ? \
+     (ishift_temp >> (shft)) | ((~0) << (16-(shft))) : \
+     (ishift_temp >> (shft)))
 #else
 #define ISHIFT_TEMPS
 #define IRIGHT_SHIFT(x,shft)    ((x) >> (shft))
@@ -86,13 +86,13 @@ typedef phuff_entropy_encoder * phuff_entropy_ptr;
 
 /* Forward declarations */
 METHODDEF(boolean) encode_mcu_DC_first JPP((j_compress_ptr cinfo,
-					    JBLOCKROW *MCU_data));
+                        JBLOCKROW *MCU_data));
 METHODDEF(boolean) encode_mcu_AC_first JPP((j_compress_ptr cinfo,
-					    JBLOCKROW *MCU_data));
+                        JBLOCKROW *MCU_data));
 METHODDEF(boolean) encode_mcu_DC_refine JPP((j_compress_ptr cinfo,
-					     JBLOCKROW *MCU_data));
+                         JBLOCKROW *MCU_data));
 METHODDEF(boolean) encode_mcu_AC_refine JPP((j_compress_ptr cinfo,
-					     JBLOCKROW *MCU_data));
+                         JBLOCKROW *MCU_data));
 METHODDEF(void) finish_pass_phuff JPP((j_compress_ptr cinfo));
 METHODDEF(void) finish_pass_gather_phuff JPP((j_compress_ptr cinfo));
 
@@ -130,9 +130,9 @@ start_pass_phuff (j_compress_ptr cinfo, boolean gather_statistics)
       lossyc->entropy_encode_mcu = encode_mcu_AC_refine;
       /* AC refinement needs a correction bit buffer */
       if (entropy->bit_buffer == NULL)
-	entropy->bit_buffer = (char *)
-	  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-				      MAX_CORR_BITS * SIZEOF(char));
+    entropy->bit_buffer = (char *)
+      (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+                      MAX_CORR_BITS * SIZEOF(char));
     }
   }
   if (gather_statistics)
@@ -150,7 +150,7 @@ start_pass_phuff (j_compress_ptr cinfo, boolean gather_statistics)
     /* Get table index */
     if (is_DC_band) {
       if (cinfo->Ah != 0)   /* DC refinement needs no table */
-	continue;
+    continue;
       tbl = compptr->dc_tbl_no;
     } else {
       entropy->ac_tbl_no = tbl = compptr->ac_tbl_no;
@@ -163,15 +163,15 @@ start_pass_phuff (j_compress_ptr cinfo, boolean gather_statistics)
       /* Allocate and zero the statistics tables */
       /* Note that jpeg_gen_optimal_table expects 257 entries in each table! */
       if (entropy->count_ptrs[tbl] == NULL)
-	entropy->count_ptrs[tbl] = (long *)
-	  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-				      257 * SIZEOF(long));
+    entropy->count_ptrs[tbl] = (long *)
+      (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
+                      257 * SIZEOF(long));
       MEMZERO(entropy->count_ptrs[tbl], 257 * SIZEOF(long));
     } else {
       /* Compute derived values for Huffman table */
       /* We may do this more than once for a table, but it's not expensive */
       jpeg_make_c_derived_tbl(cinfo, is_DC_band, tbl,
-			      & entropy->derived_tbls[tbl]);
+                  & entropy->derived_tbls[tbl]);
     }
   }
 
@@ -196,9 +196,9 @@ start_pass_phuff (j_compress_ptr cinfo, boolean gather_statistics)
 
 /* Emit a byte */
 #define emit_byte(entropy,val)  \
-	{ *(entropy)->next_output_byte++ = (JOCTET) (val);  \
-	  if (--(entropy)->free_in_buffer == 0)  \
-	    dump_buffer(entropy); }
+    { *(entropy)->next_output_byte++ = (JOCTET) (val);  \
+      if (--(entropy)->free_in_buffer == 0)  \
+        dump_buffer(entropy); }
 
 
 LOCAL(void)
@@ -295,7 +295,7 @@ emit_symbol (phuff_entropy_ptr entropy, int tbl_no, int symbol)
 
 LOCAL(void)
 emit_buffered_bits (phuff_entropy_ptr entropy, char * bufstart,
-		    unsigned int nbits)
+            unsigned int nbits)
 {
   if (entropy->gather_statistics)
     return;         /* no real work */
@@ -793,7 +793,7 @@ finish_pass_gather_phuff (j_compress_ptr cinfo)
     compptr = cinfo->cur_comp_info[ci];
     if (is_DC_band) {
       if (cinfo->Ah != 0)   /* DC refinement needs no table */
-	continue;
+    continue;
       tbl = compptr->dc_tbl_no;
     } else {
       tbl = compptr->ac_tbl_no;
@@ -832,7 +832,7 @@ jinit_phuff_encoder (j_compress_ptr cinfo)
 
   entropy = (phuff_entropy_ptr)
     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-				SIZEOF(phuff_entropy_encoder));
+                SIZEOF(phuff_entropy_encoder));
   lossyc->entropy_private = (struct jpeg_entropy_encoder *) entropy;
   lossyc->pub.entropy_start_pass = start_pass_phuff;
   lossyc->pub.need_optimization_pass = need_optimization_pass;

@@ -717,19 +717,19 @@ realize_virt_arrays (j_common_ptr cinfo)
     if (bptr->mem_buffer == NULL) { /* if not realized yet */
       minheights = ((long) bptr->rows_in_array - 1L) / bptr->maxaccess + 1L;
       if (minheights <= max_minheights) {
-	/* This buffer fits in memory */
-	bptr->rows_in_mem = bptr->rows_in_array;
+    /* This buffer fits in memory */
+    bptr->rows_in_mem = bptr->rows_in_array;
       } else {
-	/* It doesn't fit in memory, create backing store. */
-	bptr->rows_in_mem = (JDIMENSION) (max_minheights * bptr->maxaccess);
-	jpeg_open_backing_store(cinfo, & bptr->b_s_info,
-				(long) bptr->rows_in_array *
-				(long) bptr->blocksperrow *
-				(long) SIZEOF(JBLOCK));
-	bptr->b_s_open = TRUE;
+    /* It doesn't fit in memory, create backing store. */
+    bptr->rows_in_mem = (JDIMENSION) (max_minheights * bptr->maxaccess);
+    jpeg_open_backing_store(cinfo, & bptr->b_s_info,
+                (long) bptr->rows_in_array *
+                (long) bptr->blocksperrow *
+                (long) SIZEOF(JBLOCK));
+    bptr->b_s_open = TRUE;
       }
       bptr->mem_buffer = alloc_barray(cinfo, JPOOL_IMAGE,
-				      bptr->blocksperrow, bptr->rows_in_mem);
+                      bptr->blocksperrow, bptr->rows_in_mem);
       bptr->rowsperchunk = mem->last_rowsperchunk;
       bptr->cur_start_row = 0;
       bptr->first_undef_row = 0;

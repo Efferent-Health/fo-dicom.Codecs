@@ -30,7 +30,7 @@
 
 #include "osconfig.h"
 
-/* We assume ANSI C and don't support DOS, 
+/* We assume ANSI C and don't support DOS,
  * so the following settings need not be tested 
  */
 #define HAVE_PROTOTYPES 

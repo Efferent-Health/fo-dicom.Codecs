@@ -212,13 +212,13 @@ typedef unsigned int JDIMENSION;
  */
 
 /* a function called through method pointers: */
-#define METHODDEF(type)		static type
+#define METHODDEF(type)    static type
 /* a function used only in its module: */
-#define LOCAL(type)		static type
+#define LOCAL(type)    static type
 /* a function referenced thru EXTERNs: */
-#define GLOBAL(type)		type
+#define GLOBAL(type)    type
 /* a reference to a GLOBAL function: */
-#define EXTERN(type)		extern type
+#define EXTERN(type)    extern type
 
 
 /* This macro is used to declare a "method", that is, a function pointer.

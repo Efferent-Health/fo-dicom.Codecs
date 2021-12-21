@@ -316,7 +316,7 @@ output_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
       samp_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here; it is input-side-dependent! */
-      samp_rows = (int) (compptr->height_in_data_units % compptr->v_samp_factor);
+      samp_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (samp_rows == 0) samp_rows = compptr->v_samp_factor;
     }
 

@@ -42,7 +42,7 @@ typedef struct {
   int MCU_rows_per_iMCU_row;    /* number of such rows needed */
 
   JSAMPROW cur_row[MAX_COMPONENTS]; /* row of point transformed samples */
-  JSAMPROW prev_row[MAX_COMPONENTS];    /* previous row of Pt'd samples */
+  JSAMPROW prev_row[MAX_COMPONENTS];  /* previous row of Pt'd samples */
   JDIFFARRAY diff_buf[MAX_COMPONENTS];  /* iMCU row of differences */
 
   /* In multi-pass modes, we need a virtual sample array for each component. */
@@ -179,7 +179,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
          samp_row++)
           MEMZERO(diff->diff_buf[ci][samp_row],
               (size_t)jround_up((long) compptr->width_in_data_units,
-                        (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
+                (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
       }
     }
     samps_across = (int)compptr->width_in_data_units;
@@ -378,7 +378,7 @@ jinit_c_diff_controller (j_compress_ptr cinfo, boolean need_full_buffer)
     for (row = 0; row < compptr->v_samp_factor; row++)
       MEMZERO(diff->diff_buf[ci][row],
           (size_t)jround_up((long) compptr->width_in_data_units,
-                    (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
+            (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
   }
 
   /* Create the sample buffer. */

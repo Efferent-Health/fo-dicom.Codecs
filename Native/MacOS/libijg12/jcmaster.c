@@ -382,7 +382,7 @@ per_scan_setup (j_compress_ptr cinfo)
     /* For noninterleaved scans, it is convenient to define last_row_height
      * as the number of block rows present in the last iMCU row.
      */
-    tmp = (int) (compptr->height_in_data_units % compptr->v_samp_factor);
+    tmp = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
     if (tmp == 0) tmp = compptr->v_samp_factor;
     compptr->last_row_height = tmp;
     

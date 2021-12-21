@@ -30,7 +30,7 @@
 
 #include "osconfig.h"
 
-/* We assume ANSI C and don't support DOS,ß
+/* We assume ANSI C and don't support DOS,
 * so the following settings need not be tested
 */
 #define HAVE_PROTOTYPES 
@@ -80,23 +80,23 @@
 #endif /* JPEG_INTERNALS */
 
 /*
- *  $Log: jconfig16.h,v $
- *  Revision 1.5  2010-10-14 13:19:14  joergr
- *  Updated copyright header. Added reference to COPYRIGHT file.
- *
- *  Revision 1.4  2005/12/08 15:47:55  meichel
- *  Updated Makefiles to correctly install header files
- *
- *  Revision 1.3  2001/12/18 09:48:53  meichel
- *  Modified configure test for "const" support of the C compiler
- *    in order to avoid a macro recursion error on Sun CC 2.0.1
- *
- *  Revision 1.2  2001/11/19 14:55:56  meichel
- *  Disabled JPEGMEM environment variable in dcmjpeg IJG code
- *    since it is not required and getenv() is thread unsafe on some systems.
- *
- *  Revision 1.1  2001/11/13 15:57:17  meichel
- *  Initial release of module dcmjpeg
- *
- *
- */
+*  $Log: jconfig16.h,v $
+*  Revision 1.5  2010-10-14 13:19:14  joergr
+*  Updated copyright header. Added reference to COPYRIGHT file.
+*
+*  Revision 1.4  2005/12/08 15:47:55  meichel
+*  Updated Makefiles to correctly install header files
+*
+*  Revision 1.3  2001/12/18 09:48:53  meichel
+*  Modified configure test for "const" support of the C compiler
+*    in order to avoid a macro recursion error on Sun CC 2.0.1
+*
+*  Revision 1.2  2001/11/19 14:55:56  meichel
+*  Disabled JPEGMEM environment variable in dcmjpeg IJG code
+*    since it is not required and getenv() is thread unsafe on some systems.
+*
+*  Revision 1.1  2001/11/13 15:57:17  meichel
+*  Initial release of module dcmjpeg
+*
+*
+*/

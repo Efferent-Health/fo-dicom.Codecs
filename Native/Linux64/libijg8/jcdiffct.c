@@ -169,7 +169,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       samp_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here, since may not be set! */
-      samp_rows = (int) (compptr->height_in_data_units % compptr->v_samp_factor);
+      samp_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (samp_rows == 0) samp_rows = compptr->v_samp_factor;
       else {
         /* Fill dummy difference rows at the bottom edge with zeros, which
@@ -265,7 +265,7 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       samp_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here, since may not be set! */
-      samp_rows = (int) (compptr->height_in_data_units % compptr->v_samp_factor);
+      samp_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (samp_rows == 0) samp_rows = compptr->v_samp_factor;
     }
     samps_across = compptr->width_in_data_units;
@@ -378,7 +378,7 @@ jinit_c_diff_controller (j_compress_ptr cinfo, boolean need_full_buffer)
     for (row = 0; row < compptr->v_samp_factor; row++)
       MEMZERO(diff->diff_buf[ci][row],
           jround_up((long) compptr->width_in_data_units,
-            (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
+                    (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
   }
 
   /* Create the sample buffer. */

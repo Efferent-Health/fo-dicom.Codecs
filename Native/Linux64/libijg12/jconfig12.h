@@ -1,38 +1,38 @@
 /*
- *
- *  Copyright (C) 1998-2010, OFFIS e.V.
- *  All rights reserved.  See COPYRIGHT file for details.
- *
- *  This software and supporting documentation were developed by
- *
- *    OFFIS e.V.
- *    R&D Division Health
- *    Escherweg 2
- *    D-26121 Oldenburg, Germany
- *
- *
- *  Module: dcmjpeg
- *
- *  Author: Marco Eichelberg
- *
- *  Purpose:
- *    this file derives the preprocessor symbols required to compile
- *    the IJG library from the central DCMTK configuration file osconfig.h
- *
- *  Last Update:      $Author: joergr $
- *  Update Date:      $Date: 2010-10-14 13:19:12 $
- *  CVS/RCS Revision: $Revision: 1.5 $
- *  Status:           $State: Exp $
- *
- *  CVS/RCS Log at end of file
- *
- */
+*
+*  Copyright (C) 1998-2010, OFFIS e.V.
+*  All rights reserved.  See COPYRIGHT file for details.
+*
+*  This software and supporting documentation were developed by
+*
+*    OFFIS e.V.
+*    R&D Division Health
+*    Escherweg 2
+*    D-26121 Oldenburg, Germany
+*
+*
+*  Module: dcmjpeg
+*
+*  Author: Marco Eichelberg
+*
+*  Purpose:
+*    this file derives the preprocessor symbols required to compile
+*    the IJG library from the central DCMTK configuration file osconfig.h
+*
+*  Last Update:      $Author: joergr $
+*  Update Date:      $Date: 2010-10-14 13:19:12 $
+*  CVS/RCS Revision: $Revision: 1.5 $
+*  Status:           $State: Exp $
+*
+*  CVS/RCS Log at end of file
+*
+*/
 
 #include "osconfig.h"
 
-/* We assume ANSI C and don't support DOS, 
- * so the following settings need not be tested 
- */
+/* We assume ANSI C and don't support DOS,
+* so the following settings need not be tested
+*/
 #define HAVE_PROTOTYPES 
 #define HAVE_UNSIGNED_CHAR 
 #define HAVE_UNSIGNED_SHORT 
