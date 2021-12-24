@@ -642,7 +642,7 @@ quantize_fs_dither (j_decompress_ptr cinfo, JSAMPARRAY input_buf,
       output_ptr = output_buf[row];
       if (cquantize->on_odd_row) {
     /* work right to left in this row */
-    input_ptr += (width-1) * nc; /* so point to rightmost pixel */
+    input_ptr += (width-1) * (JDIMENSION)nc; /* so point to rightmost pixel */
     output_ptr += width-1;
     dir = -1;
     dirnc = -nc;

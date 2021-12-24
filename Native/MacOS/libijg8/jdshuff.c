@@ -179,7 +179,7 @@ process_restart (j_decompress_ptr cinfo)
 
   /* Throw away any unused bits remaining in bit buffer; */
   /* include any full bytes in next_marker's count of discarded bytes */
-  cinfo->marker->discarded_bytes += entropy->bitstate.bits_left / 8;
+  cinfo->marker->discarded_bytes += (unsigned int)(entropy->bitstate.bits_left / 8);
   entropy->bitstate.bits_left = 0;
 
   /* Advance past the RSTn marker */

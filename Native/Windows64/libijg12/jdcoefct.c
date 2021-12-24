@@ -165,8 +165,8 @@ decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
      MCU_col_num++) {
       /* Try to fetch an MCU.  Entropy decoder expects buffer to be zeroed. */
       jzero_far((void FAR *) coef->MCU_buffer[0],
-        (size_t)cinfo->data_units_in_MCU * SIZEOF(JBLOCK));
-      if (! (*lossyd->entropy_decode_mcu) (cinfo, coef->MCU_buffer)) {
+        (size_t)(cinfo->data_units_in_MCU * SIZEOF(JBLOCK)));
+      if (!(*lossyd->entropy_decode_mcu) (cinfo, coef->MCU_buffer)) {
     /* Suspension forced; update state counters and exit */
     coef->MCU_vert_offset = yoffset;
     coef->MCU_ctr = MCU_col_num;
@@ -353,7 +353,7 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
       block_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here; it is input-side-dependent! */
-      block_rows = (int)compptr->height_in_data_units % compptr->v_samp_factor;
+      block_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (block_rows == 0) block_rows = compptr->v_samp_factor;
     }
     inverse_DCT = lossyd->inverse_DCT[ci];
@@ -417,7 +417,7 @@ smoothing_ok (j_decompress_ptr cinfo)
   int * coef_bits;
   int * coef_bits_latch;
 
-  if (! cinfo->process == JPROC_PROGRESSIVE || cinfo->coef_bits == NULL)
+  if (!cinfo->process == JPROC_PROGRESSIVE || cinfo->coef_bits == NULL)
     return FALSE;
 
   /* Allocate latch area if not already done */
@@ -514,7 +514,7 @@ decompress_smooth_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
       last_row = FALSE;
     } else {
       /* NB: can't use last_row_height here; it is input-side-dependent! */
-      block_rows = (int)compptr->height_in_data_units % compptr->v_samp_factor;
+      block_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (block_rows == 0) block_rows = compptr->v_samp_factor;
       access_rows = block_rows; /* this iMCU row only */
       last_row = TRUE;

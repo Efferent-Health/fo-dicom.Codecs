@@ -415,10 +415,10 @@ per_scan_setup (j_compress_ptr cinfo)
       compptr->MCU_data_units = compptr->MCU_width * compptr->MCU_height;
       compptr->MCU_sample_width = compptr->MCU_width * data_unit;
       /* Figure number of non-dummy blocks in last MCU column & row */
-      tmp = (int) (compptr->width_in_data_units % compptr->MCU_width);
+      tmp = (int)(compptr->width_in_data_units % compptr->MCU_width);
       if (tmp == 0) tmp = compptr->MCU_width;
       compptr->last_col_width = tmp;
-      tmp = (int) (compptr->height_in_data_units % compptr->MCU_height);
+      tmp = (int)(compptr->height_in_data_units % compptr->MCU_height);
       if (tmp == 0) tmp = compptr->MCU_height;
       compptr->last_row_height = tmp;
       /* Prepare array describing MCU composition */

@@ -344,7 +344,7 @@ encode_mcus_huff (j_compress_ptr cinfo, JDIFFIMAGE diff_buf,
     yoffset = entropy->input_ptr_info[ptrn].yoffset;
     MCU_width = entropy->input_ptr_info[ptrn].MCU_width;
     entropy->input_ptr[ptrn] =
-      diff_buf[ci][MCU_row_num + yoffset] + (MCU_col_num * MCU_width);
+      diff_buf[ci][MCU_row_num + (size_t)yoffset] + MCU_col_num * (size_t)MCU_width;
   }
 
   for (mcu_num = 0; mcu_num < nMCU; mcu_num++) {
@@ -486,7 +486,7 @@ encode_mcus_gather (j_compress_ptr cinfo, JDIFFIMAGE diff_buf,
     yoffset = entropy->input_ptr_info[ptrn].yoffset;
     MCU_width = entropy->input_ptr_info[ptrn].MCU_width;
     entropy->input_ptr[ptrn] =
-      diff_buf[ci][MCU_row_num + yoffset] + (MCU_col_num * MCU_width);
+      diff_buf[ci][MCU_row_num + (size_t)yoffset] + MCU_col_num * (size_t)MCU_width;
   }
 
   for (mcu_num = 0; mcu_num < nMCU; mcu_num++) {

@@ -318,7 +318,7 @@ emit_eobrun (phuff_entropy_ptr entropy)
   register int temp, nbits;
 
   if (entropy->EOBRUN > 0) {    /* if there is any pending EOBRUN */
-    temp = entropy->EOBRUN;
+    temp = (int)entropy->EOBRUN;
     nbits = 0;
     while ((temp >>= 1))
       nbits++;

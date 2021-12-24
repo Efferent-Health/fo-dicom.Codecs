@@ -171,7 +171,7 @@ add_huff_table (j_compress_ptr cinfo,
   if (nsymbols < 1 || nsymbols > 256)
     ERREXIT(cinfo, JERR_BAD_HUFF_TABLE);
 
-  MEMCOPY((*htblptr)->huffval, val, nsymbols * SIZEOF(UINT8));
+  MEMCOPY((*htblptr)->huffval, val, (size_t)nsymbols * SIZEOF(UINT8));
 
   /* Initialize sent_table FALSE so table will be written to JPEG file. */
   (*htblptr)->sent_table = FALSE;
@@ -586,7 +586,7 @@ jpeg_simple_progression (j_compress_ptr cinfo)
     cinfo->script_space_size = MAX(nscans, 10);
     cinfo->script_space = (jpeg_scan_info *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
-            cinfo->script_space_size * SIZEOF(jpeg_scan_info));
+            (size_t)cinfo->script_space_size * SIZEOF(jpeg_scan_info));
   }
   scanptr = cinfo->script_space;
   cinfo->scan_info = scanptr;
@@ -668,7 +668,7 @@ jpeg_simple_lossless (j_compress_ptr cinfo, int predictor, int point_transform)
     cinfo->script_space_size = nscans;
     cinfo->script_space = (jpeg_scan_info *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
-            cinfo->script_space_size * SIZEOF(jpeg_scan_info));
+            (size_t)cinfo->script_space_size * SIZEOF(jpeg_scan_info));
   }
   scanptr = cinfo->script_space;
   cinfo->scan_info = scanptr;
@@ -676,7 +676,7 @@ jpeg_simple_lossless (j_compress_ptr cinfo, int predictor, int point_transform)
 
   /* Fill the script. */
   scanptr->comps_in_scan = ncomps;
-  for (ci = 0; ci < ncomps; ci++)
+  for (ci = 0; ci < (int)ncomps; ci++)
     scanptr->component_index[ci] = ci;
   scanptr->Ss = predictor;
   scanptr->Se = 0;

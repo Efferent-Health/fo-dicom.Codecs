@@ -268,13 +268,13 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       block_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here, since may not be set! */
-      block_rows = (int)compptr->height_in_data_units % compptr->v_samp_factor;
+      block_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (block_rows == 0) block_rows = compptr->v_samp_factor;
     }
     blocks_across = (JDIMENSION)compptr->width_in_data_units;
     h_samp_factor = compptr->h_samp_factor;
     /* Count number of dummy blocks to be added at the right margin. */
-    ndummy = (int)blocks_across % h_samp_factor;
+    ndummy = (int)(blocks_across % h_samp_factor);
     if (ndummy > 0)
       ndummy = h_samp_factor - ndummy;
     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call

@@ -276,7 +276,7 @@ get_sof (j_decompress_ptr cinfo, J_CODEC_PROCESS process, boolean is_arith,
   if (cinfo->comp_info == NULL) /* do only once, even if suspend */
     cinfo->comp_info = (jpeg_component_info *) (*cinfo->mem->alloc_small)
             ((j_common_ptr) cinfo, JPOOL_IMAGE,
-             cinfo->num_components * SIZEOF(jpeg_component_info));
+             (size_t)cinfo->num_components * SIZEOF(jpeg_component_info));
   
   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
        ci++, compptr++) {
@@ -561,7 +561,7 @@ get_dri (j_decompress_ptr cinfo)
 
   INPUT_2BYTES(cinfo, tmp, return FALSE);
 
-  TRACEMS1(cinfo, 1, JTRC_DRI, tmp);
+  TRACEMS1(cinfo, 1, JTRC_DRI, (int)tmp);
 
   cinfo->restart_interval = tmp;
 
@@ -603,8 +603,8 @@ examine_app0 (j_decompress_ptr cinfo, JOCTET FAR * data,
     cinfo->JFIF_major_version = GETJOCTET(data[5]);
     cinfo->JFIF_minor_version = GETJOCTET(data[6]);
     cinfo->density_unit = GETJOCTET(data[7]);
-    cinfo->X_density = (GETJOCTET(data[8]) << 8) + GETJOCTET(data[9]);
-    cinfo->Y_density = (GETJOCTET(data[10]) << 8) + GETJOCTET(data[11]);
+    cinfo->X_density = (UINT16)((GETJOCTET(data[8]) << 8) + GETJOCTET(data[9]));
+    cinfo->Y_density = (UINT16)((GETJOCTET(data[10]) << 8) + GETJOCTET(data[11]));
     /* Check version.
      * Major version must be 1, anything else signals an incompatible change.
      * (We used to treat this as an error, but now it's a nonfatal warning,
@@ -675,11 +675,11 @@ examine_app14 (j_decompress_ptr cinfo, JOCTET FAR * data,
       GETJOCTET(data[3]) == 0x62 &&
       GETJOCTET(data[4]) == 0x65) {
     /* Found Adobe APP14 marker */
-    version = (GETJOCTET(data[5]) << 8) + GETJOCTET(data[6]);
-    flags0 = (GETJOCTET(data[7]) << 8) + GETJOCTET(data[8]);
-    flags1 = (GETJOCTET(data[9]) << 8) + GETJOCTET(data[10]);
+    version = (unsigned int)((GETJOCTET(data[5]) << 8) + GETJOCTET(data[6]));
+    flags0 = (unsigned int)((GETJOCTET(data[7]) << 8) + GETJOCTET(data[8]));
+    flags1 = (unsigned int)((GETJOCTET(data[9]) << 8) + GETJOCTET(data[10]));
     transform = GETJOCTET(data[11]);
-    TRACEMS4(cinfo, 1, JTRC_ADOBE, version, flags0, flags1, transform);
+    TRACEMS4(cinfo, 1, JTRC_ADOBE, (int)version, (int)flags0, (int)flags1, (int)transform);
     cinfo->saw_Adobe_marker = TRUE;
     cinfo->Adobe_transform = (UINT8) transform;
   } else {
@@ -908,7 +908,7 @@ next_marker (j_decompress_ptr cinfo)
   }
 
   if (cinfo->marker->discarded_bytes != 0) {
-    WARNMS2(cinfo, JWRN_EXTRANEOUS_DATA, cinfo->marker->discarded_bytes, c);
+    WARNMS2(cinfo, JWRN_EXTRANEOUS_DATA, (int)cinfo->marker->discarded_bytes, c);
     cinfo->marker->discarded_bytes = 0;
   }
 
@@ -1317,7 +1317,7 @@ jpeg_save_markers (j_decompress_ptr cinfo, int marker_code,
   /* Length limit mustn't be larger than what we can allocate
    * (should only be a concern in a 16-bit environment).
    */
-  maxlength = cinfo->mem->max_alloc_chunk - SIZEOF(struct jpeg_marker_struct);
+  maxlength = cinfo->mem->max_alloc_chunk - (long)SIZEOF(struct jpeg_marker_struct);
   if (((long) length_limit) > maxlength)
     length_limit = (unsigned int) maxlength;
 

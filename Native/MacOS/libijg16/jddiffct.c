@@ -70,9 +70,9 @@ start_iMCU_row (j_decompress_ptr cinfo)
     diff->MCU_rows_per_iMCU_row = 1;
   } else {
     if (cinfo->input_iMCU_row < (cinfo->total_iMCU_rows-1))
-      diff->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->v_samp_factor;
+      diff->MCU_rows_per_iMCU_row = (JDIMENSION)cinfo->cur_comp_info[0]->v_samp_factor;
     else
-      diff->MCU_rows_per_iMCU_row = cinfo->cur_comp_info[0]->last_row_height;
+      diff->MCU_rows_per_iMCU_row = (JDIMENSION)cinfo->cur_comp_info[0]->last_row_height;
   }
 
   diff->MCU_ctr = 0;
@@ -95,7 +95,7 @@ start_input_pass (j_decompress_ptr cinfo)
    */
   if (cinfo->restart_interval % cinfo->MCUs_per_row != 0)
     ERREXIT2(cinfo, JERR_BAD_RESTART,
-         cinfo->restart_interval, cinfo->MCUs_per_row);
+         (int)cinfo->restart_interval, (int)cinfo->MCUs_per_row);
 
   /* Initialize restart counter */
   diff->restart_rows_to_go = cinfo->restart_interval / cinfo->MCUs_per_row;
@@ -269,7 +269,7 @@ consume_data (j_decompress_ptr cinfo)
     ci = compptr->component_index;
     buffer[ci] = (*cinfo->mem->access_virt_sarray)
       ((j_common_ptr) cinfo, diff->whole_image[ci],
-       cinfo->input_iMCU_row * compptr->v_samp_factor,
+       cinfo->input_iMCU_row * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION) compptr->v_samp_factor, TRUE);
   }
 
@@ -309,14 +309,14 @@ output_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
     /* Align the virtual buffer for this component. */
     buffer = (*cinfo->mem->access_virt_sarray)
       ((j_common_ptr) cinfo, diff->whole_image[ci],
-       cinfo->output_iMCU_row * compptr->v_samp_factor,
+       cinfo->output_iMCU_row * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION) compptr->v_samp_factor, FALSE);
 
     if (cinfo->output_iMCU_row < last_iMCU_row)
       samp_rows = compptr->v_samp_factor;
     else {
       /* NB: can't use last_row_height here; it is input-side-dependent! */
-      samp_rows = (int) (compptr->height_in_data_units % compptr->v_samp_factor);
+      samp_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (samp_rows == 0) samp_rows = compptr->v_samp_factor;
     }
 

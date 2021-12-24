@@ -178,21 +178,21 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
         for (samp_row = samp_rows; samp_row < compptr->v_samp_factor;
          samp_row++)
           MEMZERO(diff->diff_buf[ci][samp_row],
-              jround_up((long) compptr->width_in_data_units,
+              (size_t)jround_up((long) compptr->width_in_data_units,
                         (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
       }
     }
-    samps_across = compptr->width_in_data_units;
+    samps_across = (int)compptr->width_in_data_units;
 
     for (samp_row = 0; samp_row < samp_rows; samp_row++) {
       (*losslsc->scaler_scale) (cinfo,
                     input_buf[ci][samp_row],
-                    diff->cur_row[ci], samps_across);
+                    diff->cur_row[ci], (JDIMENSION)samps_across);
       (*losslsc->predict_difference[ci]) (cinfo, ci,
                           diff->cur_row[ci],
                           diff->prev_row[ci],
                           diff->diff_buf[ci][samp_row],
-                          samps_across);
+                          (JDIMENSION)samps_across);
       SWAP_ROWS(diff->cur_row[ci], diff->prev_row[ci]);
     }
       }
@@ -201,8 +201,8 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     /* Try to write the MCU-row (or remaining portion of suspended MCU-row). */
     MCU_count =
       (*losslsc->entropy_encode_mcus) (cinfo,
-                       diff->diff_buf, yoffset, MCU_col_num,
-                       cinfo->MCUs_per_row - MCU_col_num);
+                       diff->diff_buf, (JDIMENSION)yoffset, MCU_col_num,
+                       (JDIMENSION)cinfo->MCUs_per_row - MCU_col_num);
     if (MCU_count != cinfo->MCUs_per_row - MCU_col_num) {
       /* Suspension forced; update state counters and exit */
       diff->MCU_vert_offset = yoffset;
@@ -257,7 +257,7 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     /* Align the virtual buffers for this component. */
     buffer[ci] = (*cinfo->mem->access_virt_sarray)
       ((j_common_ptr) cinfo, diff->whole_image[ci],
-       diff->iMCU_row_num * compptr->v_samp_factor,
+       diff->iMCU_row_num * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION) compptr->v_samp_factor, TRUE);
 
     /* Count non-dummy sample rows in this iMCU row. */
@@ -319,7 +319,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     ci = compptr->component_index;
     buffer[ci] = (*cinfo->mem->access_virt_sarray)
       ((j_common_ptr) cinfo, diff->whole_image[ci],
-       diff->iMCU_row_num * compptr->v_samp_factor,
+       diff->iMCU_row_num * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION) compptr->v_samp_factor, FALSE);
   }
 
@@ -377,7 +377,7 @@ jinit_c_diff_controller (j_compress_ptr cinfo, boolean need_full_buffer)
      */
     for (row = 0; row < compptr->v_samp_factor; row++)
       MEMZERO(diff->diff_buf[ci][row],
-          jround_up((long) compptr->width_in_data_units,
+          (size_t)jround_up((long) compptr->width_in_data_units,
                     (long) compptr->h_samp_factor) * SIZEOF(JDIFF));
   }
 

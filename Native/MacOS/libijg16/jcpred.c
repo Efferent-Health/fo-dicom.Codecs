@@ -271,7 +271,7 @@ start_pass (j_compress_ptr cinfo)
    */
   if (cinfo->restart_interval % cinfo->MCUs_per_row != 0)
     ERREXIT2(cinfo, JERR_BAD_RESTART,
-         cinfo->restart_interval, cinfo->MCUs_per_row);
+         (int)cinfo->restart_interval, (int)cinfo->MCUs_per_row);
 
   /* Set predictors for start of pass */
   for (ci = 0; ci < cinfo->num_components; ci++)

@@ -156,7 +156,7 @@ process_restart (j_decompress_ptr cinfo)
 
   /* Throw away any unused bits remaining in bit buffer; */
   /* include any full bytes in next_marker's count of discarded bytes */
-  cinfo->marker->discarded_bytes += entropy->bitstate.bits_left / 8;
+  cinfo->marker->discarded_bytes += (unsigned int)entropy->bitstate.bits_left / 8;
   entropy->bitstate.bits_left = 0;
 
   /* Advance past the RSTn marker */
@@ -206,7 +206,7 @@ decode_mcus (j_decompress_ptr cinfo, JDIFFIMAGE diff_buf,
     yoffset = entropy->output_ptr_info[ptrn].yoffset;
     MCU_width = entropy->output_ptr_info[ptrn].MCU_width;
     entropy->output_ptr[ptrn] =
-      diff_buf[ci][MCU_row_num + yoffset] + (MCU_col_num * MCU_width);
+      diff_buf[ci][MCU_row_num + (JDIMENSION)yoffset] + MCU_col_num * (JDIMENSION)MCU_width;
   }
 
   /*
@@ -219,7 +219,7 @@ decode_mcus (j_decompress_ptr cinfo, JDIFFIMAGE diff_buf,
   if (entropy->insufficient_data) {
     for (ptrn = 0; ptrn < entropy->num_output_ptrs; ptrn++)
       jzero_far((void FAR *) entropy->output_ptr[ptrn],
-        nMCU * entropy->output_ptr_info[ptrn].MCU_width * SIZEOF(JDIFF));
+        nMCU * (size_t)entropy->output_ptr_info[ptrn].MCU_width * SIZEOF(JDIFF));
 
     (*losslsd->predict_process_restart) (cinfo);
   }

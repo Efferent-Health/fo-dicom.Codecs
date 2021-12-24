@@ -234,7 +234,7 @@ process_restart (j_decompress_ptr cinfo)
 
   /* Throw away any unused bits remaining in bit buffer; */
   /* include any full bytes in next_marker's count of discarded bytes */
-  cinfo->marker->discarded_bytes += entropy->bitstate.bits_left / 8;
+  cinfo->marker->discarded_bytes += (unsigned int)(entropy->bitstate.bits_left / 8);
   entropy->bitstate.bits_left = 0;
 
   /* Advance past the RSTn marker */
@@ -410,11 +410,11 @@ decode_mcu_AC_first (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
       if (r == 15) {    /* ZRL */
         k += 15;        /* skip 15 zeroes in band */
       } else {      /* EOBr, run length is 2^r + appended bits */
-        EOBRUN = 1 << r;
+        EOBRUN = (unsigned int)(1 << r);
         if (r) {        /* EOBr, r > 0 */
           CHECK_BIT_BUFFER(br_state, r, return FALSE);
           r = GET_BITS(r);
-          EOBRUN += r;
+          EOBRUN += (unsigned int)r;
         }
         EOBRUN--;       /* this band is processed at this moment */
         break;      /* force end-of-band */
@@ -554,11 +554,11 @@ decode_mcu_AC_refine (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
         s = m1;     /* newly nonzero coef is negative */
     } else {
       if (r != 15) {
-        EOBRUN = 1 << r;    /* EOBr, run length is 2^r + appended bits */
+        EOBRUN = (unsigned int)(1 << r);    /* EOBr, run length is 2^r + appended bits */
         if (r) {
           CHECK_BIT_BUFFER(br_state, r, goto undoit);
           r = GET_BITS(r);
-          EOBRUN += r;
+          EOBRUN += (unsigned int)r;
         }
         break;      /* rest of block is handled by EOB logic */
       }
@@ -665,7 +665,7 @@ jinit_phuff_decoder (j_decompress_ptr cinfo)
   /* Create progression status table */
   cinfo->coef_bits = (int (*)[DCTSIZE2])
     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-                cinfo->num_components*DCTSIZE2*SIZEOF(int));
+                (size_t)cinfo->num_components*DCTSIZE2*SIZEOF(int));
   coef_bit_ptr = & cinfo->coef_bits[0][0];
   for (ci = 0; ci < cinfo->num_components; ci++) 
     for (i = 0; i < DCTSIZE2; i++)

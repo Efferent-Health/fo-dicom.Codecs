@@ -289,7 +289,7 @@ jinit_c_main_controller (j_compress_ptr cinfo, boolean need_full_buffer)
      ci++, compptr++) {
       mymain->buffer[ci] = (*cinfo->mem->alloc_sarray)
     ((j_common_ptr) cinfo, JPOOL_IMAGE,
-     compptr->width_in_data_units * data_unit,
+     compptr->width_in_data_units * (JDIMENSION)data_unit,
      (JDIMENSION) (compptr->v_samp_factor * data_unit));
     }
   }

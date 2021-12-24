@@ -146,9 +146,9 @@ pre_process_data (j_compress_ptr cinfo,
                        prep->color_buf,
                        (JDIMENSION) prep->next_buf_row,
                        numrows);
-    *in_row_ctr += numrows;
+    *in_row_ctr += (JDIMENSION)numrows;
     prep->next_buf_row += numrows;
-    prep->rows_to_go -= numrows;
+    prep->rows_to_go -= (JDIMENSION)numrows;
     /* If at bottom of image, pad to fill the conversion buffer. */
     if (prep->rows_to_go == 0 &&
     prep->next_buf_row < cinfo->max_v_samp_factor) {
@@ -174,9 +174,9 @@ pre_process_data (j_compress_ptr cinfo,
       for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
        ci++, compptr++) {
     expand_bottom_edge(output_buf[ci],
-               compptr->width_in_data_units * cinfo->data_unit,
-               (int) (*out_row_group_ctr * compptr->v_samp_factor),
-               (int) (out_row_groups_avail * compptr->v_samp_factor));
+               compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit,
+               (int)(*out_row_group_ctr * compptr->v_samp_factor),
+               (int)(out_row_groups_avail * compptr->v_samp_factor));
       }
       *out_row_group_ctr = out_row_groups_avail;
       break;            /* can exit outer loop without test */
@@ -224,9 +224,9 @@ pre_process_context (j_compress_ptr cinfo,
       }
     }
       }
-      *in_row_ctr += numrows;
+      *in_row_ctr += (JDIMENSION)numrows;
       prep->next_buf_row += numrows;
-      prep->rows_to_go -= numrows;
+      prep->rows_to_go -= (JDIMENSION)numrows;
     } else {
       /* Return for more data, unless we are at the bottom of the image. */
       if (prep->rows_to_go != 0)
@@ -277,7 +277,7 @@ create_context_buffer (j_compress_ptr cinfo)
    */
   fake_buffer = (JSAMPARRAY)
     (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-                (cinfo->num_components * 5 * rgroup_height) *
+                (size_t)(cinfo->num_components * 5 * rgroup_height) *
                 SIZEOF(JSAMPROW));
 
   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
@@ -293,7 +293,7 @@ create_context_buffer (j_compress_ptr cinfo)
        (JDIMENSION) (3 * rgroup_height));
     /* Copy true buffer row pointers into the middle of the fake row array */
     MEMCOPY(fake_buffer + rgroup_height, true_buffer,
-        3 * rgroup_height * SIZEOF(JSAMPROW));
+        3 * (size_t)rgroup_height * SIZEOF(JSAMPROW));
     /* Fill in the above and below wraparound pointers */
     for (i = 0; i < rgroup_height; i++) {
       fake_buffer[i] = true_buffer[2 * rgroup_height + i];

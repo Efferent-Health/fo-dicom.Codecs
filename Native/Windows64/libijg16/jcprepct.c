@@ -175,8 +175,8 @@ pre_process_data (j_compress_ptr cinfo,
        ci++, compptr++) {
     expand_bottom_edge(output_buf[ci],
                compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit,
-               (int)*out_row_group_ctr * compptr->v_samp_factor,
-               (int)out_row_groups_avail * compptr->v_samp_factor);
+               (int)(*out_row_group_ctr * compptr->v_samp_factor),
+               (int)(out_row_groups_avail * compptr->v_samp_factor));
       }
       *out_row_group_ctr = out_row_groups_avail;
       break;            /* can exit outer loop without test */

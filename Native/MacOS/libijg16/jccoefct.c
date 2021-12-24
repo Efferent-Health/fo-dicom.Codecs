@@ -171,8 +171,8 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     compptr = cinfo->cur_comp_info[ci];
     blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
                         : compptr->last_col_width;
-    xpos = MCU_col_num * compptr->MCU_sample_width;
-    ypos = yoffset * DCTSIZE; /* ypos == (yoffset+yindex) * DCTSIZE */
+    xpos = MCU_col_num * (JDIMENSION)compptr->MCU_sample_width;
+    ypos = (JDIMENSION)(yoffset * DCTSIZE); /* ypos == (yoffset+yindex) * DCTSIZE */
     for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
       if (coef->iMCU_row_num < last_iMCU_row ||
           yoffset+yindex < compptr->last_row_height) {
@@ -183,7 +183,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
         if (blockcnt < compptr->MCU_width) {
           /* Create some dummy blocks at the right edge of the image. */
           jzero_far((void FAR *) coef->MCU_buffer[blkn + blockcnt],
-            (compptr->MCU_width - blockcnt) * SIZEOF(JBLOCK));
+            (size_t)(compptr->MCU_width - blockcnt) * SIZEOF(JBLOCK));
           for (bi = blockcnt; bi < compptr->MCU_width; bi++) {
         coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn+bi-1][0][0];
           }
@@ -191,7 +191,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       } else {
         /* Create a row of dummy blocks at the bottom of the image. */
         jzero_far((void FAR *) coef->MCU_buffer[blkn],
-              compptr->MCU_width * SIZEOF(JBLOCK));
+              (size_t)compptr->MCU_width * SIZEOF(JBLOCK));
         for (bi = 0; bi < compptr->MCU_width; bi++) {
           coef->MCU_buffer[blkn+bi][0][0] = coef->MCU_buffer[blkn-1][0][0];
         }
@@ -261,7 +261,7 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     /* Align the virtual buffer for this component. */
     buffer = (*cinfo->mem->access_virt_barray)
       ((j_common_ptr) cinfo, coef->whole_image[ci],
-       coef->iMCU_row_num * compptr->v_samp_factor,
+       coef->iMCU_row_num * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION)compptr->v_samp_factor, TRUE);
     /* Count non-dummy DCT block rows in this iMCU row. */
     if (coef->iMCU_row_num < last_iMCU_row)
@@ -271,7 +271,7 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       block_rows = (int)(compptr->height_in_data_units % compptr->v_samp_factor);
       if (block_rows == 0) block_rows = compptr->v_samp_factor;
     }
-    blocks_across = compptr->width_in_data_units;
+    blocks_across = (JDIMENSION)compptr->width_in_data_units;
     h_samp_factor = compptr->h_samp_factor;
     /* Count number of dummy blocks to be added at the right margin. */
     ndummy = (int)(blocks_across % h_samp_factor);
@@ -289,7 +289,7 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       if (ndummy > 0) {
     /* Create dummy blocks at the right edge of the image. */
     thisblockrow += blocks_across; /* => first dummy block */
-    jzero_far((void FAR *) thisblockrow, ndummy * SIZEOF(JBLOCK));
+    jzero_far((void FAR *) thisblockrow, (size_t)ndummy * SIZEOF(JBLOCK));
     lastDC = thisblockrow[-1][0];
     for (bi = 0; bi < ndummy; bi++) {
       thisblockrow[bi][0] = lastDC;
@@ -302,8 +302,8 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
      * This squeezes a few more bytes out of the resulting file...
      */
     if (coef->iMCU_row_num == last_iMCU_row) {
-      blocks_across += ndummy;  /* include lower right corner */
-      MCUs_across = blocks_across / h_samp_factor;
+      blocks_across += (JDIMENSION)ndummy;  /* include lower right corner */
+      MCUs_across = blocks_across / (JDIMENSION)h_samp_factor;
       for (block_row = block_rows; block_row < compptr->v_samp_factor;
        block_row++) {
     thisblockrow = buffer[block_row];
@@ -360,7 +360,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     compptr = cinfo->cur_comp_info[ci];
     buffer[ci] = (*cinfo->mem->access_virt_barray)
       ((j_common_ptr) cinfo, coef->whole_image[compptr->component_index],
-       coef->iMCU_row_num * compptr->v_samp_factor,
+       coef->iMCU_row_num * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION)compptr->v_samp_factor, FALSE);
   }
 
@@ -373,7 +373,7 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       blkn = 0;         /* index of current DCT block within MCU */
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
     compptr = cinfo->cur_comp_info[ci];
-    start_col = MCU_col_num * compptr->MCU_width;
+    start_col = MCU_col_num * (JDIMENSION)compptr->MCU_width;
     for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
       buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
       for (xindex = 0; xindex < compptr->MCU_width; xindex++) {

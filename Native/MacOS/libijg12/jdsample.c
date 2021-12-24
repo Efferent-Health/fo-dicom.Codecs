@@ -105,7 +105,7 @@ sep_upsample (j_decompress_ptr cinfo,
        * to color_buf[ci], so that fullsize_upsample can change it.
        */
       (*upsample->methods[ci]) (cinfo, compptr,
-    input_buf[ci] + (*in_row_group_ctr * upsample->rowgroup_height[ci]),
+    input_buf[ci] + (*in_row_group_ctr * (JDIMENSION)upsample->rowgroup_height[ci]),
     upsample->color_buf + ci);
     }
     upsample->next_row_out = 0;
@@ -133,7 +133,7 @@ sep_upsample (j_decompress_ptr cinfo,
   /* Adjust counts */
   *out_row_ctr += num_rows;
   upsample->rows_to_go -= num_rows;
-  upsample->next_row_out += num_rows;
+  upsample->next_row_out += (int)num_rows;
   /* When the buffer is emptied, declare this input row group consumed */
   if (upsample->next_row_out >= cinfo->max_v_samp_factor)
     (*in_row_group_ctr)++;

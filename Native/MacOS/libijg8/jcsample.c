@@ -123,7 +123,7 @@ sep_downsample (j_compress_ptr cinfo,
   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
        ci++, compptr++) {
     in_ptr = input_buf[ci] + in_row_index;
-    out_ptr = output_buf[ci] + (out_row_group_index * compptr->v_samp_factor);
+    out_ptr = output_buf[ci] + (out_row_group_index * (JDIMENSION)compptr->v_samp_factor);
     (*downsample->methods[ci]) (cinfo, compptr, in_ptr, out_ptr);
   }
 }
@@ -142,7 +142,7 @@ int_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
 {
   int inrow, outrow, h_expand, v_expand, numpix, numpix2, h, v;
   JDIMENSION outcol, outcol_h;  /* outcol_h == outcol*h_expand */
-  JDIMENSION output_cols = compptr->width_in_data_units * cinfo->data_unit;
+  JDIMENSION output_cols = compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit;
   JSAMPROW inptr, outptr;
   IJG_INT32 outvalue;
 
@@ -156,13 +156,13 @@ int_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
    * efficient.
    */
   expand_right_edge(input_data, cinfo->max_v_samp_factor,
-            cinfo->image_width, output_cols * h_expand);
+            cinfo->image_width, output_cols * (JDIMENSION)h_expand);
 
   inrow = 0;
   for (outrow = 0; outrow < compptr->v_samp_factor; outrow++) {
     outptr = output_data[outrow];
     for (outcol = 0, outcol_h = 0; outcol < output_cols;
-     outcol++, outcol_h += h_expand) {
+     outcol++, outcol_h += (JDIMENSION)h_expand) {
       outvalue = 0;
       for (v = 0; v < v_expand; v++) {
     inptr = input_data[inrow+v] + outcol_h;
@@ -192,7 +192,7 @@ fullsize_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
             cinfo->max_v_samp_factor, cinfo->image_width);
   /* Edge-expand */
   expand_right_edge(output_data, cinfo->max_v_samp_factor,
-            cinfo->image_width, compptr->width_in_data_units * cinfo->data_unit);
+            cinfo->image_width, compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit);
 }
 
 
@@ -214,7 +214,7 @@ h2v1_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
 {
   int outrow;
   JDIMENSION outcol;
-  JDIMENSION output_cols = compptr->width_in_data_units * cinfo->data_unit;
+  JDIMENSION output_cols = compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit;
   register JSAMPROW inptr, outptr;
   register int bias;
 
@@ -251,7 +251,7 @@ h2v2_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
 {
   int inrow, outrow;
   JDIMENSION outcol;
-  JDIMENSION output_cols = compptr->width_in_data_units * cinfo->data_unit;
+  JDIMENSION output_cols = compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit;
   register JSAMPROW inptr0, inptr1, outptr;
   register int bias;
 
@@ -294,7 +294,7 @@ h2v2_smooth_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
 {
   int inrow, outrow;
   JDIMENSION colctr;
-  JDIMENSION output_cols = compptr->width_in_data_units * cinfo->data_unit;
+  JDIMENSION output_cols = compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit;
   register JSAMPROW inptr0, inptr1, above_ptr, below_ptr, outptr;
   IJG_INT32 membersum, neighsum, memberscale, neighscale;
 
@@ -394,7 +394,7 @@ fullsize_smooth_downsample (j_compress_ptr cinfo, jpeg_component_info *compptr,
 {
   int outrow;
   JDIMENSION colctr;
-  JDIMENSION output_cols = compptr->width_in_data_units * cinfo->data_unit;
+  JDIMENSION output_cols = compptr->width_in_data_units * (JDIMENSION)cinfo->data_unit;
   register JSAMPROW inptr, above_ptr, below_ptr, outptr;
   IJG_INT32 membersum, neighsum, memberscale, neighscale;
   int colsum, lastcolsum, nextcolsum;

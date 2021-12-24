@@ -190,7 +190,7 @@ decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
                             : compptr->last_col_width;
     output_ptr = output_buf[compptr->component_index] +
       yoffset * compptr->codec_data_unit;
-    start_col = MCU_col_num * compptr->MCU_sample_width;
+    start_col = MCU_col_num * (JDIMENSION)compptr->MCU_sample_width;
     for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
       if (cinfo->input_iMCU_row < last_iMCU_row ||
           yoffset+yindex < compptr->last_row_height) {
@@ -199,7 +199,7 @@ decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
           (*inverse_DCT) (cinfo, compptr,
                   (JCOEFPTR) coef->MCU_buffer[blkn+xindex],
                   output_ptr, output_col);
-          output_col += compptr->codec_data_unit;
+          output_col += (JDIMENSION)compptr->codec_data_unit;
         }
       }
       blkn += compptr->MCU_width;
@@ -259,7 +259,7 @@ consume_data (j_decompress_ptr cinfo)
     compptr = cinfo->cur_comp_info[ci];
     buffer[ci] = (*cinfo->mem->access_virt_barray)
       ((j_common_ptr) cinfo, coef->whole_image[compptr->component_index],
-       cinfo->input_iMCU_row * compptr->v_samp_factor,
+       cinfo->input_iMCU_row * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION) compptr->v_samp_factor, TRUE);
     /* Note: entropy decoder expects buffer to be zeroed,
      * but this is handled automatically by the memory manager
@@ -276,7 +276,7 @@ consume_data (j_decompress_ptr cinfo)
       blkn = 0;         /* index of current DCT block within MCU */
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
     compptr = cinfo->cur_comp_info[ci];
-    start_col = MCU_col_num * compptr->MCU_width;
+    start_col = MCU_col_num * (JDIMENSION)compptr->MCU_width;
     for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
       buffer_ptr = buffer[ci][yindex+yoffset] + start_col;
       for (xindex = 0; xindex < compptr->MCU_width; xindex++) {
@@ -346,7 +346,7 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
     /* Align the virtual buffer for this component. */
     buffer = (*cinfo->mem->access_virt_barray)
       ((j_common_ptr) cinfo, coef->whole_image[ci],
-       cinfo->output_iMCU_row * compptr->v_samp_factor,
+       cinfo->output_iMCU_row * (JDIMENSION)compptr->v_samp_factor,
        (JDIMENSION) compptr->v_samp_factor, FALSE);
     /* Count non-dummy DCT block rows in this iMCU row. */
     if (cinfo->output_iMCU_row < last_iMCU_row)
@@ -366,7 +366,7 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
     (*inverse_DCT) (cinfo, compptr, (JCOEFPTR) buffer_ptr,
             output_ptr, output_col);
     buffer_ptr++;
-    output_col += compptr->codec_data_unit;
+    output_col += (JDIMENSION)compptr->codec_data_unit;
       }
       output_ptr += compptr->codec_data_unit;
     }
@@ -424,7 +424,7 @@ smoothing_ok (j_decompress_ptr cinfo)
   if (coef->coef_bits_latch == NULL)
     coef->coef_bits_latch = (int *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-                  cinfo->num_components *
+                  (size_t)cinfo->num_components *
                   (SAVED_COEFS * SIZEOF(int)));
   coef_bits_latch = coef->coef_bits_latch;
 
@@ -524,7 +524,7 @@ decompress_smooth_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
       access_rows += compptr->v_samp_factor; /* prior iMCU row too */
       buffer = (*cinfo->mem->access_virt_barray)
     ((j_common_ptr) cinfo, coef->whole_image[ci],
-     (cinfo->output_iMCU_row - 1) * compptr->v_samp_factor,
+     (cinfo->output_iMCU_row - 1) * (JDIMENSION)compptr->v_samp_factor,
      (JDIMENSION) access_rows, FALSE);
       buffer += compptr->v_samp_factor; /* point to current iMCU row */
       first_row = FALSE;
@@ -660,7 +660,7 @@ decompress_smooth_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
     DC4 = DC5; DC5 = DC6;
     DC7 = DC8; DC8 = DC9;
     buffer_ptr++, prev_block_row++, next_block_row++;
-    output_col += compptr->codec_data_unit;
+    output_col += (JDIMENSION)compptr->codec_data_unit;
       }
       output_ptr += compptr->codec_data_unit;
     }
