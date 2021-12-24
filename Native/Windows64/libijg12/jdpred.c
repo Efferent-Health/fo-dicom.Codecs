@@ -87,7 +87,6 @@
       undiff_buf[xindex] = Ra; \
     }
 
-#define JPEG_UNUSED(x) ((void)x)
 
 /*
  * Undifferencers for the all rows but the first in a scan or restart interval.
@@ -110,8 +109,6 @@ jpeg_undifference2(j_decompress_ptr cinfo, int comp_index,
            JDIFFROW undiff_buf, JDIMENSION width)
 {
   UNDIFFERENCE_2D(PREDICTOR2);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Rb);
 }
 
 METHODDEF(void)
@@ -120,8 +117,6 @@ jpeg_undifference3(j_decompress_ptr cinfo, int comp_index,
            JDIFFROW undiff_buf, JDIMENSION width)
 {
   UNDIFFERENCE_2D(PREDICTOR3);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Rb);
 }
 
 METHODDEF(void)
@@ -130,8 +125,6 @@ jpeg_undifference4(j_decompress_ptr cinfo, int comp_index,
            JDIFFROW undiff_buf, JDIMENSION width)
 {
   UNDIFFERENCE_2D(PREDICTOR4);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Rb);
 }
 
 METHODDEF(void)
@@ -141,8 +134,6 @@ jpeg_undifference5(j_decompress_ptr cinfo, int comp_index,
 {
   SHIFT_TEMPS
   UNDIFFERENCE_2D(PREDICTOR5);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Rb);
 }
 
 METHODDEF(void)
@@ -152,8 +143,6 @@ jpeg_undifference6(j_decompress_ptr cinfo, int comp_index,
 {
   SHIFT_TEMPS
   UNDIFFERENCE_2D(PREDICTOR6);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Rb);
 }
 
 METHODDEF(void)
@@ -163,8 +152,6 @@ jpeg_undifference7(j_decompress_ptr cinfo, int comp_index,
 {
   SHIFT_TEMPS
   UNDIFFERENCE_2D(PREDICTOR7);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Rb);
 }
 
 

@@ -119,7 +119,6 @@ METHODDEF(void) start_pass
         reset_predictor(cinfo, ci); \
     }
 
-#define JPEG_UNUSED(x) ((void)x)
 
 /*
  * Differencers for the all rows but the first in a scan or restart interval.
@@ -134,7 +133,6 @@ jpeg_difference1(j_compress_ptr cinfo, int ci,
          JDIFFROW diff_buf, JDIMENSION width)
 {
   DIFFERENCE_1D(INITIAL_PREDICTOR2);
-  JPEG_UNUSED(restart);
 }
 
 METHODDEF(void)
@@ -143,8 +141,6 @@ jpeg_difference2(j_compress_ptr cinfo, int ci,
          JDIFFROW diff_buf, JDIMENSION width)
 {
   DIFFERENCE_2D(PREDICTOR2);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Ra);
 }
 
 METHODDEF(void)
@@ -153,8 +149,6 @@ jpeg_difference3(j_compress_ptr cinfo, int ci,
          JDIFFROW diff_buf, JDIMENSION width)
 {
   DIFFERENCE_2D(PREDICTOR3);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Ra);
 }
 
 METHODDEF(void)
@@ -163,8 +157,6 @@ jpeg_difference4(j_compress_ptr cinfo, int ci,
          JDIFFROW diff_buf, JDIMENSION width)
 {
   DIFFERENCE_2D(PREDICTOR4);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Ra);
 }
 
 METHODDEF(void)
@@ -174,8 +166,6 @@ jpeg_difference5(j_compress_ptr cinfo, int ci,
 {
   SHIFT_TEMPS
   DIFFERENCE_2D(PREDICTOR5);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Ra);
 }
 
 METHODDEF(void)
@@ -185,8 +175,6 @@ jpeg_difference6(j_compress_ptr cinfo, int ci,
 {
   SHIFT_TEMPS
   DIFFERENCE_2D(PREDICTOR6);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Ra);
 }
 
 METHODDEF(void)
@@ -196,8 +184,6 @@ jpeg_difference7(j_compress_ptr cinfo, int ci,
 {
   SHIFT_TEMPS
   DIFFERENCE_2D(PREDICTOR7);
-  JPEG_UNUSED(Rc);
-  JPEG_UNUSED(Ra);
 }
 
 
