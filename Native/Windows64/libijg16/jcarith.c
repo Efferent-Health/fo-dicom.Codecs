@@ -16,8 +16,6 @@
 /*
  * Module initialization routine for arithmetic entropy encoding.
  */
-GLOBAL(void)
-jinit_arith_encoder (j_compress_ptr cinfo);
 
 GLOBAL(void)
 jinit_arith_encoder (j_compress_ptr cinfo)
