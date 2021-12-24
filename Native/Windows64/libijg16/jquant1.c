@@ -548,7 +548,7 @@ quantize_ord_dither (j_decompress_ptr cinfo, JSAMPARRAY input_buf,
      * inputs.  The maximum dither is +- MAXJSAMPLE; this sets the
      * required amount of padding.
      */
-    *output_ptr = (JSAMPLE)(*output_ptr + colorindex_ci[GETJSAMPLE(*input_ptr)+dither[col_index]]);
+    *output_ptr += colorindex_ci[GETJSAMPLE(*input_ptr)+dither[col_index]];
     input_ptr += nc;
     output_ptr++;
     col_index = (col_index + 1) & ODITHER_MASK;
@@ -678,7 +678,7 @@ quantize_fs_dither (j_decompress_ptr cinfo, JSAMPARRAY input_buf,
     cur = GETJSAMPLE(range_limit[cur]);
     /* Select output value, accumulate into output code for this pixel */
     pixcode = GETJSAMPLE(colorindex_ci[cur]);
-    *output_ptr = (JSAMPLE)(*output_ptr + pixcode);
+    *output_ptr += (JSAMPLE) pixcode;
     /* Compute actual representation error at this pixel */
     /* Note: we can do this even though we don't have the final */
     /* pixel code, because the colormap is orthogonal. */

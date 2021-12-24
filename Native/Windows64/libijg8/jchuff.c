@@ -240,10 +240,10 @@ jpeg_gen_optimal_table (j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[])
       while (bits[j] == 0)
     j--;
 
-      bits[i] = (UINT8)(bits[i] - 2);       /* remove two symbols */
-      bits[i-1]++;                  /* one goes in this length */
-      bits[j+1] = (UINT8)(bits[j+1] + 2);   /* two new symbols in this length */
-      bits[j]--;                    /* symbol of this length is now a prefix */
+      bits[i] -= 2;      /* remove two symbols */
+      bits[i-1]++;       /* one goes in this length */
+      bits[j+1] += 2;    /* two new symbols in this length */
+      bits[j]--;         /* symbol of this length is now a prefix */
     }
   }
 

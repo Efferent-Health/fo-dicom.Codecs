@@ -474,7 +474,7 @@ decode_mcu_DC_refine (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
     /* Encoded data is simply the next bit of the two's-complement DC value */
     CHECK_BIT_BUFFER(br_state, 1, return FALSE);
     if (GET_BITS(1))
-      (*block)[0] |= p1;
+      (*block)[0] |= (JCOEF)p1;
     /* Note: since we use |=, repeating the assignment later is safe */
   }
 
