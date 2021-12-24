@@ -69,7 +69,7 @@ SET(CHARLS_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../CharLS/processline.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../CharLS/scan.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../CharLS/util.h
- )
+)
 
 #libijg8 library
 SET(LIBIJG8_SRCS

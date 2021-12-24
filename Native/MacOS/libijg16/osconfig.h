@@ -44,7 +44,7 @@
 #define DCM_DICT_DEFAULT_PATH ""
 
 /* Define the environment variable path separator */
-#define ENVIRONMENT_PATH_SEPARATOR '\0'
+/* #define ENVIRONMENT_PATH_SEPARATOR '' */
 
 /* Define to 1 if you have the `accept' function. */
 /* #undef HAVE_ACCEPT */
@@ -680,7 +680,7 @@
 #define PACKAGE_VERSION_NUMBER ""
 
 /* Define path separator */
-#define PATH_SEPARATOR '\0'
+/* #define PATH_SEPARATOR '' */
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

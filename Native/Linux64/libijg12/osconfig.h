@@ -44,7 +44,7 @@
 #define DCM_DICT_DEFAULT_PATH ""
 
 /* Define the environment variable path separator */
-#define ENVIRONMENT_PATH_SEPARATOR ''
+/* #define ENVIRONMENT_PATH_SEPARATOR '' */
 
 /* Define to 1 if you have the `accept' function. */
 /* #undef HAVE_ACCEPT */
@@ -680,7 +680,7 @@
 #define PACKAGE_VERSION_NUMBER ""
 
 /* Define path separator */
-#define PATH_SEPARATOR ''
+/* #define PATH_SEPARATOR '' */
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -828,7 +828,7 @@ typedef unsigned long ulong;
 
 #ifdef _MSC_VER
 #if _MSC_VER <= 1200 /* Additional settings for VC6 and older */
-/* disable warning that return type for 'identifier::operator –>' is not a UDT or reference to a UDT */
+/* disable warning that return type for 'identifier::operator ï¿½>' is not a UDT or reference to a UDT */
 #pragma warning( disable : 4284 )
 #define HAVE_OLD_INTERLOCKEDCOMPAREEXCHANGE
 #else
