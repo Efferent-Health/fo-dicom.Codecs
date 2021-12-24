@@ -80,8 +80,9 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
     }
     /* code is now 1 more than the last code used for codelength si; but
      * it must still fit in si bits, since no code is allowed to be all ones.
+     * BUG FIX: Comparison must be >, not >=
      */
-    if (((IJG_INT32) code) >= (((IJG_INT32) 1) << si))
+    if (((IJG_INT32) code) > (((IJG_INT32) 1) << si))
       ERREXIT(cinfo, JERR_BAD_HUFF_TABLE);
     code <<= 1;
     si++;
@@ -97,7 +98,7 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
        */
       dtbl->valoffset[l] = (IJG_INT32) p - (IJG_INT32) huffcode[p];
       p += htbl->bits[l];
-      dtbl->maxcode[l] = huffcode[p-1]; /* maximum code of length l */
+      dtbl->maxcode[l] = (IJG_INT32)huffcode[p-1]; /* maximum code of length l */
     } else {
       dtbl->maxcode[l] = -1;    /* -1 if no codes of this length */
     }
