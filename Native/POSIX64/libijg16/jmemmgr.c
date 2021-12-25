@@ -405,10 +405,10 @@ alloc_sarray (j_common_ptr cinfo, int pool_id,
 
   /* Calculate max # of rows allowed in one allocation chunk */
   ltemp = (MAX_ALLOC_CHUNK-SIZEOF(large_pool_hdr)) /
-      ((long) samplesperrow * SIZEOF(JSAMPLE));
+      ((long)samplesperrow * SIZEOF(JSAMPLE));
   if (ltemp <= 0)
     ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
-  if (ltemp < (long) numrows)
+  if (ltemp < (long)numrows)
     rowsperchunk = (JDIMENSION) ltemp;
   else
     rowsperchunk = numrows;
@@ -453,10 +453,10 @@ alloc_barray (j_common_ptr cinfo, int pool_id,
 
   /* Calculate max # of rows allowed in one allocation chunk */
   ltemp = (MAX_ALLOC_CHUNK-SIZEOF(large_pool_hdr)) /
-      ((long) blocksperrow * SIZEOF(JBLOCK));
+      ((long)blocksperrow * SIZEOF(JBLOCK));
   if (ltemp <= 0)
     ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
-  if (ltemp < (long) numrows)
+  if (ltemp < (long)numrows)
     rowsperchunk = (JDIMENSION) ltemp;
   else
     rowsperchunk = numrows;
@@ -503,10 +503,10 @@ alloc_darray (j_common_ptr cinfo, int pool_id,
 
   /* Calculate max # of rows allowed in one allocation chunk */
   ltemp = (MAX_ALLOC_CHUNK-SIZEOF(large_pool_hdr)) /
-      ((long) diffsperrow * SIZEOF(JDIFF));
+      ((long)diffsperrow * SIZEOF(JDIFF));
   if (ltemp <= 0)
     ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
-  if (ltemp < (long) numrows)
+  if (ltemp < (long)numrows)
     rowsperchunk = (JDIMENSION) ltemp;
   else
     rowsperchunk = numrows;
@@ -650,18 +650,18 @@ realize_virt_arrays (j_common_ptr cinfo)
   maximum_space = 0;
   for (sptr = mem->virt_sarray_list; sptr != NULL; sptr = sptr->next) {
     if (sptr->mem_buffer == NULL) { /* if not realized yet */
-      space_per_minheight += (long) sptr->maxaccess *
-                 (long) sptr->samplesperrow * SIZEOF(JSAMPLE);
-      maximum_space += (long) sptr->rows_in_array *
-               (long) sptr->samplesperrow * SIZEOF(JSAMPLE);
+      space_per_minheight += (long)sptr->maxaccess *
+                 (long)sptr->samplesperrow * SIZEOF(JSAMPLE);
+      maximum_space += (long)sptr->rows_in_array *
+               (long)sptr->samplesperrow * SIZEOF(JSAMPLE);
     }
   }
   for (bptr = mem->virt_barray_list; bptr != NULL; bptr = bptr->next) {
     if (bptr->mem_buffer == NULL) { /* if not realized yet */
-      space_per_minheight += (long) bptr->maxaccess *
-                 (long) bptr->blocksperrow * SIZEOF(JBLOCK);
-      maximum_space += (long) bptr->rows_in_array *
-               (long) bptr->blocksperrow * SIZEOF(JBLOCK);
+      space_per_minheight += (long)bptr->maxaccess *
+                 (long)bptr->blocksperrow * SIZEOF(JBLOCK);
+      maximum_space += (long)bptr->rows_in_array *
+               (long)bptr->blocksperrow * SIZEOF(JBLOCK);
     }
   }
 
@@ -669,7 +669,7 @@ realize_virt_arrays (j_common_ptr cinfo)
     return;         /* no unrealized arrays, no work */
 
   /* Determine amount of memory to actually use; this is system-dependent. */
-  avail_mem = jpeg_mem_available(cinfo, space_per_minheight, maximum_space,
+  avail_mem = (long)jpeg_mem_available(cinfo, (long)space_per_minheight, (long)maximum_space,
                  mem->total_space_allocated);
 
   /* If the maximum space needed is available, make all the buffers full
@@ -691,13 +691,13 @@ realize_virt_arrays (j_common_ptr cinfo)
 
   for (sptr = mem->virt_sarray_list; sptr != NULL; sptr = sptr->next) {
     if (sptr->mem_buffer == NULL) { /* if not realized yet */
-      minheights = ((long) sptr->rows_in_array - 1L) / sptr->maxaccess + 1L;
+      minheights = (long)((sptr->rows_in_array - 1L) / sptr->maxaccess + 1L);
       if (minheights <= max_minheights) {
     /* This buffer fits in memory */
     sptr->rows_in_mem = sptr->rows_in_array;
       } else {
     /* It doesn't fit in memory, create backing store. */
-    sptr->rows_in_mem = (JDIMENSION) (max_minheights * sptr->maxaccess);
+    sptr->rows_in_mem = (JDIMENSION)(max_minheights * sptr->maxaccess);
     jpeg_open_backing_store(cinfo, & sptr->b_s_info,
                 (long) sptr->rows_in_array *
                 (long) sptr->samplesperrow *
@@ -715,7 +715,7 @@ realize_virt_arrays (j_common_ptr cinfo)
 
   for (bptr = mem->virt_barray_list; bptr != NULL; bptr = bptr->next) {
     if (bptr->mem_buffer == NULL) { /* if not realized yet */
-      minheights = ((long) bptr->rows_in_array - 1L) / bptr->maxaccess + 1L;
+      minheights = (long)((bptr->rows_in_array - 1L) / bptr->maxaccess + 1L);
       if (minheights <= max_minheights) {
     /* This buffer fits in memory */
     bptr->rows_in_mem = bptr->rows_in_array;
@@ -745,28 +745,28 @@ do_sarray_io (j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writing)
 {
   long bytesperrow, file_offset, byte_count, rows, thisrow, i;
 
-  bytesperrow = (long) ptr->samplesperrow * SIZEOF(JSAMPLE);
+  bytesperrow = (long)ptr->samplesperrow * SIZEOF(JSAMPLE);
   file_offset = ptr->cur_start_row * bytesperrow;
   /* Loop to read or write each allocation chunk in mem_buffer */
-  for (i = 0; i < (long) ptr->rows_in_mem; i += ptr->rowsperchunk) {
+  for (i = 0; i < (long)ptr->rows_in_mem; i += ptr->rowsperchunk) {
     /* One chunk, but check for short chunk at end of buffer */
-    rows = MIN((long) ptr->rowsperchunk, (long) ptr->rows_in_mem - i);
+    rows = MIN((long)ptr->rowsperchunk, (long)ptr->rows_in_mem - i);
     /* Transfer no more than is currently defined */
-    thisrow = (long) ptr->cur_start_row + i;
-    rows = MIN(rows, (long) ptr->first_undef_row - thisrow);
+    thisrow = (long)ptr->cur_start_row + i;
+    rows = MIN(rows, (long)ptr->first_undef_row - thisrow);
     /* Transfer no more than fits in file */
-    rows = MIN(rows, (long) ptr->rows_in_array - thisrow);
+    rows = MIN(rows, (long)ptr->rows_in_array - thisrow);
     if (rows <= 0)      /* this chunk might be past end of file! */
       break;
     byte_count = rows * bytesperrow;
     if (writing)
       (*ptr->b_s_info.write_backing_store) (cinfo, & ptr->b_s_info,
                         (void FAR *) ptr->mem_buffer[i],
-                        file_offset, byte_count);
+                        (long)file_offset, (long)byte_count);
     else
       (*ptr->b_s_info.read_backing_store) (cinfo, & ptr->b_s_info,
                        (void FAR *) ptr->mem_buffer[i],
-                       file_offset, byte_count);
+                       (long)file_offset, (long)byte_count);
     file_offset += byte_count;
   }
 }
@@ -778,28 +778,28 @@ do_barray_io (j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writing)
 {
   long bytesperrow, file_offset, byte_count, rows, thisrow, i;
 
-  bytesperrow = (long) ptr->blocksperrow * SIZEOF(JBLOCK);
+  bytesperrow = (long)ptr->blocksperrow * SIZEOF(JBLOCK);
   file_offset = ptr->cur_start_row * bytesperrow;
   /* Loop to read or write each allocation chunk in mem_buffer */
-  for (i = 0; i < (long) ptr->rows_in_mem; i += ptr->rowsperchunk) {
+  for (i = 0; i < (long)ptr->rows_in_mem; i += ptr->rowsperchunk) {
     /* One chunk, but check for short chunk at end of buffer */
-    rows = MIN((long) ptr->rowsperchunk, (long) ptr->rows_in_mem - i);
+    rows = MIN((long)ptr->rowsperchunk, (long)ptr->rows_in_mem - i);
     /* Transfer no more than is currently defined */
-    thisrow = (long) ptr->cur_start_row + i;
-    rows = MIN(rows, (long) ptr->first_undef_row - thisrow);
+    thisrow = (long)ptr->cur_start_row + i;
+    rows = MIN(rows, (long)ptr->first_undef_row - thisrow);
     /* Transfer no more than fits in file */
-    rows = MIN(rows, (long) ptr->rows_in_array - thisrow);
+    rows = MIN(rows, (long)ptr->rows_in_array - thisrow);
     if (rows <= 0)      /* this chunk might be past end of file! */
       break;
     byte_count = rows * bytesperrow;
     if (writing)
       (*ptr->b_s_info.write_backing_store) (cinfo, & ptr->b_s_info,
                         (void FAR *) ptr->mem_buffer[i],
-                        file_offset, byte_count);
+                        (long)file_offset, (long)byte_count);
     else
       (*ptr->b_s_info.read_backing_store) (cinfo, & ptr->b_s_info,
                        (void FAR *) ptr->mem_buffer[i],
-                       file_offset, byte_count);
+                       (long)file_offset, (long)byte_count);
     file_offset += byte_count;
   }
 }
