@@ -84,7 +84,7 @@ use_merged_upsample (j_decompress_ptr cinfo)
 GLOBAL(void)
 jpeg_calc_output_dimensions (j_decompress_ptr cinfo)
 /* Do computations that are needed before master selection phase */
-{ 
+{
   /* Prevent application from calling me at wrong times */
   if (cinfo->global_state != DSTATE_READY)
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
@@ -209,7 +209,7 @@ prepare_range_limit_table (j_decompress_ptr cinfo)
 
 LOCAL(void)
 master_selection (j_decompress_ptr cinfo)
-{ 
+{
   my_master_ptr master = (my_master_ptr) cinfo->master;
   long samplesperrow;
   JDIMENSION jd_samplesperrow;
@@ -443,16 +443,14 @@ jpeg_new_colormap (j_decompress_ptr cinfo)
 
 GLOBAL(void)
 jinit_master_decompress (j_decompress_ptr cinfo)
-{ 
+{
   my_master_ptr master;
 
   master = (my_master_ptr)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
 				  SIZEOF(my_decomp_master));
   cinfo->master = (struct jpeg_decomp_master *) master;
-
   master->pub.prepare_for_output_pass = prepare_for_output_pass;
-
   master->pub.finish_output_pass = finish_output_pass;
 
   master->pub.is_dummy_pass = FALSE;

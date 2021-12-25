@@ -87,7 +87,6 @@
       undiff_buf[xindex] = Ra; \
     }
 
-
 /*
  * Undifferencers for the all rows but the first in a scan or restart interval.
  * The first sample in the row is undifferenced using the vertical

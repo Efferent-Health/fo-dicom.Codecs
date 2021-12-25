@@ -17,8 +17,8 @@
 #define JPEG_INTERNALS
 #include "jinclude12.h"
 #include "jpeglib12.h"
-#include "jlossy12.h"       /* Private declarations for lossy codec */
-#include "jdhuff12.h"       /* Declarations shared with jd*huff.c */
+#include "jlossy12.h"        /* Private declarations for lossy codec */
+#include "jdhuff12.h"        /* Declarations shared with jd*huff.c */
 
 
 /*

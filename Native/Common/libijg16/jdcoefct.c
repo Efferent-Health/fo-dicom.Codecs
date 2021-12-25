@@ -181,7 +181,7 @@ decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
     compptr = cinfo->cur_comp_info[ci];
     /* Don't bother to IDCT an uninteresting component. */
-    if (! compptr->component_needed) {
+    if (!compptr->component_needed) {
       blkn += compptr->MCU_data_units;
       continue;
     }
@@ -285,7 +285,7 @@ consume_data (j_decompress_ptr cinfo)
     }
       }
       /* Try to fetch the MCU. */
-      if (! (*lossyd->entropy_decode_mcu) (cinfo, coef->MCU_buffer)) {
+      if (!(*lossyd->entropy_decode_mcu) (cinfo, coef->MCU_buffer)) {
     /* Suspension forced; update state counters and exit */
     coef->MCU_vert_offset = yoffset;
     coef->MCU_ctr = MCU_col_num;
@@ -341,7 +341,7 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
        ci++, compptr++) {
     /* Don't bother to IDCT an uninteresting component. */
-    if (! compptr->component_needed)
+    if (!compptr->component_needed)
       continue;
     /* Align the virtual buffer for this component. */
     buffer = (*cinfo->mem->access_virt_barray)
@@ -417,7 +417,7 @@ smoothing_ok (j_decompress_ptr cinfo)
   int * coef_bits;
   int * coef_bits_latch;
 
-  if (! cinfo->process == JPROC_PROGRESSIVE || cinfo->coef_bits == NULL)
+  if (!cinfo->process == JPROC_PROGRESSIVE || cinfo->coef_bits == NULL)
     return FALSE;
 
   /* Allocate latch area if not already done */
@@ -486,7 +486,7 @@ decompress_smooth_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
 
   /* Force some input to be done if we are getting ahead of the input. */
   while (cinfo->input_scan_number <= cinfo->output_scan_number &&
-     ! cinfo->inputctl->eoi_reached) {
+     !cinfo->inputctl->eoi_reached) {
     if (cinfo->input_scan_number == cinfo->output_scan_number) {
       /* If input is working on current scan, we ordinarily want it to
        * have completed the current row.  But if input scan is DC,
@@ -505,7 +505,7 @@ decompress_smooth_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
   for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
        ci++, compptr++) {
     /* Don't bother to IDCT an uninteresting component. */
-    if (! compptr->component_needed)
+    if (!compptr->component_needed)
       continue;
     /* Count non-dummy DCT block rows in this iMCU row. */
     if (cinfo->output_iMCU_row < last_iMCU_row) {

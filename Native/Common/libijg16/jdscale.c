@@ -90,7 +90,7 @@ scaler_start_pass (j_decompress_ptr cinfo)
 
   scale->scale_factor = cinfo->Al - downscale;
 
-  /* Set scaler functions based on scale_factor (positive = left shift) */
+  /* Set scale functions based on scale_factor (positive = left shift) */
   if (scale->scale_factor > 0)
     losslsd->scaler_scale = simple_upscale;
   else if (scale->scale_factor < 0) {
