@@ -20,8 +20,8 @@ extern "C"{
 #elif defined(__linux__)
 #define EXPORT_OpenJPEG extern 
 extern "C"{
-#include "./Linux64/OpenJPEG/openjpeg.h"
-#include "./Linux64/OpenJPEG/j2k.h"
+#include "./Common/OpenJPEG/openjpeg.h"
+#include "./Common/OpenJPEG/j2k.h"
 #include <string.h>
 }
 
