@@ -1071,6 +1071,7 @@ namespace FellowOakDicom.Native.Codec
                 jparams = (DicomJpeg2000Params)GetDefaultParameters();
 
             int pixelCount = oldPixelData.Height * oldPixelData.Width;
+            
             if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct)
                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
 
@@ -1084,7 +1085,7 @@ namespace FellowOakDicom.Native.Codec
             {
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
 
-                //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                //Converting photometricinterpretation YbrFull or YbrFull422 to RGB
                 if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
                     jpegData = PixelDataConverter.YbrFullToRgb(jpegData);

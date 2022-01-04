@@ -1449,7 +1449,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     frameArray = new PinnedByteArray(ByteConverter.UnpackLow16(frameBuffer).Data);
                 }
                 else
+                {
                     frameArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
+
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                    {
+                        frameArray = new PinnedByteArray(PixelDataConverter.YbrFull422ToRgb(new MemoryByteBuffer(frameArray.Data), oldPixelData.Width).Data);
+                    }
+                }
 
 
                 try
@@ -1818,7 +1825,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                             jpeg_start_compress_16_MacOS(ref cinfo, Convert.ToInt32(true));
 
-                        byte* row_pointer;
+                        byte* row_pointer = null;
                         int row_stride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
 
                         byte* framePtr = (byte*)(void*)frameArray.Pointer;
@@ -1829,7 +1836,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             //jpeg_write_scanlines_8 for Linux, Windows and MacOS for 64 bits
                             if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            {
                                 jpeg_write_scanlines_8_Windows64(ref cinfo, &row_pointer, 1);
+
+                            }
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                                 jpeg_write_scanlines_8_Linux64(ref cinfo, &row_pointer, 1);
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -1923,6 +1933,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             {
                                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
                             }
+                        }
+
+                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                        {
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                         }
 
                         IByteBuffer buffer;
