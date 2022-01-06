@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DICOM JPEG2000 Decoder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/dicom-parser@latest/dist/dicomParser.min.js"></script>
+    <script src="build/DicomJpeg2000Decoder.js"></script>
+    <style>
+      .input-image {
+        min-height: 200px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1>DICOM JPEG2000 Decoder</h1> 
+      <label for="dicom-input">Upload DICOM file:</label> <input type="file" id="dicom-input" name="dicom-input" accept=".dicom,.dcm">
+      <div class="input-image" id="input-image">
+        <p>Or Drag and Drop Image Here</p> 
+        <canvas id="image-canvas" width="200" height="100"></canvas>
+      </div>
+    </div>
+    <script type="text/javascript">
+
+      // Helper routines 'framesAreFragmented' and 'getEncapsulatedImageFrame' taken from https://github.com/cornerstonejs/cornerstoneWADOImageLoader/blob/00cf0419c98c6bddef121d4409c8a2a9d780f336/src/imageLoader/wadouri/getEncapsulatedImageFrame.js
+      // MIT License
+      function framesAreFragmented(dataSet) {
+        const numberOfFrames = dataSet.intString('x00280008');
+        const pixelDataElement = dataSet.elements.x7fe00010;
+
+        return numberOfFrames !== pixelDataElement.fragments.length;
+      }
+
+      function getEncapsulatedImageFrame(dataSet, frameIndex) {
+
+        if (
+          dataSet.elements.x7fe00010 &&
+          dataSet.elements.x7fe00010.basicOffsetTable.length
+        ) {
+          // Basic Offset Table is not empty
+          return dicomParser.readEncapsulatedImageFrame(
+            dataSet,
+            dataSet.elements.x7fe00010,
+            frameIndex
+          );
+        }
+
+        // Empty basic offset table
+
+        if (framesAreFragmented(dataSet)) {
+          const basicOffsetTable = dicomParser.createJPEGBasicOffsetTable(
+            dataSet,
+            dataSet.elements.x7fe00010
+          );
+
+          return dicomParser.readEncapsulatedImageFrame(
+            dataSet,
+            dataSet.elements.x7fe00010,
+            frameIndex,
+            basicOffsetTable
+          );
+        }
+
+        return dicomParser.readEncapsulatedPixelDataFromFragments(
+          dataSet,
+          dataSet.elements.x7fe00010,
+          frameIndex
+        );
+      }
+
+      // Helper routine to convert from the decoded jpegOutputData to an RGBA array.
+      // Currently this routine only handles MONOCHROME1, MONOCHROME2 and RGB
+      function convertDecodedDataToRGBA(dstArrayBuffer, jpegOutputData, dataSet) {
+        
+        let dstArray = new Uint8Array(dstArrayBuffer)
+        let photometricInterpretation = dataSet.string("x00280004")
+        let samplesPerPixel = dataSet.uint16("x00280002")
+        console.log(`photometricInterpretation: ${photometricInterpretation} samplesPerPixel: ${samplesPerPixel}`)
+
+        if (photometricInterpretation === "MONOCHROME1" || photometricInterpretation === "MONOCHROME2") {
+
+          let invert = photometricInterpretation === "MONOCHROME1"
+          let smallestPixelValue
+          let largestPixelValue
+          let pixelRepresentation = dataSet.uint16('x00280103');
+
+          if (pixelRepresentation === 0) {
+            smallestPixelValue = dataSet.uint16('x00280106')
+            largestPixelValue = dataSet.uint16('x00280107')
+          } else {
+            smallestPixelValue = dataSet.int16('x00280106')
+            largestPixelValue = dataSet.int16('x00280107')
+          }
+
+          if (smallestPixelValue === undefined || largestPixelValue === undefined) {
+            let src = jpegOutputData.getComponent(0).data
+            let srcIdx = 0
+            smallestPixelValue = src[srcIdx]
+            largestPixelValue = src[srcIdx]
+
+            for (let y = 0; y < jpegOutputData.height; y++) {
+              for (let x = 0; x < jpegOutputData.width; x++) {
+                let val = src[srcIdx++]
+                if (val > largestPixelValue) {
+                  largestPixelValue = val
+                }
+
+                if (val < smallestPixelValue) {
+                  smallestPixelValue = val
+                }
+              }
+            }
+          }
+
+          let src = jpegOutputData.getComponent(0).data
+          let srcIdx = 0
+          let dstIdx = 0
+          let valRange = largestPixelValue - smallestPixelValue
+
+          for (let y = 0; y < jpegOutputData.height; y++) {
+            for (let x = 0; x < jpegOutputData.width; x++) {
+              let val = src[srcIdx++]
+              val = 255 * (val - smallestPixelValue) / valRange
+              if (invert) {
+                val = 255 - val
+              }
+
+              dstArray[dstIdx++] = val
+              dstArray[dstIdx++] = val
+              dstArray[dstIdx++] = val
+              dstArray[dstIdx++] = 255  // Alpha
+            }
+          }
+
+        } else {
+
+          // Assume image is RGB              
+          let srcR = jpegOutputData.getComponent(0).data
+          let srcG = jpegOutputData.getComponent(1).data
+          let srcB = jpegOutputData.getComponent(2).data
+
+          let srcIdxR = 0
+          let srcIdxG = 0
+          let srcIdxB = 0
+          let dstIdx = 0
+
+          for (let y = 0; y < jpegOutputData.height; y++) {
+            for (let x = 0; x < jpegOutputData.width; x++) {
+              dstArray[dstIdx++] = srcR[srcIdxR++]
+              dstArray[dstIdx++] = srcG[srcIdxG++]
+              dstArray[dstIdx++] = srcB[srcIdxB++]
+              dstArray[dstIdx++] = 255  // Alpha
+            }
+          }
+        }
+
+        return dstArray
+      }
+
+      // Demonstration of loading in a DICOM file with an image encoded as JPEG2000
+      async function loadFile(fileHandle) {
+
+        // First we extract pixel data for the first frame in the DICOM file using the dicomParser JS library
+        let arrayBuffer = await fileHandle.arrayBuffer()
+        let byteArray = new Uint8Array(arrayBuffer)
+        let dataSet = dicomParser.parseDicom(byteArray)
+        console.log(dataSet)
+
+        let pixelDataElement = dataSet.elements.x7fe00010
+        let pixelData = null
+
+        if (pixelDataElement.encapsulatedPixelData) {
+          pixelData = getEncapsulatedImageFrame(dataSet, 0)
+        }
+
+        //console.log(pixelData)
+        if (pixelData) {
+          console.log("Creating WASM InputData")
+
+          // Create an input data object to hold the compressed pixel data
+          let inputData = new Module.InputData(pixelData.length)
+          let jpegOutputData = null
+
+          try {
+            // Copy the pixel data into the inputData object and then decode it using decodeJpeg2000
+            inputData.dataJS.set(pixelData)
+            jpegOutputData = Module.decodeJpeg2000(inputData)
+
+            if (jpegOutputData.hasFailed) {
+              console.error("Unable to decode data");
+            } else {
+
+              // Now we convert the decoded JPEG data to a RGBA buffer and display it on a HTML canvas element
+              let dstArrayBuffer = new ArrayBuffer(jpegOutputData.width * jpegOutputData.height * 4)
+              let dstArray = convertDecodedDataToRGBA(dstArrayBuffer, jpegOutputData, dataSet)
+
+              console.log(`Decoded image size is ${jpegOutputData.width}x${jpegOutputData.height}`)
+
+              const pixels = new Uint8ClampedArray(dstArray);
+              const imageData = new ImageData(pixels, jpegOutputData.width, jpegOutputData.height)
+
+              let canvas = document.getElementById("image-canvas")
+              canvas.width = jpegOutputData.width
+              canvas.height = jpegOutputData.height
+              const ctx = canvas.getContext("2d")
+              ctx.putImageData(imageData, 0, 0)
+            }
+          } finally {
+            // Both the inputData and jpegOutputData objects must be manually deleted in order to
+            // avoid leaking memory from the WASM heap.
+            inputData.delete()
+            if (jpegOutputData) {
+              jpegOutputData.delete()
+            }
+          }
+        } else {
+          console.error("Unable to locate pixelData for image")
+        }
+      }
+
+      function onFileSelected(event) {
+        if (event.srcElement !== null && event.srcElement.files.length > 0) {
+          loadFile(event.srcElement.files[0])
+        }        
+      }
+
+      function stopEvent(event) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      function onDrop(event) {
+        if (event.dataTransfer !== null && event.dataTransfer.files.length > 0) {
+          loadFile(event.dataTransfer.files[0])
+        }
+
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      document.getElementById("dicom-input").addEventListener("change", onFileSelected)
+      let inputImageDiv = document.getElementById("input-image")
+      inputImageDiv.addEventListener("dragstart", stopEvent)
+      inputImageDiv.addEventListener("dragenter", stopEvent)
+      inputImageDiv.addEventListener("dragover", stopEvent)
+      inputImageDiv.addEventListener("drop", onDrop)
+
+    </script>      
+  </body>
+</html>
