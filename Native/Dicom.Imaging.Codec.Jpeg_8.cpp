@@ -10,9 +10,9 @@ extern "C"{
 #include "stdio.h"
 #include "string.h"
 #include "setjmp.h"
-#include "libijg8/jpeglib8.h"
-#include "libijg8/jerror8.h"
-#include "libijg8/jpegint8.h"
+#include "./Common/libijg8/jpeglib8.h"
+#include "./Common/libijg8/jerror8.h"
+#include "./Common/libijg8/jpegint8.h"
 }
 
 #elif defined(__linux__)
@@ -34,9 +34,9 @@ extern "C"{
 		#include "stdio.h"
 		#include "string.h"
 		#include "setjmp.h"
-		#include "./MacOS/libijg8/jpeglib8.h"
-		#include "./MacOS/libijg8/jerror8.h"
-		#include "./MacOS/libijg8/jpegint8.h"
+		#include "./Common/libijg8/jpeglib8.h"
+		#include "./Common/libijg8/jerror8.h"
+		#include "./Common/libijg8/jpegint8.h"
 		}
     #endif
 

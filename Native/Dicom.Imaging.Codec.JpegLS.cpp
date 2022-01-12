@@ -5,7 +5,7 @@
 #include <new>
 
 #if defined (_WIN32)
-#include "CharLS/charls.h"
+#include "./Common/CharLS/charls.h"
 #define EXPORT_Charls __declspec(dllexport)
 
 #elif defined(__linux__)
@@ -16,7 +16,7 @@
 #include "TargetConditionals.h"
     #ifdef TARGET_OS_MAC
         #define EXPORT_Charls extern
-		#include "./MacOS/CharLS/charls.h"
+		#include "./Common/CharLS/charls.h"
     #endif
 
 #endif
