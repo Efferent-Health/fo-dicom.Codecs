@@ -21,9 +21,9 @@
  */
 
 #ifndef JCONFIG_INCLUDED        /* in case jinclude.h already did */
-#include "jconfig8.h"           /* widely used configuration options */
+#include "../../POSIX64/libijg8/jconfig8.h"           /* widely used configuration options */
 #endif
-#include "jmorecfg8.h"          /* seldom changed options */
+#include "../../POSIX64/libijg8/jmorecfg8.h"          /* seldom changed options */
 
 
 /* Version ID for the JPEG library.

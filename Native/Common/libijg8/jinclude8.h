@@ -17,7 +17,7 @@
 
 /* Include auto-config file to find out which system include files we need. */
 
-#include "jconfig8.h"		/* auto configuration options */
+#include "../../POSIX64/libijg8/jconfig8.h"		/* auto configuration options */
 #define JCONFIG_INCLUDED	/* so that jpeglib.h doesn't do it again */
 
 /*

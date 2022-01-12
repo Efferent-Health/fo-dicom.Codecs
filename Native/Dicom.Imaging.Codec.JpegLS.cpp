@@ -9,7 +9,7 @@
 #define EXPORT_Charls __declspec(dllexport)
 
 #elif defined(__linux__)
-#include "./Linux64/CharLS/charls.h"
+#include "./Common/CharLS/charls.h"
 #define EXPORT_Charls extern 
 
 #elif defined(__APPLE__)

@@ -21,9 +21,9 @@
  */
 
 #ifndef JCONFIG_INCLUDED	/* in case jinclude.h already did */
-#include "jconfig16.h"		/* widely used configuration options */
+#include "../../POSIX64/libijg16/jconfig16.h"		/* widely used configuration options */
 #endif
-#include "jmorecfg16.h"		/* seldom changed options */
+#include "../../POSIX64/libijg16/jmorecfg16.h"		/* seldom changed options */
 
 
 /* Version ID for the JPEG library.
