@@ -117,7 +117,7 @@
     <ClCompile Include="..\..\Dicom.Imaging.Codec.JpegLS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CharLS\interface.cpp" />
+    <ClCompile Include="..\..\Common\CharLS\interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\OpenJPEG\bio.h">
