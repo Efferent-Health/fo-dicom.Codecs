@@ -89,7 +89,7 @@ stages:
   - job: MacOS
     dependsOn: Linux
     pool:
-      vmImage: 'macOS-10.14'
+      vmImage: 'macOS-10.15'
     steps:
     - script: |
         cd Native/MacOS/build_ALL
