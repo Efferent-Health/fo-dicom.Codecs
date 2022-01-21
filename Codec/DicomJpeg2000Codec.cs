@@ -421,6 +421,7 @@ namespace FellowOakDicom.Native.Codec
 
         public bool Irreversible { get; set; }
         public int Rate { get; set; }
+        public OPJ_PROG_ORDER ProgressionOrder { get; set; } = OPJ_PROG_ORDER.LRCP;
         public int[] RateLevels { get; set; }
         public bool IsVerbose { get; set; }
         public bool AllowMCT { get; set; }
@@ -724,12 +725,10 @@ namespace FellowOakDicom.Native.Codec
                     if(oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                     {
                         frameData = PixelDataConverter.YbrFullToRgb(frameData);
-                        oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                     }
                     else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                     {
                         frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
-                        oldPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                     }    
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
@@ -772,7 +771,7 @@ namespace FellowOakDicom.Native.Codec
                     eparams.cp_rsiz = OPJ_RSIZ_CAPABILITIES.STD_RSIZ;
                     eparams.cblockw_init = 64;
                     eparams.cblockh_init = 64;
-                    eparams.prog_order = OPJ_PROG_ORDER.LRCP;
+                    eparams.prog_order = jparams.ProgressionOrder;
                     eparams.roi_compno = -1;        
                     eparams.subsampling_dx = 1;
                     eparams.subsampling_dy = 1;
@@ -892,7 +891,6 @@ namespace FellowOakDicom.Native.Codec
                             }
                             else if (oldPixelData.BytesAllocated == 2)
                             {
-
                                 if (Convert.ToBoolean(comp->sgnd))
                                 {
                                     if (oldPixelData.BitsStored < 16)
