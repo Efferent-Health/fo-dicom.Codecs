@@ -19,8 +19,6 @@
  */
 
 /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
-#include <stdlib.h>
-
 #include "jinclude16.h"
 #include "jpeglib16.h"
 #include "jversion16.h"
