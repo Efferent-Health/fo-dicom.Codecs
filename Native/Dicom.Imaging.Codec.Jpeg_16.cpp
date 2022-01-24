@@ -31,6 +31,7 @@ extern "C" {
         #define EXPORT_libijg16 extern
 		extern "C"{
 		#include "stdio.h"
+		#include "stdlib.h"
 		#include "string.h"
 		#include "setjmp.h"
 		#include "./MacOS/libijg16/jpeglib16.h"
