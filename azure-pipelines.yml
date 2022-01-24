@@ -46,14 +46,14 @@ stages:
       vmImage: 'ubuntu-18.04'
     steps:
     - script: |
-        cd Native/Linux64/build_ALL
+        cd Native/POSIX64/build_linux
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile Linux library'
     - task: PublishBuildArtifacts@1
       displayName: Publish Linux artifacts
       inputs:
-        PathtoPublish: 'Native/Linux64/build_ALL/bin'
+        PathtoPublish: 'Native/POSIX64/build_linux/bin'
         ArtifactName: 'lib-linux64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -92,14 +92,14 @@ stages:
       vmImage: 'macOS-10.15'
     steps:
     - script: |
-        cd Native/MacOS/build_ALL
+        cd Native/POSIX64/build_macOS
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile MacOS library'
     - task: PublishBuildArtifacts@1
       displayName: Publish MacOS artifacts
       inputs:
-        PathtoPublish: 'Native/MacOS/build_ALL/bin'
+        PathtoPublish: 'Native/POSIX64/build_macOS/bin'
         ArtifactName: 'lib-macOS'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2

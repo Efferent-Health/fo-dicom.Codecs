@@ -10,9 +10,9 @@ extern "C" {
 #include "stdio.h"
 #include "string.h"
 #include "setjmp.h"
-#include "libijg16/jpeglib16.h"
-#include "libijg16/jerror16.h"
-#include "libijg16/jpegint16.h"
+#include "./Common/libijg16/jpeglib16.h"
+#include "./Common/libijg16/jerror16.h"
+#include "./Common/libijg16/jpegint16.h"
 }
 #elif defined(__linux__)
 #define EXPORT_libijg16  extern 
@@ -20,9 +20,9 @@ extern "C" {
 #include "stdio.h"
 #include "string.h"
 #include "setjmp.h"
-#include "./Linux64/libijg16/jpeglib16.h"
-#include "./Linux64/libijg16/jerror16.h"
-#include "./Linux64/libijg16/jpegint16.h"
+#include "./Common/libijg16/jpeglib16.h"
+#include "./Common/libijg16/jerror16.h"
+#include "./Common/libijg16/jpegint16.h"
 }
 
 #elif defined(__APPLE__)
@@ -34,9 +34,9 @@ extern "C" {
 		#include "stdlib.h"
 		#include "string.h"
 		#include "setjmp.h"
-		#include "./MacOS/libijg16/jpeglib16.h"
-		#include "./MacOS/libijg16/jerror16.h"
-		#include "./MacOS/libijg16/jpegint16.h"
+		#include "./Common/libijg16/jpeglib16.h"
+		#include "./Common/libijg16/jerror16.h"
+		#include "./Common/libijg16/jpegint16.h"
 		}
     #endif
 

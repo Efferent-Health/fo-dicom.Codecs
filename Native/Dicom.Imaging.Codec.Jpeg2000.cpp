@@ -13,15 +13,15 @@
 #if defined(_WIN32)
 #define EXPORT_OpenJPEG  __declspec(dllexport)
 extern "C"{
-#include "OpenJPEG/openjpeg.h"
-#include "OpenJPEG/j2k.h"
+#include "./Common/OpenJPEG/openjpeg.h"
+#include "./Common/OpenJPEG/j2k.h"
 }
 
 #elif defined(__linux__)
 #define EXPORT_OpenJPEG extern 
 extern "C"{
-#include "./Linux64/OpenJPEG/openjpeg.h"
-#include "./Linux64/OpenJPEG/j2k.h"
+#include "./Common/OpenJPEG/openjpeg.h"
+#include "./Common/OpenJPEG/j2k.h"
 #include <string.h>
 }
 
@@ -30,8 +30,8 @@ extern "C"{
     #ifdef TARGET_OS_MAC
         #define EXPORT_OpenJPEG extern
 		extern "C"{
-        #include "./MacOS/OpenJPEG/openjpeg.h"
-        #include "./MacOS/OpenJPEG/j2k.h"
+        #include "./Common/OpenJPEG/openjpeg.h"
+        #include "./Common/OpenJPEG/j2k.h"
 		}
     #endif
 

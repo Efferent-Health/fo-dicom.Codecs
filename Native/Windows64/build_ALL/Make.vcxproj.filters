@@ -21,88 +21,88 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\OpenJPEG\bio.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\bio.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\cio.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\cio.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\dwt.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\dwt.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\event.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\event.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\image.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\image.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\j2k.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\j2k.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\j2k_lib.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\j2k_lib.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\jp2.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\jp2.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\jpt.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\jpt.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\mct.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\mct.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\mqc.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\mqc.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\openjpeg.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\openjpeg.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\pi.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\pi.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\raw.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\raw.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\t1.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\t1.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\t2.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\t2.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\tcd.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\tcd.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\tgt.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\tgt.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\cidx_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\cidx_manager.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\phix_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\phix_manager.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\ppix_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\ppix_manager.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\thix_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\thix_manager.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\OpenJPEG\tpix_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\tpix_manager.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\CharLS\interface.cpp">
+    <ClCompile Include="..\..\Common\CharLS\interface.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\CharLS\jpegls.cpp">
+    <ClCompile Include="..\..\Common\CharLS\jpegls.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\CharLS\jpegmarkersegment.cpp">
+    <ClCompile Include="..\..\Common\CharLS\jpegmarkersegment.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\CharLS\jpegstreamreader.cpp">
+    <ClCompile Include="..\..\Common\CharLS\jpegstreamreader.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\CharLS\jpegstreamwriter.cpp">
+    <ClCompile Include="..\..\Common\CharLS\jpegstreamwriter.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_8.cpp">
@@ -122,142 +122,142 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\OpenJPEG\bio.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\bio.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\cio.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\cio.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\dwt.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\dwt.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\event.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\event.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\fix.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\fix.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\image.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\image.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\int.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\int.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\j2k.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\j2k.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\j2k_lib.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\j2k_lib.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\jp2.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\jp2.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\jpt.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\jpt.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\mct.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\mct.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\mqc.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\mqc.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\openjpeg.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\openjpeg.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\opj_includes.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_includes.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\opj_malloc.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_malloc.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\pi.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\pi.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\raw.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\raw.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\t1.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\t1.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\t1_luts.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\t1_luts.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\t2.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\t2.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\tcd.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\tcd.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\tgt.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\tgt.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\opj_config.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_config.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\cidx_manager.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\cidx_manager.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\OpenJPEG\indexbox_manager.h">
+    <ClInclude Include="..\..\Common\OpenJPEG\indexbox_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\charls.h">
+    <ClInclude Include="..\..\Common\CharLS\charls.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\colortransform.h">
+    <ClInclude Include="..\..\Common\CharLS\colortransform.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\context.h">
+    <ClInclude Include="..\..\Common\CharLS\context.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\contextrunmode.h">
+    <ClInclude Include="..\..\Common\CharLS\contextrunmode.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\decoderstrategy.h">
+    <ClInclude Include="..\..\Common\CharLS\decoderstrategy.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\defaulttraits.h">
+    <ClInclude Include="..\..\Common\CharLS\defaulttraits.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\encoderstrategy.h">
+    <ClInclude Include="..\..\Common\CharLS\encoderstrategy.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jlscodecfactory.h">
+    <ClInclude Include="..\..\Common\CharLS\jlscodecfactory.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jpegimagedatasegment.h">
+    <ClInclude Include="..\..\Common\CharLS\jpegimagedatasegment.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jpegmarkercode.h">
+    <ClInclude Include="..\..\Common\CharLS\jpegmarkercode.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jpegmarkersegment.h">
+    <ClInclude Include="..\..\Common\CharLS\jpegmarkersegment.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jpegsegment.h">
+    <ClInclude Include="..\..\Common\CharLS\jpegsegment.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jpegstreamreader.h">
+    <ClInclude Include="..\..\Common\CharLS\jpegstreamreader.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\jpegstreamwriter.h">
+    <ClInclude Include="..\..\Common\CharLS\jpegstreamwriter.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\lookuptable.h">
+    <ClInclude Include="..\..\Common\CharLS\lookuptable.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\losslesstraits.h">
+    <ClInclude Include="..\..\Common\CharLS\losslesstraits.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\processline.h">
+    <ClInclude Include="..\..\Common\CharLS\processline.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\publictypes.h">
+    <ClInclude Include="..\..\Common\CharLS\publictypes.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\scan.h">
+    <ClInclude Include="..\..\Common\CharLS\scan.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\CharLS\util.h">
+    <ClInclude Include="..\..\Common\CharLS\util.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
   </ItemGroup>

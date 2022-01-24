@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/Linux64/build_ALL/bin/*.so" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/MacOS/build_ALL/bin/*.dylib" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/build_linux/bin/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/build_macOS/bin/*.dylib" CopyToOutputDirectory="Always" />
     <None Include="../../Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
