@@ -11,7 +11,7 @@ This is collaborative project mantained by [Fellow Oak Dicom](https://github.com
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
 - Windows 64-bit (tested with Windows 10)
 - Linux 64-bit (tested with Ubuntu 16/18 Desktop and Server)
-- MacOS (tested with macOS High Sierra Version 10.13)
+- MacOS (tested with macOS Catalina Version 10.15)
 
 ## Supported CODECs
 
