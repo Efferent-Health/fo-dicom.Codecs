@@ -278,8 +278,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
+
                 byte[] jpegData = new byte[frameData.Size];
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData);
+                
                 uint jpegDataSize = 0;
                 char[] errorMessage = new char[256];
 
@@ -308,7 +310,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     else
                         buffer = new MemoryByteBuffer(jpegData);
 
-                    buffer = EvenLengthBuffer.Create(buffer);
+                    if (oldPixelData.NumberOfFrames == 1)
+                        buffer = EvenLengthBuffer.Create(buffer);
+
                     newPixelData.AddFrame(buffer);
                 }
             }
@@ -336,9 +340,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
+
                 byte[] frameData = new byte[newPixelData.UncompressedFrameSize];
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
+
                 JlsParameters jls = new JlsParameters();
+
                 char[] errorMessage = new char[256];
 
                 unsafe
@@ -361,7 +368,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         buffer = new TempFileBuffer(frameData);
                     else
                         buffer = new MemoryByteBuffer(frameData);
-                    buffer = EvenLengthBuffer.Create(buffer);
+
+                    if (oldPixelData.NumberOfFrames == 1)
+                        buffer = EvenLengthBuffer.Create(buffer);
 
                     newPixelData.AddFrame(buffer);
                 }

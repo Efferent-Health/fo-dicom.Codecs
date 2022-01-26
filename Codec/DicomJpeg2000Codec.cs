@@ -967,7 +967,10 @@ namespace FellowOakDicom.Native.Codec
                                     buffer = new TempFileBuffer(cbuf);
                                 else
                                     buffer = new MemoryByteBuffer(cbuf);
-                                buffer = EvenLengthBuffer.Create(buffer);
+
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
                                 newPixelData.AddFrame(buffer);
                             }
                             else
@@ -987,7 +990,10 @@ namespace FellowOakDicom.Native.Codec
                                     buffer = new TempFileBuffer(cbuf);
                                 else
                                     buffer = new MemoryByteBuffer(cbuf);
-                                buffer = EvenLengthBuffer.Create(buffer);
+
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
                                 newPixelData.AddFrame(buffer);
                             }
                             else
@@ -1007,7 +1013,10 @@ namespace FellowOakDicom.Native.Codec
                                     buffer = new TempFileBuffer(cbuf);
                                 else
                                     buffer = new MemoryByteBuffer(cbuf);
-                                buffer = EvenLengthBuffer.Create(buffer);
+
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
                                 newPixelData.AddFrame(buffer);
                             }
                             else
@@ -1289,7 +1298,9 @@ namespace FellowOakDicom.Native.Codec
                         else
                             buffer = new MemoryByteBuffer(destArray.Data);
 
-                        buffer = EvenLengthBuffer.Create(buffer);
+                        if (oldPixelData.NumberOfFrames == 1)
+                            buffer = EvenLengthBuffer.Create(buffer);
+
                         newPixelData.AddFrame(buffer);
 
                     }

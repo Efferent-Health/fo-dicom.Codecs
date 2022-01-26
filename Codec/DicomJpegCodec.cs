@@ -1941,6 +1941,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         IByteBuffer buffer;
+
                         if (MemoryBuffer.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
                         {
                             buffer = new TempFileBuffer(MemoryBuffer.ToArray());
@@ -1951,7 +1952,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             buffer = new MemoryByteBuffer(MemoryBuffer.ToArray());
                         }
 
-                        buffer = EvenLengthBuffer.Create(buffer);
+                        if (oldPixelData.NumberOfFrames == 1)
+                            buffer = EvenLengthBuffer.Create(buffer);
+
                         newPixelData.AddFrame(buffer);
                     }
                 }
@@ -1976,7 +1979,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 unsafe
-                {
+                {   
                     PinnedByteArray jpegArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
                     PinnedByteArray frameArray = null;
 
@@ -2115,6 +2118,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_8_Windows64(ref dinfo, 1);
@@ -2132,6 +2136,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_8_Linux64(ref dinfo, 1);
@@ -2149,6 +2154,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_8_MacOS(ref dinfo, 1);
@@ -2168,6 +2174,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_12_Windows64(ref dinfo, 1);
@@ -2185,6 +2192,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_12_Linux64(ref dinfo, 1);
@@ -2202,6 +2210,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_12_MacOS(ref dinfo, 1);
@@ -2221,6 +2230,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_16_Windows64(ref dinfo, 1);
@@ -2238,6 +2248,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_16_Linux64(ref dinfo, 1);
@@ -2255,6 +2266,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         {
                             int jpeg_read_header_value = 0;
+
                             try
                             {
                                 jpeg_read_header_value = jpeg_read_header_16_MacOS(ref dinfo, 1);
@@ -2276,15 +2288,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         
                         newPixelData.PhotometricInterpretation = oldPixelData.PhotometricInterpretation;
+
                         if (jpegParams.ConvertColorSpaceToRGB && (dinfo.out_color_space == J_COLOR_SPACE.JCS_YCbCr || dinfo.out_color_space == J_COLOR_SPACE.JCS_RGB))
                         {
                             if (oldPixelData.PixelRepresentation == PixelRepresentation.Signed)
                                 throw new DicomCodecException("JPEG codec unable to perform colorspace conversion on signed pixel data");
+                            
                             dinfo.out_color_space = J_COLOR_SPACE.JCS_RGB;
                             newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                             newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
                         }
-
                         else
                         {
                             dinfo.jpeg_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
@@ -2342,14 +2355,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             jpeg_start_decompress_16_MacOS(ref dinfo);
                         }
 
-                        int rowSize;
+                        int rowSize = 0;
+
                         if (Bits == 8) 
                             rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
                         else 
                             rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
 
                         int frameSize = Convert.ToInt32(rowSize * dinfo.output_height);
-                        if ((frameSize % 2) != 0)
+
+                        if ((frameSize % 2) != 0 && oldPixelData.NumberOfFrames == 1)
                             frameSize++;
 
                         frameArray = new PinnedByteArray(frameSize);
@@ -2366,6 +2381,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -2376,6 +2392,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -2386,6 +2403,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
 
@@ -2398,6 +2416,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -2408,6 +2427,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -2418,6 +2438,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines on pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
 
@@ -2430,6 +2451,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
                             else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -2440,6 +2462,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
                                 }
+                                
                                 framePtr += rows * rowSize;;
                             }
                             else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -2450,6 +2473,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
                                 }
+
                                 framePtr += rows * rowSize;
                             }
 
@@ -2480,11 +2504,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             jpeg_destroy_decompress_16_MacOS(ref dinfo);
 
                         IByteBuffer buffer;
+
                         if (frameArray.Count >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
                             buffer = new TempFileBuffer(frameArray.Data);
                         else
                             buffer = new MemoryByteBuffer(frameArray.Data);
-                        buffer = EvenLengthBuffer.Create(buffer);
 
                         if (newPixelData.PlanarConfiguration == PlanarConfiguration.Planar && newPixelData.SamplesPerPixel > 1)
                         {
