@@ -6,7 +6,7 @@ stages:
   jobs:
   - job: Windows
     pool:
-      vmImage: 'VS2017-Win2016'
+      vmImage: 'windows-2019'
     steps:
     - task: MSBuild@1
       displayName: 'Compile libijg* libraries'
@@ -31,7 +31,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         PackageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -77,7 +77,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         PackageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -123,7 +123,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         PackageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -142,7 +142,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         PackageType: 'sdk'
-        version: '5.0.x'
+        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Compliance tests
       inputs:
@@ -154,7 +154,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Zip files
       inputs:
-        rootFolderOrFile: 'Tests/Acceptance/bin/debug/net5.0/out'
+        rootFolderOrFile: 'Tests/Acceptance/bin/debug/net6.0/out'
         archiveType: 'zip'
         archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win64-$(Build.BuildId).zip'
     - task: GitHubRelease@0
@@ -168,13 +168,13 @@ stages:
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
-        releaseNotesFile: 'Tests/Acceptance/bin/debug/net5.0/out/Results.md'
+        releaseNotesFile: 'Tests/Acceptance/bin/debug/net6.0/out/Results.md'
 
 - stage: Deploy
   jobs:
   - job: Nuget
     pool:
-      vmImage: 'VS2017-Win2016'
+      vmImage: 'windows-2019'
     steps:
     - task: DownloadBuildArtifacts@0
       displayName: Retrieving build artifacts
