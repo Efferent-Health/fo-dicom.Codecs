@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.0.0"/>
+    <PackageReference Include="fo-dicom" Version="5.0.3"/>
   </ItemGroup>
 
   <ItemGroup>

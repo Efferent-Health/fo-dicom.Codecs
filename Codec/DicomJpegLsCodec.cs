@@ -110,32 +110,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public abstract DicomTransferSyntax TransferSyntax { get; }
 
-            public enum DicomJpegLsInterleaveMode
-    {
-        None = 0,
-
-        Line = 1,
-
-        Sample = 2
-    };
+        public enum DicomJpegLsInterleaveMode
+        {
+            None = 0,
+            Line = 1,
+            Sample = 2
+        };
 
     public enum DicomJpegLsColorTransform
     {
         None = 0,
-
         HP1 = 1,
-
         HP2 = 2,
-
         HP3 = 3
     };
 
     public class DicomJpegLsParams : DicomCodecParams
     {
         private int _allowedError;
-
         private DicomJpegLsInterleaveMode _ilMode;
-
         private DicomJpegLsColorTransform _colorTransform;
 
         public DicomJpegLsParams()

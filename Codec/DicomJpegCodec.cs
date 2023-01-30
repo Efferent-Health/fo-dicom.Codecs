@@ -1925,14 +1925,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
                             && cinfo.jpeg_color_space == J_COLOR_SPACE.JCS_YCbCr)
                         {
-                            if (jpegParams.SampleFactor == DicomJpegSampleFactor.SF422)
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                            }
-                            else
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
-                            }
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
                         }
 
                         if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
