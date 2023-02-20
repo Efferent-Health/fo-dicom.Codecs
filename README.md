@@ -31,7 +31,7 @@ The following CODECS are implemented:
 
 ## Usage
  
-- Add the standard fo-dicom nuget packages to your project (tested with 4.0.8 and 5.0.0)
+- Add the standard fo-dicom nuget packages to your project (tested with 4.0.8 and 5.0.3)
 ### With fo-dicom 4.0
 - Add the [nuget package](https://www.nuget.org/packages/Efferent.Native/) to your .net Standard or .net Core project (minimum version is 2.0) 
 - Add the standard fo-dicom nuget packages to your project (version 4.0.x)
