@@ -15,6 +15,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>    
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="fo-dicom" Version="5.0.3"/>
     <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0"/>
@@ -38,4 +43,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
+    <None Include="../README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
+  </ItemGroup>  
 </Project>
