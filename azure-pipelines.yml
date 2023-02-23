@@ -36,94 +36,94 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
- - job: Linux
-   dependsOn: Windows
-   pool:
-     vmImage: 'ubuntu-20.04'
-   steps:
-   - script: |
-       cd Native/POSIX64/build_linux
-       cmake ./CMakeLists.txt
-       make
-     displayName: 'Compile Linux library'
-   - task: PublishBuildArtifacts@1
-     displayName: Publish Linux artifacts
-     inputs:
-       PathtoPublish: 'Native/POSIX64/build_linux/bin'
-       ArtifactName: 'lib-linux64'
-       publishLocation: 'Container'
-   - task: DotNetCoreCLI@2
-     displayName: Compile managed library
-     inputs:
-       command: 'build'
-       projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
-       arguments: '--configuration Debug'
-       configuration: 'Debug'
-       feedsToUse: 'select'
-       versioningScheme: 'off'
-   - script: |
-       sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
-     name: setvarStep
-   - task: PublishBuildArtifacts@1
-     displayName: Publish managed artifacts
-     inputs:
-       PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
-       ArtifactName: 'lib-managed'
-       publishLocation: 'Container'
-   - task: DotNetCoreCLI@2
-     displayName: Unit tests
-     inputs:
-       command: 'test'
-       projects: 'Tests/Unit/*.csproj'
-       testRunTitle: 'fo-dicom.Codecs unit tests'
-       feedsToUse: 'select'
-       versioningScheme: 'off'
- - job: MacOS
-   dependsOn: Linux
-   pool:
-     vmImage: 'macos-11'
-   steps:
-   - script: |
-       cd Native/POSIX64/build_macOS
-       cmake ./CMakeLists.txt
-       make
-     displayName: 'Compile MacOS library'
-   - task: PublishBuildArtifacts@1
-     displayName: Publish MacOS artifacts
-     inputs:
-       PathtoPublish: 'Native/POSIX64/build_macOS/bin'
-       ArtifactName: 'lib-macOS'
-       publishLocation: 'Container'
-   - task: DotNetCoreCLI@2
-     displayName: Compile managed library
-     inputs:
-       command: 'build'
-       projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
-       arguments: '--configuration Debug'
-       configuration: 'Debug'
-       feedsToUse: 'select'
-       versioningScheme: 'off'
-   - script: |
-       sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
-     name: setvarStep
-   - task: PublishBuildArtifacts@1
-     displayName: Publish managed artifacts
-     inputs:
-       PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
-       ArtifactName: 'lib-managed'
-       publishLocation: 'Container'
-   - task: UseDotNet@2
-     inputs:
-       PackageType: 'sdk'
-       version: '6.0.x'
-   - task: DotNetCoreCLI@2
-     displayName: Unit tests
-     inputs:
-       command: 'test'
-       projects: 'Tests/Unit/*.csproj'
-       testRunTitle: 'fo-dicom.Codecs unit tests'
-       feedsToUse: 'select'
-       versioningScheme: 'off'
+  - job: Linux
+    dependsOn: Windows
+    pool:
+      vmImage: 'ubuntu-20.04'
+    steps:
+    - script: |
+        cd Native/POSIX64/build_linux
+        cmake ./CMakeLists.txt
+        make
+      displayName: 'Compile Linux library'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Linux artifacts
+      inputs:
+        PathtoPublish: 'Native/POSIX64/build_linux/bin'
+        ArtifactName: 'lib-linux64'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Compile managed library
+      inputs:
+        command: 'build'
+        projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
+        arguments: '--configuration Debug'
+        configuration: 'Debug'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - script: |
+        sed -nre 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
+      name: setvarStep
+    - task: PublishBuildArtifacts@1
+      displayName: Publish managed artifacts
+      inputs:
+        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
+        ArtifactName: 'lib-managed'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: 'test'
+        projects: 'Tests/Unit/*.csproj'
+        testRunTitle: 'fo-dicom.Codecs unit tests'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+  - job: MacOS
+    dependsOn: Linux
+    pool:
+      vmImage: 'macos-11'
+    steps:
+    - script: |
+        cd Native/POSIX64/build_macOS
+        cmake ./CMakeLists.txt
+        make
+      displayName: 'Compile MacOS library'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish MacOS artifacts
+      inputs:
+        PathtoPublish: 'Native/POSIX64/build_macOS/bin'
+        ArtifactName: 'lib-macOS'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Compile managed library
+      inputs:
+        command: 'build'
+        projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
+        arguments: '--configuration Debug'
+        configuration: 'Debug'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - script: |
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
+      name: setvarStep
+    - task: PublishBuildArtifacts@1
+      displayName: Publish managed artifacts
+      inputs:
+        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
+        ArtifactName: 'lib-managed'
+        publishLocation: 'Container'
+    - task: UseDotNet@2
+      inputs:
+        PackageType: 'sdk'
+        version: '6.0.x'
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: 'test'
+        projects: 'Tests/Unit/*.csproj'
+        testRunTitle: 'fo-dicom.Codecs unit tests'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
   - job: Acceptance
     dependsOn: MacOS
     pool:
