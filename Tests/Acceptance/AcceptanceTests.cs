@@ -8,9 +8,13 @@ using System.Drawing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using FellowOakDicom;
-using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.Imaging;
+using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.Imaging.NativeCodec;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
@@ -128,19 +132,20 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         {
             var outputFile = Path.ChangeExtension(Path.GetFileNameWithoutExtension(filenames[index0]), ".png");
 
-            //try
-            //{
+            try
+            {
                 var img = new DicomImage(filenames[index0]);
-                img.RenderImage().As<Bitmap>().Save(Path.Combine($"out", outputFile));
+                //img.RenderImage().As<Bitmap>().Save(Path.Combine($"out", outputFile));
+                img.RenderImage().AsSharpImage().SaveAsPng(Path.Combine($"out", outputFile));
                 
                 resultsRender[index0] = "OK";
-            //}
-            //catch (Exception e)
-            //{
-            //    resultsRender[index0] = "FAIL";
-            //  
-            //    File.WriteAllText(outputFile, e.Message);
-            //}
+            }
+            catch (Exception e)
+            {
+                resultsRender[index0] = "FAIL";
+
+                File.WriteAllText(outputFile, e.Message);
+            }
         }
 
         [ClassCleanup]
