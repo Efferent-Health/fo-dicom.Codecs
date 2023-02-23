@@ -159,29 +159,30 @@ stages:
         releaseNotesFile: 'Tests/Acceptance/bin/debug/net6.0/out/Results.md'
 
 - stage: Deploy
- jobs:
- - job: Nuget
-   pool:
-     vmImage: 'windows-2019'
-   steps:
-   - task: DownloadBuildArtifacts@0
-     displayName: Retrieving build artifacts
-     inputs:
-       buildType: 'current'
-       downloadType: 'specific'
-       downloadPath: 'bin'
-   - task: NuGetCommand@2
-     displayName: Prepare nuget package
-     inputs:
-       command: 'pack'
-       feedsToUse: 'select'
-       packagesToPack: '**/fo-dicom.Codecs.nuspec'
-       versioningScheme: 'off'
-   - task: NuGetCommand@2
-     inputs:
-       command: 'push'
-       feedsToUse: 'select'
-       packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-       nuGetFeedType: 'external'
-       publishFeedCredentials: 'Nuget.org'
-       versioningScheme: 'off'
+  jobs:
+  - job: Nuget
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: Retrieving build artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: 'bin'
+    - task: NuGetCommand@2
+      displayName: Prepare nuget package
+      inputs:
+        command: 'pack'
+        feedsToUse: 'select'
+        packagesToPack: '**/fo-dicom.Codecs.nuspec'
+        versioningScheme: 'off'
+    - task: NuGetCommand@2
+      inputs:
+        command: 'push'
+        feedsToUse: 'select'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+        nuGetFeedType: 'external'
+        publishFeedCredentials: 'Nuget.org'
+        versioningScheme: 'off'
+  
