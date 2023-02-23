@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <PackageReference Include="fo-dicom" Version="5.0.3"/>
-    <!--PackageReference Include="fo-dicom.Drawing" Version="4.0.7" /-->
     <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.0.3" />
   </ItemGroup>
 
