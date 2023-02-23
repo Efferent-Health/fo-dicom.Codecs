@@ -28,10 +28,10 @@ stages:
         PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
-    - task: UseDotNet@2
-      inputs:
-        PackageType: 'sdk'
-        version: '6.0.x'
+#    - task: UseDotNet@2
+#      inputs:
+#        PackageType: 'sdk'
+#        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -140,10 +140,10 @@ stages:
     variables:
       csprojVersion: $[ dependencies.MacOS.outputs['setvarStep.csprojVersion'] ]
     steps:
-    - task: UseDotNet@2
-      inputs:
-        PackageType: 'sdk'
-        version: '6.0.x'
+#    - task: UseDotNet@2
+#      inputs:
+#        PackageType: 'sdk'
+#        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Compliance tests
       inputs:

@@ -73,6 +73,10 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             }
 
             Directory.CreateDirectory("out");
+
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddImageManager<ImageSharpImageManager>().AddTranscoderManager<NativeTranscoderManager>())
+                .Build();
         }
 
         [DataTestMethod]
