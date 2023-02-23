@@ -132,7 +132,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         {
             var outputFile = Path.ChangeExtension(Path.GetFileNameWithoutExtension(filenames[index0]), ".png");
 
-            try
+            //try
             {
                 var img = new DicomImage(filenames[index0]);
                 //img.RenderImage().As<Bitmap>().Save(Path.Combine($"out", outputFile));
@@ -140,12 +140,12 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 
                 resultsRender[index0] = "OK";
             }
-            catch (Exception e)
-            {
-                resultsRender[index0] = "FAIL";
-
-                File.WriteAllText(outputFile, e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    resultsRender[index0] = "FAIL";
+            //
+            //    File.WriteAllText(outputFile, e.Message);
+            //}
         }
 
         [ClassCleanup]
