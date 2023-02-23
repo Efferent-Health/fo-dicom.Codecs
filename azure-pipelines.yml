@@ -133,7 +133,8 @@ stages:
 #       feedsToUse: 'select'
 #       versioningScheme: 'off'
   - job: Acceptance
-    dependsOn: MacOS
+#    dependsOn: MacOS
+    dependsOn: Windows
     pool:
       vmImage: 'windows-2019'
     variables:
