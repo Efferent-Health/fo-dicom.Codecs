@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/Linux64/linux-x64/*.so" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/MacOS/macOS/*.dylib" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/linux-x64/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/osx-x64/*.dylib" CopyToOutputDirectory="Always" />
     <None Include="../../Native/Windows64/win-x64/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

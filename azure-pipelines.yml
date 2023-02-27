@@ -18,14 +18,14 @@ stages:
     - task: MSBuild@1
       displayName: 'Compile Windows library'
       inputs:
-        solution: "Native/Windows64/build_ALL/Dicom.Native-win64.vcxproj"
+        solution: "Native/Windows64/build_ALL/Dicom.Native-win-x64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
       displayName: Publish Windows artifacts
       inputs:
-        PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win64'
+        PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win-x64'
         ArtifactName: 'lib-windows64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -50,7 +50,7 @@ stages:
       displayName: Publish Linux artifacts
       inputs:
         PathtoPublish: 'Native/POSIX64/build_linux/bin'
-        ArtifactName: 'lib-linux64'
+        ArtifactName: 'lib-linux-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Compile managed library
@@ -84,15 +84,15 @@ stages:
       vmImage: 'macos-11'
     steps:
     - script: |
-        cd Native/POSIX64/build_macOS
+        cd Native/POSIX64/build_osx
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile MacOS library'
     - task: PublishBuildArtifacts@1
       displayName: Publish MacOS artifacts
       inputs:
-        PathtoPublish: 'Native/POSIX64/build_macOS/bin'
-        ArtifactName: 'lib-macOS'
+        PathtoPublish: 'Native/POSIX64/build_osx/bin'
+        ArtifactName: 'lib-osx-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Compile managed library
@@ -144,7 +144,7 @@ stages:
       inputs:
         rootFolderOrFile: 'Tests/Acceptance/bin/debug/net6.0/out'
         archiveType: 'zip'
-        archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win64-$(Build.BuildId).zip'
+        archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win-x64-$(Build.BuildId).zip'
     - task: GitHubRelease@0
       displayName: Release to GitHub
       inputs:
