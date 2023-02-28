@@ -219,7 +219,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (Platform.Current == Platform.Type.unsupported)
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -278,22 +278,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 
                 uint jpegDataSize = 0;
                 char[] errorMessage = new char[256];
+                CharlsApiResultType err;
 
                 // IMPORT JpegLsEncode
                 unsafe 
                 {  
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    { 
-                        CharlsApiResultType err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {   
-                        CharlsApiResultType err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        CharlsApiResultType err = JpegLSEncode_Osx64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
-                    }
+                    if (Platform.Current == Platform.Type.linux_x64)
+                         err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                    else if (Platform.Current == Platform.Type.win_x64)
+                        err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        err = JpegLSEncode_Osx64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
 
                     Array.Resize(ref jpegData,(int)jpegDataSize);
 
@@ -314,7 +309,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (Platform.Current == Platform.Type.unsupported)
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -341,21 +336,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 JlsParameters jls = new JlsParameters();
 
                 char[] errorMessage = new char[256];
+                CharlsApiResultType err;
 
                 unsafe
                 {   
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
-                    {
-                        CharlsApiResultType err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                         CharlsApiResultType err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                         CharlsApiResultType err = JpegLSDecode_Osx64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
-                    }
+                    if (Platform.Current == Platform.Type.linux_x64) 
+                        err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                    else if (Platform.Current == Platform.Type.win_x64)
+                         err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                         err = JpegLSDecode_Osx64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     
                     IByteBuffer buffer;
                     if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)

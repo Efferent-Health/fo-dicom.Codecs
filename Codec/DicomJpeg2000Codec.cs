@@ -2,13 +2,11 @@
 using System.Runtime.InteropServices;
 using System.ComponentModel.Composition;
 
-using FellowOakDicom.Imaging;
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
 
-
-namespace FellowOakDicom.Native.Codec
+namespace FellowOakDicom.Imaging.NativeCodec
 {   
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate void opj_msg_callback(char *msg, void *client_data);
@@ -700,7 +698,9 @@ namespace FellowOakDicom.Native.Codec
 
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            var platform = Platform.Current;
+
+            if (platform == Platform.Type.unsupported)
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -749,17 +749,17 @@ namespace FellowOakDicom.Native.Codec
                         event_mgr.info_handler = IntPtr.Zero;
                     }
 
-                    if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    if (Platform.Current == Platform.Type.linux_x64)
                     {
                         cinfo = Opj_create_compress_Linux64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Linux64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    else if (Platform.Current == Platform.Type.win_x64)
                     {
                         cinfo = Opj_create_compress_Windows64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Windows64((opj_common_ptr*)cinfo, &event_mgr, null);
                     }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    else if (Platform.Current == Platform.Type.osx_x64)
                     {
                         cinfo = Opj_create_compress_Osx64(OPJ_CODEC_FORMAT.CODEC_J2K);
                         Opj_set_event_mgr_Osx64((opj_common_ptr*)cinfo, &event_mgr, null);
@@ -827,15 +827,15 @@ namespace FellowOakDicom.Native.Codec
                     {
                         OPJ_COLOR_SPACE color_space = getOpenJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
-                        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if(Platform.Current == Platform.Type.linux_x64)
                         {
                             image = Opj_image_create_Linux64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
-                        else if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if(Platform.Current == Platform.Type.win_x64)
                         {
                             image = Opj_image_create_Windows64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
-                        else if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if(Platform.Current == Platform.Type.osx_x64)
                         {
                             image = Opj_image_create_Osx64(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
                         }
@@ -933,19 +933,19 @@ namespace FellowOakDicom.Native.Codec
                                 throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
                         }
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (Platform.Current == Platform.Type.linux_x64)
                         {
                             Opj_setup_encoder_Linux64(cinfo, ref eparams, image);
                         
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)cinfo, null , 0);
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Platform.Current == Platform.Type.win_x64)
                         {
                             Opj_setup_encoder_Windows64(cinfo, ref eparams, image);
                         
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)cinfo, null , 0);
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Platform.Current == Platform.Type.osx_x64)
                         {
                             Opj_setup_encoder_Osx64(cinfo, ref eparams, image);
                         
@@ -953,7 +953,7 @@ namespace FellowOakDicom.Native.Codec
                         }
 
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (Platform.Current == Platform.Type.linux_x64)
                         {
                             if (Convert.ToBoolean(Opj_encode_Linux64(cinfo, cio, image, eparams.index)))
                             {
@@ -976,7 +976,7 @@ namespace FellowOakDicom.Native.Codec
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Platform.Current == Platform.Type.win_x64)
                         {
                             if (Convert.ToBoolean(Opj_encode_Windows64(cinfo, cio, image, eparams.index)))
                             {
@@ -999,7 +999,7 @@ namespace FellowOakDicom.Native.Codec
                             else
                                 throw new DicomCodecException("Unable to JPEG 2000 encode image");
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Platform.Current == Platform.Type.osx_x64)
                         {
                             if (Convert.ToBoolean(Opj_encode_Osx64(cinfo, cio, image, eparams.index)))
                             {
@@ -1028,23 +1028,32 @@ namespace FellowOakDicom.Native.Codec
                     {
                         if (cio != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_cio_close_Windows64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_cio_close_Osx64(cio);                           
+                            if (Platform.Current == Platform.Type.linux_x64) 
+                                Opj_cio_close_Linux64(cio);
+                            else if (Platform.Current == Platform.Type.win_x64) 
+                                Opj_cio_close_Windows64(cio);
+                            else if (Platform.Current == Platform.Type.osx_x64) 
+                                Opj_cio_close_Osx64(cio);                           
                         }
 
                         if (image != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_image_destroy_Windows64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_image_destroy_Osx64(image);                            
+                            if (Platform.Current == Platform.Type.linux_x64) 
+                                Opj_image_destroy_Linux64(image);
+                            else if (Platform.Current == Platform.Type.win_x64) 
+                                Opj_image_destroy_Windows64(image);
+                            else if (Platform.Current == Platform.Type.osx_x64) 
+                                Opj_image_destroy_Osx64(image);                            
                         }                       
 
                         if (cinfo != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) Opj_destroy_compress_Linux64(cinfo);      
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) Opj_destroy_compress_Windows64(cinfo);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) Opj_destroy_compress_Osx64(cinfo);                      
+                            if (Platform.Current == Platform.Type.linux_x64) 
+                                Opj_destroy_compress_Linux64(cinfo);      
+                            else if (Platform.Current == Platform.Type.win_x64) 
+                                Opj_destroy_compress_Windows64(cinfo);
+                            else if (Platform.Current == Platform.Type.osx_x64) 
+                                Opj_destroy_compress_Osx64(cinfo);                      
                         }
                     }
                 }
@@ -1067,7 +1076,7 @@ namespace FellowOakDicom.Native.Codec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (Platform.Current == Platform.Type.unsupported)
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -1114,18 +1123,13 @@ namespace FellowOakDicom.Native.Codec
                     opj_dinfo_t* dinfo = null;
                     opj_cio_t* cio = null;
                     
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
+                    if (Platform.Current == Platform.Type.linux_x64)
                         Memset_Linux64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
+                    else if (Platform.Current == Platform.Type.win_x64)
                         Memset_Windows64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
+                    else if (Platform.Current == Platform.Type.osx_x64)
                         Memset_Osx64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
-                    }
+
                     opj_msg_callback error_handler = opj_error_callback;
                     event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
 
@@ -1138,18 +1142,12 @@ namespace FellowOakDicom.Native.Codec
                         event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
                     }
 
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
+                    if (Platform.Current == Platform.Type.linux_x64)
                         Opj_set_default_decoder_parameters_Linux64(&dparams);
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
+                    else if (Platform.Current == Platform.Type.win_x64)
                         Opj_set_default_decoder_parameters_Windows64(&dparams);
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
+                    else if (Platform.Current == Platform.Type.osx_x64)
                         Opj_set_default_decoder_parameters_Osx64(&dparams);
-                    }
                     
                     dparams.cp_layer = 0;
                     dparams.cp_reduce = 0;
@@ -1160,7 +1158,7 @@ namespace FellowOakDicom.Native.Codec
 
                     try
                     {
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (Platform.Current == Platform.Type.linux_x64)
                         {   
 
                             format = GetCodecFormat_Linux64(buf);
@@ -1174,7 +1172,7 @@ namespace FellowOakDicom.Native.Codec
                             Opj_setup_decoder_Linux64(dinfo, &dparams);
 
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Platform.Current == Platform.Type.win_x64)
                         {   
                             format = GetCodecFormat_Windows64(buf);
 
@@ -1186,7 +1184,7 @@ namespace FellowOakDicom.Native.Codec
 
                             Opj_setup_decoder_Windows64(dinfo, &dparams);
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Platform.Current == Platform.Type.osx_x64)
                         {   
                             format = GetCodecFormat_Osx64(buf);
 
@@ -1202,17 +1200,17 @@ namespace FellowOakDicom.Native.Codec
                         bool opj_err = false;
                         dinfo->client_data = (void*)&opj_err;
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        if (Platform.Current == Platform.Type.linux_x64)
                         {
                             cio = Opj_cio_open_Linux64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_Linux64(dinfo, cio);
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Platform.Current == Platform.Type.win_x64)
                         {
                             cio = Opj_cio_open_Windows64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_Windows64(dinfo, cio);
                         }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Platform.Current == Platform.Type.osx_x64)
                         {
                             cio = Opj_cio_open_Osx64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_Osx64(dinfo, cio);
@@ -1309,31 +1307,31 @@ namespace FellowOakDicom.Native.Codec
                     {
                         if (cio != null) 
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                            if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_cio_close_Linux64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                            else if (Platform.Current == Platform.Type.win_x64) 
                                 Opj_cio_close_Windows64(cio);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) 
+                            else if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_cio_close_Osx64(cio);
                         }
 
                         if (dinfo != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                            if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_destroy_decompress_Linux64(dinfo);
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                            if (Platform.Current == Platform.Type.win_x64) 
                                 Opj_destroy_decompress_Windows64(dinfo);
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) 
+                            if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_destroy_decompress_Osx64(dinfo);
                         }
 
                         if (image != null)
                         {
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) 
+                            if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_image_destroy_Linux64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                            else if (Platform.Current == Platform.Type.win_x64) 
                                 Opj_image_destroy_Windows64(image);
-                            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) 
+                            else if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_image_destroy_Osx64(image);
                         }
                     }

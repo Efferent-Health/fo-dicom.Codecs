@@ -1225,11 +1225,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 char[] buffer = new char[200];
                 
                 //format_message for Linux, Windows and Osx64 for 64 bits
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Platform.Current == Platform.Type.win_x64)
                     format_message_8_Windows64(ref cinfo, buffer);
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Platform.Current == Platform.Type.linux_x64)
                     format_message_8_Linux64(ref cinfo, buffer);
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Platform.Current == Platform.Type.osx_x64)
                     format_message_8_Osx64(ref cinfo, buffer);
 
                 throw new DicomCodecException(new String(buffer));             
@@ -1241,11 +1241,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 char[] buffer = new char[200];
 
                 //format_message for Linux, Windows and Osx64 for 64 bits
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Platform.Current == Platform.Type.win_x64)
                     format_message_8_Windows64(ref cinfo, buffer);
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Platform.Current == Platform.Type.linux_x64)
                     format_message_8_Linux64(ref cinfo, buffer);
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Platform.Current == Platform.Type.osx_x64)
                     format_message_8_Osx64(ref cinfo, buffer);
                 
                 //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
@@ -1433,7 +1433,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame)
             {
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (Platform.Current == Platform.Type.unsupported)
                 {
                     throw new InvalidOperationException("Unsupported OS Platform");
                 }
@@ -1476,27 +1476,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         jpeg_error_mgr jerr = new jpeg_error_mgr();
 
                         //jpeg_std_error_8 for Linux, Windows and Osx64 for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             cinfo.err = jpeg_std_error_8_Windows64(ref jerr);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             cinfo.err = jpeg_std_error_8_Linux64(ref jerr);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             cinfo.err = jpeg_std_error_8_Osx64(ref jerr);
 
                         //jpeg_std_error_12 for Linux, Windows and Osx64 for 64 bits
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                             cinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                             cinfo.err = jpeg_std_error_12_Linux64(ref jerr);
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                             cinfo.err = jpeg_std_error_12_Osx64(ref jerr);
 
                         //jpeg_std_error_16 for Linux, Windows and Osx64 for 64 bits
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                             cinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                             cinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                             cinfo.err = jpeg_std_error_16_Osx64(ref jerr);
 
                         errorexit errorexit_ = ErrorExit;
@@ -1506,27 +1506,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                         //jpeg_create_compress_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_create_compress_8_Windows64(ref cinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_create_compress_8_Linux64(ref cinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_create_compress_8_Osx64(ref cinfo);
 
                         //jpeg_create_compress_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_create_compress_12_Windows64(ref cinfo);
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_create_compress_12_Linux64(ref cinfo);
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_create_compress_12_Osx64(ref cinfo);
 
                         //jpeg_create_compress_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                             jpeg_create_compress_16_Windows64(ref cinfo);
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_create_compress_16_Linux64(ref cinfo);
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_create_compress_16_Osx64(ref cinfo);
                         
                         cinfo.client_data = null;
@@ -1551,27 +1551,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         cinfo.in_color_space = getJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
                         //jpeg_set_defaults_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_set_defaults_8_Windows64(ref cinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_set_defaults_8_Linux64(ref cinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_set_defaults_8_Osx64(ref cinfo);
 
                         //jpeg_set_defaults_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_set_defaults_12_Windows64(ref cinfo);
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_set_defaults_12_Linux64(ref cinfo);
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_set_defaults_12_Osx64(ref cinfo);
 
                         //jpeg_set_defaults_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                             jpeg_set_defaults_16_Windows64(ref cinfo);
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_set_defaults_16_Linux64(ref cinfo);
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_set_defaults_16_Osx64(ref cinfo);
 
                         cinfo.optimize_coding = 1;
@@ -1579,54 +1579,54 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (Mode == JpegMode.Baseline || Mode == JpegMode.Sequential)
                         {
                             //jpeg_set_quality_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_quality_8_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_quality_8_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_quality_8_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             //jpeg_set_quality_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_quality_12_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             //jpeg_set_quality_16 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_quality_16_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                         }
                         else if (Mode == JpegMode.SpectralSelection)
                         {
                             //jpeg_set_quality_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_quality_8_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_quality_8_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_quality_8_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             //jpeg_set_quality_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_quality_12_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             //jpeg_set_quality_16 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_quality_16_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
 
                             jpeg_simple_spectral_selection(ref cinfo);
@@ -1635,51 +1635,51 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Mode == JpegMode.Progressive)
                         {
                             //jpeg_set_quality_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             {
                                 jpeg_set_quality_8_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_8_Windows64(ref cinfo);
                             }
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             {
                                 jpeg_set_quality_8_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_8_Linux64(ref cinfo);
                             }
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             {
                                 jpeg_set_quality_8_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_8_Osx64(ref cinfo);
                             }
 
                             //jpeg_set_quality_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                             {
                                 jpeg_set_quality_12_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_12_Windows64(ref cinfo);
                             }
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                             {
                                 jpeg_set_quality_12_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_12_Linux64(ref cinfo);
                             }
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                             {
                                 jpeg_set_quality_12_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_12_Osx64(ref cinfo);
                             }
 
                             //jpeg_set_quality_16 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                             {
                                 jpeg_set_quality_16_Windows64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_16_Windows64(ref cinfo);
                             }
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                             {
                                 jpeg_set_quality_16_Linux64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_16_Linux64(ref cinfo);
                             }
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                             {
                                 jpeg_set_quality_16_Osx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 jpeg_simple_progression_16_Osx64(ref cinfo);
@@ -1688,27 +1688,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else
                         {
                             //jpeg_simple_lossless_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_simple_lossless_8_Windows64(ref cinfo, Predictor, PointTransform);
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_simple_lossless_8_Linux64(ref cinfo, Predictor, PointTransform);
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_simple_lossless_8_Osx64(ref cinfo, Predictor, PointTransform);
 
                             //jpeg_simple_lossless_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_simple_lossless_12_Windows64(ref cinfo, Predictor, PointTransform);
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_simple_lossless_12_Linux64(ref cinfo, Predictor, PointTransform);
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_simple_lossless_12_Osx64(ref cinfo, Predictor, PointTransform);
 
                             //jpeg_simple_lossless_16 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_simple_lossless_16_Windows64(ref cinfo, Predictor, PointTransform);
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_simple_lossless_16_Linux64(ref cinfo, Predictor, PointTransform);
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_simple_lossless_16_Osx64(ref cinfo, Predictor, PointTransform);
 
                         }
@@ -1718,27 +1718,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (Mode == JpegMode.Lossless)
                         {
                             //jpeg_set_colorspace_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_colorspace_8_Windows64(ref cinfo, cinfo.in_color_space);
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_colorspace_8_Linux64(ref cinfo, cinfo.in_color_space);
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_colorspace_8_Osx64(ref cinfo, cinfo.in_color_space);
 
                             //jpeg_set_colorspace_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_colorspace_12_Osx64(ref cinfo, cinfo.in_color_space);
 
                             //jpeg_set_colorspace_16 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_set_colorspace_16_Windows64(ref cinfo, cinfo.in_color_space);
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_set_colorspace_16_Linux64(ref cinfo, cinfo.in_color_space);
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_set_colorspace_16_Osx64(ref cinfo, cinfo.in_color_space);
 
                             cinfo.comp_info->h_samp_factor = 1;
@@ -1765,27 +1765,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 if (jpegParams.SampleFactor == DicomJpegSampleFactor.Unknown)
                                 {
                                     //jpeg_set_colorspace_8 for Linux, Windows and Osx for 64 bits
-                                    if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                                         jpeg_set_colorspace_8_Windows64(ref cinfo, cinfo.in_color_space);
-                                    else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                    else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                                         jpeg_set_colorspace_8_Linux64(ref cinfo, cinfo.in_color_space);
-                                    else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                                    else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                                         jpeg_set_colorspace_8_Osx64(ref cinfo, cinfo.in_color_space);
 
                                     //jpeg_set_colorspace_12 for Linux, Windows and Osx for 64 bits
-                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                                         jpeg_set_colorspace_12_Windows64(ref cinfo, cinfo.in_color_space);
-                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                    else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                                         jpeg_set_colorspace_12_Linux64(ref cinfo, cinfo.in_color_space);
-                                    else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                                    else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                                         jpeg_set_colorspace_12_Osx64(ref cinfo, cinfo.in_color_space);
 
                                     //jpeg_set_colorspace_16 for Linux, Windows and Osx for 64 bits
-                                    else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                                         jpeg_set_colorspace_16_Windows64(ref cinfo, cinfo.in_color_space);
-                                    else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                                    else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                                         jpeg_set_colorspace_16_Linux64(ref cinfo, cinfo.in_color_space);
-                                    else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                                    else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                                         jpeg_set_colorspace_16_Osx64(ref cinfo, cinfo.in_color_space);
 
                                 }
@@ -1802,27 +1802,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_start_compress_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_start_compress_8_Windows64(ref cinfo, Convert.ToInt32(true));
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_start_compress_8_Linux64(ref cinfo, Convert.ToInt32(true));
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_start_compress_8_Osx64(ref cinfo, Convert.ToInt32(true));
 
                         //jpeg_start_compress_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_start_compress_12_Windows64(ref cinfo, Convert.ToInt32(true));
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_start_compress_12_Linux64(ref cinfo, Convert.ToInt32(true));
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_start_compress_12_Osx64(ref cinfo, Convert.ToInt32(true));
 
                         //jpeg_start_compress_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                             jpeg_start_compress_16_Windows64(ref cinfo, Convert.ToInt32(true));
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_start_compress_16_Linux64(ref cinfo, Convert.ToInt32(true));
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_start_compress_16_Osx64(ref cinfo, Convert.ToInt32(true));
 
                         byte* row_pointer = null;
@@ -1835,47 +1835,47 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             row_pointer = &framePtr[cinfo.next_scanline * row_stride];
 
                             //jpeg_write_scanlines_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             {
                                 jpeg_write_scanlines_8_Windows64(ref cinfo, &row_pointer, 1);
 
                             }
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_write_scanlines_8_Linux64(ref cinfo, &row_pointer, 1);
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_write_scanlines_8_Osx64(ref cinfo, &row_pointer, 1);
 
                             //jpeg_write_scanlines_12 for Linux, Windows and Osx for 64 bits   
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_write_scanlines_12_Windows64(ref cinfo, &row_pointer, 1);
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_write_scanlines_12_Linux64(ref cinfo, &row_pointer, 1);
-                            else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_write_scanlines_12_Osx64(ref cinfo, &row_pointer, 1);
 
                             //jpeg_write_scanlines_16 for Linux, Windows and Osx for 64 bits
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                                 jpeg_write_scanlines_16_Windows64(ref cinfo, &row_pointer, 1);
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                                 jpeg_write_scanlines_16_Linux64(ref cinfo, &row_pointer, 1);
-                            else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                                 jpeg_write_scanlines_16_Osx64(ref cinfo, &row_pointer, 1);
                         }
 
                         //jpeg_finish_compress_8 and jpeg_destroy_compress_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                         {
                             jpeg_finish_compress_8_Windows64(ref cinfo);
 
                             jpeg_destroy_compress_8_Windows64(ref cinfo);
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                         {
                             jpeg_finish_compress_8_Linux64(ref cinfo);
 
                             jpeg_destroy_compress_8_Linux64(ref cinfo);
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                         {
                             jpeg_finish_compress_8_Osx64(ref cinfo);
 
@@ -1883,19 +1883,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_finish_compress_12 and jpeg_destroy_compress_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.win_x64)
                         {
                             jpeg_finish_compress_12_Windows64(ref cinfo);
 
                             jpeg_destroy_compress_12_Windows64(ref cinfo);
                         }
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.linux_x64)
                         {
                             jpeg_finish_compress_12_Linux64(ref cinfo);
 
                             jpeg_destroy_compress_12_Linux64(ref cinfo);
                         }
-                        else if (Bits <= 12 && Bits > 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 12 && Bits > 8 && Platform.Current == Platform.Type.osx_x64)
                         {
                             jpeg_finish_compress_12_Osx64(ref cinfo);
 
@@ -1903,19 +1903,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_finish_compress_16 and jpeg_destroy_compress_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.win_x64)
                         {
                             jpeg_finish_compress_16_Windows64(ref cinfo);
 
                             jpeg_destroy_compress_16_Windows64(ref cinfo);
                         }
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.linux_x64)
                         {
                             jpeg_finish_compress_16_Linux64(ref cinfo);
 
                             jpeg_destroy_compress_16_Linux64(ref cinfo);
                         }
-                        else if (Bits <= 16 && Bits > 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_x64)
                         {
                             jpeg_finish_compress_16_Osx64(ref cinfo);
 
@@ -1966,7 +1966,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame)
             {
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (Platform.Current == Platform.Type.unsupported)
                 {
                     throw new InvalidOperationException("Unsupported OS Platform");
                 }
@@ -1992,51 +1992,51 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         src.pub.skip_input_data = Marshal.GetFunctionPointerForDelegate(skip_input_data_);
 
                         //jpeg_resync_to_restart_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Windows64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Linux64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Osx64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
 
                         //jpeg_resync_to_restart_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Windows64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Linux64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Osx64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
 
                         //jpeg_resync_to_restart_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Windows64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Linux64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                         {
                             Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Osx64;
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
@@ -2052,27 +2052,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         jpeg_error_mgr jerr = new jpeg_error_mgr();
 
                         //jpeg_std_error_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             dinfo.err = jpeg_std_error_8_Windows64(ref jerr);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             dinfo.err = jpeg_std_error_8_Linux64(ref jerr);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             dinfo.err = jpeg_std_error_8_Osx64(ref jerr);
 
                         //jpeg_std_error_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                             dinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                             dinfo.err = jpeg_std_error_12_Linux64(ref jerr);
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                             dinfo.err = jpeg_std_error_12_Osx64(ref jerr);
 
                         //jpeg_std_error_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                             dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                             dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                             dinfo.err = jpeg_std_error_16_Osx64(ref jerr);
 
                         errorexit errorexit_ = ErrorExit;
@@ -2082,33 +2082,33 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                         //jpeg_create_decompress_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_create_decompress_8_Windows64(ref dinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_create_decompress_8_Linux64(ref dinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_create_decompress_8_Osx64(ref dinfo);
 
                         //jpeg_create_decompress_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                             jpeg_create_decompress_12_Windows64(ref dinfo);
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_create_decompress_12_Linux64(ref dinfo);
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_create_decompress_12_Osx64(ref dinfo);
 
                         //jpeg_create_decompress_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                             jpeg_create_decompress_16_Windows64(ref dinfo);
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_create_decompress_16_Linux64(ref dinfo);
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_create_decompress_16_Osx64(ref dinfo);
 
                         dinfo.src = (jpeg_source_mgr*)&src.pub;
 
                         //jpeg_read_header_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2126,7 +2126,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2144,7 +2144,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2164,7 +2164,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_read_header_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2182,7 +2182,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2200,7 +2200,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2220,7 +2220,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_read_header_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2238,7 +2238,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2256,7 +2256,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Unable to decompress JPEG: Suspended");
                             }
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                         {
                             int jpeg_read_header_value = 0;
 
@@ -2298,51 +2298,51 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_calc_output_dimensions_8 and jpeg_start_decompress_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                         {
                             jpeg_calc_output_dimensions_8_Windows64(ref dinfo);
                             jpeg_start_decompress_8_Windows64(ref dinfo);
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                         {
                             jpeg_calc_output_dimensions_8_Linux64(ref dinfo);
                             jpeg_start_decompress_8_Linux64(ref dinfo);
                         }
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                         {
                             jpeg_calc_output_dimensions_8_Osx64(ref dinfo);
                             jpeg_start_decompress_8_Osx64(ref dinfo);
                         }
 
                         //jpeg_calc_output_dimensions_12 and jpeg_start_decompress_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                         {
                             jpeg_calc_output_dimensions_12_Windows64(ref dinfo);
                             jpeg_start_decompress_12_Windows64(ref dinfo);
                         }
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                         {
                             jpeg_calc_output_dimensions_12_Linux64(ref dinfo);
                             jpeg_start_decompress_12_Linux64(ref dinfo);
                         }
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                         {
                             jpeg_calc_output_dimensions_12_Osx64(ref dinfo);
                             jpeg_start_decompress_12_Osx64(ref dinfo);
                         }
 
                         //jpeg_calc_output_dimensions_16 and jpeg_start_decompress_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                         {
                             jpeg_calc_output_dimensions_16_Windows64(ref dinfo);
                             jpeg_start_decompress_16_Windows64(ref dinfo);
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                         {
                             jpeg_calc_output_dimensions_16_Linux64(ref dinfo);
                             jpeg_start_decompress_16_Linux64(ref dinfo);
                         }
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                         {
                             jpeg_calc_output_dimensions_16_Osx64(ref dinfo);
                             jpeg_start_decompress_16_Osx64(ref dinfo);
@@ -2366,7 +2366,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         while (dinfo.output_scanline < dinfo.output_height)
                         {
                             //jpeg_read_scanlines_8 for Linux, Windows and Osx for 64 bits
-                            if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2377,7 +2377,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2388,7 +2388,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_8_Osx64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2401,7 +2401,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
 
                             //jpeg_read_scanlines_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2412,7 +2412,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2423,7 +2423,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_12_Osx64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2436,7 +2436,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
 
                             //jpeg_read_scanlines_12 for Linux, Windows and Osx for 64 bits
-                            else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Windows64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2447,7 +2447,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                            else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Linux64(ref dinfo, (byte**)&framePtr, 1));
                                 
@@ -2458,7 +2458,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 
                                 framePtr += rows * rowSize;;
                             }
-                            else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                            else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                             {
                                 int rows = Convert.ToInt32(jpeg_read_scanlines_16_Osx64(ref dinfo, (byte**)&framePtr, 1));
 
@@ -2473,27 +2473,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         //jpeg_destroy_decompress_8 for Linux, Windows and Osx for 64 bits
-                        if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                             jpeg_destroy_decompress_8_Windows64(ref dinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_destroy_decompress_8_Linux64(ref dinfo);
-                        else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_destroy_decompress_8_Osx64(ref dinfo);
 
                         //jpeg_destroy_decompress_12 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                             jpeg_destroy_decompress_12_Windows64(ref dinfo);
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_destroy_decompress_12_Linux64(ref dinfo);
-                        else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_destroy_decompress_12_Osx64(ref dinfo);
 
                         //jpeg_destroy_decompress_16 for Linux, Windows and Osx for 64 bits
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                             jpeg_destroy_decompress_16_Windows64(ref dinfo);
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                             jpeg_destroy_decompress_16_Linux64(ref dinfo);
-                        else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                        else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                             jpeg_destroy_decompress_16_Osx64(ref dinfo);
 
                         IByteBuffer buffer;
@@ -2547,51 +2547,51 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 src.pub.skip_input_data = Marshal.GetFunctionPointerForDelegate(skip_input_data_);
 
                 //jpeg_resync_to_restart_8 for Linux, Windows and Osx for 64 bits
-                if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Windows64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Linux64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_8_Osx64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
 
                 //jpeg_resync_to_restart_12 for Linux, Windows and Osx for 64 bits
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Windows64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Linux64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_12_Osx64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
 
                 //jpeg_resync_to_restart_16 for Linux, Windows and Osx for 64 bits
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Windows64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Linux64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 }
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                 {
                     Resync_to_restart resync_to_restart_ = jpeg_resync_to_restart_16_Osx64;
                     src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
@@ -2607,27 +2607,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 jpeg_error_mgr jerr = new jpeg_error_mgr();
 
                 //jpeg_std_error_8 for Linux, Windows and Osx for 64 bits
-                if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                     dinfo.err = jpeg_std_error_8_Windows64(ref jerr);
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                     dinfo.err = jpeg_std_error_8_Linux64(ref jerr);
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                     dinfo.err = jpeg_std_error_8_Osx64(ref jerr);
 
                 //jpeg_std_error_12 for Linux, Windows and Osx for 64 bits
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                     dinfo.err = jpeg_std_error_12_Windows64(ref jerr);
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                     dinfo.err = jpeg_std_error_12_Linux64(ref jerr);
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                     dinfo.err = jpeg_std_error_12_Osx64(ref jerr);
 
                 //jpeg_std_error_16 for Linux, Windows and Osx for 64 bits
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                     dinfo.err = jpeg_std_error_16_Windows64(ref jerr);
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                     dinfo.err = jpeg_std_error_16_Linux64(ref jerr);
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                     dinfo.err = jpeg_std_error_16_Osx64(ref jerr);
                 
                 errorexit errorexit_ = ErrorExit;
@@ -2637,33 +2637,33 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                 //jpeg_create_decompress_8 for Linux, Windows and Osx for 64 bits
-                if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                     jpeg_create_decompress_8_Windows64(ref dinfo);
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                     jpeg_create_decompress_8_Linux64(ref dinfo);
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                     jpeg_create_decompress_8_Osx64(ref dinfo);
 
                 //jpeg_create_decompress_12 for Linux, Windows and Osx for 64 bits
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                     jpeg_create_decompress_12_Windows64(ref dinfo);
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                     jpeg_create_decompress_12_Linux64(ref dinfo);
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                     jpeg_create_decompress_12_Osx64(ref dinfo);
                 
                 //jpeg_create_decompress_16 for Linux, Windows and Osx for 64 bits
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                     jpeg_create_decompress_16_Windows64(ref dinfo);
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                     jpeg_create_decompress_16_Linux64(ref dinfo);
-                else if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                     jpeg_create_decompress_16_Osx64(ref dinfo);                
 
                 dinfo.src = (jpeg_source_mgr*)&src.pub;
 
                 //jpeg_read_header_8 for Linux, Windows and Osx for 64 bits
-                if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Bits == 8 && Platform.Current == Platform.Type.win_x64)
                 {
                     if (jpeg_read_header_8_Windows64(ref dinfo, 1) == 0)
                     {   
@@ -2673,7 +2673,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     jpeg_destroy_decompress_8_Windows64(ref dinfo);
                 }
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits == 8 && Platform.Current == Platform.Type.linux_x64)
                 {
                     if (jpeg_read_header_8_Linux64(ref dinfo, 1) == 0)
                     {   
@@ -2683,7 +2683,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     jpeg_destroy_decompress_8_Linux64(ref dinfo);
                 }
-                else if (Bits == 8 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits == 8 && Platform.Current == Platform.Type.osx_x64)
                 {
                     if (jpeg_read_header_8_Osx64(ref dinfo, 1) == 0)
                     {   
@@ -2695,7 +2695,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 //jpeg_read_header_12 for Linux, Windows and Osx for 64 bits
-                if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.win_x64)
                 {
                     if (jpeg_read_header_12_Windows64(ref dinfo, 1) == 0)
                     {   
@@ -2705,7 +2705,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     jpeg_destroy_decompress_12_Windows64(ref dinfo);
                 }
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.linux_x64)
                 {
                     if (jpeg_read_header_12_Linux64(ref dinfo, 1) == 0)
                     {   
@@ -2715,7 +2715,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     jpeg_destroy_decompress_12_Linux64(ref dinfo);
                 }
-                else if (Bits > 8 && Bits <= 12 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (Bits > 8 && Bits <= 12 && Platform.Current == Platform.Type.osx_x64)
                 {
                     if (jpeg_read_header_12_Osx64(ref dinfo, 1) == 0)
                     {   
@@ -2727,7 +2727,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 //jpeg_read_header_12 for Linux, Windows and Osx for 64 bits
-                if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.win_x64)
                 {
                     if (jpeg_read_header_16_Windows64(ref dinfo, 1) == 0)
                     {   
@@ -2737,7 +2737,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     jpeg_destroy_decompress_16_Windows64(ref dinfo);
                 }
-                if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.linux_x64)
                 {
                     if (jpeg_read_header_16_Linux64(ref dinfo, 1) == 0)
                     {   
@@ -2747,7 +2747,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     jpeg_destroy_decompress_16_Linux64(ref dinfo);
                 }
-                if (Bits > 12 && Bits <= 16 && RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_x64)
                 {
                     if (jpeg_read_header_16_Osx64(ref dinfo, 1) == 0)
                     {   
