@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {   
@@ -33,17 +34,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
             var arch = typeof(string).Assembly.GetName().ProcessorArchitecture;
 
-            if (Platform.Current == Platform.Type.win_x64)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 if (arch == ProcessorArchitecture.Amd64)
                     return Type.win_x64;
             }
-            else if (Platform.Current == Platform.Type.linux_x64)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 if (arch == ProcessorArchitecture.Amd64)
                     return Type.linux_x64;
             }
-            else if (Platform.Current == Platform.Type.osx_x64)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 if (arch == ProcessorArchitecture.Amd64)
                     return Type.osx_x64;
