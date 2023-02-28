@@ -26,7 +26,7 @@ stages:
       displayName: Publish Windows artifacts
       inputs:
         PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win-x64'
-        ArtifactName: 'lib-windows64'
+        ArtifactName: 'lib-win-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
