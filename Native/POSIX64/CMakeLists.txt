@@ -28,7 +28,7 @@ endif()
 ## if compile ARM64
 set(ARCH_FLAG CACHE STRING "")
 
-if(${ARCH_FLAG} STREQUAL "arm64")
+if("${ARCH_FLAG}" STREQUAL "arm64")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch arm64")
 endif()
 
@@ -322,7 +322,7 @@ if(UNIX AND NOT APPLE)
     PREFIX ""
   )
 elseif(UNIX)
-  if(${ARCH_FLAG} STREQUAL "arm64")
+  if("${ARCH_FLAG}" STREQUAL "arm64")
     add_library(Dicom.Native-osx-arm64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native-osx-arm64
