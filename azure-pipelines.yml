@@ -130,7 +130,7 @@ stages:
       vmImage: 'macos-11'
     steps:
     - script: |
-        cd Native/POSIX64/build_osx
+        cd Native/POSIX64/
         cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt 
         make
       displayName: 'Compile MacOS library'
