@@ -241,8 +241,20 @@ decode_mcus (j_decompress_ptr cinfo, JDIFFIMAGE diff_buf,
     /* Section H.2.2: decode the sample difference */
     HUFF_DECODE(s, br_state, dctbl, return mcu_num, label1);
     if (s) {
-      if (s == 16)  /* special case: always output 32768 */
+      if ((s == 16) && (bits_left < 16)) { /* standard case: always output 32768 */
         s = 32768;
+      }
+      else if (s >= 16) { /* there are enough bits available, so check ... */
+        r = PEEK_BITS(16);
+        s = HUFF_EXTEND(r, 16);
+        if ((s & 0xffff) == 0x8000) { /* special case: handle buggy Cornell encoder */
+          DROP_BITS(16);
+        } else {  /* standard case: always output 32768 */
+          if (s == 0x7fff)
+            DROP_BITS(16);
+          s = 32768;
+        }
+      }
       else {    /* normal case: fetch subsequent bits */
         CHECK_BIT_BUFFER(br_state, s, return mcu_num);
         r = GET_BITS(s);

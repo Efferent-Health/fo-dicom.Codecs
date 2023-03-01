@@ -309,7 +309,10 @@ jpeg_huff_decode (bitread_working_state * state,
 
   if (l > 16) {
     WARNMS(state->cinfo, JWRN_HUFF_BAD_CODE);
-    return 0;           /* fake a zero as the safest result */
+    if (l == 17)
+      return 17;          /* this is the result of the buggy Cornell encoder */
+    else
+      return 0;           /* fake a zero as the safest result */
   }
 
   return htbl->pub->huffval[ (int) (code + htbl->valoffset[l]) ];
