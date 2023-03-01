@@ -87,9 +87,9 @@ stages:
         cd Native/POSIX64/
         cmake ./CMakeLists.txt
         make
-      displayName: 'Compile MacOS library'
+      displayName: 'Compile Osx x64 library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish MacOS x64 artifacts
+      displayName: Publish Osx x64 artifacts
       inputs:
         PathtoPublish: 'Native/POSIX64/lib-osx-x64'
         ArtifactName: 'lib-osx-x64'
@@ -133,9 +133,9 @@ stages:
         cd Native/POSIX64/
         cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt 
         make
-      displayName: 'Compile MacOS library'
+      displayName: 'Compile Osx arm64 library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish MacOS arm64 artifacts
+      displayName: Publish Osx arm64 artifacts
       inputs:
         PathtoPublish: 'Native/POSIX64/lib-osx-arm64'
         ArtifactName: 'lib-osx-arm64'
