@@ -193,29 +193,37 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
     public abstract class DicomJpegLsNativeCodec : DicomJpegLsCodec
     {
-        //For Encode JPEGLS Windows
+        //For Encode JPEGLS Windows x64
         [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode_Windows64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSEncode_Windows_x64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        //For Encode JPEGLS Windows
+        //For Decode JPEGLS Windows x64
         [DllImport("Dicom.Native-win-x64.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode_Windows64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_Windows_x64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        //For Encode JPEGLS Linux
+        //For Encode JPEGLS Linux x64
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode_Linux64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSEncode_Linux_x64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        //For Encode JPEGLS Linux
+        //For Decode JPEGLS Linux x64
         [DllImport("Dicom.Native-linux-x64.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode_Linux64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_Linux_x64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        //For Encode JPEGLS OSX
+        //For Encode JPEGLS OSX x64
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode_Osx64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSEncode_Osx_x64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        //For Encode JPEGLS OSX
+        //For Decode JPEGLS OSX arm64
         [DllImport("Dicom.Native-osx-x64.dylib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode_Osx64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_Osx_x64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+
+        //For Encode JPEGLS OSX arm64
+        [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
+        public static extern unsafe CharlsApiResultType JpegLSEncode_Osx_arm64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+
+        //For Decode JPEGLS OSX arm64
+        [DllImport("Dicom.Native-osx-arm64.dylib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
+        public static extern unsafe CharlsApiResultType JpegLSDecode_Osx_arm64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
@@ -278,17 +286,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 
                 uint jpegDataSize = 0;
                 char[] errorMessage = new char[256];
+
                 CharlsApiResultType err;
 
                 // IMPORT JpegLsEncode
                 unsafe 
                 {  
                     if (Platform.Current == Platform.Type.linux_x64)
-                         err = JpegLSEncode_Linux64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                         err = JpegLSEncode_Linux_x64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
                     else if (Platform.Current == Platform.Type.win_x64)
-                        err = JpegLSEncode_Windows64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                        err = JpegLSEncode_Windows_x64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
                     else if (Platform.Current == Platform.Type.osx_x64)
-                        err = JpegLSEncode_Osx64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count),ref jls , errorMessage);
+                        err = JpegLSEncode_Osx_x64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        err = JpegLSEncode_Osx_arm64((void*)jpegArray.Pointer, checked((uint)jpegArray.Count), &jpegDataSize, (void*)frameArray.Pointer, checked((uint)frameArray.Count), ref jls, errorMessage);
 
                     Array.Resize(ref jpegData,(int)jpegDataSize);
 
@@ -336,16 +347,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 JlsParameters jls = new JlsParameters();
 
                 char[] errorMessage = new char[256];
+
                 CharlsApiResultType err;
 
                 unsafe
                 {   
                     if (Platform.Current == Platform.Type.linux_x64) 
-                        err = JpegLSDecode_Linux64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                        err = JpegLSDecode_Linux_x64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     else if (Platform.Current == Platform.Type.win_x64)
-                         err = JpegLSDecode_Windows64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                         err = JpegLSDecode_Windows_x64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     else if (Platform.Current == Platform.Type.osx_x64)
-                         err = JpegLSDecode_Osx64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                         err = JpegLSDecode_Osx_x64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                         err = JpegLSDecode_Osx_arm64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                     
                     IByteBuffer buffer;
                     if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)

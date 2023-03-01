@@ -4,7 +4,7 @@ trigger:
 stages:
 - stage: Build
   jobs:
-  - job: Windows
+  - job: Windows x64
     pool:
       vmImage: 'windows-2019'
     steps:
@@ -23,7 +23,7 @@ stages:
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Windows artifacts
+      displayName: Publish Windows x64 artifacts
       inputs:
         PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win-x64'
         ArtifactName: 'lib-win-x64'
@@ -42,14 +42,14 @@ stages:
       vmImage: 'ubuntu-20.04'
     steps:
     - script: |
-        cd Native/POSIX64/build_linux
+        cd Native/POSIX64/
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile Linux library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Linux artifacts
+      displayName: Publish Linux x64 artifacts
       inputs:
-        PathtoPublish: 'Native/POSIX64/build_linux/bin'
+        PathtoPublish: 'Native/POSIX64/lib-linux-x64'
         ArtifactName: 'lib-linux-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -78,20 +78,20 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: MacOS
+  - job: MacOS x64
     dependsOn: Linux
     pool:
       vmImage: 'macos-11'
     steps:
     - script: |
-        cd Native/POSIX64/build_osx
+        cd Native/POSIX64/
         cmake ./CMakeLists.txt
         make
       displayName: 'Compile MacOS library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish MacOS artifacts
+      displayName: Publish MacOS x64 artifacts
       inputs:
-        PathtoPublish: 'Native/POSIX64/build_osx/bin'
+        PathtoPublish: 'Native/POSIX64/lib-osx-x64'
         ArtifactName: 'lib-osx-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -124,8 +124,54 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
+  - job: MacOS arm64
+    dependsOn: MacOS x64
+    pool:
+      vmImage: 'macos-11'
+    steps:
+    - script: |
+        cd Native/POSIX64/build_osx
+        cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt 
+        make
+      displayName: 'Compile MacOS library'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish MacOS arm64 artifacts
+      inputs:
+        PathtoPublish: 'Native/POSIX64/lib-osx-arm64'
+        ArtifactName: 'lib-osx-arm64'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Compile managed library
+      inputs:
+        command: 'build'
+        projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
+        arguments: '--configuration Debug'
+        configuration: 'Debug'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - script: |
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
+      name: setvarStep
+    - task: PublishBuildArtifacts@1
+      displayName: Publish managed artifacts
+      inputs:
+        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
+        ArtifactName: 'lib-managed'
+        publishLocation: 'Container'
+    - task: UseDotNet@2
+      inputs:
+        PackageType: 'sdk'
+        version: '6.0.x'
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: 'test'
+        projects: 'Tests/Unit/*.csproj'
+        testRunTitle: 'fo-dicom.Codecs unit tests'
+        feedsToUse: 'select'
+        versioningScheme: 'off'
   - job: Acceptance
-    dependsOn: MacOS
+    dependsOn: MacOS arm64
     pool:
       vmImage: 'windows-2019'
     variables:

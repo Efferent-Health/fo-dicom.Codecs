@@ -20,5 +20,6 @@
         <file src="../bin/lib-win-x64/Dicom.Native-win-x64.dll" target="runtimes/win-x64/native" />
         <file src="../bin/lib-linux-x64/Dicom.Native-linux-x64.so" target="runtimes/linux-x64/native" />
         <file src="../bin/lib-osx-x64/Dicom.Native-osx-x64.dylib" target="runtimes/osx-x64/native" />
+        <file src="../bin/lib-osx-arm64/Dicom.Native-osx-arm64.dylib" target="runtimes/osx-arm64/native" />
     </files>
 </package>
