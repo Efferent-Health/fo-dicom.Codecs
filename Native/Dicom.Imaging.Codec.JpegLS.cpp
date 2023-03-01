@@ -41,7 +41,7 @@ EXPORT_Charls CharlsApiResultType JpegLSEncode(void* destination, size_t destina
 
 EXPORT_Charls CharlsApiResultType JpegLSDecode(void * destination, int destinationLength, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage)
 {
-    return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage );     
+    return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage);     
 }
 
 #ifdef __cplusplus
