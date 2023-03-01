@@ -4,7 +4,7 @@ trigger:
 stages:
 - stage: Build
   jobs:
-  - job: Windows_x64
+  - job: win_x64
     pool:
       vmImage: 'windows-2019'
     steps:
@@ -36,8 +36,8 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: Linux_x64
-    dependsOn: Windows_x64
+  - job: linux_x64
+    dependsOn: win_x64
     pool:
       vmImage: 'ubuntu-20.04'
     steps:
@@ -78,8 +78,8 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: Osx_x64
-    dependsOn: Linux_x64
+  - job: osx_x64
+    dependsOn: linux_x64
     pool:
       vmImage: 'macos-11'
     steps:
@@ -124,8 +124,8 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  - job: Osx_arm64
-    dependsOn: Osx_x64
+  - job: osx_arm64
+    dependsOn: osx_x64
     pool:
       vmImage: 'macos-11'
     steps:
@@ -171,7 +171,7 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: Acceptance
-    dependsOn: Osx_arm64
+    dependsOn: osx_arm64
     pool:
       vmImage: 'windows-2019'
     variables:
