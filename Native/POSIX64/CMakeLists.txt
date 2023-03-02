@@ -30,7 +30,7 @@ set(ARCH_FLAG CACHE STRING "")
 
 if("${ARCH_FLAG}" STREQUAL "arm64")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch arm64")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++2a -Wall -Wextra")
+  set(CMAKE_REQUIRED_LINK_OPTIONS "-arch;arm64")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
