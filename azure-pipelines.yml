@@ -16,14 +16,14 @@ stages:
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: MSBuild@1
-      displayName: 'Compile Windows library'
+      displayName: 'Compile windows x64 library'
       inputs:
         solution: "Native/Windows64/build_ALL/Dicom.Native-win-x64.vcxproj"
         platform: 'x64'
         msbuildArchitecture: 'x64'
         configuration: 'Release'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Windows x64 artifacts
+      displayName: Publish windows x64 artifacts
       inputs:
         PathtoPublish: 'Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win-x64'
         ArtifactName: 'lib-win-x64'
@@ -45,9 +45,9 @@ stages:
         cd Native/POSIX64/
         cmake ./CMakeLists.txt
         make
-      displayName: 'Compile Linux library'
+      displayName: 'Compile linux x64 library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Linux x64 artifacts
+      displayName: Publish linux x64 artifacts
       inputs:
         PathtoPublish: 'Native/POSIX64/lib-linux-x64'
         ArtifactName: 'lib-linux-x64'
@@ -87,9 +87,9 @@ stages:
         cd Native/POSIX64/
         cmake ./CMakeLists.txt
         make
-      displayName: 'Compile Osx x64 library'
+      displayName: 'Compile osx x64 library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Osx x64 artifacts
+      displayName: Publish osx x64 artifacts
       inputs:
         PathtoPublish: 'Native/POSIX64/lib-osx-x64'
         ArtifactName: 'lib-osx-x64'
@@ -133,9 +133,9 @@ stages:
         cd Native/POSIX64/
         cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt 
         make
-      displayName: 'Compile Osx arm64 library'
+      displayName: 'Compile osx arm64 library'
     - task: PublishBuildArtifacts@1
-      displayName: Publish Osx arm64 artifacts
+      displayName: Publish osx arm64 artifacts
       inputs:
         PathtoPublish: 'Native/POSIX64/lib-osx-arm64'
         ArtifactName: 'lib-osx-arm64'
