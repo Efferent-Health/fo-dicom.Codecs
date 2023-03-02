@@ -163,7 +163,7 @@ stages:
     pool:
       vmImage: 'windows-2019'
     variables:
-      csprojVersion: $[ dependencies.MacOS.outputs['setvarStep.csprojVersion'] ]
+      csprojVersion: $[ dependencies.osx_arm64.outputs['setvarStep.csprojVersion'] ]
     steps:
     - task: DotNetCoreCLI@2
       displayName: Compliance tests
