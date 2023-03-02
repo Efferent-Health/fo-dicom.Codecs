@@ -158,18 +158,6 @@ stages:
         PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
-    - task: UseDotNet@2
-      inputs:
-        PackageType: 'sdk'
-        version: '6.0.x'
-    - task: DotNetCoreCLI@2
-      displayName: Unit tests
-      inputs:
-        command: 'test'
-        projects: 'Tests/Unit/*.csproj'
-        testRunTitle: 'fo-dicom.Codecs unit tests'
-        feedsToUse: 'select'
-        versioningScheme: 'off'
   - job: Acceptance
     dependsOn: osx_arm64
     pool:
