@@ -159,7 +159,9 @@ stages:
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
   - job: Acceptance
-    dependsOn: osx_arm64
+    dependsOn:
+      - win_x64
+      - osx_arm64
     pool:
       vmImage: 'windows-2019'
     variables:
