@@ -48,7 +48,7 @@ extern "C" {
 
 //Encode OpenJPEG
 
-EXPORT_OpenJPEG opj_cinfo_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
+EXPORT_OpenJPEG opj_codec_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
 {
     return opj_create_compress(format);
  
@@ -64,7 +64,7 @@ EXPORT_OpenJPEG opj_image_t* Opj_image_create(int numcmpts, opj_image_cmptparm_t
     return opj_image_create(numcmpts, cmptparms, clrspc);  
 }
 
-EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* parameters, opj_image_t* image)
+EXPORT_OpenJPEG void Opj_setup_encoder(opj_codec_t* cinfo, opj_cparameters_t* parameters, opj_image_t* image)
 {
     opj_setup_encoder(cinfo, parameters, image);  
 }
@@ -74,7 +74,7 @@ EXPORT_OpenJPEG opj_cio_t* Opj_cio_open(opj_common_ptr cinfo , unsigned char* bu
     return opj_cio_open(cinfo, buffer, length);   
 }
 
-EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, char* index)
+EXPORT_OpenJPEG int Opj_encode(opj_codec_t* cinfo, opj_cio_t* cio, opj_image_t* image, char* index)
 {
     return opj_encode(cinfo, cio, image, index);   
 }
@@ -89,7 +89,7 @@ EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
     opj_image_destroy(image);  
 }
 
-EXPORT_OpenJPEG void Opj_destroy_compress(opj_cinfo_t* cinfo)
+EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* cinfo)
 {
     opj_destroy_compress(cinfo);   
 }
