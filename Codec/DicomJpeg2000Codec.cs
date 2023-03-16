@@ -14,6 +14,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct opj_event_mgr_t
     {
+        /** Data to call the event manager upon */
+        public IntPtr m_error_data;
+        /** Data to call the event manager upon */
+        public IntPtr m_warning_data;
+        /** Data to call the event manager upon */
+        public IntPtr m_info_data;
         /** Error message callback if available, NULL otherwise */
         public IntPtr error_handler;
         /** Warning message callback if available, NULL otherwise */
@@ -111,6 +117,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public int factor;
         /** image component data */
         public int* data;
+        /** alpha channel */
+        ushort alpha;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -304,6 +312,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public char tcp_mct;
         /** Enable JPIP indexing*/
         public int jpip_on;
+        /** Naive implementation of MCT restricted to a single reversible array based
+            encoding without offset concerning all the components. */
+        public IntPtr mct_data;
+        /**
+         * Maximum size (in bytes) for the whole codestream.
+         * If == 0, codestream size limitation is not considered
+         * If it does not comply with tcp_rates, max_cs_size prevails
+         * and a warning is issued.
+         * */
+        int max_cs_size;
+        /** RSIZ value
+            To be used to combine OPJ_PROFILE_*, OPJ_EXTENSION_* and (sub)levels values. */
+        ushort rsiz;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -371,10 +392,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public unsafe fixed sbyte outfile[4096];
         public OPJ_CODEC_FORMAT decod_format;
         public int cod_format;
+        /** Decoding area left boundary */
+        uint DA_x0;
+        /** Decoding area right boundary */
+        uint DA_x1;
+        /** Decoding area up boundary */
+        uint DA_y0;
+        /** Decoding area bottom boundary */
+        uint DA_y1;
+        /** Verbose mode */
+        bool m_verbose;
+
+        /** tile number of the decoded tile */
+        uint tile_index;
+        /** Nb of tile to decode */
+        uint nb_tile_to_decode;
         public int jpwl_correct;
         public int jpwl_exp_comps;
         public int jpwl_max_tiles;
-        public OPJ_LIMIT_DECODING cp_limit_decoding;
+        //public OPJ_LIMIT_DECODING cp_limit_decoding;
         public uint flags;
     }
 
