@@ -39,13 +39,7 @@
     <ClCompile Include="..\..\Common\OpenJPEG\j2k.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\j2k_lib.c">
-      <Filter>Source Files\OpenJPEG</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\jp2.c">
-      <Filter>Source Files\OpenJPEG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\jpt.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\mct.c">
@@ -58,9 +52,6 @@
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\pi.c">
-      <Filter>Source Files\OpenJPEG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\raw.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\t1.c">
@@ -118,6 +109,36 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\CharLS\interface.cpp" />
+    <ClCompile Include="..\..\Common\OpenJPEG\bench_dwt.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\function_list.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\ht_dec.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\invert.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_clock.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_malloc.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\sparse_array.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1_generate_luts.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1_ht_generate_luts.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\thread.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\OpenJPEG\bio.h">
@@ -132,25 +153,13 @@
     <ClInclude Include="..\..\Common\OpenJPEG\event.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\fix.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\image.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\int.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\j2k.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\j2k_lib.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\jp2.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\jpt.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\mct.h">
@@ -169,9 +178,6 @@
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\pi.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\raw.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\t1.h">
@@ -257,6 +263,48 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\CharLS\util.h">
       <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\function_list.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\invert.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\mqc_inl.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_clock.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_codec.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_common.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_intmath.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_inttypes.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_stdint.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\sparse_array.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\t1_ht_luts.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\thread.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\tls_keys.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_config_private.h">
+      <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

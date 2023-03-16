@@ -4,7 +4,7 @@
  * party and contributor rights, including patent rights, and no such rights
  * are granted under this license.
  *
- * Copyright (c) 2005, Herve Drolon, FreeImage Team
+ * Copyright (c) 2017, IntoPIX SA <support@intopix.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,43 +28,20 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef OPJ_IMAGE_H
-#define OPJ_IMAGE_H
-/**
-@file image.h
-@brief Implementation of operations on images (IMAGE)
+#ifndef OPJ_COMMMON_H
+#define OPJ_COMMMON_H
 
-The functions in IMAGE.C have for goal to realize operations on images.
+/*
+ ==========================================================
+   Common constants shared among several modules
+ ==========================================================
 */
-
-struct opj_image;
-struct opj_cp;
-
-/** @defgroup IMAGE IMAGE - Implementation of operations on images */
-/*@{*/
-
-/**
- * Create an empty image
- *
- * @return returns an empty image if successful, returns NULL otherwise
- */
-opj_image_t* opj_image_create0(void);
+#define OPJ_COMMON_CBLK_DATA_EXTRA        2    /**< Margin for a fake FFFF marker */
 
 
+#define OPJ_COMP_PARAM_DEFAULT_CBLOCKW        64
+#define OPJ_COMP_PARAM_DEFAULT_CBLOCKH        64
+#define OPJ_COMP_PARAM_DEFAULT_PROG_ORDER     OPJ_LRCP
+#define OPJ_COMP_PARAM_DEFAULT_NUMRESOLUTION  6
 
-/**
- * Updates the components characteristics of the image from the coding parameters.
- *
- * @param p_image_header        the image header to update.
- * @param p_cp                  the coding parameters from which to update the image.
- */
-void opj_image_comp_header_update(opj_image_t * p_image,
-                                  const struct opj_cp* p_cp);
-
-void opj_copy_image_header(const opj_image_t* p_image_src,
-                           opj_image_t* p_image_dest);
-
-/*@}*/
-
-#endif /* OPJ_IMAGE_H */
-
+#endif /* OPJ_COMMMON_H */
