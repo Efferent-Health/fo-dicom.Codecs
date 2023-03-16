@@ -14,6 +14,7 @@
 #define EXPORT_OpenJPEG  __declspec(dllexport)
 extern "C"{
 #include "./Common/OpenJPEG/openjpeg.h"
+#include "./Common/OpenJPEG/openjpeg2to1wrapper.h"
 #include "./Common/OpenJPEG/opj_includes.h"
 #include "./Common/OpenJPEG/j2k.h"
 }
@@ -49,36 +50,88 @@ extern "C" {
 
 //Encode OpenJPEG
 
-EXPORT_OpenJPEG opj_codec_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
+EXPORT_OpenJPEG opj_cinfo_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
 {
-    return opj_create_compress(format);
+    opj_codec_t* realCodec = opj_create_compress(format);
  
+    opj_cinfo_t* cinfo = (opj_cinfo_t*)opj_calloc(1, sizeof(opj_cinfo_t));
+    if (!cinfo) return NULL;
+    cinfo->is_decompressor = OPJ_FALSE;
+    switch (format) {
+    case OPJ_CODEC_J2K:
+        /* get a J2K coder handle */
+        cinfo->j2k_handle = (void*)realCodec;
+        if (!cinfo->j2k_handle) {
+            opj_free(cinfo);
+            return NULL;
+        }
+        break;
+    case OPJ_CODEC_JP2:
+        /* get a JP2 coder handle */
+        cinfo->jp2_handle = (void*)realCodec;
+        if (!cinfo->jp2_handle) {
+            opj_free(cinfo);
+            return NULL;
+        }
+        break;
+    case OPJ_CODEC_JPT:
+    case OPJ_CODEC_UNKNOWN:
+    default:
+        opj_free(cinfo);
+        return NULL;
+    }
+    return cinfo;
 }
 
-//EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_event_mgr_t* e, void* context)
-//{
-//    return opj_set_event_mgr(cinfo, e, context);  
-//}
+EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_event_mgr_t* e, void* context)
+{
+    return opj_set_event_mgr(cinfo, e, context);  
+}
 
 EXPORT_OpenJPEG opj_image_t* Opj_image_create(int numcmpts, opj_image_cmptparm_t* cmptparms, OPJ_COLOR_SPACE clrspc)
 {
     return opj_image_create(numcmpts, cmptparms, clrspc);  
 }
 
-EXPORT_OpenJPEG void Opj_setup_encoder(opj_codec_t* cinfo, opj_cparameters_t* parameters, opj_image_t* image)
+EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* parameters, opj_image_t* image)
 {
-    opj_setup_encoder(cinfo, parameters, image);  
+    if (cinfo && parameters && image) {
+        switch (cinfo->codec_format) {
+        case OPJ_CODEC_J2K:
+            opj_setup_encoder((opj_codec_t*)cinfo->j2k_handle, parameters, image);
+            break;
+        case OPJ_CODEC_JP2:
+            opj_setup_encoder((opj_codec_t*)cinfo->jp2_handle, parameters, image);
+            break;
+        case OPJ_CODEC_JPT:
+        case OPJ_CODEC_UNKNOWN:
+        default:
+            break;
+        }
+    }
 }
 
-//EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(unsigned char* buffer, int length)
-//{
-//    return opj_stream_create(buffer, length);
-//}
-//
-//EXPORT_OpenJPEG int Opj_encode(opj_codec_t* cinfo, opj_stream_t* cio, opj_image_t* image, char* index)
-//{
-//    return opj_encode(cinfo, cio, image, index);   
-//}
+EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(opj_common_ptr cinfo, unsigned char* buffer, int length)
+{
+    return opj_stream_create(length, OPJ_FALSE);
+}
+
+EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_stream_t* cio, opj_image_t* image, char* index)
+{
+    if (cinfo && cio && image) {
+        switch (cinfo->codec_format) {
+        case OPJ_CODEC_J2K:
+            return opj_encode((opj_codec_t*)cinfo->j2k_handle, cio);
+        case OPJ_CODEC_JP2:
+            return opj_encode((opj_codec_t*)cinfo->jp2_handle, cio);
+        case OPJ_CODEC_JPT:
+        case OPJ_CODEC_UNKNOWN:
+        default:
+            break;
+        }
+    }
+    return OPJ_FALSE;
+}
 
 EXPORT_OpenJPEG void Opj_cio_close(opj_stream_t* cio)
 {
@@ -90,39 +143,126 @@ EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
     opj_image_destroy(image);  
 }
 
-EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* cinfo)
+EXPORT_OpenJPEG void Opj_destroy_compress(opj_cinfo_t* cinfo)
 {
-    opj_destroy_codec(cinfo);
+    if (cinfo) {
+        /* destroy the codec */
+        switch (cinfo->codec_format) {
+        case OPJ_CODEC_J2K:
+            opj_destroy_codec((opj_codec_t*)cinfo->j2k_handle);
+            break;
+        case OPJ_CODEC_JP2:
+            opj_destroy_codec((opj_codec_t*)cinfo->jp2_handle);
+            break;
+        case OPJ_CODEC_JPT:
+        case OPJ_CODEC_UNKNOWN:
+        default:
+            break;
+        }
+        /* destroy the decompressor */
+        opj_free(cinfo);
+    }
 }
 
-//EXPORT_OpenJPEG OPJ_OFF_T Cio_tell(opj_stream_t* cio)
-//{
-//    return opj_stream_tell(cio);
-//}
+EXPORT_OpenJPEG OPJ_OFF_T Cio_tell(opj_stream_t* cio)
+{
+    return opj_stream_tell((opj_stream_private_t*)cio);
+}
 
 //Decode OpenJPEG
 
-EXPORT_OpenJPEG opj_codec_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
+EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
 {
-    return opj_create_decompress(format);   
+    opj_dinfo_t* dinfo = (opj_dinfo_t*)opj_calloc(1, sizeof(opj_dinfo_t));
+    if (!dinfo) return NULL;
+    dinfo->is_decompressor = OPJ_TRUE;
+    switch (format) {
+    case OPJ_CODEC_J2K:
+    case OPJ_CODEC_JPT:
+        /* get a J2K decoder handle */
+        dinfo->j2k_handle = (void*)opj_create_decompress(format);
+        if (!dinfo->j2k_handle) {
+            opj_free(dinfo);
+            return NULL;
+        }
+        break;
+    case OPJ_CODEC_JP2:
+        /* get a JP2 decoder handle */
+        dinfo->jp2_handle = (void*)opj_create_decompress(format);
+        if (!dinfo->jp2_handle) {
+            opj_free(dinfo);
+            return NULL;
+        }
+        break;
+    case OPJ_CODEC_UNKNOWN:
+    default:
+        opj_free(dinfo);
+        return NULL;
+    }
+
+    dinfo->codec_format = format;
+
+    return dinfo;
 }
 
-EXPORT_OpenJPEG void Opj_setup_decoder(opj_codec_t* dinfo, opj_dparameters_t* parameters)
+EXPORT_OpenJPEG void Opj_setup_decoder(opj_dinfo_t* dinfo, opj_dparameters_t* parameters)
 {
-    opj_setup_decoder(dinfo, parameters);
+    if (dinfo && parameters) {
+        switch (dinfo->codec_format) {
+        case OPJ_CODEC_J2K:
+        case OPJ_CODEC_JPT:
+            opj_setup_decoder((opj_codec_t*)dinfo->j2k_handle, parameters);
+            break;
+        case OPJ_CODEC_JP2:
+            opj_setup_decoder((opj_codec_t*)dinfo->jp2_handle, parameters);
+            break;
+        case OPJ_CODEC_UNKNOWN:
+        default:
+            break;
+        }
+    }
 }
 
-EXPORT_OpenJPEG OPJ_BOOL Opj_decode(opj_codec_t* dinfo, opj_stream_t* cio)
+EXPORT_OpenJPEG OPJ_BOOL Opj_decode(opj_dinfo_t* dinfo, opj_stream_t* cio)
 {
-    return opj_decode(dinfo, cio, NULL);  
+    if (dinfo && cio) {
+        switch (dinfo->codec_format) {
+        case OPJ_CODEC_J2K:
+            return opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, NULL);
+        case OPJ_CODEC_JPT:
+            return opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, NULL);
+        case OPJ_CODEC_JP2:
+            return opj_decode((opj_codec_t*)dinfo->jp2_handle, cio, NULL);
+        case OPJ_CODEC_UNKNOWN:
+        default:
+            break;
+        }
+    }
+    return OPJ_FALSE;
 }
 
-EXPORT_OpenJPEG void Opj_destroy_decompress(opj_codec_t* dinfo)
+EXPORT_OpenJPEG void Opj_destroy_decompress(opj_dinfo_t* dinfo)
 {
-    opj_destroy_codec(dinfo);
+    if (dinfo) {
+        /* destroy the codec */
+        switch (dinfo->codec_format) {
+        case OPJ_CODEC_J2K:
+        case OPJ_CODEC_JPT:
+            opj_destroy_codec((opj_codec_t*)dinfo->j2k_handle);
+            break;
+        case OPJ_CODEC_JP2:
+            opj_destroy_codec((opj_codec_t*)dinfo->jp2_handle);
+            break;
+        case OPJ_CODEC_UNKNOWN:
+        default:
+            break;
+        }
+        /* destroy the decompressor */
+        opj_free(dinfo);
+    }
 }
 
-EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parameters)
+EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t* parameters)
 {
     opj_set_default_decoder_parameters(parameters);
 }

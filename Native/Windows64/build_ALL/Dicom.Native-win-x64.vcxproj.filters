@@ -109,9 +109,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\CharLS\interface.cpp" />
-    <ClCompile Include="..\..\Common\OpenJPEG\bench_dwt.c">
-      <Filter>Source Files\OpenJPEG</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\function_list.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
@@ -119,9 +116,6 @@
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\invert.c">
-      <Filter>Source Files\OpenJPEG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\opj_clock.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\opj_malloc.c">
@@ -137,6 +131,9 @@
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPEG\thread.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_clock.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
   </ItemGroup>
@@ -305,6 +302,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\opj_config_private.h">
       <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\openjpeg2to1wrapper.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

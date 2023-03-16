@@ -24,9 +24,9 @@
 /* check if function `_aligned_malloc` exists */
 #define OPJ_HAVE__ALIGNED_MALLOC
 /* check if function `memalign` exists */
-#define OPJ_HAVE_MEMALIGN
+//#define OPJ_HAVE_MEMALIGN
 /* check if function `posix_memalign` exists */
-#define OPJ_HAVE_POSIX_MEMALIGN
+//#define OPJ_HAVE_POSIX_MEMALIGN
 
 #if !defined(_POSIX_C_SOURCE)
 #if defined(OPJ_HAVE_FSEEKO) || defined(OPJ_HAVE_POSIX_MEMALIGN)
