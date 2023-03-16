@@ -14,6 +14,7 @@
 #define EXPORT_OpenJPEG  __declspec(dllexport)
 extern "C"{
 #include "./Common/OpenJPEG/openjpeg.h"
+#include "./Common/OpenJPEG/opj_includes.h"
 #include "./Common/OpenJPEG/j2k.h"
 }
 
@@ -54,10 +55,10 @@ EXPORT_OpenJPEG opj_codec_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
  
 }
 
-EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_event_mgr_t* e, void* context)
-{
-    return opj_set_event_mgr(cinfo, e, context);  
-}
+//EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_event_mgr_t* e, void* context)
+//{
+//    return opj_set_event_mgr(cinfo, e, context);  
+//}
 
 EXPORT_OpenJPEG opj_image_t* Opj_image_create(int numcmpts, opj_image_cmptparm_t* cmptparms, OPJ_COLOR_SPACE clrspc)
 {
@@ -69,19 +70,19 @@ EXPORT_OpenJPEG void Opj_setup_encoder(opj_codec_t* cinfo, opj_cparameters_t* pa
     opj_setup_encoder(cinfo, parameters, image);  
 }
 
-EXPORT_OpenJPEG opj_cio_t* Opj_cio_open(opj_common_ptr cinfo , unsigned char* buffer, int length)
-{
-    return opj_cio_open(cinfo, buffer, length);   
-}
+//EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(unsigned char* buffer, int length)
+//{
+//    return opj_stream_create(buffer, length);
+//}
+//
+//EXPORT_OpenJPEG int Opj_encode(opj_codec_t* cinfo, opj_stream_t* cio, opj_image_t* image, char* index)
+//{
+//    return opj_encode(cinfo, cio, image, index);   
+//}
 
-EXPORT_OpenJPEG int Opj_encode(opj_codec_t* cinfo, opj_cio_t* cio, opj_image_t* image, char* index)
+EXPORT_OpenJPEG void Opj_cio_close(opj_stream_t* cio)
 {
-    return opj_encode(cinfo, cio, image, index);   
-}
-
-EXPORT_OpenJPEG void Opj_cio_close(opj_cio_t* cio)
-{
-    opj_cio_close(cio);  
+    opj_stream_destroy(cio);
 }
 
 EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
@@ -91,34 +92,34 @@ EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
 
 EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* cinfo)
 {
-    opj_destroy_compress(cinfo);   
+    opj_destroy_codec(cinfo);
 }
 
-EXPORT_OpenJPEG int Cio_tell(opj_cio_t* cio)
-{
-    return cio_tell(cio);    
-}
+//EXPORT_OpenJPEG OPJ_OFF_T Cio_tell(opj_stream_t* cio)
+//{
+//    return opj_stream_tell(cio);
+//}
 
 //Decode OpenJPEG
 
-EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
+EXPORT_OpenJPEG opj_codec_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
 {
     return opj_create_decompress(format);   
 }
 
-EXPORT_OpenJPEG void Opj_setup_decoder(opj_dinfo_t* dinfo, opj_dparameters_t* parameters)
+EXPORT_OpenJPEG void Opj_setup_decoder(opj_codec_t* dinfo, opj_dparameters_t* parameters)
 {
-    opj_setup_decoder(dinfo, parameters);  
+    opj_setup_decoder(dinfo, parameters);
 }
 
-EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_dinfo_t* dinfo, opj_cio_t* cio)
+EXPORT_OpenJPEG OPJ_BOOL Opj_decode(opj_codec_t* dinfo, opj_stream_t* cio)
 {
-    return opj_decode(dinfo, cio);  
+    return opj_decode(dinfo, cio, NULL);  
 }
 
-EXPORT_OpenJPEG void Opj_destroy_decompress(opj_dinfo_t* dinfo)
+EXPORT_OpenJPEG void Opj_destroy_decompress(opj_codec_t* dinfo)
 {
-    opj_destroy_decompress(dinfo); 
+    opj_destroy_codec(dinfo);
 }
 
 EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parameters)
@@ -143,19 +144,19 @@ EXPORT_OpenJPEG OPJ_CODEC_FORMAT GetCodecFormat(unsigned char* buffer)
     //Comparing 12 or 4 first values from image buffer to get the JPEG2000 decode format
     if(memcmp(buf12, JP2_RFC3745_MAGIC, 12) == 0 || memcmp(buf12, JP2_MAGIC, 4) == 0)
     {   
-        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_JP2;
+        opj_buffer_format = OPJ_CODEC_FORMAT::OPJ_CODEC_JP2;
 
         return opj_buffer_format;
     }
     else if (memcmp(buf12, J2K_CODESTREAM_MAGIC, 4) == 0)
     {   
-        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_J2K;
+        opj_buffer_format = OPJ_CODEC_FORMAT::OPJ_CODEC_J2K;
 
         return opj_buffer_format;
     }
     else
     {   
-        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_UNKNOWN;
+        opj_buffer_format = OPJ_CODEC_FORMAT::OPJ_CODEC_UNKNOWN;
     }
 
     return opj_buffer_format;
