@@ -465,6 +465,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
     public abstract class DicomJpeg2000Codec : IDicomCodec
     {
+        static DicomJpeg2000Codec()
+        {
+            Environment.SetEnvironmentVariable("OPJ_NUM_THREADS", $"{(Environment.ProcessorCount == 1 ? 1 :Environment.ProcessorCount - 1)}");
+        }
         public string Name
         {
             get
