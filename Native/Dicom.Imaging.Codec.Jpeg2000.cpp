@@ -182,30 +182,16 @@ EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* pa
 
 EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(opj_common_ptr cinfo, unsigned char* buffer, int length)
 {
-    opj_stream_t* pStream = opj_stream_create(length, OPJ_FALSE);
+    opj_stream_t* pStream = opj_stream_create(length, cinfo->is_decompressor);
     MemFile* memFile = (MemFile*)opj_malloc(sizeof(MemFile));
     memFile->pabyData = buffer;
     memFile->nLength = length;
     memFile->nCurPos = 0;
     opj_stream_set_user_data_length(pStream, length);
-    opj_stream_set_write_function(pStream, WriteCallback);
-    opj_stream_set_seek_function(pStream, SeekCallback);
-    opj_stream_set_skip_function(pStream, SkipCallback);
-    opj_stream_set_user_data(pStream, memFile, FreeCallback);
-
-    return pStream;
-}
-
-
-EXPORT_OpenJPEG opj_stream_t* Opj_cio_open_decode(opj_common_ptr cinfo, unsigned char* buffer, int length)
-{
-    opj_stream_t* pStream = opj_stream_create(length, OPJ_TRUE);
-    MemFile* memFile = (MemFile*)opj_malloc(sizeof(MemFile));
-    memFile->pabyData = buffer;
-    memFile->nLength = length;
-    memFile->nCurPos = 0;
-    opj_stream_set_user_data_length(pStream, length);
-    opj_stream_set_read_function(pStream, ReadCallback);
+    if (!cinfo->is_decompressor)
+        opj_stream_set_write_function(pStream, WriteCallback);
+    else
+        opj_stream_set_read_function(pStream, ReadCallback);
     opj_stream_set_seek_function(pStream, SeekCallback);
     opj_stream_set_skip_function(pStream, SkipCallback);
     opj_stream_set_user_data(pStream, memFile, FreeCallback);
