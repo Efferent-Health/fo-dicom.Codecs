@@ -8,6 +8,7 @@ using FellowOakDicom.IO.Buffer;
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {   
@@ -861,6 +862,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     opj_image_t* image = null;
                     opj_cio_t* cio = null;
                     IntPtr cio2 = IntPtr.Zero;
+                    var buf = new PinnedByteArray(new byte[1000000]);
 
                     
                     event_mgr.error_handler = IntPtr.Zero;
@@ -1073,7 +1075,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             Opj_setup_encoder_Windows_x64(cinfo, ref eparams, image);
                         
-                            cio2 = Opj_cio_open_Windows_x64((opj_common_ptr*)cinfo, null , 1000000);
+                            cio2 = Opj_cio_open_Windows_x64((opj_common_ptr*)cinfo, (byte*)(void*)buf.Pointer, buf.ByteSize);
                         }
                         else if (Platform.Current == Platform.Type.osx_x64)
                         {
@@ -1094,7 +1096,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (Convert.ToBoolean(Opj_encode_Linux_x64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Linux_x64(cio);
-                                byte[] cbuf = new byte[clen];
+                                var cbuf = new byte[clen];
 
                                 Marshal.Copy((IntPtr)cio->buffer, cbuf, 0, clen);
 
@@ -1117,21 +1119,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (Convert.ToBoolean(Opj_encode_Windows_x64(cinfo, cio2, image, eparams.index)))
                             {
                                 int clen = (int)Cio_tell_Windows_x64(cio2);
-                                Opj_cio_close_Windows_x64(cio2);
-                                //byte[] cbuf = new byte[clen];
-                                //Cio_read_Windows_x64(cio2, cbuf, clen, &event_mgr);
-                                var cbuf = File.ReadAllBytes(@"C:\Users\Marco\Desktop\New folder\fo-dicom.Codecs\Tests\Unit\bin\Debug\net472\out.dump");
-                                //var bytes = new List<byte>();
-                                //bytes.Add(0xFF);
-                                //bytes.Add(0x4F);
-                                //bytes.Add(0xFF);
-                                //bytes.Add(0x52);
-                                //bytes.AddRange(file);
-                                //cbuf = bytes.ToArray();
+                                var cbuf = buf.Data.Take(clen).ToArray();
 
                                 IByteBuffer buffer;
                                 if (clen >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
-                                    buffer = new TempFileBuffer(cbuf);
+                                    buffer = new TempFileBuffer(buf.Data.Take(clen).ToArray());
                                 else
                                     buffer = new MemoryByteBuffer(cbuf);
 
@@ -1197,8 +1189,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_cio_close_Linux_x64(cio);
-                            //else if (Platform.Current == Platform.Type.win_x64) 
-                            //    Opj_cio_close_Windows_x64(cio2);
+                            else if (Platform.Current == Platform.Type.win_x64)
+                                Opj_cio_close_Windows_x64(cio2);
                             else if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_cio_close_Osx_x64(cio);
                             else if (Platform.Current == Platform.Type.osx_arm64) 

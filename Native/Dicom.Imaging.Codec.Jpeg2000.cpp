@@ -75,6 +75,27 @@ extern "C" {
         return nBytes;
     }
 
+    static OPJ_SIZE_T WriteCallback(void* pBuffer, OPJ_SIZE_T nBytes,
+        void* pUserData)
+    {
+        MemFile* memFile = (MemFile*)pUserData;
+        if (memFile->nCurPos >= memFile->nLength) {
+            return -1;
+        }
+        if (memFile->nCurPos + nBytes >= memFile->nLength) {
+            size_t nToWrite = memFile->nLength - memFile->nCurPos;
+            memcpy((void *)(memFile->pabyData + memFile->nCurPos), pBuffer, nToWrite);
+            memFile->nCurPos = memFile->nLength;
+            return nToWrite;
+        }
+        if (nBytes == 0) {
+            return -1;
+        }
+        memcpy((void *)(memFile->pabyData + memFile->nCurPos), pBuffer, nBytes);
+        memFile->nCurPos += nBytes;
+        return nBytes;
+    }
+
     static OPJ_BOOL SeekCallback(OPJ_OFF_T nBytes, void* pUserData)
     {
         MemFile* memFile = (MemFile*)pUserData;
@@ -161,8 +182,18 @@ EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* pa
 
 EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(opj_common_ptr cinfo, unsigned char* buffer, int length)
 {
-    opj_stream_t* l_stream = opj_stream_create_file_stream("out.dump", length, OPJ_FALSE);
-    return l_stream;
+    opj_stream_t* pStream = opj_stream_create(length, OPJ_FALSE);
+    MemFile* memFile = (MemFile*)opj_malloc(sizeof(MemFile));
+    memFile->pabyData = buffer;
+    memFile->nLength = length;
+    memFile->nCurPos = 0;
+    opj_stream_set_user_data_length(pStream, length);
+    opj_stream_set_write_function(pStream, WriteCallback);
+    opj_stream_set_seek_function(pStream, SeekCallback);
+    opj_stream_set_skip_function(pStream, SkipCallback);
+    opj_stream_set_user_data(pStream, memFile, FreeCallback);
+
+    return pStream;
 }
 
 
