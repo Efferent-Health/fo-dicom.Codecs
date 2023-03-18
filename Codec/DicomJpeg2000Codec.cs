@@ -66,24 +66,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public void* mj2_handle;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_cio_t
-    {
-        /** open mode (read/write) either OPJ_STREAM_READ or OPJ_STREAM_WRITE */
-        public opj_common_ptr* cinfo;
-        public int openmode;
-        /** pointer to the start of the buffer */
-        public byte* buffer;
-        /** buffer size in bytes */
-        public int length;
-        /** pointer to the start of the stream */
-        public byte* start;
-        /** pointer to the end of the stream */
-        public byte* end;
-        /** pointer to the current position */
-        public byte* bp;
-    }
-
     [Flags]
     public enum OPJ_COLOR_SPACE
     {
@@ -589,15 +571,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
-        public static extern unsafe opj_cio_t* Opj_cio_open_Linux_x64(opj_common_ptr* cinfo, byte* buffer, int length);
+        public static extern unsafe IntPtr Opj_cio_open_Linux_x64(opj_common_ptr* cinfo, byte* buffer, int length);
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
-        public static extern unsafe int Opj_encode_Linux_x64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
+        public static extern unsafe int Opj_encode_Linux_x64(opj_cinfo_t* cinfo, IntPtr cio, opj_image_t* image, sbyte* index);
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
 
-        public static extern unsafe void Opj_cio_close_Linux_x64(opj_cio_t* cio);
+        public static extern unsafe void Opj_cio_close_Linux_x64(IntPtr cio);
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
 
@@ -609,7 +591,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
 
-        public static extern unsafe int Cio_tell_Linux_x64(opj_cio_t* cio);
+        public static extern unsafe int Cio_tell_Linux_x64(IntPtr cio);
 
 
         //Decode JPEG2000 for Linux
@@ -629,7 +611,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
-        public static extern unsafe opj_image_t* Opj_decode_Linux_x64(opj_dinfo_t* dinfo, opj_cio_t* cio);
+        public static extern unsafe opj_image_t* Opj_decode_Linux_x64(opj_dinfo_t* dinfo, IntPtr cio);
 
         [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
@@ -662,15 +644,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
-        public static extern unsafe opj_cio_t* Opj_cio_open_Osx_x64(opj_common_ptr* cinfo, byte* buffer, int length);
+        public static extern unsafe IntPtr Opj_cio_open_Osx_x64(opj_common_ptr* cinfo, byte* buffer, int length);
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
-        public static extern unsafe int Opj_encode_Osx_x64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
+        public static extern unsafe int Opj_encode_Osx_x64(opj_cinfo_t* cinfo, IntPtr cio, opj_image_t* image, sbyte* index);
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
 
-        public static extern unsafe void Opj_cio_close_Osx_x64(opj_cio_t* cio);
+        public static extern unsafe void Opj_cio_close_Osx_x64(IntPtr cio);
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
 
@@ -682,7 +664,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
 
-        public static extern unsafe int Cio_tell_Osx_x64(opj_cio_t* cio);
+        public static extern unsafe int Cio_tell_Osx_x64(IntPtr cio);
 
 
         //Decode JPEG2000 for OSX x64
@@ -701,7 +683,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
-        public static extern unsafe opj_image_t* Opj_decode_Osx_x64(opj_dinfo_t* dinfo, opj_cio_t* cio);
+        public static extern unsafe opj_image_t* Opj_decode_Osx_x64(opj_dinfo_t* dinfo, IntPtr cio);
 
         [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
@@ -734,15 +716,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
 
-        public static extern unsafe opj_cio_t* Opj_cio_open_Osx_arm64(opj_common_ptr* cinfo, byte* buffer, int length);
+        public static extern unsafe IntPtr Opj_cio_open_Osx_arm64(opj_common_ptr* cinfo, byte* buffer, int length);
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
 
-        public static extern unsafe int Opj_encode_Osx_arm64(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, sbyte* index);
+        public static extern unsafe int Opj_encode_Osx_arm64(opj_cinfo_t* cinfo, IntPtr cio, opj_image_t* image, sbyte* index);
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
 
-        public static extern unsafe void Opj_cio_close_Osx_arm64(opj_cio_t* cio);
+        public static extern unsafe void Opj_cio_close_Osx_arm64(IntPtr cio);
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
 
@@ -754,7 +736,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
 
-        public static extern unsafe int Cio_tell_Osx_arm64(opj_cio_t* cio);
+        public static extern unsafe int Cio_tell_Osx_arm64(IntPtr cio);
 
 
         //Decode JPEG2000 for OSX arm64
@@ -773,7 +755,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
 
-        public static extern unsafe opj_image_t* Opj_decode_Osx_arm64(opj_dinfo_t* dinfo, opj_cio_t* cio);
+        public static extern unsafe opj_image_t* Opj_decode_Osx_arm64(opj_dinfo_t* dinfo, IntPtr cio);
 
         [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
 
@@ -853,10 +835,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     opj_event_mgr_t event_mgr = new opj_event_mgr_t();
                     opj_cinfo_t* cinfo= null;  /* handle to a compressor */
                     opj_image_t* image = null;
-                    opj_cio_t* cio = null;
-                    IntPtr cio2 = IntPtr.Zero;
+                    IntPtr cio = IntPtr.Zero;
                     var buf = new PinnedByteArray(new byte[1000000]);
-
                     
                     event_mgr.error_handler = IntPtr.Zero;
                     if (jparams.IsVerbose)
@@ -1068,7 +1048,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             Opj_setup_encoder_Windows_x64(cinfo, ref eparams, image);
                         
-                            cio2 = Opj_cio_open_Windows_x64((opj_common_ptr*)cinfo, (byte*)(void*)buf.Pointer, buf.ByteSize);
+                            cio = Opj_cio_open_Windows_x64((opj_common_ptr*)cinfo, (byte*)(void*)buf.Pointer, buf.ByteSize);
                         }
                         else if (Platform.Current == Platform.Type.osx_x64)
                         {
@@ -1089,9 +1069,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (Convert.ToBoolean(Opj_encode_Linux_x64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Linux_x64(cio);
-                                var cbuf = new byte[clen];
-
-                                Marshal.Copy((IntPtr)cio->buffer, cbuf, 0, clen);
+                                var cbuf = buf.Data.Take(clen).ToArray();
 
                                 IByteBuffer buffer;
                                 if (clen >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -1109,9 +1087,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         else if (Platform.Current == Platform.Type.win_x64)
                         {
-                            if (Convert.ToBoolean(Opj_encode_Windows_x64(cinfo, cio2, image, eparams.index)))
+                            if (Convert.ToBoolean(Opj_encode_Windows_x64(cinfo, cio, image, eparams.index)))
                             {
-                                int clen = (int)Cio_tell_Windows_x64(cio2);
+                                int clen = (int)Cio_tell_Windows_x64(cio);
                                 var cbuf = buf.Data.Take(clen).ToArray();
 
                                 IByteBuffer buffer;
@@ -1133,9 +1111,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (Convert.ToBoolean(Opj_encode_Osx_x64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Osx_x64(cio);
-                                byte[] cbuf = new byte[clen];
-
-                                Marshal.Copy((IntPtr)cio->buffer, cbuf, 0, clen);
+                                var cbuf = buf.Data.Take(clen).ToArray();
 
                                 IByteBuffer buffer;
                                 if (clen >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -1156,9 +1132,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (Convert.ToBoolean(Opj_encode_Osx_arm64(cinfo, cio, image, eparams.index)))
                             {
                                 int clen = Cio_tell_Osx_arm64(cio);
-                                byte[] cbuf = new byte[clen];
-
-                                Marshal.Copy((IntPtr)cio->buffer, cbuf, 0, clen);
+                                var cbuf = buf.Data.Take(clen).ToArray();
 
                                 IByteBuffer buffer;
                                 if (clen >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
@@ -1178,12 +1152,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     finally
                     {
-                        if (cio2 != IntPtr.Zero)
+                        if (cio != IntPtr.Zero)
                         {
                             if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_cio_close_Linux_x64(cio);
                             else if (Platform.Current == Platform.Type.win_x64)
-                                Opj_cio_close_Windows_x64(cio2);
+                                Opj_cio_close_Windows_x64(cio);
                             else if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_cio_close_Osx_x64(cio);
                             else if (Platform.Current == Platform.Type.osx_arm64) 
@@ -1279,8 +1253,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     opj_event_mgr_t event_mgr = new opj_event_mgr_t();
                     opj_image_t* image = null;
                     opj_dinfo_t* dinfo = null;
-                    opj_cio_t* cio = null;
-                    IntPtr cio2 = IntPtr.Zero;
+                    IntPtr cio = IntPtr.Zero;
                     
                     if (Platform.Current == Platform.Type.linux_x64)
                         Memset_Linux_x64(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
@@ -1387,8 +1360,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         else if (Platform.Current == Platform.Type.win_x64)
                         {
-                            cio2 = Opj_cio_open_Windows_x64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
-                            image = Opj_decode_Windows_x64(dinfo, cio2);
+                            cio = Opj_cio_open_Windows_x64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
+                            image = Opj_decode_Windows_x64(dinfo, cio);
                         }
                         else if (Platform.Current == Platform.Type.osx_x64)
                         {
@@ -1490,12 +1463,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     finally
                     {
-                        if (cio2 != IntPtr.Zero) 
+                        if (cio != IntPtr.Zero) 
                         {
                             if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_cio_close_Linux_x64(cio);
                             else if (Platform.Current == Platform.Type.win_x64) 
-                                Opj_cio_close_Windows_x64(cio2);
+                                Opj_cio_close_Windows_x64(cio);
                             else if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_cio_close_Osx_x64(cio);
                             else if (Platform.Current == Platform.Type.osx_arm64) 
