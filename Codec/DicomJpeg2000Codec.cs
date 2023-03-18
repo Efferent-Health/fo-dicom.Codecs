@@ -1197,8 +1197,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             if (Platform.Current == Platform.Type.linux_x64) 
                                 Opj_cio_close_Linux_x64(cio);
-                            else if (Platform.Current == Platform.Type.win_x64) 
-                                Opj_cio_close_Windows_x64(cio2);
+                            //else if (Platform.Current == Platform.Type.win_x64) 
+                            //    Opj_cio_close_Windows_x64(cio2);
                             else if (Platform.Current == Platform.Type.osx_x64) 
                                 Opj_cio_close_Osx_x64(cio);
                             else if (Platform.Current == Platform.Type.osx_arm64) 
@@ -1402,7 +1402,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         else if (Platform.Current == Platform.Type.win_x64)
                         {
-                            File.WriteAllBytes("decoding", jpegArray.Data);
                             //cio = Opj_cio_open_Windows_x64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             var dd = Opj_cio_open_Windows_x64_decoding((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
                             image = Opj_decode_Windows_x64(dinfo, dd);
