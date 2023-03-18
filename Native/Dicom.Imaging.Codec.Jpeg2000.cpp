@@ -113,17 +113,35 @@ EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* pa
 
 EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(opj_common_ptr cinfo, unsigned char* buffer, int length)
 {
-    return opj_stream_create(length, OPJ_FALSE);
+    opj_stream_t* l_stream = opj_stream_create_file_stream("out.dump", length, OPJ_FALSE);
+    return l_stream;
+}
+
+
+EXPORT_OpenJPEG opj_stream_t* Opj_cio_open_decode(opj_common_ptr cinfo, unsigned char* buffer, int length)
+{
+    opj_stream_t* l_stream = opj_stream_create_default_file_stream("decoding", OPJ_TRUE);
+    return l_stream;
 }
 
 EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_stream_t* cio, opj_image_t* image, char* index)
 {
+    OPJ_BOOL bSuccess;
     if (cinfo && cio && image) {
         switch (cinfo->codec_format) {
         case OPJ_CODEC_J2K:
-            return opj_encode((opj_codec_t*)cinfo->j2k_handle, cio);
+            bSuccess = opj_start_compress((opj_codec_t*)cinfo->j2k_handle, image, cio);
+            if (!bSuccess) {
+                opj_stream_destroy(cio);
+                opj_destroy_codec((opj_codec_t*)cinfo->j2k_handle);
+                opj_image_destroy(image);
+                return 0;
+            }
+            bSuccess = opj_encode((opj_codec_t*)cinfo->j2k_handle, cio);
+            bSuccess = opj_end_compress((opj_codec_t*)cinfo->j2k_handle, cio);
+            return bSuccess;
         case OPJ_CODEC_JP2:
-            return opj_encode((opj_codec_t*)cinfo->jp2_handle, cio);
+            return opj_start_compress((opj_codec_t*)cinfo->jp2_handle, image, cio);
         case OPJ_CODEC_JPT:
         case OPJ_CODEC_UNKNOWN:
         default:
@@ -167,6 +185,12 @@ EXPORT_OpenJPEG void Opj_destroy_compress(opj_cinfo_t* cinfo)
 EXPORT_OpenJPEG OPJ_OFF_T Cio_tell(opj_stream_t* cio)
 {
     return opj_stream_tell((opj_stream_private_t*)cio);
+}
+
+EXPORT_OpenJPEG OPJ_SIZE_T Cio_read(opj_stream_t* cio, OPJ_BYTE* p_buffer, OPJ_SIZE_T p_size, opj_event_mgr_t* p_event_mgr)
+{
+    opj_stream_seek((opj_stream_private_t*)cio, 0, p_event_mgr);
+    return opj_stream_read_data((opj_stream_private_t*)cio, p_buffer, p_size, p_event_mgr);
 }
 
 //Decode OpenJPEG
@@ -223,16 +247,27 @@ EXPORT_OpenJPEG void Opj_setup_decoder(opj_dinfo_t* dinfo, opj_dparameters_t* pa
     }
 }
 
-EXPORT_OpenJPEG OPJ_BOOL Opj_decode(opj_dinfo_t* dinfo, opj_stream_t* cio)
+EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_dinfo_t* dinfo, opj_stream_t* cio)
 {
+    OPJ_BOOL bSuccess;
+    opj_image_t* pImage;
     if (dinfo && cio) {
         switch (dinfo->codec_format) {
         case OPJ_CODEC_J2K:
-            return opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, NULL);
-        case OPJ_CODEC_JPT:
-            return opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, NULL);
-        case OPJ_CODEC_JP2:
-            return opj_decode((opj_codec_t*)dinfo->jp2_handle, cio, NULL);
+            if (!opj_read_header(cio, (opj_codec_t*)dinfo->j2k_handle, &pImage))
+            {
+                fprintf(stderr, "ERROR -> failed to read the header\n");
+                opj_stream_destroy(cio);
+                opj_destroy_codec((opj_codec_t*)dinfo->j2k_handle);
+                return NULL;
+            }
+            bSuccess = opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, pImage);
+            bSuccess = opj_end_decompress((opj_codec_t*)dinfo->j2k_handle, cio);
+            return pImage;
+        //case OPJ_CODEC_JPT:
+        //    return opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, NULL);
+        //case OPJ_CODEC_JP2:
+        //    return opj_decode((opj_codec_t*)dinfo->jp2_handle, cio, NULL);
         case OPJ_CODEC_UNKNOWN:
         default:
             break;
