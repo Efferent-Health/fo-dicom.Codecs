@@ -216,7 +216,16 @@ EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_stream_t* cio, opj_image_
             bSuccess = opj_end_compress((opj_codec_t*)cinfo->j2k_handle, cio);
             return bSuccess;
         case OPJ_CODEC_JP2:
-            return opj_start_compress((opj_codec_t*)cinfo->jp2_handle, image, cio);
+            bSuccess = opj_start_compress((opj_codec_t*)cinfo->jp2_handle, image, cio);
+            if (!bSuccess) {
+                opj_stream_destroy(cio);
+                opj_destroy_codec((opj_codec_t*)cinfo->jp2_handle);
+                opj_image_destroy(image);
+                return 0;
+            }
+            bSuccess = opj_encode((opj_codec_t*)cinfo->jp2_handle, cio);
+            bSuccess = opj_end_compress((opj_codec_t*)cinfo->jp2_handle, cio);
+            return bSuccess;
         case OPJ_CODEC_JPT:
         case OPJ_CODEC_UNKNOWN:
         default:
@@ -335,8 +344,17 @@ EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_dinfo_t* dinfo, opj_stream_t* cio)
             return pImage;
         //case OPJ_CODEC_JPT:
         //    return opj_decode((opj_codec_t*)dinfo->j2k_handle, cio, NULL);
-        //case OPJ_CODEC_JP2:
-        //    return opj_decode((opj_codec_t*)dinfo->jp2_handle, cio, NULL);
+        case OPJ_CODEC_JP2:
+            if (!opj_read_header(cio, (opj_codec_t*)dinfo->jp2_handle, &pImage))
+            {
+                fprintf(stderr, "ERROR -> failed to read the header\n");
+                opj_stream_destroy(cio);
+                opj_destroy_codec((opj_codec_t*)dinfo->jp2_handle);
+                return NULL;
+            }
+            bSuccess = opj_decode((opj_codec_t*)dinfo->jp2_handle, cio, pImage);
+            bSuccess = opj_end_decompress((opj_codec_t*)dinfo->jp2_handle, cio);
+            return pImage;
         case OPJ_CODEC_UNKNOWN:
         default:
             break;
