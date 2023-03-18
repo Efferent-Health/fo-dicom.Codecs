@@ -541,10 +541,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public static extern unsafe long Cio_tell_Windows_x64(IntPtr cio);
 
-        [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_read")]
-
-        public static extern unsafe long Cio_read_Windows_x64(IntPtr cio, byte[] buffer, int p_size, opj_event_mgr_t* e);
-
         //Decode JPEG2000 for Windows
 
         [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]

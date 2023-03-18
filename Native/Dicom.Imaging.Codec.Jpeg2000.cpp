@@ -262,12 +262,6 @@ EXPORT_OpenJPEG OPJ_OFF_T Cio_tell(opj_stream_t* cio)
     return opj_stream_tell((opj_stream_private_t*)cio);
 }
 
-EXPORT_OpenJPEG OPJ_SIZE_T Cio_read(opj_stream_t* cio, OPJ_BYTE* p_buffer, OPJ_SIZE_T p_size, opj_event_mgr_t* p_event_mgr)
-{
-    opj_stream_seek((opj_stream_private_t*)cio, 0, p_event_mgr);
-    return opj_stream_read_data((opj_stream_private_t*)cio, p_buffer, p_size, p_event_mgr);
-}
-
 //Decode OpenJPEG
 
 EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
