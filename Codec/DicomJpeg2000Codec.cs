@@ -836,7 +836,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     opj_cinfo_t* cinfo= null;  /* handle to a compressor */
                     opj_image_t* image = null;
                     IntPtr cio = IntPtr.Zero;
-                    var buf = new PinnedByteArray(new byte[1000000]);
                     
                     event_mgr.error_handler = IntPtr.Zero;
                     if (jparams.IsVerbose)
@@ -1037,6 +1036,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             else
                                 throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
                         }
+
+                        var img_size = 0;
+                        for (int i = 0; i < image->numcomps; i++)
+                        {
+                            img_size += image->comps[i].w * image->comps[i].h * image->comps[i].prec;
+                        }
+                        var outlen = (uint) (0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
+                        var buf = new PinnedByteArray(new byte[outlen]);
 
                         if (Platform.Current == Platform.Type.linux_x64)
                         {
