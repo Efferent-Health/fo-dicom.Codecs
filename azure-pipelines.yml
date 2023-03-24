@@ -58,6 +58,7 @@ stages:
         command: 'publish'
         projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
         arguments: '--configuration Release'
+        publishWebProjects: false
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
@@ -99,6 +100,7 @@ stages:
         command: 'publish'
         projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
         arguments: '--configuration Release'
+        publishWebProjects: false
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
@@ -144,6 +146,7 @@ stages:
         command: 'build'
         projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
         arguments: '--configuration Release'
+        publishWebProjects: false
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
