@@ -53,12 +53,11 @@ stages:
         ArtifactName: 'lib-linux-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
-      displayName: Compile managed library
+      displayName: Publish managed library
       inputs:
-        command: 'build'
+        command: 'publish'
         projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
-        arguments: '--configuration Debug'
-        configuration: 'Debug'
+        arguments: '--configuration Release'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
@@ -67,7 +66,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
+        PathtoPublish: 'Platform/fo-dicom/bin/Release/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
@@ -95,12 +94,11 @@ stages:
         ArtifactName: 'lib-osx-x64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
-      displayName: Compile managed library
+      displayName: Publish managed library
       inputs:
-        command: 'build'
+        command: 'publish'
         projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
-        arguments: '--configuration Debug'
-        configuration: 'Debug'
+        arguments: '--configuration Release'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
@@ -109,7 +107,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
+        PathtoPublish: 'Platform/fo-dicom/bin/Release/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
     - task: UseDotNet@2
@@ -141,12 +139,11 @@ stages:
         ArtifactName: 'lib-osx-arm64'
         publishLocation: 'Container'
     - task: DotNetCoreCLI@2
-      displayName: Compile managed library
+      displayName: Publish managed library
       inputs:
         command: 'build'
         projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
-        arguments: '--configuration Debug'
-        configuration: 'Debug'
+        arguments: '--configuration Release'
         feedsToUse: 'select'
         versioningScheme: 'off'
     - script: |
@@ -155,7 +152,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: Publish managed artifacts
       inputs:
-        PathtoPublish: 'Platform/fo-dicom/bin/Debug/netstandard2.0'
+        PathtoPublish: 'Platform/fo-dicom/bin/Release/netstandard2.0'
         ArtifactName: 'lib-managed'
         publishLocation: 'Container'
   - job: Acceptance
