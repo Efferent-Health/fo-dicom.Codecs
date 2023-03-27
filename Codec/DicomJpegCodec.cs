@@ -631,8 +631,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public class JpegCodec : JpegNativeCodec
         {
             // DLLIMPORT libijg8 library for Windows x64
-
             // Encode Native functions
+
             [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_std_error_8")]
             public static extern unsafe jpeg_error_mgr* jpeg_std_error_8_Windows_x64(ref jpeg_error_mgr err);
 
@@ -1410,39 +1410,105 @@ namespace FellowOakDicom.Imaging.NativeCodec
             {         
             }
 
-            public static unsafe void ErrorExit(ref j_common_ptr cinfo)
+            public static unsafe void ErrorExit_8(ref j_common_ptr cinfo)
             {
                 jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
                 char[] buffer = new char[200];
-                
-                //format_message for Linux, Windows and Osx64 for 64 bits
-                if (Platform.Current == Platform.Type.win_x64)
-                    format_message_8_Windows_x64(ref cinfo, buffer);
-                else if (Platform.Current == Platform.Type.linux_x64)
-                    format_message_8_Linux_x64(ref cinfo, buffer);
-                else if (Platform.Current == Platform.Type.osx_x64)
-                    format_message_8_Osx_x64(ref cinfo, buffer);
-                else if (Platform.Current == Platform.Type.osx_arm64)
-                    format_message_8_Osx_arm64(ref cinfo, buffer);
 
-                throw new DicomCodecException(new String(buffer));             
+                //format_message for Linux, Windows and Osx64 for 64 bits
+                    if (Platform.Current == Platform.Type.win_x64)
+                        format_message_8_Windows_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.linux_x64)
+                        format_message_8_Linux_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        format_message_8_Osx_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        format_message_8_Osx_arm64(ref cinfo, buffer);            
             }
 
-            public static unsafe void OutputMessage(ref j_common_ptr cinfo)
+            public static unsafe void ErrorExit_12(ref j_common_ptr cinfo)
             {
-                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
+                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
                 char[] buffer = new char[200];
 
                 //format_message for Linux, Windows and Osx64 for 64 bits
-                if (Platform.Current == Platform.Type.win_x64)
-                    format_message_8_Windows_x64(ref cinfo, buffer);
-                else if (Platform.Current == Platform.Type.linux_x64)
-                    format_message_8_Linux_x64(ref cinfo, buffer);
-                else if (Platform.Current == Platform.Type.osx_x64)
-                    format_message_8_Osx_x64(ref cinfo, buffer);
-                else if (Platform.Current == Platform.Type.osx_arm64)
-                    format_message_8_Osx_arm64(ref cinfo, buffer);
+                    if (Platform.Current == Platform.Type.win_x64)
+                        format_message_12_Windows_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.linux_x64)
+                        format_message_12_Linux_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        format_message_12_Osx_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        format_message_12_Osx_arm64(ref cinfo, buffer);          
+            }
+
+            public static unsafe void ErrorExit_16(ref j_common_ptr cinfo)
+            {
+                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
+                char[] buffer = new char[200];
+
+                //format_message for Linux, Windows and Osx64 for 64 bits
+                    if (Platform.Current == Platform.Type.win_x64)
+                        format_message_16_Windows_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.linux_x64)
+                        format_message_16_Linux_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        format_message_16_Osx_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        format_message_16_Osx_arm64(ref cinfo, buffer);
+            }
+
+            public static unsafe void OutputMessage_8(ref j_common_ptr cinfo)
+            {
+                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
+                char[] buffer = new char[200];
                 
+                //format_message for Linux, Windows and Osx64 for 64 bits
+                    if (Platform.Current == Platform.Type.win_x64)
+                        format_message_8_Windows_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.linux_x64)
+                        format_message_8_Linux_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        format_message_8_Osx_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        format_message_8_Osx_arm64(ref cinfo, buffer);
+
+                //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
+            }
+
+            public static unsafe void OutputMessage_12(ref j_common_ptr cinfo)
+            {
+                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
+                char[] buffer = new char[200];
+                
+                //format_message for Linux, Windows and Osx64 for 64 bits
+                    if (Platform.Current == Platform.Type.win_x64)
+                        format_message_12_Windows_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.linux_x64)
+                        format_message_12_Linux_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        format_message_12_Osx_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        format_message_12_Osx_arm64(ref cinfo, buffer);
+
+                //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
+            }
+
+            public static unsafe void OutputMessage_16(ref j_common_ptr cinfo)
+            {
+                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
+                char[] buffer = new char[200];
+                
+                //format_message for Linux, Windows and Osx64 for 64 bits
+                    if (Platform.Current == Platform.Type.win_x64)
+                        format_message_16_Windows_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.linux_x64)
+                        format_message_16_Linux_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_x64)
+                        format_message_16_Osx_x64(ref cinfo, buffer);
+                    else if (Platform.Current == Platform.Type.osx_arm64)
+                        format_message_16_Osx_arm64(ref cinfo, buffer);
+
                 //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
             }
 
@@ -1700,10 +1766,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_arm64)
                             cinfo.err = jpeg_std_error_16_Osx_arm64(ref jerr);
 
-                        errorexit errorexit_ = ErrorExit;
+                        errorexit errorexit_ = null;
+                        ouput_Message ouput_Message_  = null;
+
+                        if (Bits.Equals(8))
+                            errorexit_ = ErrorExit_8;
+                        else if (Bits > 8 && Bits <= 12)
+                            errorexit_ = ErrorExit_12;
+                        else if (Bits > 12 && Bits <= 12)
+                            errorexit_ = ErrorExit_16;
+            
                         jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
 
-                        ouput_Message ouput_Message_ = OutputMessage;
+                        if (Bits.Equals(8))
+                            ouput_Message_ = OutputMessage_8;
+                        else if (Bits > 8 && Bits <= 12)
+                            ouput_Message_ = OutputMessage_12;
+                        else if (Bits > 12 && Bits <= 16)
+                            ouput_Message_ = OutputMessage_16;
+
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                         //jpeg_create_compress_8 for Linux, Windows and Osx for 64 bits
@@ -2380,10 +2461,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_arm64)
                             dinfo.err = jpeg_std_error_16_Osx_arm64(ref jerr);
 
-                        errorexit errorexit_ = ErrorExit;
+                        errorexit errorexit_ = null;
+                        ouput_Message ouput_Message_  = null;
+
+                        if (Bits.Equals(8))
+                            errorexit_ = ErrorExit_8;
+                        else if (Bits > 8 && Bits <= 12)
+                            errorexit_ = ErrorExit_12;
+                        else if (Bits > 12 && Bits <= 12)
+                            errorexit_ = ErrorExit_16;
+            
                         jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
 
-                        ouput_Message ouput_Message_ = OutputMessage;
+                        if (Bits.Equals(8))
+                            ouput_Message_ = OutputMessage_8;
+                        else if (Bits > 8 && Bits <= 12)
+                            ouput_Message_ = OutputMessage_12;
+                        else if (Bits > 12 && Bits <= 16)
+                            ouput_Message_ = OutputMessage_16;
+
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                         //jpeg_create_decompress_8 for Linux, Windows and Osx for 64 bits
@@ -3069,10 +3165,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_arm64)
                     dinfo.err = jpeg_std_error_16_Osx_arm64(ref jerr);
                 
-                errorexit errorexit_ = ErrorExit;
+                errorexit errorexit_ = null;
+                ouput_Message ouput_Message_  = null;
+
+                if (Bits.Equals(8))
+                    errorexit_ = ErrorExit_8;
+                else if (Bits > 8 && Bits <= 12)
+                    errorexit_ = ErrorExit_12;
+                else if (Bits > 12 && Bits <= 12)
+                    errorexit_ = ErrorExit_16;
+            
                 jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
 
-                ouput_Message ouput_Message_ = OutputMessage;
+                if (Bits.Equals(8))
+                    ouput_Message_ = OutputMessage_8;
+                else if (Bits > 8 && Bits <= 12)
+                    ouput_Message_ = OutputMessage_12;
+                else if (Bits > 12 && Bits <= 16)
+                    ouput_Message_ = OutputMessage_16;
+
                 jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                 //jpeg_create_decompress_8 for Linux, Windows and Osx for 64 bits
