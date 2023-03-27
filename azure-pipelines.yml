@@ -181,18 +181,18 @@ stages:
         rootFolderOrFile: 'Tests/Acceptance/bin/debug/net6.0/out'
         archiveType: 'zip'
         archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win-x64-$(Build.BuildId).zip'
-    - task: GitHubRelease@0
-      displayName: Release to GitHub
-      inputs:
-        gitHubConnection: Efferent-Open-Source
-        repositoryName: '$(Build.Repository.Name)'         
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'manual'
-        tag: 'v$(csprojVersion)'
-        assets: 'Tests/Acceptance/out/*.zip'  
-        releaseNotesSource: 'file'
-        releaseNotesFile: 'Tests/Acceptance/bin/debug/net6.0/out/Results.md'
+#    - task: GitHubRelease@0
+#      displayName: Release to GitHub
+#      inputs:
+#        gitHubConnection: Efferent-Open-Source
+#        repositoryName: '$(Build.Repository.Name)'         
+#        action: 'create'
+#        target: '$(Build.SourceVersion)'
+#        tagSource: 'manual'
+#        tag: 'v$(csprojVersion)'
+#        assets: 'Tests/Acceptance/out/*.zip'  
+#        releaseNotesSource: 'file'
+#        releaseNotesFile: 'Tests/Acceptance/bin/debug/net6.0/out/Results.md'
 
 - stage: Deploy
   jobs:
