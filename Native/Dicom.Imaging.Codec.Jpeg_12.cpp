@@ -144,11 +144,6 @@ namespace Dicom {
 					return jpeg_resync_to_restart(dinfo, desired);
 				}
 
-				EXPORT_libijg12 void format_message_12(j_common_ptr cinfo, char* buffer)
-				{
-					(*cinfo->err->format_message)((jpeg_common_struct *)cinfo, buffer);
-				}
-
 #ifdef __cplusplus
 			}
 #endif
