@@ -243,9 +243,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate void ouput_Message(ref j_common_ptr cinfo);
 
-    [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void errorexit(ref j_common_ptr cinfo);
-
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jpeg_error_mgr
     {
@@ -689,7 +686,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Windows_x64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_8_Windows_x64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Windows_x64(ref j_common_ptr cinfo, char[] buffer);
 
             // DLLIMPORT libijg8 library for Linux x64
 
@@ -751,7 +748,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Linux_x64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_8_Linux_x64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Linux_x64(ref j_common_ptr cinfo, char[] buffer);
 
             // DLLIMPORT libijg8 library for OSX x64
 
@@ -812,7 +809,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Osx_x64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_8_Osx_x64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Osx_x64(ref j_common_ptr cinfo, char[] buffer);
 
             // DLLIMPORT libijg8 library for OSX arm64
 
@@ -873,7 +870,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Osx_arm64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_8_Osx_arm64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Osx_arm64(ref j_common_ptr cinfo, char[] buffer);
 
             
             // DLLIMPORT libijg12 library for Windows x64
@@ -934,9 +931,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
             public static extern unsafe int jpeg_resync_to_restart_12_Windows_x64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
-
-            public static extern unsafe void format_message_12_Windows_x64(ref j_common_ptr cinfo, char[] buffer);
 
             // DLLIMPORT libijg12 library for Linux x64
 
@@ -995,9 +989,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
             public static extern unsafe int jpeg_resync_to_restart_12_Linux_x64(ref j_decompress_ptr dinfo, int desired);
-
-            [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
-            public static extern unsafe void format_message_12_Linux_x64(ref j_common_ptr cinfo, char[] buffer);
 
             
             // DLLIMPORT libijg12 library for OSX x64
@@ -1058,9 +1049,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
             public static extern unsafe int jpeg_resync_to_restart_12_Osx_x64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
-            public static extern unsafe void format_message_12_Osx_x64(ref j_common_ptr cinfo, char[] buffer);
-
             
             // DLLIMPORT libijg12 library for OSX arm64
 
@@ -1120,9 +1108,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
             public static extern unsafe int jpeg_resync_to_restart_12_Osx_arm64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_12")]
-            public static extern unsafe void format_message_12_Osx_arm64(ref j_common_ptr cinfo, char[] buffer);
-
 
             // DLLIMPORT libijg16 library for Windows x64
 
@@ -1181,9 +1166,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
             public static extern unsafe int jpeg_resync_to_restart_16_Windows_x64(ref j_decompress_ptr dinfo, int desired);
-
-            [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
-            public static extern unsafe void format_message_16_Windows_x64(ref j_common_ptr cinfo, char[] buffer);
 
             
             // DLLIMPORT libijg16 library for Linux x64
@@ -1245,9 +1227,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
             public static extern unsafe int jpeg_resync_to_restart_16_Linux_x64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
-            public static extern unsafe void format_message_16_Linux_x64(ref j_common_ptr cinfo, char[] buffer);
-
             
             // DLLIMPORT libijg16 library for Osx x64
 
@@ -1306,9 +1285,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
             public static extern unsafe int jpeg_resync_to_restart_16_Osx_x64(ref j_decompress_ptr dinfo, int desired);
-
-            [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
-            public static extern unsafe void format_message_16_Osx_x64(ref j_common_ptr cinfo, char[] buffer);
 
 
             // DLLIMPORT libijg16 library for Osx arm64
@@ -1369,9 +1345,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_16")]
             public static extern unsafe int jpeg_resync_to_restart_16_Osx_arm64(ref j_decompress_ptr dinfo, int desired);
 
-            [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_16")]
-            public static extern unsafe void format_message_16_Osx_arm64(ref j_common_ptr cinfo, char[] buffer);
-
             public JpegCodec(JpegMode mode, int predictor, int point_transform, int bits)
             {
                 Mode = mode;
@@ -1410,106 +1383,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
             {         
             }
 
-            public static unsafe void ErrorExit_8(ref j_common_ptr cinfo)
+            public static unsafe void OutputMessage(ref j_common_ptr cinfo)
             {
                 jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
                 char[] buffer = new char[200];
 
                 //format_message for Linux, Windows and Osx64 for 64 bits
                     if (Platform.Current == Platform.Type.win_x64)
-                        format_message_8_Windows_x64(ref cinfo, buffer);
+                        format_message_Windows_x64(ref cinfo, buffer);
                     else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_8_Linux_x64(ref cinfo, buffer);
+                        format_message_Linux_x64(ref cinfo, buffer);
                     else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_8_Osx_x64(ref cinfo, buffer);
+                        format_message_Osx_x64(ref cinfo, buffer);
                     else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_8_Osx_arm64(ref cinfo, buffer);            
-            }
-
-            public static unsafe void ErrorExit_12(ref j_common_ptr cinfo)
-            {
-                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
-                char[] buffer = new char[200];
-
-                //format_message for Linux, Windows and Osx64 for 64 bits
-                    if (Platform.Current == Platform.Type.win_x64)
-                        format_message_12_Windows_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_12_Linux_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_12_Osx_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_12_Osx_arm64(ref cinfo, buffer);          
-            }
-
-            public static unsafe void ErrorExit_16(ref j_common_ptr cinfo)
-            {
-                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
-                char[] buffer = new char[200];
-
-                //format_message for Linux, Windows and Osx64 for 64 bits
-                    if (Platform.Current == Platform.Type.win_x64)
-                        format_message_16_Windows_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_16_Linux_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_16_Osx_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_16_Osx_arm64(ref cinfo, buffer);
-            }
-
-            public static unsafe void OutputMessage_8(ref j_common_ptr cinfo)
-            {
-                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
-                char[] buffer = new char[200];
-                
-                //format_message for Linux, Windows and Osx64 for 64 bits
-                    if (Platform.Current == Platform.Type.win_x64)
-                        format_message_8_Windows_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_8_Linux_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_8_Osx_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_8_Osx_arm64(ref cinfo, buffer);
-
-                //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
-            }
-
-            public static unsafe void OutputMessage_12(ref j_common_ptr cinfo)
-            {
-                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
-                char[] buffer = new char[200];
-                
-                //format_message for Linux, Windows and Osx64 for 64 bits
-                    if (Platform.Current == Platform.Type.win_x64)
-                        format_message_12_Windows_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_12_Linux_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_12_Osx_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_12_Osx_arm64(ref cinfo, buffer);
-
-                //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
-            }
-
-            public static unsafe void OutputMessage_16(ref j_common_ptr cinfo)
-            {
-                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo.err;
-                char[] buffer = new char[200];
-                
-                //format_message for Linux, Windows and Osx64 for 64 bits
-                    if (Platform.Current == Platform.Type.win_x64)
-                        format_message_16_Windows_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_16_Linux_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_16_Osx_x64(ref cinfo, buffer);
-                    else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_16_Osx_arm64(ref cinfo, buffer);
-
-                //LogManager.GetLogger("fo-dicom.Codecs").Debug("IJG: {0}", new String(buffer));
+                        format_message_Osx_arm64(ref cinfo, buffer);         
             }
 
             public static unsafe int fillInputBuffer(ref j_decompress_ptr dinfo)
@@ -1766,25 +1653,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits <= 16 && Bits > 12 && Platform.Current == Platform.Type.osx_arm64)
                             cinfo.err = jpeg_std_error_16_Osx_arm64(ref jerr);
 
-                        errorexit errorexit_ = null;
+                        ouput_Message errorexit_ = null;
                         ouput_Message ouput_Message_  = null;
 
-                        if (Bits.Equals(8))
-                            errorexit_ = ErrorExit_8;
-                        else if (Bits > 8 && Bits <= 12)
-                            errorexit_ = ErrorExit_12;
-                        else if (Bits > 12 && Bits <= 12)
-                            errorexit_ = ErrorExit_16;
-            
+                        errorexit_ = OutputMessage;
                         jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
 
-                        if (Bits.Equals(8))
-                            ouput_Message_ = OutputMessage_8;
-                        else if (Bits > 8 && Bits <= 12)
-                            ouput_Message_ = OutputMessage_12;
-                        else if (Bits > 12 && Bits <= 16)
-                            ouput_Message_ = OutputMessage_16;
-
+                        ouput_Message_ = OutputMessage;
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                         //jpeg_create_compress_8 for Linux, Windows and Osx for 64 bits
@@ -2461,25 +2336,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_arm64)
                             dinfo.err = jpeg_std_error_16_Osx_arm64(ref jerr);
 
-                        errorexit errorexit_ = null;
+                        ouput_Message errorexit_ = null;
                         ouput_Message ouput_Message_  = null;
 
-                        if (Bits.Equals(8))
-                            errorexit_ = ErrorExit_8;
-                        else if (Bits > 8 && Bits <= 12)
-                            errorexit_ = ErrorExit_12;
-                        else if (Bits > 12 && Bits <= 12)
-                            errorexit_ = ErrorExit_16;
-            
+                        errorexit_ = OutputMessage;
                         jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
 
-                        if (Bits.Equals(8))
-                            ouput_Message_ = OutputMessage_8;
-                        else if (Bits > 8 && Bits <= 12)
-                            ouput_Message_ = OutputMessage_12;
-                        else if (Bits > 12 && Bits <= 16)
-                            ouput_Message_ = OutputMessage_16;
-
+                        ouput_Message_ = OutputMessage;
                         jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                         //jpeg_create_decompress_8 for Linux, Windows and Osx for 64 bits
@@ -3165,25 +3028,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 else if (Bits > 12 && Bits <= 16 && Platform.Current == Platform.Type.osx_arm64)
                     dinfo.err = jpeg_std_error_16_Osx_arm64(ref jerr);
                 
-                errorexit errorexit_ = null;
+                ouput_Message errorexit_ = null;
                 ouput_Message ouput_Message_  = null;
 
-                if (Bits.Equals(8))
-                    errorexit_ = ErrorExit_8;
-                else if (Bits > 8 && Bits <= 12)
-                    errorexit_ = ErrorExit_12;
-                else if (Bits > 12 && Bits <= 12)
-                    errorexit_ = ErrorExit_16;
-            
+                errorexit_ = OutputMessage;
                 jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
 
-                if (Bits.Equals(8))
-                    ouput_Message_ = OutputMessage_8;
-                else if (Bits > 8 && Bits <= 12)
-                    ouput_Message_ = OutputMessage_12;
-                else if (Bits > 12 && Bits <= 16)
-                    ouput_Message_ = OutputMessage_16;
-
+                ouput_Message_ = OutputMessage;
                 jerr.output_message = Marshal.GetFunctionPointerForDelegate(ouput_Message_);
 
                 //jpeg_create_decompress_8 for Linux, Windows and Osx for 64 bits
