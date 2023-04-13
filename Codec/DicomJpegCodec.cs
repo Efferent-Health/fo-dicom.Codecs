@@ -241,7 +241,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     }
 
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void ouput_Message(ref j_common_ptr cinfo);
+    public unsafe delegate void ouput_Message(j_common_ptr* cinfo);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jpeg_error_mgr
@@ -288,11 +288,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
     }
 
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void init_destination(ref j_compress_ptr cinfo);
+    public unsafe delegate void init_destination(j_compress_ptr* cinfo);
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate int empty_output_buffer(ref j_compress_ptr cinfo);
+    public unsafe delegate int empty_output_buffer(j_compress_ptr* cinfo);
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void term_destination(ref j_compress_ptr cinfo);
+    public unsafe delegate void term_destination(j_compress_ptr* cinfo);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jpeg_destination_mgr
@@ -305,11 +305,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
     }
 
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void Init_source(ref j_decompress_ptr dinfo);
+    public unsafe delegate void Init_source(j_decompress_ptr* dinfo);
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate int Fill_input_buffer(ref j_decompress_ptr dinfo);
+    public unsafe delegate int Fill_input_buffer(j_decompress_ptr* dinfo);
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void Skip_input_data(ref j_decompress_ptr dinfo, int num_bytes);
+    public unsafe delegate void Skip_input_data(j_decompress_ptr* dinfo, int num_bytes);
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate int Resync_to_restart(ref j_decompress_ptr dinfo, int desired);
 
@@ -686,7 +686,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Windows_x64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-win-x64.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_Windows_x64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Windows_x64(j_common_ptr* cinfo, char[] buffer);
 
             // DLLIMPORT libijg8 library for Linux x64
 
@@ -748,7 +748,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Linux_x64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-linux-x64.so", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_Linux_x64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Linux_x64(j_common_ptr* cinfo, char[] buffer);
 
             // DLLIMPORT libijg8 library for OSX x64
 
@@ -809,7 +809,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Osx_x64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-osx-x64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_Osx_x64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Osx_x64(j_common_ptr* cinfo, char[] buffer);
 
             // DLLIMPORT libijg8 library for OSX arm64
 
@@ -870,7 +870,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_resync_to_restart_8_Osx_arm64(ref j_decompress_ptr dinfo, int desired);
 
             [DllImport("Dicom.Native-osx-arm64.dylib", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
-            public static extern unsafe void format_message_Osx_arm64(ref j_common_ptr cinfo, char[] buffer);
+            public static extern unsafe void format_message_Osx_arm64(j_common_ptr* cinfo, char[] buffer);
 
             
             // DLLIMPORT libijg12 library for Windows x64
@@ -1353,55 +1353,55 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 Bits = bits;
             }
 
-            public static unsafe void initDestination(ref j_compress_ptr cinfo)
+            public static unsafe void initDestination(j_compress_ptr* cinfo)
             {
                 JpegCodec thisPtr = This;
                 thisPtr.MemoryBuffer = new MemoryStream();
                 thisPtr.DataArray = new PinnedByteArray(16384);
-                cinfo.dest->next_output_byte = thisPtr.DataArray.Pointer;
-                cinfo.dest->free_in_buffer = 16384;
+                cinfo->dest->next_output_byte = thisPtr.DataArray.Pointer;
+                cinfo->dest->free_in_buffer = 16384;
             }
 
-            public static unsafe int emptyOutputBuffer(ref j_compress_ptr cinfo)
+            public static unsafe int emptyOutputBuffer(j_compress_ptr* cinfo)
             {
                 JpegCodec thisPtr = This;
                 thisPtr.MemoryBuffer.Write(thisPtr.DataArray.Data, 0, 16384);
-                cinfo.dest->next_output_byte = thisPtr.DataArray.Pointer;
-                cinfo.dest->free_in_buffer = 16384;
+                cinfo->dest->next_output_byte = thisPtr.DataArray.Pointer;
+                cinfo->dest->free_in_buffer = 16384;
                 return 1;
             }
 
-            public static unsafe void termDestination(ref j_compress_ptr cinfo)
+            public static unsafe void termDestination(j_compress_ptr* cinfo)
             {
                 JpegCodec thisPtr = This;
-                int count = 16384 - (int)cinfo.dest->free_in_buffer;
+                int count = 16384 - (int)cinfo->dest->free_in_buffer;
                 thisPtr.MemoryBuffer.Write(thisPtr.DataArray.Data, 0, count);
                 thisPtr.DataArray = null;
             }
 
-            public static unsafe void initSource(ref j_decompress_ptr dinfo)
+            public static unsafe void initSource(j_decompress_ptr* dinfo)
             {         
             }
 
-            public static unsafe void OutputMessage(ref j_common_ptr cinfo)
+            public static unsafe void OutputMessage(j_common_ptr* cinfo)
             {
-                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo.err;
+                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo->err;
                 char[] buffer = new char[200];
 
                 //format_message for Linux, Windows and Osx64 for 64 bits
                     if (Platform.Current == Platform.Type.win_x64)
-                        format_message_Windows_x64(ref cinfo, buffer);
+                        format_message_Windows_x64(cinfo, buffer);
                     else if (Platform.Current == Platform.Type.linux_x64)
-                        format_message_Linux_x64(ref cinfo, buffer);
+                        format_message_Linux_x64(cinfo, buffer);
                     else if (Platform.Current == Platform.Type.osx_x64)
-                        format_message_Osx_x64(ref cinfo, buffer);
+                        format_message_Osx_x64(cinfo, buffer);
                     else if (Platform.Current == Platform.Type.osx_arm64)
-                        format_message_Osx_arm64(ref cinfo, buffer);         
+                        format_message_Osx_arm64(cinfo, buffer);         
             }
 
-            public static unsafe int fillInputBuffer(ref j_decompress_ptr dinfo)
+            public static unsafe int fillInputBuffer(j_decompress_ptr* dinfo)
             {
-                SourceManagerStruct* src = (SourceManagerStruct*)(dinfo.src);
+                SourceManagerStruct* src = (SourceManagerStruct*)(dinfo->src);
                 if (src->next_buffer != null)
                 {
                     src->pub.next_input_byte = src->next_buffer;
@@ -1431,9 +1431,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 return 0;
             }
 
-            public static unsafe void skipInputData(ref j_decompress_ptr dinfo, int num_bytes)
+            public static unsafe void skipInputData(j_decompress_ptr* dinfo, int num_bytes)
             {
-                SourceManagerStruct* src = (SourceManagerStruct*)(dinfo.src);
+                SourceManagerStruct* src = (SourceManagerStruct*)(dinfo->src);
                 if (src->pub.bytes_in_buffer < (uint)num_bytes)
                 {
                     src->skip_bytes = num_bytes - Convert.ToInt32(src->pub.bytes_in_buffer);
@@ -1696,10 +1696,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         This = this;
                         // Specify destination manager
-                        jpeg_destination_mgr dest;
+                        jpeg_destination_mgr dest = new jpeg_destination_mgr();
 
-                        init_destination init_Destination_ = initDestination;
-                        dest.init_Destination = Marshal.GetFunctionPointerForDelegate((init_Destination_));
+                        init_destination init_Destination_ =  initDestination;
+                        dest.init_Destination = Marshal.GetFunctionPointerForDelegate(init_Destination_);
 
                         empty_output_buffer empty_Output_Buffer_ = emptyOutputBuffer;
                         dest.empty_Output_Buffer = Marshal.GetFunctionPointerForDelegate(empty_Output_Buffer_);
@@ -2189,6 +2189,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             buffer = EvenLengthBuffer.Create(buffer);
 
                         newPixelData.AddFrame(buffer);
+
+                        GC.KeepAlive(errorexit_);
+                        GC.KeepAlive(ouput_Message_);
+                        GC.KeepAlive(init_Destination_);
+                        GC.KeepAlive(empty_Output_Buffer_);
+                        GC.KeepAlive(term_Destination_);
                     }
                 }
 
@@ -2889,6 +2895,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         newPixelData.AddFrame(buffer);
+
+                        GC.KeepAlive(init_Source_);
+                        GC.KeepAlive(fill_input_buffer_);
+                        GC.KeepAlive(skip_input_data_);
+                        GC.KeepAlive(errorexit_);
+                        GC.KeepAlive(ouput_Message_);
                     }
 
                     finally
