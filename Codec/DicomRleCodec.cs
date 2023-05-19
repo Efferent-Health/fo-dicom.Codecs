@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.ComponentModel.Composition;
 
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
@@ -8,7 +7,6 @@ using FellowOakDicom.Imaging.Codec;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {    
-    [Export(typeof(IDicomCodec))]
     public class DicomRleNativeCodec : DicomRleCodec
     {
         #region METHODS

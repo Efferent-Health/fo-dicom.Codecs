@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.ComponentModel.Composition;
 
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
@@ -380,7 +379,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    [Export(typeof(IDicomCodec))]
     public class DicomJpegLsLosslessCodec : DicomJpegLsNativeCodec
     {
         public override DicomTransferSyntax TransferSyntax
@@ -392,7 +390,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    [Export(typeof(IDicomCodec))]
     public class DicomJpegLsNearLosslessCodec : DicomJpegLsNativeCodec
     {
         public override DicomTransferSyntax TransferSyntax

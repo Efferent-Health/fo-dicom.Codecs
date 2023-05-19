@@ -12,7 +12,6 @@
         <language>en-US</language>
 		<dependencies>
 			<dependency id="NETStandard.Library" version="2.0.0" />
-            <dependency id="System.ComponentModel.Composition" version="4.5.0" />
 		</dependencies>
     </metadata>
     <files>

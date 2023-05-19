@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.ComponentModel.Composition;
 
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
@@ -778,6 +777,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             }
 
             unsafe {
+                
                 if ((oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422) ||
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
                     throw new DicomCodecException($"Photometric Interpretation {oldPixelData.PhotometricInterpretation} not supported by JPEG 2000 encoder");
@@ -1174,16 +1174,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
             
-                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                    {
-                        newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                {
+                    newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
 
-                        if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
-                        {
-                            if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
-                            else
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
+                    if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
+                    {
+                        if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
+                        else
+                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
 
                     }
                 }
@@ -1483,7 +1483,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    [Export(typeof(IDicomCodec))]
     public class DicomJpeg2000LosslessCodec : DicomJpeg2000NativeCodec
     {
         public override DicomTransferSyntax TransferSyntax
@@ -1495,7 +1494,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    [Export(typeof(IDicomCodec))]
     public class DicomJpeg2000LossyCodec : DicomJpeg2000NativeCodec
     {
         public override DicomTransferSyntax TransferSyntax
