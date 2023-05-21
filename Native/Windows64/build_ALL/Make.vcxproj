@@ -87,9 +87,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="System.ComponentModel.Composition" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\Common\CharLS\charls.h" />
     <ClInclude Include="..\..\Common\CharLS\colortransform.h" />
     <ClInclude Include="..\..\Common\CharLS\context.h" />
