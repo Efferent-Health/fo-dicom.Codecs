@@ -1,5 +1,10 @@
 /*
- * Copyright (c) 2005, Herve Drolon, FreeImage Team
+ * The copyright in this software is being made available under the 2-clauses
+ * BSD License, included below. This software may be subject to other third
+ * party and contributor rights, including patent rights, and no such rights
+ * are granted under this license.
+ *
+ * Copyright (c) 2012, Mathieu Malaterre <mathieu.malaterre@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,37 +28,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+#ifndef OPJ_INTTYPES_H
+#define OPJ_INTTYPES_H
 
-#ifdef _WIN32
-#include <windows.h>
+#include "opj_config_private.h"
+#ifdef OPJ_HAVE_INTTYPES_H
+#include <inttypes.h>
 #else
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <sys/times.h>
-#endif /* _WIN32 */
-#include "opj_includes.h"
-
-double opj_clock(void) {
-#ifdef _WIN32
-	/* _WIN32: use QueryPerformance (very accurate) */
-    LARGE_INTEGER freq , t ;
-    /* freq is the clock speed of the CPU */
-    QueryPerformanceFrequency(&freq) ;
-	/* cout << "freq = " << ((double) freq.QuadPart) << endl; */
-    /* t is the high resolution performance counter (see MSDN) */
-    QueryPerformanceCounter ( & t ) ;
-    return ( t.QuadPart /(double) freq.QuadPart ) ;
+#if defined(_WIN32)
+#define PRId64 "I64d"
+#define PRIi64 "I64i"
+#define PRIu64 "I64u"
+#define PRIx64 "I64x"
 #else
-	/* Unix or Linux: use resource usage */
-    struct rusage t;
-    double procTime;
-    /* (1) Get the rusage data structure at this moment (man getrusage) */
-    getrusage(0,&t);
-    /* (2) What is the elapsed time ? - CPU time = User time + System time */
-	/* (2a) Get the seconds */
-    procTime = t.ru_utime.tv_sec + t.ru_stime.tv_sec;
-    /* (2b) More precisely! Get the microseconds part ! */
-    return ( procTime + (t.ru_utime.tv_usec + t.ru_stime.tv_usec) * 1e-6 ) ;
+#error unsupported platform
 #endif
-}
+#endif
 
+#endif /* OPJ_INTTYPES_H */

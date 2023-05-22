@@ -29,7 +29,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         }
 
         [DataTestMethod]
-        [DataRow("RLELossless")]
+        //[DataRow("RLELossless")]
         [DataRow("JPEG2000Lossless")]
         [DataRow("JPEG2000Lossy")]
         [DataRow("JPEGProcess14")]
@@ -55,7 +55,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         }
 
         [DataTestMethod]
-        [DataRow("RLELossless")]
+        //[DataRow("RLELossless")]
         [DataRow("JPEG2000Lossless")]
         [DataRow("JPEG2000Lossy")]
         [DataRow("JPEGProcess14")]

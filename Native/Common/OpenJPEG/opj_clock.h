@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2002-2007, Communications and Remote Sensing Laboratory, Universite catholique de Louvain (UCL), Belgium
- * Copyright (c) 2002-2007, Professor Benoit Macq
- * Copyright (c) 2001-2003, David Janssens
- * Copyright (c) 2002-2003, Yannick Verschueren
- * Copyright (c) 2003-2007, Francois-Olivier Devaux and Antonin Descampe
+ * The copyright in this software is being made available under the 2-clauses
+ * BSD License, included below. This software may be subject to other third
+ * party and contributor rights, including patent rights, and no such rights
+ * are granted under this license.
+ *
  * Copyright (c) 2005, Herve Drolon, FreeImage Team
  * All rights reserved.
  *
@@ -28,37 +28,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef __FIX_H
-#define __FIX_H
-
-#if defined(_MSC_VER) || defined(__BORLANDC__)
-#define int64 __int64
-#else
-#define int64 long long
-#endif
-
+#ifndef OPJ_CLOCK_H
+#define OPJ_CLOCK_H
 /**
-@file fix.h
-@brief Implementation of operations of specific multiplication (FIX)
+@file opj_clock.h
+@brief Internal function for timing
 
-The functions in FIX.H have for goal to realize specific multiplication.
+The functions in OPJ_CLOCK.C are internal utilities mainly used for timing.
 */
 
-/** @defgroup FIX FIX - Implementation of operations of specific multiplication */
+/** @defgroup MISC MISC - Miscellaneous internal functions */
 /*@{*/
 
+/** @name Exported functions */
+/*@{*/
+/* ----------------------------------------------------------------------- */
+
 /**
-Multiply two fixed-precision rational numbers.
-@param a
-@param b
-@return Returns a * b
+Difference in successive opj_clock() calls tells you the elapsed time
+@return Returns time in seconds
 */
-static INLINE int fix_mul(int a, int b) {
-    int64 temp = (int64) a * (int64) b ;
-    temp += temp & 4096;
-    return (int) (temp >> 13) ;
-}
+OPJ_FLOAT64 opj_clock(void);
+
+/* ----------------------------------------------------------------------- */
+/*@}*/
 
 /*@}*/
 
-#endif /* __FIX_H */
+#endif /* OPJ_CLOCK_H */
+

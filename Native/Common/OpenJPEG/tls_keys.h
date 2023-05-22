@@ -1,5 +1,10 @@
 /*
- * Copyright (c) 2005, Herve Drolon, FreeImage Team
+ * The copyright in this software is being made available under the 2-clauses
+ * BSD License, included below. This software may be subject to other third
+ * party and contributor rights, including patent rights, and no such rights
+ * are granted under this license.
+ *
+ * Copyright (c) 2016, Even Rouault
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,32 +28,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef __J2K_LIB_H
-#define __J2K_LIB_H
-/**
-@file j2k_lib.h
-@brief Internal functions
 
-The functions in J2K_LIB.C are internal utilities mainly used for timing.
-*/
+#ifndef OPJ_TLS_KEYS_H
+#define OPJ_TLS_KEYS_H
 
-/** @defgroup MISC MISC - Miscellaneous internal functions */
-/*@{*/
+#define OPJ_TLS_KEY_T1  0
 
-/** @name Exported functions */
-/*@{*/
-/* ----------------------------------------------------------------------- */
-
-/**
-Difference in successive opj_clock() calls tells you the elapsed time
-@return Returns time in seconds
-*/
-double opj_clock(void);
-
-/* ----------------------------------------------------------------------- */
-/*@}*/
-
-/*@}*/
-
-#endif /* __J2K_LIB_H */
-
+#endif /* OPJ_TLS_KEY_H */
