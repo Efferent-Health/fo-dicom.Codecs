@@ -315,9 +315,9 @@ SET(OPENJPEG_SRCS
 )
 
 if(UNIX AND NOT APPLE)
-  add_library(Dicom.Native-linux-x64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
   #Setting properties for shared or dynamic library 
-  set_target_properties(Dicom.Native-linux-x64
+  set_target_properties(Dicom.Native
     PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
@@ -325,18 +325,18 @@ if(UNIX AND NOT APPLE)
   )
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native-osx-arm64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
-    set_target_properties(Dicom.Native-osx-arm64
+    set_target_properties(Dicom.Native
       PROPERTIES
       LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-osx-arm64"
       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-osx-arm64"
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native-osx-x64 SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
-    set_target_properties(Dicom.Native-osx-x64
+    set_target_properties(Dicom.Native
       PROPERTIES
       LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-osx-x64"
       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-osx-x64"

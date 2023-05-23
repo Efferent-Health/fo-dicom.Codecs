@@ -25,7 +25,6 @@
     <None Include="../../Native/POSIX64/lib-linux-x64/*.so" CopyToOutputDirectory="Always" />
     <None Include="../../Native/POSIX64/lib-osx-x64/*.dylib" CopyToOutputDirectory="Always" />
     <None Include="../../Native/POSIX64/lib-osx-arm64/*.dylib" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native-win-x64/*.dll" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
-
 </Project>
