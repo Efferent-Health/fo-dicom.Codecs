@@ -1,6 +1,6 @@
 Fellow Oak DICOM Codecs
 
-Copyright (c) 2020 fo-dicom contributors & Efferent Health, LLC
+Copyright (c) 2023 fo-dicom contributors & Efferent Health, LLC
 
 This software is licensed under the Microsoft Public License (MS-PL)
 
