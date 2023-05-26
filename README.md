@@ -5,9 +5,6 @@
 [![Build Status](https://dev.azure.com/efferent/open-source/_apis/build/status/Efferent-Health.fo-dicom.Codecs?branchName=master)](https://dev.azure.com/efferent/open-source/_build/latest?definitionId=9&branchName=master)
 [![Join the chat at https://gitter.im/fo-dicom/fo-dicom](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fo-dicom/fo-dicom?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> **ANNOUNCEMENT: Please check our incoming Milestone:** 
-> https://github.com/Efferent-Health/fo-dicom.Codecs/milestone/1
-
 <img src="https://lh3.googleusercontent.com/-Fq3nigRUo7U/VfaIPuJMjfI/AAAAAAAAALo/7oaLrrTBhnw/s1600/Fellow%2BOak%2BSquare%2BTransp.png" alt="fo-dicom logo" height="80" /><img src="efferent_logo.png" alt="Efferent logo" height="80" />
 
 This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent Health, LLC](https://efferenthealth.com).
