@@ -115,8 +115,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         PackageType: 'sdk'
-        version: '7.x'
-        includePreviewVersions: true
+        version: '6.0.x'
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
@@ -179,7 +178,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: Zip files
       inputs:
-        rootFolderOrFile: 'Tests/Acceptance/bin/debug/net7.0/out'
+        rootFolderOrFile: 'Tests/Acceptance/bin/debug/net6.0/out'
         archiveType: 'zip'
         archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win-x64-$(Build.BuildId).zip'
 #    - task: GitHubRelease@0
