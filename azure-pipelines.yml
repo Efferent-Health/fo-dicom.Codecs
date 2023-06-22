@@ -116,6 +116,7 @@ stages:
       inputs:
         PackageType: 'sdk'
         version: '7.x'
+        includePreviewVersions: true
     - task: DotNetCoreCLI@2
       displayName: Unit tests
       inputs:
