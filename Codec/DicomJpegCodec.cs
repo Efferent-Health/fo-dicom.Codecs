@@ -724,25 +724,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe void jpeg_destroy_compress_12(ref j_compress_ptr cinfo);
 
             // Decode Native functions
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_create_decompress_12")]
             public static extern unsafe void jpeg_create_decompress_12(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_header_12")]
             public static extern unsafe int jpeg_read_header_12(ref j_decompress_ptr dinfo, int require_image);
 
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_calc_output_dimensions_12")]
             public static extern unsafe void jpeg_calc_output_dimensions_12(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_start_decompress_12")]
             public static extern unsafe int jpeg_start_decompress_12(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
             public static extern unsafe uint jpeg_read_scanlines_12(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
 
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
             public static extern unsafe void jpeg_destroy_decompress_12(ref j_decompress_ptr dinfo);
 
-            [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
+            [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
             public static extern unsafe int jpeg_resync_to_restart_12(ref j_decompress_ptr dinfo, int desired);
 
             

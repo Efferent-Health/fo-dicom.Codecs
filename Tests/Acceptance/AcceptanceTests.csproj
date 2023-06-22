@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Acceptance tests for fo-dicom.Codecs</Description>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.0.3"/>
-    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.0.3" />
+    <PackageReference Include="fo-dicom" Version="5.1.1"/>
+    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
