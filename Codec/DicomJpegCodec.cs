@@ -1294,8 +1294,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         IByteBuffer buffer;
 
                         if (MemoryBuffer.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
-                        {
+                        {   
                             buffer = new TempFileBuffer(MemoryBuffer.ToArray());
+                            buffer = EvenLengthBuffer.Create(buffer);
                         }
                         else
                         {
