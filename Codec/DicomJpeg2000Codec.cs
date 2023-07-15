@@ -755,7 +755,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 Marshal.Copy((IntPtr)cio->buffer, cbuf, 0, clen);
 
                                 IByteBuffer buffer;
-                                if (clen >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
+                                if (clen >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                 {
                                     buffer = new TempFileBuffer(cbuf);
                                     buffer = EvenLengthBuffer.Create(buffer);
@@ -972,7 +972,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         IByteBuffer buffer;
-                        if (destArray.Count >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
+                        if (destArray.Count >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             buffer = new TempFileBuffer(destArray.Data);
                         else
                             buffer = new MemoryByteBuffer(destArray.Data);

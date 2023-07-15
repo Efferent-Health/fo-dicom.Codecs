@@ -274,7 +274,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     
                         IByteBuffer buffer;
 
-                        if (jpegDataSize >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
+                        if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                         {
                             buffer = new TempFileBuffer(jpegData);
                             buffer = EvenLengthBuffer.Create(buffer);
@@ -328,7 +328,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
 
                     IByteBuffer buffer;
-                    if (frameData.Length >= (1 * 1024 * 1024) || oldPixelData.NumberOfFrames > 1)
+                    if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                         buffer = new TempFileBuffer(frameData);
                     else
                         buffer = new MemoryByteBuffer(frameData);

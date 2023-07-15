@@ -11,6 +11,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     /// </summary>
     public sealed class NativeTranscoderManager : TranscoderManager
     {
+        public static int MemoryBufferThreshold = 1024 * 1024;
 
         #region CONSTRUCTORS
 
