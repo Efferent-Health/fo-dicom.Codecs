@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Runtime.InteropServices;
 
 using FellowOakDicom.Imaging.Codec;
@@ -245,9 +244,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     jls.allowedLossyError = jparams.AllowedError;
                 }
 
-
-                var pool = ArrayPool<byte>.Shared;
-
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
                     IByteBuffer frameData = oldPixelData.GetFrame(frame);
@@ -263,15 +259,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
-                    byte[] jpegData;
-                    if (frameData.Size > int.MaxValue)
-                    {
-                        jpegData = new byte[frameData.Size];
-                    }
-                    else
-                    {
-                        jpegData = pool.Rent((int)frameData.Size);
-                    }
+
+                    byte[] jpegData = new byte[frameData.Size];
 
                     try
                     {
@@ -308,7 +297,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             frameArray.Dispose();
                             frameArray = null;
                         }
-                        pool.Return(jpegData);
                     }
                 }
             }
@@ -320,8 +308,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
-
-            var pool = ArrayPool<byte>.Shared;
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
@@ -339,16 +325,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
 
-                byte[] frameData;
-
-                if (newPixelData.UncompressedFrameSize > int.MaxValue)
-                {
-                    frameData = new byte[newPixelData.UncompressedFrameSize];
-                }
-                else
-                {
-                    frameData = pool.Rent((int)newPixelData.UncompressedFrameSize);
-                }
+                byte[] frameData = new byte[newPixelData.UncompressedFrameSize];
 
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
@@ -389,7 +366,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         jpegArray.Dispose();
                         jpegArray = null;
                     }
-                    pool.Return(frameData);
                 }
             }
         }
