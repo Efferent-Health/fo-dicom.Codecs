@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Runtime.InteropServices;
 
 using FellowOakDicom.Imaging.Codec;
@@ -202,7 +203,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public static extern unsafe CharlsApiResultType JpegLSDecode(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
-        {   
+        {
             // IMPORT JpegLsEncode
             unsafe
             {
@@ -244,6 +245,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     jls.allowedLossyError = jparams.AllowedError;
                 }
 
+
+                var pool = ArrayPool<byte>.Shared;
+
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
                     IByteBuffer frameData = oldPixelData.GetFrame(frame);
@@ -259,33 +263,52 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
-
-                    byte[] jpegData = new byte[frameData.Size];
-
-                    fixed (byte* jpegDataPointer = jpegData)
+                    byte[] jpegData;
+                    if (frameData.Size > int.MaxValue)
                     {
-                        uint jpegDataSize = 0;
-                        char[] errorMessage = new char[256];
+                        jpegData = new byte[frameData.Size];
+                    }
+                    else
+                    {
+                        jpegData = pool.Rent((int)frameData.Size);
+                    }
 
-                        CharlsApiResultType err = CharlsApiResultType.Unknown;
-                        err = JpegLSEncode(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
-                    
-                        Array.Resize(ref jpegData, (int)jpegDataSize);
-                    
-                        IByteBuffer buffer;
-
-                        if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                    try
+                    {
+                        fixed (byte* jpegDataPointer = jpegData)
                         {
-                            buffer = new TempFileBuffer(jpegData);
-                            buffer = EvenLengthBuffer.Create(buffer);
+                            uint jpegDataSize = 0;
+                            char[] errorMessage = new char[256];
+
+                            CharlsApiResultType err = CharlsApiResultType.Unknown;
+                            err = JpegLSEncode(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+
+                            Array.Resize(ref jpegData, (int)jpegDataSize);
+
+                            IByteBuffer buffer;
+
+                            if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            {
+                                buffer = new TempFileBuffer(jpegData);
+                                buffer = EvenLengthBuffer.Create(buffer);
+                            }
+                            else
+                                buffer = new MemoryByteBuffer(jpegData);
+
+                            if (oldPixelData.NumberOfFrames == 1)
+                                buffer = EvenLengthBuffer.Create(buffer);
+
+                            newPixelData.AddFrame(buffer);
                         }
-                        else
-                            buffer = new MemoryByteBuffer(jpegData);
-
-                        if (oldPixelData.NumberOfFrames == 1)
-                            buffer = EvenLengthBuffer.Create(buffer);
-
-                        newPixelData.AddFrame(buffer);
+                    }
+                    finally
+                    {
+                        if (frameArray != null)
+                        {
+                            frameArray.Dispose();
+                            frameArray = null;
+                        }
+                        pool.Return(jpegData);
                     }
                 }
             }
@@ -297,6 +320,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
+
+            var pool = ArrayPool<byte>.Shared;
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
@@ -314,29 +339,57 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
 
-                byte[] frameData = new byte[newPixelData.UncompressedFrameSize];
+                byte[] frameData;
+
+                if (newPixelData.UncompressedFrameSize > int.MaxValue)
+                {
+                    frameData = new byte[newPixelData.UncompressedFrameSize];
+                }
+                else
+                {
+                    frameData = pool.Rent((int)newPixelData.UncompressedFrameSize);
+                }
+
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
-                JlsParameters jls = new JlsParameters();
-
-                char[] errorMessage = new char[256];
-
-                CharlsApiResultType err = CharlsApiResultType.Unknown;
-
-                unsafe
+                try
                 {
-                    err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                    JlsParameters jls = new JlsParameters();
 
-                    IByteBuffer buffer;
-                    if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                        buffer = new TempFileBuffer(frameData);
-                    else
-                        buffer = new MemoryByteBuffer(frameData);
+                    char[] errorMessage = new char[256];
 
-                    if (oldPixelData.NumberOfFrames == 1)
-                        buffer = EvenLengthBuffer.Create(buffer);
+                    CharlsApiResultType err = CharlsApiResultType.Unknown;
 
-                    newPixelData.AddFrame(buffer);
+                    unsafe
+                    {
+                        err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+
+                        IByteBuffer buffer;
+                        if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            buffer = new TempFileBuffer(frameData);
+                        else
+                            buffer = new MemoryByteBuffer(frameData);
+
+                        if (oldPixelData.NumberOfFrames == 1)
+                            buffer = EvenLengthBuffer.Create(buffer);
+
+                        newPixelData.AddFrame(buffer);
+                    }
+                }
+                finally
+                {
+                    if (frameArray != null)
+                    {
+                        frameArray.Dispose();
+                        frameArray = null;
+                    }
+
+                    if (jpegArray != null)
+                    {
+                        jpegArray.Dispose();
+                        jpegArray = null;
+                    }
+                    pool.Return(frameData);
                 }
             }
         }
