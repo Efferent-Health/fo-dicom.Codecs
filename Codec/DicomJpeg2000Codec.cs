@@ -6,7 +6,7 @@ using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
 
 namespace FellowOakDicom.Imaging.NativeCodec
-{
+{   
     [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
     public unsafe delegate void opj_msg_callback(char *msg, void *client_data);
 
@@ -569,172 +569,160 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
+                    opj_image_cmptparm_t[] cmptparm = new opj_image_cmptparm_t[3];
+
+                    opj_cparameters_t eparams= new opj_cparameters_t();
+                    opj_event_mgr_t event_mgr = new opj_event_mgr_t();
+                    opj_cinfo_t* cinfo= null;  /* handle to a compressor */
+                    opj_image_t* image = null;
+                    opj_cio_t* cio = null;
+                    
+                    event_mgr.error_handler = IntPtr.Zero;
+                    if (jparams.IsVerbose)
+                    {
+                        event_mgr.warning_handler = IntPtr.Zero;
+                        event_mgr.info_handler = IntPtr.Zero;
+                    }
+
+                    cinfo = Opj_create_compress(OPJ_CODEC_FORMAT.CODEC_J2K);
+                    Opj_set_event_mgr((opj_common_ptr*)cinfo, &event_mgr, null);
+                    
+                    eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
+                    eparams.max_comp_size = 0;
+                    eparams.numresolution = 6;
+                    eparams.cp_rsiz = OPJ_RSIZ_CAPABILITIES.STD_RSIZ;
+                    eparams.cblockw_init = 64;
+                    eparams.cblockh_init = 64;
+                    eparams.prog_order = jparams.ProgressionOrder;
+                    eparams.roi_compno = -1;        
+                    eparams.subsampling_dx = 1;
+                    eparams.subsampling_dy = 1;
+                    eparams.tp_on = (char)0;
+                    eparams.decod_format = -1;
+                    eparams.cod_format = -1; 
+                    eparams.tcp_rates[0]= 0;
+                    eparams.tcp_numlayers = 0;
+                    eparams.cp_disto_alloc = 0;
+                    eparams.cp_fixed_alloc = 0;
+                    eparams.cp_fixed_quality = 0;
+                    eparams.jpip_on = 0; 
+                    eparams.cp_disto_alloc = 1;
+
+                    if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
+                        eparams.irreversible = 1;
+
+                    int r = 0;
+                    for (; r < jparams.RateLevels.Length; r++)
+                    {
+                        if (jparams.RateLevels[r] > jparams.Rate)
+                        {
+                            eparams.tcp_numlayers++;
+                            eparams.tcp_rates[r] = (float)jparams.RateLevels[r];
+                        }
+                        else
+                            break;
+                    }
+                    
+                    eparams.tcp_numlayers++;
+                    eparams.tcp_rates[r] = (float)jparams.Rate;
+
+                    if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossless && jparams.Rate > 0)
+                        eparams.tcp_rates[eparams.tcp_numlayers++] = 0;
+
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && jparams.AllowMCT)
+                        eparams.tcp_mct = (char)1;
+
+                    for (int i = 0; i < oldPixelData.SamplesPerPixel; i++)
+                    {
+                        cmptparm[i].bpp = oldPixelData.BitsAllocated;
+                        cmptparm[i].prec = oldPixelData.BitsStored;
+                        if (!jparams.EncodeSignedPixelValuesAsUnsigned)
+                            cmptparm[i].sgnd = Convert.ToInt32(oldPixelData.PixelRepresentation == PixelRepresentation.Signed);
+
+                        cmptparm[i].dx = eparams.subsampling_dx;
+                        cmptparm[i].dy = eparams.subsampling_dy;
+                        cmptparm[i].h = oldPixelData.Height;
+                        cmptparm[i].w = oldPixelData.Width;
+                    }
+
                     try
                     {
-                        opj_image_cmptparm_t[] cmptparm = new opj_image_cmptparm_t[3];
+                        OPJ_COLOR_SPACE color_space = getOpenJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
-                        opj_cparameters_t eparams = new opj_cparameters_t();
-                        opj_event_mgr_t event_mgr = new opj_event_mgr_t();
-                        opj_cinfo_t* cinfo = null;  /* handle to a compressor */
-                        opj_image_t* image = null;
-                        opj_cio_t* cio = null;
+                        image = Opj_image_create(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
 
-                        event_mgr.error_handler = IntPtr.Zero;
-                        if (jparams.IsVerbose)
+                        image->x0 = eparams.image_offset_x0;
+                        image->y0 = eparams.image_offset_y0;
+                        image->x1 = image->x0 + ((oldPixelData.Width - 1) * eparams.subsampling_dx) + 1;
+                        image->y1 = image->y0 + ((oldPixelData.Height - 1) * eparams.subsampling_dy) + 1;
+
+                        for (int c = 0; c < image->numcomps; c++)
                         {
-                            event_mgr.warning_handler = IntPtr.Zero;
-                            event_mgr.info_handler = IntPtr.Zero;
-                        }
+                            opj_image_comp_t* comp = &image->comps[c];
 
-                        cinfo = Opj_create_compress(OPJ_CODEC_FORMAT.CODEC_J2K);
-                        Opj_set_event_mgr((opj_common_ptr*)cinfo, &event_mgr, null);
-
-                        eparams.cp_cinema = OPJ_CINEMA_MODE.OFF;
-                        eparams.max_comp_size = 0;
-                        eparams.numresolution = 6;
-                        eparams.cp_rsiz = OPJ_RSIZ_CAPABILITIES.STD_RSIZ;
-                        eparams.cblockw_init = 64;
-                        eparams.cblockh_init = 64;
-                        eparams.prog_order = jparams.ProgressionOrder;
-                        eparams.roi_compno = -1;
-                        eparams.subsampling_dx = 1;
-                        eparams.subsampling_dy = 1;
-                        eparams.tp_on = (char)0;
-                        eparams.decod_format = -1;
-                        eparams.cod_format = -1;
-                        eparams.tcp_rates[0] = 0;
-                        eparams.tcp_numlayers = 0;
-                        eparams.cp_disto_alloc = 0;
-                        eparams.cp_fixed_alloc = 0;
-                        eparams.cp_fixed_quality = 0;
-                        eparams.jpip_on = 0;
-                        eparams.cp_disto_alloc = 1;
-
-                        if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
-                            eparams.irreversible = 1;
-
-                        int r = 0;
-                        for (; r < jparams.RateLevels.Length; r++)
-                        {
-                            if (jparams.RateLevels[r] > jparams.Rate)
+                            int pos = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
+                            int offset = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
+                            
+                            if (oldPixelData.BytesAllocated == 1)
                             {
-                                eparams.tcp_numlayers++;
-                                eparams.tcp_rates[r] = (float)jparams.RateLevels[r];
-                            }
-                            else
-                                break;
-                        }
-
-                        eparams.tcp_numlayers++;
-                        eparams.tcp_rates[r] = (float)jparams.Rate;
-
-                        if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossless && jparams.Rate > 0)
-                            eparams.tcp_rates[eparams.tcp_numlayers++] = 0;
-
-                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && jparams.AllowMCT)
-                            eparams.tcp_mct = (char)1;
-
-                        for (int i = 0; i < oldPixelData.SamplesPerPixel; i++)
-                        {
-                            cmptparm[i].bpp = oldPixelData.BitsAllocated;
-                            cmptparm[i].prec = oldPixelData.BitsStored;
-                            if (!jparams.EncodeSignedPixelValuesAsUnsigned)
-                                cmptparm[i].sgnd = Convert.ToInt32(oldPixelData.PixelRepresentation == PixelRepresentation.Signed);
-
-                            cmptparm[i].dx = eparams.subsampling_dx;
-                            cmptparm[i].dy = eparams.subsampling_dy;
-                            cmptparm[i].h = oldPixelData.Height;
-                            cmptparm[i].w = oldPixelData.Width;
-                        }
-
-                        try
-                        {
-                            OPJ_COLOR_SPACE color_space = getOpenJpegColorSpace(oldPixelData.PhotometricInterpretation);
-
-                            image = Opj_image_create(oldPixelData.SamplesPerPixel, ref cmptparm[0], color_space);
-
-                            image->x0 = eparams.image_offset_x0;
-                            image->y0 = eparams.image_offset_y0;
-                            image->x1 = image->x0 + ((oldPixelData.Width - 1) * eparams.subsampling_dx) + 1;
-                            image->y1 = image->y0 + ((oldPixelData.Height - 1) * eparams.subsampling_dy) + 1;
-
-                            for (int c = 0; c < image->numcomps; c++)
-                            {
-                                opj_image_comp_t* comp = &image->comps[c];
-
-                                int pos = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
-                                int offset = oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
-
-                                if (oldPixelData.BytesAllocated == 1)
+                                if (Convert.ToBoolean(comp->sgnd))
                                 {
-                                    if (Convert.ToBoolean(comp->sgnd))
+                                    if (oldPixelData.BitsStored < 8)
                                     {
-                                        if (oldPixelData.BitsStored < 8)
+                                        byte sign = (byte)(1 << oldPixelData.HighBit);
+                                        byte mask = (byte)(0xff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
+                                        for (int p = 0; p < pixelCount; p++)
                                         {
-                                            byte sign = (byte)(1 << oldPixelData.HighBit);
-                                            byte mask = (byte)(0xff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                byte pixel = frameArray.Data[pos];
-                                                if (Convert.ToBoolean(pixel & sign))
-                                                    comp->data[p] = -(((-pixel) & mask) + 1);
-                                                else
-                                                    comp->data[p] = pixel;
-                                                pos += offset;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            char* frameData8 = (char*)(void*)frameArray.Pointer;
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                comp->data[p] = frameData8[pos];
-                                                pos += offset;
-                                            }
+                                            byte pixel = frameArray.Data[pos];
+                                            if (Convert.ToBoolean(pixel & sign))
+                                                comp->data[p] = -(((-pixel) & mask) + 1);
+                                            else
+                                                comp->data[p] = pixel;
+                                            pos += offset;
                                         }
                                     }
                                     else
                                     {
+                                        char* frameData8 = (char*)(void*)frameArray.Pointer;
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            comp->data[p] = frameArray.Data[pos];
+                                            comp->data[p] = frameData8[pos];
                                             pos += offset;
                                         }
                                     }
                                 }
-                                else if (oldPixelData.BytesAllocated == 2)
+                                else
                                 {
-                                    if (Convert.ToBoolean(comp->sgnd))
+                                    for (int p = 0; p < pixelCount; p++)
                                     {
-                                        if (oldPixelData.BitsStored < 16)
+                                        comp->data[p] = frameArray.Data[pos];
+                                        pos += offset;
+                                    }
+                                }
+                            }
+                            else if (oldPixelData.BytesAllocated == 2)
+                            {
+                                if (Convert.ToBoolean(comp->sgnd))
+                                {
+                                    if (oldPixelData.BitsStored < 16)
+                                    {
+                                        ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
+                                        ushort sign = (ushort)(1 << oldPixelData.HighBit);
+                                        ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
+                                        for (int p = 0; p < pixelCount; p++)
                                         {
-                                            ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
-                                            ushort sign = (ushort)(1 << oldPixelData.HighBit);
-                                            ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                ushort pixel = frameData16[pos];
-                                                if (Convert.ToBoolean(pixel & sign))
-                                                    comp->data[p] = -(((-pixel) & mask) + 1);
-                                                else
-                                                    comp->data[p] = pixel;
-                                                pos += offset;
-                                            }
+                                            ushort pixel = frameData16[pos];
+                                            if (Convert.ToBoolean(pixel & sign))
+                                                comp->data[p] = -(((-pixel) & mask) + 1);
+                                            else
+                                                comp->data[p] = pixel;
+                                            pos += offset;
+                                        }
 
-                                        }
-                                        else
-                                        {
-                                            short* frameData16 = (short*)(void*)frameArray.Pointer;
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                comp->data[p] = frameData16[pos];
-                                                pos += offset;
-                                            }
-                                        }
                                     }
                                     else
                                     {
-                                        ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
+                                        short* frameData16 = (short*)(void*)frameArray.Pointer;
                                         for (int p = 0; p < pixelCount; p++)
                                         {
                                             comp->data[p] = frameData16[pos];
@@ -743,14 +731,24 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     }
                                 }
                                 else
-                                    throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
+                                {
+                                    ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
+                                    for (int p = 0; p < pixelCount; p++)
+                                    {
+                                        comp->data[p] = frameData16[pos];
+                                        pos += offset;
+                                    }
+                                }
                             }
+                            else
+                                throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
+                        }
 
-                            Opj_setup_encoder(cinfo, ref eparams, image);
-                            cio = Opj_cio_open((opj_common_ptr*)cinfo, null, 0);
+                        Opj_setup_encoder(cinfo, ref eparams, image);
+                        cio = Opj_cio_open((opj_common_ptr*)cinfo, null, 0);
 
-                            if (Convert.ToBoolean(Opj_encode(cinfo, cio, image, eparams.index)))
-                            {
+                        if (Convert.ToBoolean(Opj_encode(cinfo, cio, image, eparams.index)))
+                        {
                                 int clen = Cio_tell(cio);
                                 byte[] cbuf = new byte[clen];
 
@@ -769,37 +767,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     buffer = EvenLengthBuffer.Create(buffer);
 
                                 newPixelData.AddFrame(buffer);
-                            }
-                            else
-                                throw new DicomCodecException("Unable to JPEG 2000 encode image");
                         }
-                        finally
-                        {
-                            if (cio != null)
-                            {
-                                Opj_cio_close(cio);
-                            }
-
-                            if (image != null)
-                            {
-                                Opj_image_destroy(image);
-                            }
-
-                            if (cinfo != null)
-                            {
-                                Opj_destroy_compress(cinfo);
-                            }
-                        }
+                        else
+                            throw new DicomCodecException("Unable to JPEG 2000 encode image");                     
                     }
                     finally
                     {
-                        if (frameArray != null)
+                        if (cio != null)
                         {
-                            frameArray.Dispose();
-                            frameArray = null;
+                            Opj_cio_close(cio);                          
+                        }
+
+                        if (image != null)
+                        {
+                            Opj_image_destroy(image);                           
+                        }                       
+
+                        if (cinfo != null)
+                        {
+                            Opj_destroy_compress(cinfo);                      
                         }
                     }
-
                 }
             
                 if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
@@ -858,179 +846,162 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
                 PinnedByteArray destArray = new PinnedByteArray(newPixelData.UncompressedFrameSize);
 
-                try
+                unsafe
                 {
-                    unsafe
+                    opj_dparameters_t dparams = new opj_dparameters_t();
+                    opj_event_mgr_t event_mgr = new opj_event_mgr_t();
+                    opj_image_t* image = null;
+                    opj_dinfo_t* dinfo = null;
+                    opj_cio_t* cio = null;
+                    
+                    Memset(&event_mgr,0, (uint)sizeof(opj_event_mgr_t));
+
+                    opj_msg_callback error_handler = null;
+                    opj_msg_callback warning_handler = null;
+                    opj_msg_callback info_handler = null;
+
+                    error_handler = opj_error_callback;
+                    event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
+
+                    if (jparams.IsVerbose)
+                    {   
+                        warning_handler = opj_warning_callback;
+                        event_mgr.warning_handler = Marshal.GetFunctionPointerForDelegate((warning_handler));
+
+                        info_handler = opj_info_callback;
+                        event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
+                    }
+
+                    Opj_set_default_decoder(&dparams);
+                    
+                    dparams.cp_layer = 0;
+                    dparams.cp_reduce = 0;
+
+                    byte* buf = (byte*)(void*)jpegArray.Pointer;
+
+                    OPJ_CODEC_FORMAT format;
+
+                    try
                     {
-                        opj_dparameters_t dparams = new opj_dparameters_t();
-                        opj_event_mgr_t event_mgr = new opj_event_mgr_t();
-                        opj_image_t* image = null;
-                        opj_dinfo_t* dinfo = null;
-                        opj_cio_t* cio = null;
+                        format = GetCodecFormat(buf);
 
-                        Memset(&event_mgr, 0, (uint)sizeof(opj_event_mgr_t));
+                        dinfo = Opj_create_decompress(format);
+                        dparams.decod_format = format;
 
-                        opj_msg_callback error_handler = null;
-                        opj_msg_callback warning_handler = null;
-                        opj_msg_callback info_handler = null;
+                        Opj_set_event_mgr((opj_common_ptr*)dinfo, &event_mgr, null);
+                        Opj_setup_decoder(dinfo, &dparams);
 
-                        error_handler = opj_error_callback;
-                        event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
+                        bool opj_err = false;
+                        dinfo->client_data = (void*)&opj_err;
 
-                        if (jparams.IsVerbose)
+                        cio = Opj_cio_open((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
+                        image = Opj_decode(dinfo, cio);
+
+                        if (image == null)
+                            throw new DicomCodecException("Error in JPEG 2000 code stream!");
+
+                        for (int c = 0; c < image->numcomps; c++)
                         {
-                            warning_handler = opj_warning_callback;
-                            event_mgr.warning_handler = Marshal.GetFunctionPointerForDelegate((warning_handler));
+                            opj_image_comp_t* comp = &image->comps[c];
 
-                            info_handler = opj_info_callback;
-                            event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
-                        }
+                            int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
+                            int offset = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
 
-                        Opj_set_default_decoder(&dparams);
-
-                        dparams.cp_layer = 0;
-                        dparams.cp_reduce = 0;
-
-                        byte* buf = (byte*)(void*)jpegArray.Pointer;
-
-                        OPJ_CODEC_FORMAT format;
-
-                        try
-                        {
-                            format = GetCodecFormat(buf);
-
-                            dinfo = Opj_create_decompress(format);
-                            dparams.decod_format = format;
-
-                            Opj_set_event_mgr((opj_common_ptr*)dinfo, &event_mgr, null);
-                            Opj_setup_decoder(dinfo, &dparams);
-
-                            bool opj_err = false;
-                            dinfo->client_data = (void*)&opj_err;
-
-                            cio = Opj_cio_open((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
-                            image = Opj_decode(dinfo, cio);
-
-                            if (image == null)
-                                throw new DicomCodecException("Error in JPEG 2000 code stream!");
-
-                            for (int c = 0; c < image->numcomps; c++)
+                            if (newPixelData.BytesAllocated == 1)
                             {
-                                opj_image_comp_t* comp = &image->comps[c];
-
-                                int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
-                                int offset = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
-
-                                if (newPixelData.BytesAllocated == 1)
+                                if (Convert.ToBoolean(comp->sgnd))
                                 {
-                                    if (Convert.ToBoolean(comp->sgnd))
+                                    byte sign = (byte)(1 << newPixelData.HighBit);
+                                    byte mask = (byte)(0xFF ^ sign);
+                                    for (int p = 0; p < pixelCount; p++)
                                     {
-                                        byte sign = (byte)(1 << newPixelData.HighBit);
-                                        byte mask = (byte)(0xFF ^ sign);
-                                        for (int p = 0; p < pixelCount; p++)
-                                        {
-                                            int i = comp->data[p];
-                                            if (i < 0)
-                                                //destArray->Data[pos] = (unsigned char)(-i | sign);
-                                                destArray.Data[pos] = (byte)((i & mask) | sign);
-                                            else
-                                                //destArray->Data[pos] = (unsigned char)(i);
-                                                destArray.Data[pos] = (byte)(i & mask);
-                                            pos += offset;
-                                        }
-                                    }
-
-                                    else
-                                    {
-                                        for (int p = 0; p < pixelCount; p++)
-                                        {
-                                            destArray.Data[pos] = (byte)comp->data[p];
-                                            pos += offset;
-                                        }
-                                    }
-                                }
-
-                                else if (newPixelData.BytesAllocated == 2)
-                                {
-                                    ushort sign = (ushort)(1 << newPixelData.HighBit);
-                                    ushort mask = (ushort)(0xFFFF ^ sign);
-                                    ushort* destData16 = (ushort*)(void*)destArray.Pointer;
-
-                                    if (Convert.ToBoolean(comp->sgnd))
-                                    {
-                                        for (int p = 0; p < pixelCount; p++)
-                                        {
-                                            int i = comp->data[p];
-
-                                            if (i < 0)
-                                                destData16[pos] = (ushort)((i & mask) | sign);
-                                            else
-                                                destData16[pos] = (ushort)(i & mask);
-                                            pos += offset;
-                                        }
-                                    }
-
-                                    else
-                                    {
-                                        for (int p = 0; p < pixelCount; p++)
-                                        {
-                                            destData16[pos] = (ushort)comp->data[p];
-                                            pos += offset;
-                                            //Console.WriteLine("{0}",comp->data[p]);
-                                        }
+                                        int i = comp->data[p];
+                                        if (i < 0)
+                                            //destArray->Data[pos] = (unsigned char)(-i | sign);
+                                            destArray.Data[pos] = (byte)((i & mask) | sign);
+                                        else
+                                            //destArray->Data[pos] = (unsigned char)(i);
+                                            destArray.Data[pos] = (byte)(i & mask);
+                                        pos += offset;
                                     }
                                 }
 
                                 else
-                                    throw new DicomCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
+                                {
+                                    for (int p = 0; p < pixelCount; p++)
+                                    {
+                                        destArray.Data[pos] = (byte)comp->data[p];
+                                        pos += offset;
+                                    }
+                                }
                             }
 
-                            IByteBuffer buffer;
-                            if (destArray.Count >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                                buffer = new TempFileBuffer(destArray.Data);
+                            else if (newPixelData.BytesAllocated == 2)
+                            {
+                                ushort sign = (ushort)(1 << newPixelData.HighBit);
+                                ushort mask = (ushort)(0xFFFF ^ sign);
+                                ushort* destData16 = (ushort*)(void*)destArray.Pointer;
+
+                                if (Convert.ToBoolean(comp->sgnd))
+                                {
+                                    for (int p = 0; p < pixelCount; p++)
+                                    {
+                                        int i = comp->data[p];
+
+                                        if (i < 0)
+                                            destData16[pos] = (ushort)((i & mask) | sign);
+                                        else
+                                            destData16[pos] = (ushort)(i & mask);
+                                        pos += offset;
+                                    }
+                                }
+
+                                else
+                                {
+                                    for (int p = 0; p < pixelCount; p++)
+                                    {
+                                        destData16[pos] = (ushort)comp->data[p];
+                                        pos += offset;
+                                        //Console.WriteLine("{0}",comp->data[p]);
+                                    }
+                                }
+                            }
+
                             else
-                                buffer = new MemoryByteBuffer(destArray.Data);
-
-                            if (oldPixelData.NumberOfFrames == 1)
-                                buffer = EvenLengthBuffer.Create(buffer);
-
-                            newPixelData.AddFrame(buffer);
-
-                            GC.KeepAlive(error_handler);
-                            GC.KeepAlive(warning_handler);
-                            GC.KeepAlive(info_handler);
+                                throw new DicomCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
                         }
-                        finally
+
+                        IByteBuffer buffer;
+                        if (destArray.Count >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            buffer = new TempFileBuffer(destArray.Data);
+                        else
+                            buffer = new MemoryByteBuffer(destArray.Data);
+
+                        if (oldPixelData.NumberOfFrames == 1)
+                            buffer = EvenLengthBuffer.Create(buffer);
+
+                        newPixelData.AddFrame(buffer);
+
+                        GC.KeepAlive(error_handler);
+                        GC.KeepAlive(warning_handler);
+                        GC.KeepAlive(info_handler);
+                    }
+                    finally
+                    {
+                        if (cio != null) 
                         {
-                            if (cio != null)
-                            {
-                                Opj_cio_close(cio);
-                            }
-
-                            if (dinfo != null)
-                            {
-                                Opj_destroy_decompress(dinfo);
-                            }
-
-                            if (image != null)
-                            {
-                                Opj_image_destroy(image);
-                            }
+                            Opj_cio_close(cio);
                         }
-                    }
-                }
-                finally
-                {
-                    if (jpegArray != null)
-                    {
-                        jpegArray.Dispose();
-                        jpegArray = null;
-                    }
 
-                    if (destArray != null)
-                    {
-                        destArray.Dispose();
-                        destArray = null;
+                        if (dinfo != null)
+                        {
+                            Opj_destroy_decompress(dinfo);
+                        }
+
+                        if (image != null)
+                        {
+                            Opj_image_destroy(image);
+                        }
                     }
                 }
             }

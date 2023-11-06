@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fo-dicom.Codecs", "Platform\fo-dicom\fo-dicom.Codecs.csproj", "{483BF66D-5662-4869-BC62-34FD0A86D8A9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dicom.Native-win-x64", "Native\Windows64\build_ALL\Dicom.Native.vcxproj", "{FA9C7678-B9D9-46BC-8921-8152FD6787CA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dicom.Native-win-x64", "Native\Windows64\build_ALL\Dicom.Native-win-x64.vcxproj", "{FA9C7678-B9D9-46BC-8921-8152FD6787CA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libijg8.x64", "Native\Windows64\build_ALL\libijg8.x64.vcxproj", "{808528F3-15DC-4CC6-A15A-0F91CBDB54E6}"
 EndProject
