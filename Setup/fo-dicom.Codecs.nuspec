@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>fo-dicom.Codecs</id>
-        <version>5.10.9.0-beta1</version>
+        <version>5.10.9.0-beta2</version>
         <title>fo-dicom Codecs</title>
         <authors>Efferent-Health,fo-dicom</authors>
         <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
@@ -17,6 +17,7 @@
     <files>
         <file src="../bin/lib-managed/Dicom.NativeCodecs.dll" target="lib/netstandard2.0" />
         <file src="../bin/lib-win-x64/Dicom.Native.dll" target="runtimes/win-x64/native" />
+        <file src="../bin/lib-win-x64/Dicom.Native.dll" target="build\net45" />
         <file src="../bin/lib-linux-x64/Dicom.Native.so" target="runtimes/linux-x64/native" />
         <file src="../bin/lib-osx-x64/Dicom.Native.dylib" target="runtimes/osx-x64/native" />
         <file src="../bin/lib-osx-arm64/Dicom.Native.dylib" target="runtimes/osx-arm64/native" />
