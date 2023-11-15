@@ -37,7 +37,6 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: linux_x64
-    dependsOn: win_x64
     pool:
       vmImage: 'ubuntu-20.04'
     steps:
@@ -79,7 +78,6 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: osx_x64
-    dependsOn: linux_x64
     pool:
       vmImage: 'macos-11'
     steps:
@@ -125,7 +123,6 @@ stages:
         feedsToUse: 'select'
         versioningScheme: 'off'
   - job: osx_arm64
-    dependsOn: osx_x64
     pool:
       vmImage: 'macos-11'
     steps:
@@ -206,6 +203,10 @@ stages:
         buildType: 'current'
         downloadType: 'specific'
         downloadPath: 'bin'
+
+    - task: NuGetAuthenticate@1
+      displayName: 'NuGet Authenticate'
+
     - task: NuGetCommand@2
       displayName: Prepare nuget package
       inputs:
@@ -213,12 +214,19 @@ stages:
         feedsToUse: 'select'
         packagesToPack: '**/fo-dicom.Codecs.nuspec'
         versioningScheme: 'off'
+        packDestination: '$(Build.ArtifactStagingDirectory)/nupkgs'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish NuGet packages'
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/nupkgs'
+        artifactName: 'nuget'
+        publishLocation: 'Container'
     - task: NuGetCommand@2
       inputs:
         command: 'push'
         feedsToUse: 'select'
         packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'Nuget.org'
+        publishVstsFeed: 'InternalBuilds'
+        allowPackageConflicts: true
         versioningScheme: 'off'
   
