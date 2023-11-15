@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom codecs for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
-    <VersionPrefix>5.10.9.0</VersionPrefix>
+    <VersionPrefix>5.11.0.0</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Dicom.Imaging.NativeCodec</RootNamespace>
     <AssemblyName>Dicom.NativeCodecs</AssemblyName>
