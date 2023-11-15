@@ -15,10 +15,9 @@
 		</dependencies>
     </metadata>
     <files>
-        <file src="Targets/fo-dicom.Codecs.targets" target="build/net45" />
         <file src="../bin/lib-managed/Dicom.NativeCodecs.dll" target="lib/netstandard2.0" />
         <file src="../bin/lib-win-x64/Dicom.Native.dll" target="runtimes/win-x64/native" />
-        <file src="../bin/lib-win-x64/Dicom.Native.dll" target="build/net45" />
+        <file src="../bin/lib-win-x64/Dicom.Native.dll" target="lib/netstandard2.0/Dicom.Native" />
         <file src="../bin/lib-linux-x64/Dicom.Native.so" target="runtimes/linux-x64/native" />
         <file src="../bin/lib-osx-x64/Dicom.Native.dylib" target="runtimes/osx-x64/native" />
         <file src="../bin/lib-osx-arm64/Dicom.Native.dylib" target="runtimes/osx-arm64/native" />
