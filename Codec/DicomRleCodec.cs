@@ -4,6 +4,7 @@ using System.IO;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
 using FellowOakDicom.Imaging.Codec;
+using System.Buffers;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {    
@@ -67,52 +68,67 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            for (var frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
+            var pool = ArrayPool<byte>.Shared;
+            byte[] byteBuf = null;
+            
+            try
             {
-                var rleData = oldPixelData.GetFrame(frame);
-
-                // Create new frame data of even length
-                var frameSize = newPixelData.UncompressedFrameSize;
-                if ((frameSize & 1) == 1)
+                for (var frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
-                    ++frameSize;
-                }
+                    var rleData = oldPixelData.GetFrame(frame);
 
-                var frameData = new MemoryByteBuffer(new byte[frameSize]);
-
-                var pixelCount = oldPixelData.Width * oldPixelData.Height;
-                var numberOfSegments = oldPixelData.BytesAllocated * oldPixelData.SamplesPerPixel;
-
-                var decoder = new RLEDecoder(rleData);
-
-                if (decoder.NumberOfSegments != numberOfSegments)
-                {
-                    throw new InvalidOperationException("Unexpected number of RLE segments!");
-                }
-
-                for (var s = 0; s < numberOfSegments; s++)
-                {
-                    var sample = s / newPixelData.BytesAllocated;
-                    var sabyte = s % newPixelData.BytesAllocated;
-
-                    int pos, offset;
-
-                    if (newPixelData.PlanarConfiguration == PlanarConfiguration.Interleaved)
+                    // Create new frame data of even length
+                    var frameSize = newPixelData.UncompressedFrameSize;
+                    if ((frameSize & 1) == 1)
                     {
-                        pos = sample * newPixelData.BytesAllocated;
-                        offset = newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
-                    }
-                    else
-                    {
-                        pos = sample * newPixelData.BytesAllocated * pixelCount;
-                        offset = newPixelData.BytesAllocated;
+                        ++frameSize;
                     }
 
-                    pos += newPixelData.BytesAllocated - sabyte - 1;
-                    decoder.DecodeSegment(s, frameData, pos, offset);
-                }
+                    byteBuf = pool.Rent(frameSize);
+                    var frameData = new MemoryByteBuffer(byteBuf);
 
-                newPixelData.AddFrame(frameData);
+                    var pixelCount = oldPixelData.Width * oldPixelData.Height;
+                    var numberOfSegments = oldPixelData.BytesAllocated * oldPixelData.SamplesPerPixel;
+
+                    var decoder = new RLEDecoder(rleData);
+
+                    if (decoder.NumberOfSegments != numberOfSegments)
+                    {
+                        throw new InvalidOperationException("Unexpected number of RLE segments!");
+                    }
+
+                    for (var s = 0; s < numberOfSegments; s++)
+                    {
+                        var sample = s / newPixelData.BytesAllocated;
+                        var sabyte = s % newPixelData.BytesAllocated;
+
+                        int pos, offset;
+
+                        if (newPixelData.PlanarConfiguration == PlanarConfiguration.Interleaved)
+                        {
+                            pos = sample * newPixelData.BytesAllocated;
+                            offset = newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+                        }
+                        else
+                        {
+                            pos = sample * newPixelData.BytesAllocated * pixelCount;
+                            offset = newPixelData.BytesAllocated;
+                        }
+
+                        pos += newPixelData.BytesAllocated - sabyte - 1;
+                        decoder.DecodeSegment(s, frameData, pos, offset);
+                    }
+
+                    newPixelData.AddFrame(frameData);
+                }
+            }
+            finally
+            {
+                if (byteBuf != null)
+                {
+                    pool.Return(byteBuf);
+                    byteBuf = null;
+                }
             }
         }
 
