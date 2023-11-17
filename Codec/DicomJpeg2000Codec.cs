@@ -877,18 +877,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 if (image != null)
                                 {
-                                    Opj_image_destroy(image);
+                                    if (Platform.Current.Equals(Platform.Type.win_x64))
+                                        Opj_image_destroy_winx64(image);
+                                    else
+                                        Opj_image_destroy(image);
                                 }
 
                                 if (cinfo != null)
                                 {
-                                    Opj_destroy_compress(cinfo);
+                                    if (Platform.Current.Equals(Platform.Type.win_x64))
+                                        Opj_destroy_compress_winx64(cinfo);
+                                    else
+                                        Opj_destroy_compress(cinfo);
                                 }
                             }
-                            if (Platform.Current.Equals(Platform.Type.win_x64))
-                                Opj_destroy_compress_winx64(cinfo);
-                            else
-                                Opj_destroy_compress(cinfo);
                         }
                         finally
                         {
