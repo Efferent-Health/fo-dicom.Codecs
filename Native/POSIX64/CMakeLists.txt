@@ -30,14 +30,14 @@ set(ARCH_FLAG CACHE STRING "")
 
 if("${ARCH_FLAG}" STREQUAL "arm64")
   if(UNIX AND NOT APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march arm64")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a")
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch arm64")
   endif()
 
   set(CMAKE_OSX_ARCHITECTURES "arm64")
   set(CMAKE_HOST_SYSTEM_PROCESSOR "arm64")
-  
+
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
