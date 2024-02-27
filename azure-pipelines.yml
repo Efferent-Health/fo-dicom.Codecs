@@ -84,6 +84,7 @@ stages:
       vmImage: 'ubuntu-20.04'
     steps:
     - script: |
+        apt-get install -y gcc-arm-linux-gnueabi g++-arm-linux-gnueabi
         cd Native/POSIX64/
         cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
         make
