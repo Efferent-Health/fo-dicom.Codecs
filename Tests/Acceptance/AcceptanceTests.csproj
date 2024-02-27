@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.1.1"/>
-    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.1.0" />
+    <PackageReference Include="fo-dicom" Version="5.1.2"/>
+    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +24,7 @@
   <ItemGroup>
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
     <None Include="../../Native/POSIX64/lib-linux-x64/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/lib-linux-arm64/*.so" CopyToOutputDirectory="Always" />
     <None Include="../../Native/POSIX64/lib-osx-x64/*.dylib" CopyToOutputDirectory="Always" />
     <None Include="../../Native/POSIX64/lib-osx-arm64/*.dylib" CopyToOutputDirectory="Always" />
     <None Include="../../Native/Windows64/lib-win-x64/*.dll" CopyToOutputDirectory="Always" />

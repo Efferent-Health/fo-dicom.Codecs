@@ -43,6 +43,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
             {
                 if (arch == ProcessorArchitecture.Amd64)
                     return Type.linux_x64;
+                else if (arch == ProcessorArchitecture.MSIL)
+                    return Type.linux_arm64;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
