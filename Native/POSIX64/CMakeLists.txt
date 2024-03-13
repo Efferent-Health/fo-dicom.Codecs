@@ -358,7 +358,7 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${SOURCES} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
   #Setting properties for shared or dynamic library 
   set_target_properties(Dicom.Native
     PROPERTIES
@@ -369,7 +369,7 @@ if(UNIX AND NOT APPLE)
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${SOURCES} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -378,7 +378,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${SOURCES} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
