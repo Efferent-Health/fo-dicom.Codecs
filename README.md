@@ -8,9 +8,9 @@
 
 This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent Health, LLC](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
-- Windows 64-bit (tested with Windows 10)
-- Linux 64-bit (tested with Ubuntu 16/18/20 Desktop and Server)
-- MacOS 64-bit Intel and Apple architectures (tested with Ventura)
+- Windows 64-bit (tested with Windows 10/11)
+- Linux 64-bit Intel and ARM architectures (tested with Ubuntu 16/18/20 Desktop and Server)
+- MacOS 64-bit Intel and Apple architectures (tested with Ventura/Sonoma)
 
 ## Supported CODECs
 
