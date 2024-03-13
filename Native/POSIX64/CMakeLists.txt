@@ -321,9 +321,35 @@ SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/openjpeg.h
 )
 
+include_directories(../Common/OpenJPH/common/)
+
+file(GLOB CODESTREAM       "../Common/OpenJPH/codestream/*.cpp" "../Common/OpenJPH/codestream/*.h")
+file(GLOB CODESTREAM_SSE   "../Common/OpenJPH/codestream/*_sse.cpp")
+file(GLOB CODESTREAM_SSE2  "../Common/OpenJPH/codestream/*_sse2.cpp")
+file(GLOB CODESTREAM_AVX   "../Common/OpenJPH/codestream/*_avx.cpp")
+file(GLOB CODESTREAM_AVX2  "../Common/OpenJPH/codestream/*_avx2.cpp")
+file(GLOB CODESTREAM_WASM  "../Common/OpenJPH/codestream/*_wasm.cpp")
+file(GLOB CODING           "../Common/OpenJPH/coding/*.cpp" "coding/*.h")
+file(GLOB CODING_SSSE3     "../Common/OpenJPH/coding/*_ssse3.cpp")
+file(GLOB CODING_WASM      "../Common/OpenJPH/coding/*_wasm.cpp")
+file(GLOB CODING_AVX512    "../Common/OpenJPH/coding/*_avx512.cpp")
+file(GLOB COMMON           "../Common/OpenJPH/common/*.h")
+file(GLOB OTHERS           "../Common/OpenJPH/others/*.cpp")
+file(GLOB TRANSFORM        "../Common/OpenJPH/transform/*.cpp" "transform/*.h")
+file(GLOB TRANSFORM_SSE    "../Common/OpenJPH/transform/*_sse.cpp")
+file(GLOB TRANSFORM_SSE2   "../Common/OpenJPH/transform/*_sse2.cpp")
+file(GLOB TRANSFORM_AVX    "../Common/OpenJPH/transform/*_avx.cpp")
+file(GLOB TRANSFORM_AVX2   "../Common/OpenJPH/transform/*_avx2.cpp")
+file(GLOB TRANSFORM_WASM   "../Common/OpenJPH/transform/*_wasm.cpp")
+
+list(REMOVE_ITEM CODESTREAM ${CODESTREAM_SSE} ${CODESTREAM_SSE2} ${CODESTREAM_AVX} ${CODESTREAM_AVX2} ${CODESTREAM_WASM})
+list(REMOVE_ITEM CODING ${CODING_SSSE3} ${CODING_WASM} ${CODING_AVX512})
+list(REMOVE_ITEM TRANSFORM ${TRANSFORM_SSE} ${TRANSFORM_SSE2} ${TRANSFORM_AVX} ${TRANSFORM_AVX2} ${TRANSFORM_WASM})
+list(APPEND OPENJPH_SRCS ${CODESTREAM} ${CODING} ${COMMON} ${OTHERS} ${TRANSFORM})
+
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -332,7 +358,7 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${SOURCES} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
   #Setting properties for shared or dynamic library 
   set_target_properties(Dicom.Native
     PROPERTIES
@@ -343,7 +369,7 @@ if(UNIX AND NOT APPLE)
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${SOURCES} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -352,7 +378,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${SOURCES} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
