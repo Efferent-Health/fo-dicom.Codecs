@@ -61,9 +61,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [MarshalAs(UnmanagedType.I1)] public bool isReversible;
     }
 
-    public class DicomJpegHT2000Params : DicomCodecParams
+    public class DicomHTJpeg2000Params : DicomCodecParams
     {
-        public DicomJpegHT2000Params()
+        public DicomHTJpeg2000Params()
         {
         }
 
@@ -84,7 +84,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public DicomCodecParams GetDefaultParameters()
         {
-            return new DicomJpegHT2000Params();
+            return new DicomHTJpeg2000Params();
         }
 
         public abstract void Encode(
