@@ -31,6 +31,9 @@
     <Compile Include="../../Codec/DicomJpeg2000Codec.cs" >
       <Link>Codec\DicomJpeg2000Codec.cs</Link>
     </Compile>
+    <Compile Include="../../Codec/DicomJpegHT2000Codec.cs" >
+      <Link>Codec\DicomJpegHT2000Codec.cs</Link>
+    </Compile>
     <Compile Include="../../Codec/DicomJpegCodec.cs" >
       <Link>Codec\DicomJpegCodec.cs</Link>
     </Compile>
