@@ -21,7 +21,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.1.2"/>
+    <PackageReference Include="Efferent.fo-dicom" Version="5.2.0"/>
   </ItemGroup>
 
   <ItemGroup>
