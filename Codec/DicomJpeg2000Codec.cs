@@ -417,7 +417,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public bool Irreversible { get; set; }
         public int Rate { get; set; }
-        public OPJ_PROG_ORDER ProgressionOrder { get; set; } = OPJ_PROG_ORDER.LRCP;
+        public OPJ_PROG_ORDER ProgressionOrder { get; set; } = OPJ_PROG_ORDER.RPCL;
         public int[] RateLevels { get; set; }
         public bool IsVerbose { get; set; }
         public bool AllowMCT { get; set; }

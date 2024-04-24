@@ -67,10 +67,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
         }
 
-        public OPJ_PROG_ORDER ProgressionOrder { get; set; } = OPJ_PROG_ORDER.LRCP;
+        public OPJ_PROG_ORDER ProgressionOrder { get; set; } = OPJ_PROG_ORDER.RPCL;
     }
 
-    public abstract class DicomJpegHT2000Codec : IDicomCodec
+    public abstract class DicomHTJpeg2000Codec : IDicomCodec
     {
         public string Name
         {
@@ -98,7 +98,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             DicomCodecParams parameters);
     };
 
-    public abstract class DicomJpegHT2000NativeCodec : DicomJpegHT2000Codec
+    public abstract class DicomHTJpeg2000NativeCodec : DicomHTJpeg2000Codec
     {
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
         public static extern unsafe void InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo);
@@ -273,7 +273,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    public class DicomJpegHT2000LosslessRPCLCodec : DicomJpegHT2000NativeCodec
+    public class DicomHTJpeg2000LosslessRPCLCodec : DicomHTJpeg2000NativeCodec
     {
         public override DicomTransferSyntax TransferSyntax
         {
@@ -284,7 +284,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    public class DicomJpegHT2000LosslessCodec : DicomJpegHT2000NativeCodec
+    public class DicomHTJpeg2000LosslessCodec : DicomHTJpeg2000NativeCodec
     {
         public override DicomTransferSyntax TransferSyntax
         {
@@ -295,7 +295,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
     }
 
-    public class DicomJpegHT2000LossyCodec : DicomJpegHT2000NativeCodec
+    public class DicomHTJpeg2000LossyCodec : DicomHTJpeg2000NativeCodec
     {
         public override DicomTransferSyntax TransferSyntax
         {

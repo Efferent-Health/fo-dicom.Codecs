@@ -54,7 +54,7 @@ option (BUILD_TESTING     "Build tests"                         ON)
 SET(CROSSPLATFORM_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.JpegLS.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg2000.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.JpegHT2000.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.HTJpeg2000.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_8.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_12.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_16.cpp
