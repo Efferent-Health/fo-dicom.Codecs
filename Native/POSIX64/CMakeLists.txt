@@ -51,10 +51,10 @@ INCLUDE_REGULAR_EXPRESSION("^.*$")
 option (BUILD_SHARED_LIBS "Build CharLS with shared libraries." OFF)
 option (BUILD_TESTING     "Build tests"                         ON)
 
-
 SET(CROSSPLATFORM_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.JpegLS.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg2000.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.JpegHT2000.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_8.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_12.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_16.cpp
@@ -321,36 +321,96 @@ SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/openjpeg.h
 )
 
+#OpenJPH Library
 include_directories(../Common/OpenJPH/common/)
 
-file(GLOB CODESTREAM       "../Common/OpenJPH/codestream/*.cpp" "../Common/OpenJPH/codestream/*.h")
-file(GLOB CODESTREAM_SSE   "../Common/OpenJPH/codestream/*_sse.cpp")
-file(GLOB CODESTREAM_SSE2  "../Common/OpenJPH/codestream/*_sse2.cpp")
-file(GLOB CODESTREAM_AVX   "../Common/OpenJPH/codestream/*_avx.cpp")
-file(GLOB CODESTREAM_AVX2  "../Common/OpenJPH/codestream/*_avx2.cpp")
-file(GLOB CODESTREAM_WASM  "../Common/OpenJPH/codestream/*_wasm.cpp")
-file(GLOB CODING           "../Common/OpenJPH/coding/*.cpp" "../Common/OpenJPH/coding/*.h")
-file(GLOB CODING_SSSE3     "../Common/OpenJPH/coding/*_ssse3.cpp")
-file(GLOB CODING_WASM      "../Common/OpenJPH/coding/*_wasm.cpp")
-file(GLOB CODING_AVX512    "../Common/OpenJPH/coding/*_avx512.cpp")
-file(GLOB COMMON           "../Common/OpenJPH/common/*.h")
-file(GLOB OTHERS           "../Common/OpenJPH/others/*.cpp")
-file(GLOB TRANSFORM        "../Common/OpenJPH/transform/*.cpp" "../Common/OpenJPH/transform/*.h")
-file(GLOB TRANSFORM_SSE    "../Common/OpenJPH/transform/*_sse.cpp")
-file(GLOB TRANSFORM_SSE2   "../Common/OpenJPH/transform/*_sse2.cpp")
-file(GLOB TRANSFORM_AVX    "../Common/OpenJPH/transform/*_avx.cpp")
-file(GLOB TRANSFORM_AVX2   "../Common/OpenJPH/transform/*_avx2.cpp")
-file(GLOB TRANSFORM_WASM   "../Common/OpenJPH/transform/*_wasm.cpp")
+SET(OPJH_SRCS
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_bitbuffer_read.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_bitbuffer_write.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codeblock.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codeblock_fun.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_local.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_params_local.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_precinct.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_resolution.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_subband.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_tile.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_tile_comp.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codeblock.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codeblock_fun.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_gen.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_local.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_params.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_precinct.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_resolution.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_subband.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_tile.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_tile_comp.cpp
 
-list(REMOVE_ITEM CODESTREAM ${CODESTREAM_SSE} ${CODESTREAM_SSE2} ${CODESTREAM_AVX} ${CODESTREAM_AVX2} ${CODESTREAM_WASM})
-list(REMOVE_ITEM CODING ${CODING_SSSE3} ${CODING_WASM} ${CODING_AVX512})
-list(REMOVE_ITEM TRANSFORM ${TRANSFORM_SSE} ${TRANSFORM_SSE2} ${TRANSFORM_AVX} ${TRANSFORM_AVX2} ${TRANSFORM_WASM})
-list(APPEND OPENJPH_SRCS ${CODESTREAM} ${CODING} ${COMMON} ${OTHERS} ${TRANSFORM})
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_common.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/table0.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/table1.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_common.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_ssse3.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder.cpp
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arch.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arg.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_codestream.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_defs.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_file.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_mem.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_message.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_params.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_version.h
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_arch.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_file.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_mem.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_message.cpp
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_local.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_local.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour.cpp 
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_sse.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_sse2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform.cpp
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/encoded_buffer.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/interface.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/interface.cpp
+)
+
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_ssse3.cpp PROPERTIES COMPILE_FLAGS -mssse3)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder_avx512.cpp PROPERTIES COMPILE_FLAGS -mavx512cd)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
 
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
     add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
-    #Setting properties for shared or dynamic library 
+    #Setting properties for shared or dynamic library
     set_target_properties(Dicom.Native
       PROPERTIES
       LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-arm64"
@@ -358,14 +418,14 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
-  #Setting properties for shared or dynamic library 
-  set_target_properties(Dicom.Native
-    PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
-    PREFIX ""
-  ) 
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    #Setting properties for shared or dynamic library 
+    set_target_properties(Dicom.Native
+        PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
+        PREFIX ""
+    ) 
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
