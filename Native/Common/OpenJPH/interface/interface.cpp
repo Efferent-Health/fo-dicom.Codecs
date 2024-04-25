@@ -58,15 +58,14 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     }
 
     siz.set_image_offset(point(imageOffset_.x, imageOffset_.y));
-    siz.set_tile_size(size(tileSize_.width, tileSize_.height));
+    siz.set_tile_size(ojph::size(tileSize_.width, tileSize_.height));
     siz.set_tile_offset(point(tileOffset_.x, tileOffset_.y));
-    printf("set_tile_offset\n");
 
     // Setup encoding parameters
     ojph::param_cod cod = codestream.access_cod();
     cod.set_num_decomposition(decompositions_);
     cod.set_block_dims(blockDimensions_.width, blockDimensions_.height);
-    std::vector<size> precincts;
+    std::vector<ojph::size> precincts;
     precincts.resize(precincts_.size());
 
     for (size_t i = 0; i < precincts_.size(); i++)
