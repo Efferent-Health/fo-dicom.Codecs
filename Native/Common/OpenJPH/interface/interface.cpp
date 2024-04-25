@@ -77,23 +77,23 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
     switch (progression_order)
     {
-    case ojph::PROGRESSION_ORDER::OJPH_PO_LRCP:
-        cod.set_progression_order(progOrders[0]);
-        break;
-    case ojph::PROGRESSION_ORDER::OJPH_PO_RLCP:
-        cod.set_progression_order(progOrders[1]);
-        break;
-    case ojph::PROGRESSION_ORDER::OJPH_PO_RPCL:
-        cod.set_progression_order(progOrders[2]);
-        break;
-    case ojph::PROGRESSION_ORDER::OJPH_PO_PCRL:
-        cod.set_progression_order(progOrders[3]);
-        break;
-    case ojph::PROGRESSION_ORDER::OJPH_PO_CPRL:
-        cod.set_progression_order(progOrders[4]);
-        break;
-    default:
-        break;
+        case ojph::PROGRESSION_ORDER::OJPH_PO_LRCP:
+            cod.set_progression_order(progOrders[0]);
+            break;
+        case ojph::PROGRESSION_ORDER::OJPH_PO_RLCP:
+            cod.set_progression_order(progOrders[1]);
+            break;
+        case ojph::PROGRESSION_ORDER::OJPH_PO_RPCL:
+            cod.set_progression_order(progOrders[2]);
+            break;
+        case ojph::PROGRESSION_ORDER::OJPH_PO_PCRL:
+            cod.set_progression_order(progOrders[3]);
+            break;
+        case ojph::PROGRESSION_ORDER::OJPH_PO_CPRL:
+            cod.set_progression_order(progOrders[4]);
+            break;
+        default:
+            break;
     }
 
     cod.set_color_transform(finfo->isUsingColorTransform);

@@ -151,7 +151,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             height = oldPixelData.Height,
                             bitsPerSample = (byte)oldPixelData.BitsAllocated,
                             componentCount = (byte)oldPixelData.SamplesPerPixel,
-                            isSigned = false,
+                            isSigned = oldPixelData.PixelRepresentation == PixelRepresentation.Signed ? true : false,
                             isUsingColorTransform = oldPixelData.SamplesPerPixel > 1 ? true : false
                         };
 
