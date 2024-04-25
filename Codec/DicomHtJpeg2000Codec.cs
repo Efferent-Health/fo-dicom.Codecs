@@ -101,7 +101,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     public abstract class DicomHtJpeg2000NativeCodec : DicomHtJpeg2000Codec
     {
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
-        public static extern unsafe void InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo);
+        public static extern unsafe void InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
         public static extern unsafe void InvokeHTJ2KDecode(ref Raw_outdata raw_outinfo, byte* source, uint sourceLength);
@@ -118,6 +118,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 var pool = ArrayPool<byte>.Shared;
                 byte[] rawData = null;
                 byte[] jpegHT2KData = null;
+
+                DicomHtJpeg2000Params jparams = (DicomHtJpeg2000Params)parameters;
+
+                if (jparams == null)
+                    jparams = (DicomHtJpeg2000Params)GetDefaultParameters();
 
                 try
                 {
@@ -155,8 +160,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else
                             frameinfo.isReversible = false;
 
+                        var progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN;
+                        if (newPixelData.Equals(DicomTransferSyntax.HTJ2KLosslessRPCL))
+                            progressionOrder = jparams.ProgressionOrder;
+
                         Htj2k_outdata j2c_outinfo = new Htj2k_outdata();
-                        InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo);
+                        InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
 
                         jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
 

@@ -25,9 +25,9 @@ namespace Codec {
 extern "C" {
 #endif
 
-EXPORT_OpenJPH void InvokeHTJ2KEncode(struct Htj2k_outdata* j2c_outinfo, const unsigned char *source, size_t sourceLength, const struct Frameinfo *finfo)
+EXPORT_OpenJPH void InvokeHTJ2KEncode(struct Htj2k_outdata* j2c_outinfo, const unsigned char *source, size_t sourceLength, const struct Frameinfo *finfo, ojph::PROGRESSION_ORDER progression_order)
 {
-    HTJpeg2000EncodeStream(j2c_outinfo, source, sourceLength, finfo);
+    HTJpeg2000EncodeStream(j2c_outinfo, source, sourceLength, finfo, progression_order);
 }
 
 EXPORT_OpenJPH void InvokeHTJ2KDecode(struct Decoded_outdata* raw_outinfo, const unsigned char* source, size_t sourceLength)

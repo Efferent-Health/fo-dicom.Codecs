@@ -10,14 +10,14 @@
 using namespace ojph;
 using namespace std;
 
-void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *source, size_t sourceLength, const struct Frameinfo *finfo)
+void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *source, size_t sourceLength, const struct Frameinfo *finfo, ojph::PROGRESSION_ORDER progression_order)
 {
     size_t decompositions_ = 5;
     bool request_tlm_marker_ = true;
     bool set_tilepart_divisions_at_components_ = false;
     bool set_tilepart_divisions_at_resolutions_ = true;
     float quantizationStep_ = -1.0f;
-    size_t progressionOrder_ = 2; // RPCL
+    size_t progressionOrder_ = progression_order; // RPCL
 
     std::vector<Ipoint> downSamples_;
     Ipoint imageOffset_;
@@ -75,10 +75,32 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     }
     cod.set_precinct_size(precincts_.size(), precincts.data());
 
-    const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
-    cod.set_progression_order(progOrders[progressionOrder_]);
+    if (progressionOrder_ >= 0)
+    {
+        const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
+        switch (progressionOrder_)
+        {
+            case 0:
+                cod.set_progression_order(progOrders[0]);
+                break;
+            case 1:
+                cod.set_progression_order(progOrders[1]);
+                break;
+            case 2:
+                cod.set_progression_order(progOrders[2]);
+                break;
+            case 3:
+                cod.set_progression_order(progOrders[3]);
+                break;
+            case 4:
+                cod.set_progression_order(progOrders[4]);
+                break;
+            default:
+                break;
+        }
+    }
+     
     cod.set_color_transform(finfo->isUsingColorTransform);
-
     bool lossless = finfo->isReversible;
 
     cod.set_reversible(lossless);
