@@ -161,7 +161,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             frameinfo.isReversible = false;
 
                         var progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN;
-                        if (newPixelData.Equals(DicomTransferSyntax.HTJ2KLosslessRPCL))
+                        if (newPixelData.Syntax.Equals(DicomTransferSyntax.HTJ2KLosslessRPCL))
                             progressionOrder = jparams.ProgressionOrder;
 
                         Htj2k_outdata j2c_outinfo = new Htj2k_outdata();

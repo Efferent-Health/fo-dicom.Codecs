@@ -17,7 +17,6 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     bool set_tilepart_divisions_at_components_ = false;
     bool set_tilepart_divisions_at_resolutions_ = true;
     float quantizationStep_ = -1.0f;
-    size_t progressionOrder_ = progression_order; // RPCL
 
     std::vector<Ipoint> downSamples_;
     Ipoint imageOffset_;
@@ -75,31 +74,28 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     }
     cod.set_precinct_size(precincts_.size(), precincts.data());
 
-    if (progressionOrder_ >= 0)
+    const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
+    switch (progression_order)
     {
-        const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
-        switch (progressionOrder_)
-        {
-            case 0:
-                cod.set_progression_order(progOrders[0]);
-                break;
-            case 1:
-                cod.set_progression_order(progOrders[1]);
-                break;
-            case 2:
-                cod.set_progression_order(progOrders[2]);
-                break;
-            case 3:
-                cod.set_progression_order(progOrders[3]);
-                break;
-            case 4:
-                cod.set_progression_order(progOrders[4]);
-                break;
-            default:
-                break;
-        }
+    case ojph::PROGRESSION_ORDER::OJPH_PO_LRCP:
+        cod.set_progression_order(progOrders[0]);
+        break;
+    case ojph::PROGRESSION_ORDER::OJPH_PO_RLCP:
+        cod.set_progression_order(progOrders[1]);
+        break;
+    case ojph::PROGRESSION_ORDER::OJPH_PO_RPCL:
+        cod.set_progression_order(progOrders[2]);
+        break;
+    case ojph::PROGRESSION_ORDER::OJPH_PO_PCRL:
+        cod.set_progression_order(progOrders[3]);
+        break;
+    case ojph::PROGRESSION_ORDER::OJPH_PO_CPRL:
+        cod.set_progression_order(progOrders[4]);
+        break;
+    default:
+        break;
     }
-     
+
     cod.set_color_transform(finfo->isUsingColorTransform);
     bool lossless = finfo->isReversible;
 
@@ -178,7 +174,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
 {
     ojph::codestream codestream;
     ojph::mem_infile mem_file;
-    mem_file.open((ui8*)source, sourceLength);
+    mem_file.open((ui8 *)source, sourceLength);
 
     // read headers
     codestream.enable_resilience();
@@ -236,7 +232,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
 
     // calculate the resolution at the requested decomposition level and allocate destination buffer
     int decompositionLevel = 0;
-    //Isize sizeAtDecompositionLevel = calculateSizeAtDecompositionLevel(decompositionLevel, frameInfo);
+    // Isize sizeAtDecompositionLevel = calculateSizeAtDecompositionLevel(decompositionLevel, frameInfo);
     Isize sizeAtDecompositionLevel(frameInfo.width, frameInfo.height);
 
     int resolutionLevel = numDecompositions - decompositionLevel;
@@ -251,18 +247,18 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
 
     if (frameInfo.componentCount == 1)
     {
-      codestream.set_planar(true);
+        codestream.set_planar(true);
     }
     else
     {
-      if (frameInfo.isUsingColorTransform)
-      {
-        codestream.set_planar(false);
-      }
-      else
-      {
-        codestream.set_planar(true);
-      }
+        if (frameInfo.isUsingColorTransform)
+        {
+            codestream.set_planar(false);
+        }
+        else
+        {
+            codestream.set_planar(true);
+        }
     }
     codestream.create();
 
@@ -270,78 +266,78 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     ojph::ui32 comp_num;
     for (int y = 0; y < sizeAtDecompositionLevel.height; y++)
     {
-      size_t lineStart = y * sizeAtDecompositionLevel.width * frameInfo.componentCount * bytesPerPixel;
-      if (frameInfo.componentCount == 1)
-      {
-        ojph::line_buf *line = codestream.pull(comp_num);
-        if (frameInfo.bitsPerSample <= 8)
+        size_t lineStart = y * sizeAtDecompositionLevel.width * frameInfo.componentCount * bytesPerPixel;
+        if (frameInfo.componentCount == 1)
         {
-          unsigned char *pOut = (unsigned char *)&(decoded_buffer)[lineStart];
-          for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
-          {
-            int val = line->i32[x];
-            pOut[x] = std::max(0, std::min(val, UCHAR_MAX));
-          }
-        }
-        else
-        {
-          if (frameInfo.isSigned)
-          {
-            short *pOut = (short *)&(decoded_buffer)[lineStart];
-            for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+            ojph::line_buf *line = codestream.pull(comp_num);
+            if (frameInfo.bitsPerSample <= 8)
             {
-              int val = line->i32[x];
-              pOut[x] = std::max(SHRT_MIN, std::min(val, SHRT_MAX));
-            }
-          }
-          else
-          {
-            unsigned short *pOut = (unsigned short *)&(decoded_buffer)[lineStart];
-            for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
-            {
-              int val = line->i32[x];
-              pOut[x] = std::max(0, std::min(val, USHRT_MAX));
-            }
-          }
-        }
-      }
-      else
-      {
-        for (int c = 0; c < frameInfo.componentCount; c++)
-        {
-          ojph::line_buf *line = codestream.pull(comp_num);
-          if (frameInfo.bitsPerSample <= 8)
-          {
-            uint8_t *pOut = &(decoded_buffer)[lineStart] + c;
-            for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
-            {
-              int val = line->i32[x];
-              pOut[x * frameInfo.componentCount] = std::max(0, std::min(val, UCHAR_MAX));
-            }
-          }
-          else
-          {
-            if (frameInfo.isSigned)
-            {
-              short *pOut = (short *)&(decoded_buffer)[lineStart] + c;
-              for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
-              {
-                int val = line->i32[x];
-                pOut[x * frameInfo.componentCount] = std::max(SHRT_MIN, std::min(val, SHRT_MAX));
-              }
+                unsigned char *pOut = (unsigned char *)&(decoded_buffer)[lineStart];
+                for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+                {
+                    int val = line->i32[x];
+                    pOut[x] = std::max(0, std::min(val, UCHAR_MAX));
+                }
             }
             else
             {
-              unsigned short *pOut = (unsigned short *)&(decoded_buffer)[lineStart] + c;
-              for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
-              {
-                int val = line->i32[x];
-                pOut[x * frameInfo.componentCount] = std::max(0, std::min(val, USHRT_MAX));
-              }
+                if (frameInfo.isSigned)
+                {
+                    short *pOut = (short *)&(decoded_buffer)[lineStart];
+                    for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+                    {
+                        int val = line->i32[x];
+                        pOut[x] = std::max(SHRT_MIN, std::min(val, SHRT_MAX));
+                    }
+                }
+                else
+                {
+                    unsigned short *pOut = (unsigned short *)&(decoded_buffer)[lineStart];
+                    for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+                    {
+                        int val = line->i32[x];
+                        pOut[x] = std::max(0, std::min(val, USHRT_MAX));
+                    }
+                }
             }
-          }
         }
-      }
+        else
+        {
+            for (int c = 0; c < frameInfo.componentCount; c++)
+            {
+                ojph::line_buf *line = codestream.pull(comp_num);
+                if (frameInfo.bitsPerSample <= 8)
+                {
+                    uint8_t *pOut = &(decoded_buffer)[lineStart] + c;
+                    for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+                    {
+                        int val = line->i32[x];
+                        pOut[x * frameInfo.componentCount] = std::max(0, std::min(val, UCHAR_MAX));
+                    }
+                }
+                else
+                {
+                    if (frameInfo.isSigned)
+                    {
+                        short *pOut = (short *)&(decoded_buffer)[lineStart] + c;
+                        for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+                        {
+                            int val = line->i32[x];
+                            pOut[x * frameInfo.componentCount] = std::max(SHRT_MIN, std::min(val, SHRT_MAX));
+                        }
+                    }
+                    else
+                    {
+                        unsigned short *pOut = (unsigned short *)&(decoded_buffer)[lineStart] + c;
+                        for (size_t x = 0; x < sizeAtDecompositionLevel.width; x++)
+                        {
+                            int val = line->i32[x];
+                            pOut[x * frameInfo.componentCount] = std::max(0, std::min(val, USHRT_MAX));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     raw_outinfo->raw_buffer = new unsigned char[destinationSize];
