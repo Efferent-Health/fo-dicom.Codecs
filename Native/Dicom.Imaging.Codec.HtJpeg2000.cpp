@@ -14,7 +14,7 @@
     #endif
 #endif
 
-#include "./Common/OpenJPH/interface/interface.h"
+#include "./Common/OpenJPH/interface/ojph_interface.h"
 
 namespace Dicom {
 namespace Imaging {
