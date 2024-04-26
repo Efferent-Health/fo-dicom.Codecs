@@ -160,44 +160,44 @@ stages:
         testRunTitle: 'fo-dicom.Codecs unit tests'
         feedsToUse: 'select'
         versioningScheme: 'off'
-  #- job: osx_arm64
-  #  dependsOn: osx_x64
-  #  pool:
-  #    vmImage: 'macos-11'
-  #  steps:
-  #  - script: |
-  #      cd Native/POSIX64/
-  #      cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt 
-  #      make
-  #    displayName: 'Compile osx arm64 library'
-  #  - task: PublishBuildArtifacts@1
-  #    displayName: Publish osx arm64 artifacts
-  #    inputs:
-  #      PathtoPublish: 'Native/POSIX64/lib-osx-arm64'
-  #      ArtifactName: 'lib-osx-arm64'
-  #      publishLocation: 'Container'
-  #  - task: DotNetCoreCLI@2
-  #    displayName: Publish managed library
-  #    inputs:
-  #      command: 'build'
-  #      projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
-  #      arguments: '--configuration Release'
-  #      publishWebProjects: false
-  #      feedsToUse: 'select'
-  #      versioningScheme: 'off'
-  #  - script: |
-  #      sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
-  #    name: setvarStep
-  #  - task: PublishBuildArtifacts@1
-  #    displayName: Publish managed artifacts
-  #    inputs:
-  #      PathtoPublish: 'Platform/fo-dicom/bin/Release/netstandard2.0'
-  #      ArtifactName: 'lib-managed'
-  #      publishLocation: 'Container'
+  - job: osx_arm64
+    dependsOn: osx_x64
+    pool:
+      vmImage: 'macos-11'
+    steps:
+    - script: |
+        cd Native/POSIX64/
+        cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt 
+        make
+      displayName: 'Compile osx arm64 library'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish osx arm64 artifacts
+      inputs:
+        PathtoPublish: 'Native/POSIX64/lib-osx-arm64'
+        ArtifactName: 'lib-osx-arm64'
+        publishLocation: 'Container'
+    - task: DotNetCoreCLI@2
+      displayName: Publish managed library
+      inputs:
+        command: 'build'
+        projects: 'Platform/fo-dicom/fo-dicom.Codecs.csproj'
+        arguments: '--configuration Release'
+        publishWebProjects: false
+        feedsToUse: 'select'
+        versioningScheme: 'off'
+    - script: |
+        sed -nEe 's:^.*<VersionPrefix>(.*)</VersionPrefix>.*$:##vso[task.setvariable variable=csprojVersion;isOutput=true]\1:p' Platform/fo-dicom/fo-dicom.Codecs.csproj
+      name: setvarStep
+    - task: PublishBuildArtifacts@1
+      displayName: Publish managed artifacts
+      inputs:
+        PathtoPublish: 'Platform/fo-dicom/bin/Release/netstandard2.0'
+        ArtifactName: 'lib-managed'
+        publishLocation: 'Container'
   - job: Acceptance
     dependsOn:
       - win_x64
-      - osx_x64
+      - osx_arm64
     pool:
       vmImage: 'windows-2019'
     variables:

@@ -120,7 +120,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
             unsafe
             {
-                if (Platform.Current == Platform.Type.unsupported || Platform.Current == Platform.Type.osx_arm64)
+                if (Platform.Current == Platform.Type.unsupported)
                 {
                     throw new InvalidOperationException("Unsupported OS Platform");
                 }
@@ -215,7 +215,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public override unsafe void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (Platform.Current == Platform.Type.unsupported || Platform.Current == Platform.Type.osx_arm64)
+            if (Platform.Current == Platform.Type.unsupported)
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
