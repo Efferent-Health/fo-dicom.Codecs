@@ -87,7 +87,7 @@ stages:
         sudo apt-get update
         sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
         cd Native/POSIX64/
-        cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
+        cmake -DARCH_FLAG:STRING=arm64 -DOJPH_DISABLE_INTEL_SIMD=ON ./CMakeLists.txt
         make
       displayName: 'Compile linux arm64 library'
     - task: PublishBuildArtifacts@1
