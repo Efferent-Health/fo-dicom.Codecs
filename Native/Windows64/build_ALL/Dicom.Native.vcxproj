@@ -62,7 +62,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHARLS_STATIC;OPJ_STATIC;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4691</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -107,7 +107,6 @@
     <ClInclude Include="..\..\Common\CharLS\publictypes.h" />
     <ClInclude Include="..\..\Common\CharLS\scan.h" />
     <ClInclude Include="..\..\Common\CharLS\util.h" />
-
     <ClInclude Include="..\..\Common\OpenJPEG\bio.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\cidx_manager.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\cio.h" />
@@ -134,7 +133,6 @@
     <ClInclude Include="..\..\Common\OpenJPEG\t2.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\tcd.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\tgt.h" />
-
     <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h" />
     <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h" />
     <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h" />
@@ -144,7 +142,6 @@
     <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h" />
     <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h" />
     <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h" />
-
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_read.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_write.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_codeblock.h" />
@@ -156,20 +153,17 @@
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_subband.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_tile.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_tile_comp.h" />
-
     <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_common.h" />
     <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_decoder.h" />
     <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_encoder.h" />
     <ClInclude Include="..\..\Common\OpenJPH\coding\table0.h" />
     <ClInclude Include="..\..\Common\OpenJPH\coding\table1.h" />
-
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_colour.h" />
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_colour_local.h" />
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_transform.h" />
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_transform_local.h" />
-
     <ClInclude Include="..\..\Common\OpenJPH\interface\encoded_buffer.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\interface\interface.h" />    
+    <ClInclude Include="..\..\Common\OpenJPH\interface\interface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp" />
@@ -290,7 +284,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-
     <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_codeblock.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
@@ -351,7 +344,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-
     <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_common.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
@@ -368,7 +360,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-
     <ClCompile Include="..\..\Common\OpenJPH\others\ojph_arch.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
@@ -385,7 +376,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-
     <ClCompile Include="..\..\Common\OpenJPH\transform\ojph_colour.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
@@ -426,7 +416,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-
     <ClCompile Include="..\..\Common\OpenJPH\interface\interface.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
