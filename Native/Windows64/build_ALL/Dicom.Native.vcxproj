@@ -135,6 +135,16 @@
     <ClInclude Include="..\..\Common\OpenJPEG\tcd.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\tgt.h" />
 
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_codestream.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_defs.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_mem.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h" />
+
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_read.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_write.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_codeblock.h" />
@@ -152,16 +162,6 @@
     <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_encoder.h" />
     <ClInclude Include="..\..\Common\OpenJPH\coding\table0.h" />
     <ClInclude Include="..\..\Common\OpenJPH\coding\table1.h" />
-
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_codestream.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_defs.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_mem.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h" />
 
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_colour.h" />
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_colour_local.h" />

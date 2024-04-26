@@ -378,6 +378,37 @@
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
 
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_codestream.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_defs.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_file.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_mem.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_read.h">
       <Filter>Header Files\OpenJPH</Filter>
     </ClInclude>
@@ -422,37 +453,6 @@
       <Filter>Header Files\OpenJPH</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPH\coding\table1.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_codestream.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_defs.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_file.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_mem.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h">
-      <Filter>Header Files\OpenJPH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h">
       <Filter>Header Files\OpenJPH</Filter>
     </ClInclude>
 
