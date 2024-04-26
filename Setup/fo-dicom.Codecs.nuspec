@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>fo-dicom.Codecs</id>
-        <version>5.13.0.0-beta4</version>
+        <version>5.13.0.0-beta5</version>
         <title>fo-dicom Codecs</title>
         <authors>Efferent-Health,fo-dicom</authors>
         <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
