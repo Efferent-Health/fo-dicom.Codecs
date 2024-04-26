@@ -215,7 +215,7 @@
       <Filter>Source Files\OpenJPH</Filter>
     </ClCompile>
 
-    <ClCompile Include="..\..\Common\OpenJPH\interface\interface.cpp">
+    <ClCompile Include="..\..\Common\OpenJPH\interface\ojph_interface.cpp">
       <Filter>Source Files\OpenJPH</Filter>
     </ClCompile>
 

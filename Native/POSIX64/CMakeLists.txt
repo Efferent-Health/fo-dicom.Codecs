@@ -394,8 +394,8 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform.cpp
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/encoded_buffer.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/interface.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/interface.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/ojph_interface.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/ojph_interface.cpp
 )
 
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)

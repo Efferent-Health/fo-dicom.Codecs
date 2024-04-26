@@ -163,7 +163,7 @@
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_transform.h" />
     <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_transform_local.h" />
     <ClInclude Include="..\..\Common\OpenJPH\interface\encoded_buffer.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\interface\interface.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\interface\ojph_interface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp" />
@@ -416,7 +416,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPH\interface\interface.cpp">
+    <ClCompile Include="..\..\Common\OpenJPH\interface\ojph_interface.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>

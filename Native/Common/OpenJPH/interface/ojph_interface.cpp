@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <climits>
 
-#include "interface.h"
+#include "ojph_interface.h"
 #include "encoded_buffer.h"
 
 #include <vector>
