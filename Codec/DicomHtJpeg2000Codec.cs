@@ -99,7 +99,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
     };
 
     public abstract class DicomHtJpeg2000NativeCodec : DicomHtJpeg2000Codec
-    {
+    {   
+        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
+        public static extern unsafe void InvokeHTJ2KEncode_winx64(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
+
+        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
+        public static extern unsafe void InvokeHTJ2KDecode_winx64(ref Raw_outdata raw_outinfo, byte* source, uint sourceLength);
+
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
         public static extern unsafe void InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
@@ -110,7 +116,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
             unsafe
             {
-                if (Platform.Current == Platform.Type.unsupported || Platform.Current == Platform.Type.win_x64)
+                if (Platform.Current == Platform.Type.unsupported || Platform.Current == Platform.Type.osx_arm64 || Platform.Current== Platform.Type.linux_arm64)
                 {
                     throw new InvalidOperationException("Unsupported OS Platform");
                 }
@@ -165,7 +171,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             progressionOrder = jparams.ProgressionOrder;
 
                         Htj2k_outdata j2c_outinfo = new Htj2k_outdata();
-                        InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+
+                        if (Platform.Current.Equals(Platform.Type.win_x64))
+                            InvokeHTJ2KEncode_winx64(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+                        else
+                            InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
 
                         jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
 
@@ -201,7 +211,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public override unsafe void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (Platform.Current == Platform.Type.unsupported || Platform.Current == Platform.Type.win_x64)
+            if (Platform.Current == Platform.Type.unsupported || Platform.Current == Platform.Type.osx_arm64 || Platform.Current== Platform.Type.linux_arm64)
             {
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
@@ -237,7 +247,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         unsafe
                         {   
                             if (Platform.Current.Equals(Platform.Type.win_x64))
-                                InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
+                                InvokeHTJ2KDecode_winx64(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
                             else
                                 InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);;
 
