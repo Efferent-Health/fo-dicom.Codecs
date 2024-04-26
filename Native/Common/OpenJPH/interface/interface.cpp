@@ -1,5 +1,6 @@
 #include <iostream>
 #include <new>
+#include <algorithm>
 #include <climits>
 
 #include "interface.h"
