@@ -32,8 +32,10 @@ if("${ARCH_FLAG}" STREQUAL "arm64")
   if(UNIX AND NOT APPLE)
     set(CMAKE_C_COMPILER "/usr/bin/aarch64-linux-gnu-gcc")
     set(CMAKE_CXX_COMPILER "/usr/bin/aarch64-linux-gnu-g++")
+    add_compile_options(-DOJPH_DISABLE_INTEL_SIMD)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch arm64")
+    add_compile_options(-DOJPH_DISABLE_INTEL_SIMD)
   endif()
 
   set(CMAKE_OSX_ARCHITECTURES "arm64")
@@ -341,10 +343,6 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_gen.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_local.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse2.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_params.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_precinct.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_resolution.cpp
@@ -359,7 +357,6 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/table1.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_common.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_ssse3.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder.cpp
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arch.h
@@ -383,6 +380,21 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_local.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour.cpp 
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform.cpp
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/encoded_buffer.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/ojph_interface.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/ojph_interface.cpp
+)
+
+SET(OPJH_INTEL_SIMD_SRCS
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx2.cpp
+  
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_ssse3.cpp
+
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_sse.cpp
@@ -391,11 +403,6 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform.cpp
-
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/encoded_buffer.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/ojph_interface.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/interface/ojph_interface.cpp
 )
 
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
@@ -418,7 +425,7 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
         PROPERTIES
@@ -438,7 +445,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
