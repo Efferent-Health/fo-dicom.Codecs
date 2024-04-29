@@ -217,10 +217,10 @@ stages:
         rootFolderOrFile: 'Tests/Acceptance/bin/debug/net7.0/out'
         archiveType: 'zip'
         archiveFile: 'Tests/Acceptance/out/AcceptanceImages-win-x64-$(Build.BuildId).zip'
-    - task: GitHubRelease@0
-      displayName: Release to GitHub
+    - task: GitHubRelease@1
+      displayName: Create GitHub Release
       inputs:
-        gitHubConnection: Efferent-Open-Source
+        gitHubConnection: GitHubServiceConnection
         repositoryName: '$(Build.Repository.Name)'         
         action: 'create'
         target: '$(Build.SourceVersion)'
