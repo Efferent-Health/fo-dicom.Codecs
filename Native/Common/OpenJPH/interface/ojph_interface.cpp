@@ -164,7 +164,7 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     j2c_outinfo->size_outbuffer = encoder.getBuffer().size();
     j2c_outinfo->j2c_buffer = new unsigned char[j2c_outinfo->size_outbuffer];
 
-    memcpy(j2c_outinfo->j2c_buffer, encoder.getBuffer().data(), sizeof(unsigned char) * (int)j2c_outinfo->size_outbuffer);
+    memcpy(j2c_outinfo->j2c_buffer, encoder.getBuffer().data(), sizeof(unsigned char) * j2c_outinfo->size_outbuffer);
 
     // cleanup
     codestream.close();
@@ -344,7 +344,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     raw_outinfo->raw_buffer = new unsigned char[destinationSize];
     raw_outinfo->size_outbuffer = destinationSize;
 
-    memcpy(raw_outinfo->raw_buffer, decoded_buffer.data(), sizeof(unsigned char) * (int)raw_outinfo->size_outbuffer);
+    memcpy(raw_outinfo->raw_buffer, decoded_buffer.data(), sizeof(unsigned char) * raw_outinfo->size_outbuffer);
 
     codestream.close();
     decoded_buffer.clear();
