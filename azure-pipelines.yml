@@ -224,7 +224,7 @@ stages:
         repositoryName: '$(Build.Repository.Name)'         
         action: 'create'
         target: '$(Build.SourceVersion)'
-        #tagSource: 'manual'
+        tagSource: 'gitTag'
         tag: 'v$(csprojVersion)'
         assets: 'Tests/Acceptance/out/*.zip'  
         releaseNotesSource: 'file'
