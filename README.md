@@ -24,7 +24,7 @@ The following CODECS are implemented:
 - JPEG-LS Lossless Image Compression
 - JPEG-LS Lossy (Near-Lossless) Image Compression
 - RLE Lossless
-- **High-Throughput JPEG 2000 (HTJ2K) encoding is alredy in beta phase!!!** (read https://github.com/Efferent-Health/fo-dicom.Codecs/issues/54)
+- **High-Throughput JPEG 2000 (HTJ2K) encoding is already in beta phase!!!** (read https://github.com/Efferent-Health/fo-dicom.Codecs/issues/54)
 
 ## Usage
  
