@@ -295,30 +295,55 @@ SET(LIBIJG16_SRCS
 
 #OpenJPEG Library
 SET(OPENJPEG_SRCS
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thread.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thread.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/bio.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/bio.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/cio.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/cio.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/dwt.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/dwt.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/event.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/event.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/ht_dec.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/image.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/image.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/invert.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/invert.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/j2k.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/j2k_lib.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/j2k.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/jp2.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/jpt.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/jp2.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/mct.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/mct.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/mqc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/mqc.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/mqc_inl.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/openjpeg.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/pi.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/raw.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/t1.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/t2.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tcd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tgt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/cidx_manager.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/phix_manager.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/ppix_manager.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thix_manager.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tpix_manager.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/openjpeg.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_clock.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_clock.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/pi.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/pi.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/t1.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/t1.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/t2.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/t2.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tcd.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tcd.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tgt.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/tgt.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/function_list.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/function_list.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_codec.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_includes.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_intmath.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_malloc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_malloc.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/sparse_array.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/sparse_array.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_config.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/opj_config_private.h
 )
 
 include_directories(../Common/OpenJPH/common/)
@@ -349,7 +374,7 @@ list(APPEND OPENJPH_SRCS ${CODESTREAM} ${CODING} ${COMMON} ${OTHERS} ${TRANSFORM
 
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -358,7 +383,7 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
   #Setting properties for shared or dynamic library 
   set_target_properties(Dicom.Native
     PROPERTIES
@@ -369,7 +394,7 @@ if(UNIX AND NOT APPLE)
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -378,7 +403,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPH_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES

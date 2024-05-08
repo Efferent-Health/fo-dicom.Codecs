@@ -15,13 +15,15 @@
 extern "C"{
 #include "./Common/OpenJPEG/openjpeg.h"
 #include "./Common/OpenJPEG/j2k.h"
+#include "./Common/OpenJPEG/opj_includes.h"
 }
 
 #elif defined(__linux__)
-#define EXPORT_OpenJPEG extern 
+#define EXPORT_OpenJPEG extern
+#include <unistd.h>
 extern "C"{
 #include "./Common/OpenJPEG/openjpeg.h"
-#include "./Common/OpenJPEG/j2k.h"
+#include "./Common/OpenJPEG/opj_includes.h"
 #include <string.h>
 }
 
@@ -32,6 +34,7 @@ extern "C"{
 		extern "C"{
         #include "./Common/OpenJPEG/openjpeg.h"
         #include "./Common/OpenJPEG/j2k.h"
+        #include "./Common/OpenJPEG/opj_includes.h"
 		}
     #endif
 
@@ -46,42 +49,173 @@ namespace Codec {
 extern "C" {
 #endif
 
-//Encode OpenJPEG
-
-EXPORT_OpenJPEG opj_cinfo_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
+typedef struct {
+    const uint8_t* pabyData;
+    size_t         nCurPos;
+    size_t         nLength;
+} MemFile;
+    
+static OPJ_SIZE_T ReadCallback(void* pBuffer, OPJ_SIZE_T nBytes, void* pUserData)
 {
-    return opj_create_compress(format);
- 
+    MemFile* memFile = (MemFile*)pUserData;
+    if (memFile->nCurPos >= memFile->nLength) {
+        return -1;
+    }
+    if (memFile->nCurPos + nBytes >= memFile->nLength) {
+        size_t nToRead = memFile->nLength - memFile->nCurPos;
+        memcpy(pBuffer, memFile->pabyData + memFile->nCurPos, nToRead);
+        memFile->nCurPos = memFile->nLength;
+        return nToRead;
+    }
+    if (nBytes == 0) {
+        return -1;
+    }
+    
+    memcpy(pBuffer, memFile->pabyData + memFile->nCurPos, nBytes);
+    memFile->nCurPos += nBytes;
+    return nBytes;
 }
 
-EXPORT_OpenJPEG opj_event_mgr_t* Opj_set_event_mgr(opj_common_ptr cinfo, opj_event_mgr_t* e, void* context)
+static OPJ_SIZE_T WriteCallback(void* pBuffer, OPJ_SIZE_T nBytes, void* pUserData)
 {
-    return opj_set_event_mgr(cinfo, e, context);  
+    MemFile* memFile = (MemFile*)pUserData;
+    if (memFile->nCurPos >= memFile->nLength) 
+    {
+        return -1;
+    }
+        
+    if (memFile->nCurPos + nBytes >= memFile->nLength) 
+    {
+        size_t nToWrite = memFile->nLength - memFile->nCurPos;
+        memcpy((void *)(memFile->pabyData + memFile->nCurPos), pBuffer, nToWrite);
+        memFile->nCurPos = memFile->nLength;
+        return nToWrite;
+    }
+        
+    if (nBytes == 0) 
+    {
+        return -1;
+    }
+    
+    memcpy((void *)(memFile->pabyData + memFile->nCurPos), pBuffer, nBytes);
+    memFile->nCurPos += nBytes;
+    return nBytes;
 }
 
-EXPORT_OpenJPEG opj_image_t* Opj_image_create(int numcmpts, opj_image_cmptparm_t* cmptparms, OPJ_COLOR_SPACE clrspc)
+static OPJ_BOOL SeekCallback(OPJ_OFF_T nBytes, void* pUserData)
+{
+    MemFile* memFile = (MemFile*)pUserData;
+    memFile->nCurPos = nBytes;
+    return OPJ_TRUE;
+}
+
+static OPJ_OFF_T SkipCallback(OPJ_OFF_T nBytes, void* pUserData)
+{
+    MemFile* memFile = (MemFile*)pUserData;
+    memFile->nCurPos += nBytes;
+    return nBytes;
+}
+
+static void FreeCallback(void* pUserData)
+{
+    MemFile* memFile = (MemFile*)pUserData;
+    opj_free(memFile);
+}
+
+/**
+sample error debug callback expecting no client object
+*/
+static void error_callback(const char *msg, void *client_data)
+{
+    (void)client_data;
+    fprintf(stdout, "[ERROR] %s", msg);
+}
+    
+/**
+sample warning debug callback expecting no client object
+*/
+static void warning_callback(const char *msg, void *client_data)
+{
+    (void)client_data;
+    fprintf(stdout, "[WARNING] %s", msg);
+}
+
+/**
+sample debug callback expecting no client object
+*/
+static void info_callback(const char *msg, void *client_data)
+{
+    (void)client_data;
+    fprintf(stdout, "[INFO] %s", msg);
+}
+
+/* CALLING COMPRESSION FUNCTIONS */
+
+EXPORT_OpenJPEG opj_codec_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
+{
+    opj_codec_t* realCodec = opj_create_compress(format);
+    
+    /* catch events using our callbacks and give a local context */
+    opj_set_info_handler(realCodec, info_callback, 00);
+    opj_set_warning_handler(realCodec, warning_callback, 00);
+    opj_set_error_handler(realCodec, error_callback, 00);
+    
+    return realCodec;
+}
+
+EXPORT_OpenJPEG opj_image_t* Opj_image_create(OPJ_UINT32 numcmpts, opj_image_cmptparm_t* cmptparms, OPJ_COLOR_SPACE clrspc)
 {
     return opj_image_create(numcmpts, cmptparms, clrspc);  
 }
 
-EXPORT_OpenJPEG void Opj_setup_encoder(opj_cinfo_t* cinfo, opj_cparameters_t* parameters, opj_image_t* image)
-{
-    opj_setup_encoder(cinfo, parameters, image);  
+EXPORT_OpenJPEG void Opj_setup_encoder(opj_codec_t* codec, opj_cparameters_t* parameters, opj_image_t* image)
+{   
+    opj_setup_encoder(codec, parameters, image);
 }
 
-EXPORT_OpenJPEG opj_cio_t* Opj_cio_open(opj_common_ptr cinfo , unsigned char* buffer, int length)
+EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(unsigned char* buffer, size_t length)
 {
-    return opj_cio_open(cinfo, buffer, length);   
+    opj_stream_t* pStream = opj_stream_create(length, false);
+    MemFile* memFile = (MemFile*)opj_malloc(sizeof(MemFile));
+    memFile->pabyData = buffer;
+    memFile->nLength = length;
+    memFile->nCurPos = 0;
+
+    opj_stream_set_user_data_length(pStream, length);
+    opj_stream_set_write_function(pStream, WriteCallback);
+
+    opj_stream_set_seek_function(pStream, SeekCallback);
+    opj_stream_set_skip_function(pStream, SkipCallback);
+    opj_stream_set_user_data(pStream, memFile, FreeCallback);
+
+    return pStream;   
 }
 
-EXPORT_OpenJPEG int Opj_encode(opj_cinfo_t* cinfo, opj_cio_t* cio, opj_image_t* image, char* index)
+EXPORT_OpenJPEG OPJ_BOOL Opj_encode(opj_codec_t* codec, opj_stream_t* cio, opj_image_t* image, char* index)
 {
-    return opj_encode(cinfo, cio, image, index);   
+    OPJ_BOOL bSuccess;
+
+    int num_threads = opj_get_num_cpus();
+    opj_codec_set_threads(codec, num_threads);
+
+    bSuccess = opj_start_compress(codec, image, cio);
+        
+    if (!bSuccess) 
+    {
+        opj_stream_destroy(cio);
+        opj_destroy_codec(codec);
+        opj_image_destroy(image);
+        return OPJ_FALSE;
+    }
+        
+    bSuccess = opj_encode(codec, cio);
+    bSuccess = opj_end_compress(codec, cio);
+    return bSuccess;
 }
 
-EXPORT_OpenJPEG void Opj_cio_close(opj_cio_t* cio)
+EXPORT_OpenJPEG void Opj_cio_close(opj_stream_t* cio)
 {
-    opj_cio_close(cio);  
+    opj_stream_destroy(cio);
 }
 
 EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
@@ -89,19 +223,22 @@ EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
     opj_image_destroy(image);  
 }
 
-EXPORT_OpenJPEG void Opj_destroy_compress(opj_cinfo_t* cinfo)
+EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* codec)
 {
-    opj_destroy_compress(cinfo);   
+    if (codec) 
+    {
+       opj_destroy_codec(codec);
+    }
 }
 
-EXPORT_OpenJPEG int Cio_tell(opj_cio_t* cio)
+EXPORT_OpenJPEG int Cio_tell(opj_stream_t* cio)
 {
-    return cio_tell(cio);    
+    return opj_stream_tell((opj_stream_private_t*)cio);  
 }
 
-//Decode OpenJPEG
+//Calling compression functions
 
-EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
+/*EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
 {
     return opj_create_decompress(format);   
 }
@@ -129,10 +266,10 @@ EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parame
 EXPORT_OpenJPEG void Memset(void * prt, int value ,size_t num)
 {
     memset(prt, value, num);
-}
+}*/
 
 EXPORT_OpenJPEG OPJ_CODEC_FORMAT GetCodecFormat(unsigned char* buffer)
-{   
+{
     unsigned char buf12[12];
 
     OPJ_CODEC_FORMAT opj_buffer_format;
@@ -143,19 +280,19 @@ EXPORT_OpenJPEG OPJ_CODEC_FORMAT GetCodecFormat(unsigned char* buffer)
     //Comparing 12 or 4 first values from image buffer to get the JPEG2000 decode format
     if(memcmp(buf12, JP2_RFC3745_MAGIC, 12) == 0 || memcmp(buf12, JP2_MAGIC, 4) == 0)
     {   
-        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_JP2;
+        opj_buffer_format = OPJ_CODEC_FORMAT::OPJ_CODEC_JP2;
 
         return opj_buffer_format;
     }
     else if (memcmp(buf12, J2K_CODESTREAM_MAGIC, 4) == 0)
     {   
-        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_J2K;
+        opj_buffer_format = OPJ_CODEC_FORMAT::OPJ_CODEC_J2K;
 
         return opj_buffer_format;
     }
     else
     {   
-        opj_buffer_format = OPJ_CODEC_FORMAT::CODEC_UNKNOWN;
+        opj_buffer_format = OPJ_CODEC_FORMAT::OPJ_CODEC_UNKNOWN;
     }
 
     return opj_buffer_format;
