@@ -11,20 +11,6 @@ using FellowOakDicom.IO.Buffer;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
-    [UnmanagedFunctionPointerAttribute(CallingConvention.StdCall)]
-    public unsafe delegate void opj_msg_callback(char* msg, void* client_data);
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct opj_event_mgr_t
-    {
-        /** Error message callback if available, NULL otherwise */
-        public IntPtr error_handler;
-        /** Warning message callback if available, NULL otherwise */
-        public IntPtr warning_handler;
-        /** Debug message callback if available, NULL otherwise */
-        public IntPtr info_handler;
-    }
-
     [Flags]
     public enum OPJ_CODEC_FORMAT
     {
@@ -33,48 +19,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         CODEC_JPT = 1,      /**< JPT-stream (JPEG 2000, JPIP) : read only */
         CODEC_JP2 = 2 		/**< JPEG-2000 file format : read/write */
     }
-
-    /*[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_common_ptr
-    {
-        public opj_event_mgr_t* event_mgr;
-        public void* client_data;
-        public int is_decompressor;
-        public OPJ_CODEC_FORMAT codec_format;
-        public void* j2k_handle;
-        public void* jp2_handle;
-        public void* mj2_handle;
-    }*/
-
-    /*[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_cinfo_t
-    {
-        public opj_event_mgr_t* event_mgr;
-        public void* client_data;
-        public int is_decompressor;
-        public OPJ_CODEC_FORMAT codec_format;
-        public void* j2k_handle;
-        public void* jp2_handle;
-        public void* mj2_handle;
-    }*/
-
-    /*[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_cio_t
-    {
-        /** open mode (read/write) either OPJ_STREAM_READ or OPJ_STREAM_WRITE */
-        //public opj_common_ptr* cinfo;
-        //public int openmode;
-        /** pointer to the start of the buffer */
-        //public byte* buffer;
-        /** buffer size in bytes */
-        //public int length;
-        /** pointer to the start of the stream */
-        //public byte* start;
-        /** pointer to the end of the stream */
-        //public byte* end;
-        /** pointer to the current position */
-        //public byte* bp;
-    //}
 
     [Flags]
     public enum OPJ_COLOR_SPACE
@@ -366,40 +310,26 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public uint sgnd;
     }
 
-    [Flags]
-    public enum OPJ_LIMIT_DECODING
-    {
-        NO_LIMITATION = 0,
-        LIMIT_TO_MAIN_HEADER = 1,
-        DECODE_ALL_BUT_PACKETS = 2
-    }
-
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct opj_dparameters_t
     {
-        public int cp_reduce;
-        public int cp_layer;
+        public uint cp_reduce;
+        public uint cp_layer;
         public unsafe fixed sbyte infile[4096];
         public unsafe fixed sbyte outfile[4096];
-        public OPJ_CODEC_FORMAT decod_format;
+        public int decod_format;
         public int cod_format;
+        public uint DA_x0;
+        public uint DA_x1;
+        public uint DA_y0;
+        public uint DA_y1;
+        public int m_verbose;
+        public uint tile_index;
+        public uint nb_tile_to_decode;
         public int jpwl_correct;
         public int jpwl_exp_comps;
         public int jpwl_max_tiles;
-        public OPJ_LIMIT_DECODING cp_limit_decoding;
         public uint flags;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public unsafe struct opj_dinfo_t
-    {
-        public opj_event_mgr_t* event_mgr;
-        public void* client_data;
-        public int is_decompressor;
-        public OPJ_CODEC_FORMAT codec_format;
-        public void* j2k_handle;
-        public void* jp2_handle;
-        public void* mj2_handle;
     }
 
     public class DicomJpeg2000Params : DicomCodecParams
@@ -479,14 +409,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
         public static extern unsafe void Opj_setup_encoder_winx64(void* codec, ref opj_cparameters_t parameters, opj_image_t* image);
 
-        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
-        public static extern unsafe void* Opj_cio_open_winx64(byte* buffer, uint length);
+        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_stream")]
+        public static extern unsafe void* Opj_create_stream_winx64(byte* buffer, uint length, bool isDecompressor);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
         public static extern unsafe int Opj_encode_winx64(void* codec, void* stream, opj_image_t* image, sbyte* index);
 
-        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
-        public static extern unsafe void Opj_cio_close_winx64(void* stream);
+        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_close")]
+        public static extern unsafe void Opj_stream_close_winx64(void* stream);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
         public static extern unsafe void Opj_image_destroy_winx64(opj_image_t* image);
@@ -494,28 +424,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
         public static extern unsafe void Opj_destroy_compress_winx64(void* codec);
 
-        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
-        public static extern unsafe int Cio_tell_winx64(void* cio);
+        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_tell")]
+        public static extern unsafe int Opj_stream_tell_winx64(void* stream);
 
         //Decode OpenJPEG library for winx64
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
-        public static extern unsafe opj_dinfo_t* Opj_create_decompress_winx64(OPJ_CODEC_FORMAT format);
+        public static extern unsafe void* Opj_create_decompress_winx64(OPJ_CODEC_FORMAT format);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
-        public static extern unsafe void Opj_setup_decoder_winx64(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
+        public static extern unsafe void Opj_setup_decoder_winx64(void* codec, opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
-        public static extern unsafe void Opj_set_default_decoder_winx64(opj_dparameters_t* parameters);
+        public static extern unsafe void Opj_set_default_decode_parameters_winx64(opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
-        public static extern unsafe opj_image_t* Opj_decode_winx64(opj_dinfo_t* dinfo, void* cio);
+        public static extern unsafe opj_image_t* Opj_decode_winx64(void* codec, void* stream);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
-        public static extern unsafe void Opj_destroy_decompress_winx64(opj_dinfo_t* dinfo);
-
-        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
-        public static extern unsafe void Memset_x64(void* ptr, int value, uint num);
+        public static extern unsafe void Opj_destroy_decompress_winx64(void* codec);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCodecFormat")]
         public static extern unsafe OPJ_CODEC_FORMAT GetCodecFormat_winx64(byte* buffer);
@@ -531,14 +458,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_encoder")]
         public static extern unsafe void Opj_setup_encoder(void* codec, ref opj_cparameters_t parameters, opj_image_t* image);
 
-        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_open")]
-        public static extern unsafe void* Opj_cio_open(byte* buffer, uint length);
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_stream")]
+        public static extern unsafe void* Opj_create_stream(byte* buffer, uint length, bool isDecompressor);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
         public static extern unsafe int Opj_encode(void* codec, void* stream, opj_image_t* image, sbyte* index);
 
-        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_cio_close")]
-        public static extern unsafe void Opj_cio_close(void* stream);
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_close")]
+        public static extern unsafe void Opj_stream_close(void* stream);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_image_destroy")]
         public static extern unsafe void Opj_image_destroy(opj_image_t* image);
@@ -546,28 +473,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_compress")]
         public static extern unsafe void Opj_destroy_compress(void* codec);
 
-        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Cio_tell")]
-        public static extern unsafe int Cio_tell(void* stream);
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_tell")]
+        public static extern unsafe int Opj_stream_tell(void* stream);
 
         //Decode OpenJPEG library
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_create_decompress")]
-        public static extern unsafe opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format);
+        public static extern unsafe void* Opj_create_decompress(OPJ_CODEC_FORMAT format);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_setup_decoder")]
-        public static extern unsafe void Opj_setup_decoder(opj_dinfo_t* dinfo, opj_dparameters_t* parameters);
+        public static extern unsafe void Opj_setup_decoder(void* codec, opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_set_default_decode_parameters")]
-        public static extern unsafe void Opj_set_default_decoder(opj_dparameters_t* parameters);
+        public static extern unsafe void Opj_set_default_decode_parameters(opj_dparameters_t* parameters);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_decode")]
-        public static extern unsafe opj_image_t* Opj_decode(opj_dinfo_t* dinfo, void* cio);
+        public static extern unsafe opj_image_t* Opj_decode(void* codec, void* stream);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_destroy_decompress")]
-        public static extern unsafe void Opj_destroy_decompress(opj_dinfo_t* dinfo);
-
-        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Memset")]
-        public static extern unsafe void Memset(void* ptr, int value, uint num);
+        public static extern unsafe void Opj_destroy_decompress(void* codec);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "GetCodecFormat")]
         public static extern unsafe OPJ_CODEC_FORMAT GetCodecFormat(byte* buffer);
@@ -584,16 +508,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 return OPJ_COLOR_SPACE.CLRSPC_SYCC;
             else
                 return OPJ_COLOR_SPACE.CLRSPC_UNKNOWN;
-        }
-
-        public static unsafe void opj_error_callback(char* msg, void* usr)
-        {
-        }
-        public static unsafe void opj_warning_callback(char* msg, void* usr)
-        {
-        }
-        public static unsafe void opj_info_callback(char* msg, void* usr)
-        {
         }
 
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
@@ -644,7 +558,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             opj_cparameters_t eparams = new opj_cparameters_t();
                             void* codec = null;  /* handle to a compressor */
                             opj_image_t* image = null;
-                            void* cio = null;
+                            void* c_stream = null;
 
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
@@ -820,54 +734,47 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     img_size += image->comps[i].w * image->comps[i].h * image->comps[i].prec;
                                 }
+
                                 var outlen = (uint) (0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
                                 var buf = new PinnedByteArray(new byte[outlen]);
-
-                                Console.WriteLine("size of cparameters : {0}", Marshal.SizeOf(typeof(opj_cparameters_t)));
-                                Console.WriteLine("size of cparameters : {0}", Marshal.SizeOf(typeof(opj_poc_t)));
-                                Console.WriteLine("size of cparameters : {0}", Marshal.SizeOf(typeof(sbyte)));
 
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                 {
                                     Opj_setup_encoder_winx64(codec, ref eparams, image);
-                                    cio = Opj_cio_open_winx64((byte*)buf.Pointer, outlen);
+                                    c_stream = Opj_create_stream_winx64((byte*)buf.Pointer, (uint)buf.ByteSize, false);
                                 }
                                 else
                                 {
                                     Opj_setup_encoder(codec, ref eparams, image);
-                                    cio = Opj_cio_open((byte*)buf.Pointer, (uint)buf.ByteSize);
+                                    c_stream = Opj_create_stream((byte*)buf.Pointer, (uint)buf.ByteSize, false);
                                 }
 
                                 var isEncodeSuccess = false;
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode_winx64(codec, cio, image, eparams.index));
+                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode_winx64(codec, c_stream, image, eparams.index));
                                 else
-                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode(codec, cio, image, eparams.index));
+                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode(codec, c_stream, image, eparams.index));
 
                                 if (isEncodeSuccess)
                                 {
                                     int clen = 0;
 
                                     if (Platform.Current.Equals(Platform.Type.win_x64))
-                                        clen = Cio_tell_winx64(cio);
+                                        clen = Opj_stream_tell_winx64(c_stream);
                                     else
-                                        clen = Cio_tell(cio);
+                                        clen = Opj_stream_tell(c_stream);
                                     
-                                    var cbuf1 = buf.Data.Take(clen).ToArray();
-
-                                    //cbuf = pool.Rent(clen);
-
-                                    //Marshal.Copy((IntPtr)cio, cbuf, 0, clen);
-                                    //var cbuf1 = buf.Data.Take(clen).ToArray();
+                                    cbuf = pool.Rent(clen);
+                                    Marshal.Copy(buf.Pointer, cbuf, 0, clen);
 
                                     IByteBuffer buffer;
                                     if (clen >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                     {
-                                        buffer = new TempFileBuffer(cbuf1);
+                                        buffer = new TempFileBuffer(cbuf);
                                         buffer = EvenLengthBuffer.Create(buffer);
                                     }
                                     else
-                                        buffer = new MemoryByteBuffer(cbuf1);
+                                        buffer = new MemoryByteBuffer(cbuf);
 
                                     if (oldPixelData.NumberOfFrames == 1)
                                         buffer = EvenLengthBuffer.Create(buffer);
@@ -879,12 +786,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
                             finally
                             {
-                                if (cio != null)
+                                if (c_stream != null)
                                 {
                                     if (Platform.Current.Equals(Platform.Type.win_x64))
-                                        Opj_cio_close_winx64(cio);
+                                        Opj_stream_close_winx64(c_stream);
                                     else
-                                        Opj_cio_close(cio);
+                                        Opj_stream_close(c_stream);
                                 }
 
                                 if (image != null)
@@ -946,7 +853,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
 
-            /*DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
+            DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
 
             if (jparams == null)
                 jparams = (DicomJpeg2000Params)GetDefaultParameters();
@@ -984,36 +891,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     unsafe
                     {
                         opj_dparameters_t dparams = new opj_dparameters_t();
-                        opj_event_mgr_t event_mgr = new opj_event_mgr_t();
                         opj_image_t* image = null;
-                        opj_dinfo_t* dinfo = null;
-                        opj_cio_t* cio = null;
+                        void* codec = null;
+                        void* d_stream = null;
 
                         if (Platform.Current.Equals(Platform.Type.win_x64))
-                            Memset_x64(&event_mgr, 0, (uint)sizeof(opj_event_mgr_t));
+                            Opj_set_default_decode_parameters_winx64(&dparams);
                         else
-                            Memset(&event_mgr, 0, (uint)sizeof(opj_event_mgr_t));
-
-                        opj_msg_callback error_handler = null;
-                        opj_msg_callback warning_handler = null;
-                        opj_msg_callback info_handler = null;
-
-                        error_handler = opj_error_callback;
-                        event_mgr.error_handler = Marshal.GetFunctionPointerForDelegate((error_handler));
-
-                        if (jparams.IsVerbose)
-                        {
-                            warning_handler = opj_warning_callback;
-                            event_mgr.warning_handler = Marshal.GetFunctionPointerForDelegate((warning_handler));
-
-                            info_handler = opj_info_callback;
-                            event_mgr.info_handler = Marshal.GetFunctionPointerForDelegate((info_handler));
-                        }
-
-                        if (Platform.Current.Equals(Platform.Type.win_x64))
-                            Opj_set_default_decoder_winx64(&dparams);
-                        else
-                            Opj_set_default_decoder(&dparams);
+                            Opj_set_default_decode_parameters(&dparams);
 
                         dparams.cp_layer = 0;
                         dparams.cp_reduce = 0;
@@ -1028,28 +913,24 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 format = GetCodecFormat_winx64(buf);
-                                dparams.decod_format = format;
-                                dinfo = Opj_create_decompress_winx64(format);
-                                Opj_set_event_mgr_winx64((opj_common_ptr*)dinfo, &event_mgr, null);
-                                Opj_setup_decoder_winx64(dinfo, &dparams);
+                                dparams.decod_format = (int)format;
 
-                                bool opj_err = false;
-                                dinfo->client_data = (void*)&opj_err;
-                                cio = Opj_cio_open_winx64((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
-                                image = Opj_decode_winx64(dinfo, cio);
+                                codec = Opj_create_decompress_winx64(format);
+                                Opj_setup_decoder_winx64(codec, &dparams);
+
+                                d_stream = Opj_create_stream_winx64(buf, (uint)jpegArray.ByteSize, true);
+                                image = Opj_decode_winx64(codec, d_stream);
                             }
                             else
                             {
                                 format = GetCodecFormat(buf);
-                                dparams.decod_format = format;
-                                dinfo = Opj_create_decompress(format);
-                                Opj_set_event_mgr((opj_common_ptr*)dinfo, &event_mgr, null);
-                                Opj_setup_decoder(dinfo, &dparams);
+                                dparams.decod_format = (int)format;
 
-                                bool opj_err = false;
-                                dinfo->client_data = (void*)&opj_err;
-                                cio = Opj_cio_open((opj_common_ptr*)dinfo, buf, (int)jpegArray.ByteSize);
-                                image = Opj_decode(dinfo, cio);
+                                codec = Opj_create_decompress(format);
+                                Opj_setup_decoder(codec, &dparams);
+
+                                d_stream = Opj_create_stream(buf, (uint)jpegArray.ByteSize, true);
+                                image = Opj_decode(codec, d_stream);
                             }
 
                             if (image == null)
@@ -1060,7 +941,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 opj_image_comp_t* comp = &image->comps[c];
 
                                 int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
-                                int offset = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps;
+                                int offset = (int)(newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps);
 
                                 if (newPixelData.BytesAllocated == 1)
                                 {
@@ -1070,7 +951,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         byte mask = (byte)(0xFF ^ sign);
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            int i = comp->data[p];
+                                            int i = (int)comp->data[p];
                                             if (i < 0)
                                                 //destArray->Data[pos] = (unsigned char)(-i | sign);
                                                 destArray.Data[pos] = (byte)((i & mask) | sign);
@@ -1101,7 +982,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     {
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            int i = comp->data[p];
+                                            int i = (int)comp->data[p];
 
                                             if (i < 0)
                                                 destData16[pos] = (ushort)((i & mask) | sign);
@@ -1117,7 +998,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         {
                                             destData16[pos] = (ushort)comp->data[p];
                                             pos += offset;
-                                            //Console.WriteLine("{0}",comp->data[p]);
                                         }
                                     }
                                 }
@@ -1136,27 +1016,23 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 buffer = EvenLengthBuffer.Create(buffer);
 
                             newPixelData.AddFrame(buffer);
-
-                            GC.KeepAlive(error_handler);
-                            GC.KeepAlive(warning_handler);
-                            GC.KeepAlive(info_handler);
                         }
                         finally
                         {
-                            if (cio != null)
+                            if (d_stream != null)
                             {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    Opj_cio_close_winx64(cio);
+                                    Opj_stream_close_winx64(d_stream);
                                 else
-                                    Opj_cio_close(cio);
+                                    Opj_stream_close(d_stream);
                             }
 
-                            if (dinfo != null)
+                            if (codec != null)
                             {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    Opj_destroy_decompress_winx64(dinfo);
+                                    Opj_destroy_decompress_winx64(codec);
                                 else
-                                    Opj_destroy_decompress(dinfo);
+                                    Opj_destroy_decompress(codec);
                             }
 
                             if (image != null)
@@ -1183,7 +1059,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         destArray = null;
                     }
                 }
-            }*/
+            }
         }
     }
 

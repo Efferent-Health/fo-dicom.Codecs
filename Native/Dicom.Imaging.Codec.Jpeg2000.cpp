@@ -20,7 +20,6 @@ extern "C"{
 
 #elif defined(__linux__)
 #define EXPORT_OpenJPEG extern
-#include <unistd.h>
 extern "C"{
 #include "./Common/OpenJPEG/openjpeg.h"
 #include "./Common/OpenJPEG/opj_includes.h"
@@ -128,7 +127,7 @@ sample error debug callback expecting no client object
 static void error_callback(const char *msg, void *client_data)
 {
     (void)client_data;
-    fprintf(stdout, "[ERROR] %s", msg);
+    //fprintf(stdout, "[ERROR] %s", msg);
 }
     
 /**
@@ -137,7 +136,7 @@ sample warning debug callback expecting no client object
 static void warning_callback(const char *msg, void *client_data)
 {
     (void)client_data;
-    fprintf(stdout, "[WARNING] %s", msg);
+    //fprintf(stdout, "[WARNING] %s", msg);
 }
 
 /**
@@ -146,21 +145,21 @@ sample debug callback expecting no client object
 static void info_callback(const char *msg, void *client_data)
 {
     (void)client_data;
-    fprintf(stdout, "[INFO] %s", msg);
+    //fprintf(stdout, "[INFO] %s", msg);
 }
 
 /* CALLING COMPRESSION FUNCTIONS */
 
 EXPORT_OpenJPEG opj_codec_t* Opj_create_compress(OPJ_CODEC_FORMAT format)
 {
-    opj_codec_t* realCodec = opj_create_compress(format);
+    opj_codec_t* codec = opj_create_compress(format);
     
     /* catch events using our callbacks and give a local context */
-    opj_set_info_handler(realCodec, info_callback, 00);
-    opj_set_warning_handler(realCodec, warning_callback, 00);
-    opj_set_error_handler(realCodec, error_callback, 00);
+    opj_set_info_handler(codec, info_callback, 00);
+    opj_set_warning_handler(codec, warning_callback, 00);
+    opj_set_error_handler(codec, error_callback, 00);
     
-    return realCodec;
+    return codec;
 }
 
 EXPORT_OpenJPEG opj_image_t* Opj_image_create(OPJ_UINT32 numcmpts, opj_image_cmptparm_t* cmptparms, OPJ_COLOR_SPACE clrspc)
@@ -173,16 +172,20 @@ EXPORT_OpenJPEG void Opj_setup_encoder(opj_codec_t* codec, opj_cparameters_t* pa
     opj_setup_encoder(codec, parameters, image);
 }
 
-EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(unsigned char* buffer, size_t length)
+EXPORT_OpenJPEG opj_stream_t* Opj_create_stream(unsigned char* buffer, size_t length, bool isDecompressor)
 {
-    opj_stream_t* pStream = opj_stream_create(length, false);
+    opj_stream_t* pStream = opj_stream_create(length, isDecompressor);
     MemFile* memFile = (MemFile*)opj_malloc(sizeof(MemFile));
     memFile->pabyData = buffer;
     memFile->nLength = length;
     memFile->nCurPos = 0;
 
     opj_stream_set_user_data_length(pStream, length);
-    opj_stream_set_write_function(pStream, WriteCallback);
+
+    if (!isDecompressor)
+        opj_stream_set_write_function(pStream, WriteCallback);
+    else
+        opj_stream_set_read_function(pStream, ReadCallback);
 
     opj_stream_set_seek_function(pStream, SeekCallback);
     opj_stream_set_skip_function(pStream, SkipCallback);
@@ -191,31 +194,31 @@ EXPORT_OpenJPEG opj_stream_t* Opj_cio_open(unsigned char* buffer, size_t length)
     return pStream;   
 }
 
-EXPORT_OpenJPEG OPJ_BOOL Opj_encode(opj_codec_t* codec, opj_stream_t* cio, opj_image_t* image, char* index)
+EXPORT_OpenJPEG OPJ_BOOL Opj_encode(opj_codec_t* codec, opj_stream_t* stream, opj_image_t* image, char* index)
 {
     OPJ_BOOL bSuccess;
 
     int num_threads = opj_get_num_cpus();
     opj_codec_set_threads(codec, num_threads);
 
-    bSuccess = opj_start_compress(codec, image, cio);
+    bSuccess = opj_start_compress(codec, image, stream);
         
     if (!bSuccess) 
     {
-        opj_stream_destroy(cio);
+        opj_stream_destroy(stream);
         opj_destroy_codec(codec);
         opj_image_destroy(image);
         return OPJ_FALSE;
     }
         
-    bSuccess = opj_encode(codec, cio);
-    bSuccess = opj_end_compress(codec, cio);
+    bSuccess = opj_encode(codec, stream);
+    bSuccess = opj_end_compress(codec, stream);
     return bSuccess;
 }
 
-EXPORT_OpenJPEG void Opj_cio_close(opj_stream_t* cio)
+EXPORT_OpenJPEG void Opj_stream_close(opj_stream_t* stream)
 {
-    opj_stream_destroy(cio);
+    opj_stream_destroy(stream);
 }
 
 EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
@@ -226,47 +229,64 @@ EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
 EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* codec)
 {
     if (codec) 
-    {
        opj_destroy_codec(codec);
+}
+
+EXPORT_OpenJPEG int Opj_stream_tell(opj_stream_t* stream)
+{
+    return opj_stream_tell((opj_stream_private_t*)stream);  
+}
+
+/* CALLING DECOMPRESSION FUNCTIONS */
+
+EXPORT_OpenJPEG opj_codec_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
+{   
+    opj_codec_t* codec = opj_create_decompress(format);
+
+    /* catch events using our callbacks and give a local context */
+    opj_set_info_handler(codec, info_callback, 00);
+    opj_set_warning_handler(codec, warning_callback, 00);
+    opj_set_error_handler(codec, error_callback, 00);
+    
+    return codec;  
+}
+
+EXPORT_OpenJPEG void Opj_setup_decoder(opj_codec_t* codec, opj_dparameters_t* parameters)
+{
+    opj_setup_decoder(codec, parameters);  
+}
+
+EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_codec_t* codec, opj_stream_t* stream)
+{
+    OPJ_BOOL bSuccess;
+    opj_image_t* pImage;
+    
+    int num_threads = opj_get_num_cpus();
+    opj_codec_set_threads(codec, num_threads);
+
+    if (!opj_read_header(stream, codec, &pImage))
+    {
+        opj_stream_destroy(stream);
+        opj_destroy_codec(codec);
+        return NULL;
     }
+
+    bSuccess = opj_decode(codec, stream, pImage);
+    bSuccess = opj_end_decompress(codec, stream);
+    return pImage;
 }
 
-EXPORT_OpenJPEG int Cio_tell(opj_stream_t* cio)
-{
-    return opj_stream_tell((opj_stream_private_t*)cio);  
-}
 
-//Calling compression functions
-
-/*EXPORT_OpenJPEG opj_dinfo_t* Opj_create_decompress(OPJ_CODEC_FORMAT format)
+EXPORT_OpenJPEG void Opj_destroy_decompress(opj_codec_t* codec)
 {
-    return opj_create_decompress(format);   
-}
-
-EXPORT_OpenJPEG void Opj_setup_decoder(opj_dinfo_t* dinfo, opj_dparameters_t* parameters)
-{
-    opj_setup_decoder(dinfo, parameters);  
-}
-
-EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_dinfo_t* dinfo, opj_cio_t* cio)
-{
-    return opj_decode(dinfo, cio);  
-}
-
-EXPORT_OpenJPEG void Opj_destroy_decompress(opj_dinfo_t* dinfo)
-{
-    opj_destroy_decompress(dinfo); 
+    if (codec) 
+       opj_destroy_codec(codec);
 }
 
 EXPORT_OpenJPEG void Opj_set_default_decode_parameters(opj_dparameters_t *parameters)
 {
     opj_set_default_decoder_parameters(parameters);
 }
-
-EXPORT_OpenJPEG void Memset(void * prt, int value ,size_t num)
-{
-    memset(prt, value, num);
-}*/
 
 EXPORT_OpenJPEG OPJ_CODEC_FORMAT GetCodecFormat(unsigned char* buffer)
 {
