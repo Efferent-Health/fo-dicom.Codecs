@@ -192,16 +192,14 @@ EXPORT_OpenJPEG opj_stream_t* Opj_create_stream(unsigned char* buffer, size_t le
     return pStream;   
 }
 
-EXPORT_OpenJPEG OPJ_BOOL Opj_encode(opj_codec_t* codec, opj_stream_t* stream, opj_image_t* image, char* index)
+EXPORT_OpenJPEG OPJ_BOOL Opj_encode(opj_codec_t* codec, opj_stream_t* stream, opj_image_t* image)
 {
     OPJ_BOOL bSuccess;
 
     int num_threads = opj_get_num_cpus();
     opj_codec_set_threads(codec, num_threads);
-
-    bSuccess = opj_start_compress(codec, image, stream);
         
-    if (!bSuccess) 
+    if (!opj_start_compress(codec, image, stream)) 
     {
         opj_stream_destroy(stream);
         opj_destroy_codec(codec);

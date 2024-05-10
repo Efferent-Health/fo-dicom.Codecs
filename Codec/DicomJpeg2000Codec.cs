@@ -413,7 +413,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public static extern unsafe void* Opj_create_stream_winx64(byte* buffer, uint length, bool isDecompressor);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
-        public static extern unsafe int Opj_encode_winx64(void* codec, void* stream, opj_image_t* image, sbyte* index);
+        public static extern unsafe int Opj_encode_winx64(void* codec, void* stream, opj_image_t* image);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_close")]
         public static extern unsafe void Opj_stream_close_winx64(void* stream);
@@ -462,7 +462,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public static extern unsafe void* Opj_create_stream(byte* buffer, uint length, bool isDecompressor);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_encode")]
-        public static extern unsafe int Opj_encode(void* codec, void* stream, opj_image_t* image, sbyte* index);
+        public static extern unsafe int Opj_encode(void* codec, void* stream, opj_image_t* image);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_close")]
         public static extern unsafe void Opj_stream_close(void* stream);
@@ -751,9 +751,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 var isEncodeSuccess = false;
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode_winx64(codec, c_stream, image, eparams.index));
+                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode_winx64(codec, c_stream, image));
                                 else
-                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode(codec, c_stream, image, eparams.index));
+                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode(codec, c_stream, image));
 
                                 if (isEncodeSuccess)
                                 {
