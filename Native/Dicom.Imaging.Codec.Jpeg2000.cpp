@@ -31,7 +31,6 @@ extern "C"{
         #define EXPORT_OpenJPEG extern
 		extern "C"{
         #include "./Common/OpenJPEG/openjpeg.h"
-        #include "./Common/OpenJPEG/j2k.h"
         #include "./Common/OpenJPEG/opj_includes.h"
 		}
     #endif
