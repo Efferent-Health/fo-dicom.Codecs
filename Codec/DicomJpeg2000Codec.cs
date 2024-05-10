@@ -474,7 +474,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public static extern unsafe void Opj_destroy_compress(void* codec);
 
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_tell")]
-        public static extern unsafe int Opj_stream_tell(void* stream);
+        public static extern unsafe long Opj_stream_tell(void* stream);
 
         //Decode OpenJPEG library
 
@@ -760,9 +760,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     int clen = 0;
 
                                     if (Platform.Current.Equals(Platform.Type.win_x64))
-                                        clen = Opj_stream_tell_winx64(c_stream);
+                                        clen = (int)Opj_stream_tell_winx64(c_stream);
                                     else
-                                        clen = Opj_stream_tell(c_stream);
+                                        clen = (int)Opj_stream_tell(c_stream);
                                     
                                     cbuf = pool.Rent(clen);
                                     Marshal.Copy(buf.Pointer, cbuf, 0, clen);

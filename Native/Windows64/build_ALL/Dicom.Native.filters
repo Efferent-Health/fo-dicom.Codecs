@@ -111,9 +111,6 @@
     <ClCompile Include="..\..\Common\OpenJPEG\bio.c">
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\bench_dwt.c">
-      <Filter>Source Files\OpenJPEG</Filter>
-    </ClCompile>
     
     <ClCompile Include="..\..\Common\CharLS\jpegls.cpp">
       <Filter>Source Files\CharLS</Filter>
@@ -183,12 +180,6 @@
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\opj_intmath.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\opj_includes.h">
-      <Filter>Header Files\OpenJPEG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\OpenJPEG\openjpeg.h">
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\OpenJPEG\opj_includes.h">

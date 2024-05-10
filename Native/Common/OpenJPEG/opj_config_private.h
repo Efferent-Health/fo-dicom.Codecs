@@ -20,14 +20,20 @@
 
 /* find whether or not have <malloc.h> */
 #define OPJ_HAVE_MALLOC_H
+
 /* check if function `aligned_alloc` exists */
 /* #undef OPJ_HAVE_ALIGNED_ALLOC */
+
+#ifdef _WIN32
 /* check if function `_aligned_malloc` exists */
-/* #undef OPJ_HAVE__ALIGNED_MALLOC */
-/* check if function `memalign` exists */
-#define OPJ_HAVE_MEMALIGN
-/* check if function `posix_memalign` exists */
-#define OPJ_HAVE_POSIX_MEMALIGN
+    #define OPJ_HAVE__ALIGNED_MALLOC
+#else
+    /* check if function `memalign` exists */
+    #define OPJ_HAVE_MEMALIGN
+
+    /* check if function `posix_memalign` exists */
+    #define OPJ_HAVE_POSIX_MEMALIGN
+#endif
 
 #if !defined(_POSIX_C_SOURCE)
 #if defined(OPJ_HAVE_FSEEKO) || defined(OPJ_HAVE_POSIX_MEMALIGN)

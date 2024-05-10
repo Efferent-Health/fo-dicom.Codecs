@@ -14,7 +14,6 @@
 #define EXPORT_OpenJPEG  __declspec(dllexport)
 extern "C"{
 #include "./Common/OpenJPEG/openjpeg.h"
-#include "./Common/OpenJPEG/j2k.h"
 #include "./Common/OpenJPEG/opj_includes.h"
 }
 
@@ -232,7 +231,7 @@ EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* codec)
        opj_destroy_codec(codec);
 }
 
-EXPORT_OpenJPEG int Opj_stream_tell(opj_stream_t* stream)
+EXPORT_OpenJPEG int64_t Opj_stream_tell(opj_stream_t* stream)
 {
     return opj_stream_tell((opj_stream_private_t*)stream);  
 }
