@@ -18,8 +18,10 @@
 /* #undef _FILE_OFFSET_BITS */
 #define OPJ_HAVE_FSEEKO ON
 
-/* find whether or not have <malloc.h> */
-#define OPJ_HAVE_MALLOC_H
+#if !defined(__APPLE__)
+    /* find whether or not have <malloc.h> */
+    #define OPJ_HAVE_MALLOC_H
+#endif
 
 /* check if function `aligned_alloc` exists */
 /* #undef OPJ_HAVE_ALIGNED_ALLOC */
