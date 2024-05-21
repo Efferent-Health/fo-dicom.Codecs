@@ -56,7 +56,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         /** number of division by 2 of the out image compared to the original size of image */
         public uint factor;
         /** image component data */
-        public uint* data;
+        public int* data;
         public ushort alpha;
     }
 
@@ -588,7 +588,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             eparams.cp_fixed_alloc = 0;
                             eparams.cp_fixed_quality = 0;
                             eparams.jpip_on = 0;
-                            eparams.cp_disto_alloc = 1;
+                            //eparams.cp_disto_alloc = 1;
 
                             if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
                                 eparams.irreversible = 1;
@@ -660,7 +660,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                                 {
                                                     byte pixel = frameArray.Data[pos];
                                                     if (Convert.ToBoolean(pixel & sign))
-                                                        comp->data[p] = (uint)-(((-pixel) & mask) + 1);
+                                                        comp->data[p] = -(((-pixel) & mask) + 1);
                                                     else
                                                         comp->data[p] = pixel;
                                                     pos += offset;
@@ -691,26 +691,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         {
                                             if (oldPixelData.BitsStored < 16)
                                             {
-                                                ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
-                                                ushort sign = (ushort)(1 << oldPixelData.HighBit);
-                                                ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
+                                                short* frameData16 = (short*)(void*)frameArray.Pointer;
+                                                short sign = (short)(1 << oldPixelData.HighBit);
+                                                short mask = (short)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
                                                 for (int p = 0; p < pixelCount; p++)
                                                 {
-                                                    ushort pixel = frameData16[pos];
+                                                    short pixel = frameData16[pos];
                                                     if (Convert.ToBoolean(pixel & sign))
-                                                        comp->data[p] = (uint)-(((-pixel) & mask) + 1);
+                                                        comp->data[p] = -(((-pixel) & mask) + 1);
                                                     else
                                                         comp->data[p] = pixel;
                                                     pos += offset;
                                                 }
-
                                             }
                                             else
                                             {
                                                 short* frameData16 = (short*)(void*)frameArray.Pointer;
                                                 for (int p = 0; p < pixelCount; p++)
                                                 {
-                                                    comp->data[p] = (uint)frameData16[pos];
+                                                    comp->data[p] = frameData16[pos];
                                                     pos += offset;
                                                 }
                                             }
@@ -764,17 +763,18 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     else
                                         clen = (int)Opj_stream_tell(c_stream);
                                     
-                                    cbuf = pool.Rent(clen);
-                                    Marshal.Copy(buf.Pointer, cbuf, 0, clen);
+                                    //cbuf = pool.Rent(clen);
+                                    //Marshal.Copy(buf.Pointer, cbuf, 0, clen);
+                                    var cbuf1 = buf.Data.Take(clen).ToArray();
 
                                     IByteBuffer buffer;
                                     if (clen >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                     {
-                                        buffer = new TempFileBuffer(cbuf);
+                                        buffer = new TempFileBuffer(cbuf1);
                                         buffer = EvenLengthBuffer.Create(buffer);
                                     }
                                     else
-                                        buffer = new MemoryByteBuffer(cbuf);
+                                        buffer = new MemoryByteBuffer(cbuf1);
 
                                     if (oldPixelData.NumberOfFrames == 1)
                                         buffer = EvenLengthBuffer.Create(buffer);
@@ -818,7 +818,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 frameArray.Dispose();
                                 frameArray = null;
                             }
-
                         }
                     }
                 }
