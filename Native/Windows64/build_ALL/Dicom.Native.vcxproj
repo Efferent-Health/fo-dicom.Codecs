@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FA9C7678-B9D9-46BC-8921-8152FD6787CA}</ProjectGuid>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>DICOM.Imaging.Codec</RootNamespace>
     <ProjectName>Dicom.Native</ProjectName>
@@ -24,7 +24,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -63,11 +63,15 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4691</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>
       </AdditionalDependencies>
+      <ForceFileOutput>
+      </ForceFileOutput>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -107,32 +111,37 @@
     <ClInclude Include="..\..\Common\CharLS\publictypes.h" />
     <ClInclude Include="..\..\Common\CharLS\scan.h" />
     <ClInclude Include="..\..\Common\CharLS\util.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\bio.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\cidx_manager.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\cio.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\dwt.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\event.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\fix.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\image.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\indexbox_manager.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\int.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\j2k.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\j2k_lib.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\jp2.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\jpt.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\mct.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\mqc.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\openjpeg.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\opj_config.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\opj_includes.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\opj_malloc.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\pi.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\raw.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\t1.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\t1_luts.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\t2.h" />
-    <ClInclude Include="..\..\Common\OpenJPEG\tcd.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\tls_keys.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\thread.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\tgt.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\tcd.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\t2.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\t1_luts.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\t1_ht_luts.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\t1.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\sparse_array.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\pi.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_malloc.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_intmath.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_includes.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_config_private.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_config.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_common.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_codec.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_clock.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\openjpeg.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\mqc_inl.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\mqc.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\mct.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\jp2.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\j2k.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\invert.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\image.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\function_list.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\event.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\dwt.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\cio.h" />
+    <ClInclude Include="..\..\Common\OpenJPEG\bio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp" />
@@ -160,83 +169,7 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\bio.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\cidx_manager.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\cio.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\dwt.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\event.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\image.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\j2k.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\j2k_lib.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\jp2.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\jpt.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\mct.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\mqc.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\openjpeg.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\phix_manager.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\pi.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\ppix_manager.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\raw.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\t1.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\t2.c">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\tcd.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\thread.c">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
@@ -244,11 +177,87 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\thix_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\tcd.c">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPEG\tpix_manager.c">
+    <ClCompile Include="..\..\Common\OpenJPEG\t2.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1_ht_generate_luts.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\sparse_array.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\pi.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_malloc.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_clock.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\openjpeg.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\mqc.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\mct.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\jp2.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\j2k.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\invert.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\image.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\ht_dec.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\function_list.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\event.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\dwt.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\cio.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\bio.c">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
