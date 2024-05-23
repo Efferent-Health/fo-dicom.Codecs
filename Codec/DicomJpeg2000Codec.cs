@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Runtime.InteropServices;
 
 using System.Linq;
-using System.Drawing;
 
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
