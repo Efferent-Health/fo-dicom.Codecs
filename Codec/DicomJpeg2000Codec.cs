@@ -691,7 +691,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         {
                                             if (oldPixelData.BitsStored < 16)
                                             {
-                                                short* frameData16 = (short*)(void*)frameArray.Pointer;
+                                                short* frameData16 = (short*)frameArray.Pointer.ToPointer();
                                                 short sign = (short)(1 << oldPixelData.HighBit);
                                                 short mask = (short)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
                                                 for (int p = 0; p < pixelCount; p++)
@@ -706,7 +706,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             }
                                             else
                                             {
-                                                short* frameData16 = (short*)(void*)frameArray.Pointer;
+                                                short* frameData16 = (short*)frameArray.Pointer.ToPointer();
                                                 for (int p = 0; p < pixelCount; p++)
                                                 {
                                                     comp->data[p] = frameData16[pos];
@@ -715,12 +715,34 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             }
                                         }
                                         else
-                                        {
-                                            ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
-                                            for (int p = 0; p < pixelCount; p++)
+                                        {   
+                                            if (oldPixelData.BitsStored < 16)
                                             {
-                                                comp->data[p] = frameData16[pos];
-                                                pos += offset;
+                                                ushort* frameData16 = (ushort*)frameArray.Pointer.ToPointer();
+                                                ushort sign = (ushort)(1 << oldPixelData.HighBit);
+                                                ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
+
+                                                for (int p = 0; p < pixelCount; p++)
+                                                {
+                                                    ushort pixel = frameData16[pos];
+                                                    if (Convert.ToBoolean(pixel & sign))
+                                                    {
+                                                        comp->data[p] = -(((-pixel) & mask) + 1);
+                                                        comp->sgnd = 1;
+                                                    }
+                                                    else
+                                                        comp->data[p] = pixel;
+                                                    pos += offset;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ushort* frameData16 = (ushort*)frameArray.Pointer.ToPointer();
+                                                for (int p = 0; p < pixelCount; p++)
+                                                {
+                                                    comp->data[p] = frameData16[pos];
+                                                    pos += offset;
+                                                }
                                             }
                                         }
                                     }
