@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 using FellowOakDicom.Imaging.Codec;
@@ -2097,7 +2098,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 PinnedByteArray jpegArray = new PinnedByteArray(pixelData.GetFrame(0).Data);
                 j_decompress_ptr dinfo = new j_decompress_ptr();
 
-                SourceManagerStruct src;
+                var jpegFile = new byte[] { 255, 216, 255, 224 };
+
+                if (!jpegArray.Data.SequenceEqual(jpegArray.Data.Take(jpegFile.Length)))
+                {
+                    throw new DicomCodecException("Not a JPEG file.");
+                }
+
+                SourceManagerStruct src = new SourceManagerStruct();
 
                 Init_source init_Source_ = initSource;
                 src.pub.init_source = Marshal.GetFunctionPointerForDelegate(init_Source_);
@@ -2198,7 +2206,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         jpeg_create_decompress_16(ref dinfo);
                 }
 
-                dinfo.src = (jpeg_source_mgr*)&src.pub;
+                dinfo.src = &src.pub;
 
                 //jpeg_read_header 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                 if (Bits.Equals(8))
@@ -2271,6 +2279,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
 
+                GC.KeepAlive(init_Source_);
+                GC.KeepAlive(skip_input_data_);
+                GC.KeepAlive(errorexit_);
+                GC.KeepAlive(ouput_Message_);
+
                 return dinfo.data_precision;
             }
 
@@ -2325,23 +2338,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             try
             {
-                try
-                {
-                    precision = JpegHelper.ScanJpegForBitDepth(oldPixelData);
-                }
-                catch
-                {
-                    // if the internal scanner chokes on an image, try again using ijg
-                    JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
-                    precision = c.ScanHeaderForPrecision(oldPixelData);
-                }
+                precision = JpegHelper.ScanJpegForBitDepth(oldPixelData);
             }
             catch
             {
-                // the old scanner choked on several valid images...
-                // assume the correct encoder was used and let libijg handle the rest
-                precision = oldPixelData.BitsStored;
+                // if the internal scanner chokes on an image, try again using ijg
+                JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
+                precision = c.ScanHeaderForPrecision(oldPixelData);
             }
+
+            // the old scanner choked on several valid images...
+            // assume the correct encoder was used and let libijg handle the rest
+            if (precision != 0)
+                precision = oldPixelData.BitsStored;
 
             if (newPixelData.BitsStored <= 8 && precision > 8)
                 newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)16); // embedded overlay?
@@ -2359,7 +2368,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             if (bits == 8)
                 return new JpegCodec(JpegMode.Baseline, 0, 0, bits);
             else
-                throw new DicomCodecException(String.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
+                throw new DicomCodecException(string.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
         }
     }
 
@@ -2379,7 +2388,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 return new JpegCodec(JpegMode.Baseline, 0, 0, bits);
 
             else
-                throw new DicomCodecException(String.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
+                throw new DicomCodecException(string.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
         }
 
     };
@@ -2398,12 +2407,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
             if (bits == 8)
                 return new JpegCodec(JpegMode.Sequential, 0, 0, bits);
-
-            else if (bits <= 12)
+            else if (bits > 8 && bits <= 12)
                 return new JpegCodec(JpegMode.Sequential, 0, 0, bits);
-
             else
-                throw new DicomCodecException(String.Format("Unable to create JPEG Process 4 codec for bits stored == {0}", bits));
+                throw new DicomCodecException(string.Format("Unable to create JPEG Process 4 codec for bits stored == {0}", bits));
         }
     }
 
@@ -2421,13 +2428,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {
             if (bits == 8)
                 return new JpegCodec(JpegMode.Lossless, jparams.Predictor, jparams.PointTransform, bits);
-
-            else if (bits <= 12)
+            else if (bits > 8 && bits <= 12)
                 return new JpegCodec(JpegMode.Lossless, jparams.Predictor, jparams.PointTransform, bits);
-
-            else if (bits <= 16)
+            else if (bits > 12 && bits <= 16)
                 return new JpegCodec(JpegMode.Lossless, jparams.Predictor, jparams.PointTransform, bits);
-
             else
                 throw new DicomCodecException(String.Format("Unable to create JPEG Process 14 codec for bits stored == {0}", bits));
         }
@@ -2448,10 +2452,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
             if (bits == 8)
                 return new JpegCodec(JpegMode.Lossless, 1, jparams.PointTransform, bits);
 
-            else if (bits <= 12)
+            else if (bits > 8 && bits <= 12)
                 return new JpegCodec(JpegMode.Lossless, 1, jparams.PointTransform, bits);
 
-            else if (bits <= 16)
+            else if (bits > 12 && bits <= 16)
                 return new JpegCodec(JpegMode.Lossless, 1, jparams.PointTransform, bits);
 
             else
