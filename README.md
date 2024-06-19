@@ -29,6 +29,7 @@ The following CODECS are implemented:
 ## Usage
  
 - Add the standard fo-dicom nuget packages to your project (tested with 4.0.8 and 5.0.3)
+ 
 ### With fo-dicom 4.0
 - Add the [nuget package](https://www.nuget.org/packages/Efferent.Native/) to your .net Standard or .net Core project (minimum version is 2.0) 
 - Add the standard fo-dicom nuget packages to your project (version 4.0.x)
@@ -46,3 +47,18 @@ The following CODECS are implemented:
     .SkipValidation()
     .Build();
   ````
+
+## Dependencies
+
+### Windows
+It is required to have Visual C++ Redistributable v14 installed in the target Windows machine. Otherwise, it will throw a runtime error:
+
+````
+Unable to load DLL 'Dicom.Native': The specified module could not be found. (Exception from HRESULT: 0x8007007E)
+````
+
+The installer can be downloaded directly from https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+
+
+
