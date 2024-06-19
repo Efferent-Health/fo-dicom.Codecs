@@ -59,6 +59,12 @@ Unable to load DLL 'Dicom.Native': The specified module could not be found. (Exc
 
 The installer can be downloaded directly from https://aka.ms/vs/17/release/vc_redist.x64.exe
 
+### Linux
+The native library has been built on an Ubuntu 18 environment using GNU C Compiler version 7.4.x.
 
+Therefore, it requires a GLIBC library runtime version 2.27 and GLIBCXX version 3.4. Otherwise, it can throw a runtime error like:
 
+````
+Unhandled Exception: System.DllNotFoundException: Unable to load shared library 'Dicom.Native.so' or one of its dependencies.
+````
 
