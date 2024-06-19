@@ -117,7 +117,7 @@ stages:
   - job: osx_x64
     dependsOn: linux_arm64
     pool:
-      vmImage: 'macos-11'
+      vmImage: 'macos-12'
     steps:
     - script: |
         cd Native/POSIX64/
@@ -163,7 +163,7 @@ stages:
   - job: osx_arm64
     dependsOn: osx_x64
     pool:
-      vmImage: 'macos-11'
+      vmImage: 'macos-12'
     steps:
     - script: |
         cd Native/POSIX64/
