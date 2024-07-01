@@ -215,9 +215,28 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Run acceptance tests
-        run: dotnet test Tests/Acceptance/*.csproj --logger:trx
+        run: dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Archive files
         uses: actions/upload-artifact@v3
         with:
           name: AcceptanceImages-win-x64-${{ github.run_id }}
           path: Tests/Acceptance/bin/debug/net8.0/out
+
+  nuget:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: bin
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+      - name: Prepare NuGet package
+        run: nuget pack **/fo-dicom.Codecs.nuspec
+      - name: Publish NuGet package
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: nuget push **/*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
