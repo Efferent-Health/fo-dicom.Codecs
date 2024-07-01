@@ -1,0 +1,218 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - README.md
+
+jobs:
+  versions:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Version comparison
+        run: |
+          $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
+          $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
+          $version1 = $xml1.Project.PropertyGroup.VersionPrefix;
+          $version2 = $xml2.package.metadata.version;
+
+          if ($version1 -ne $version2) {
+              throw "csproj and nuspec versions are different"
+          }
+        shell: pwsh
+
+  build_win_x64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compile libijg* libraries
+        run: |
+          msbuild Native/Windows64/build_ALL/libijg*.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+      - name: Compile windows x64 library
+        run: |
+          msbuild Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
+      - name: Publish windows x64 artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-win-x64
+          path: Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native
+      - name: Run unit tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tests/Unit/*.csproj --logger:trx
+        name: Run unit tests
+
+  build_linux_x64:
+    runs-on: ubuntu-20.04
+    needs: build_win_x64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compile linux x64 library
+        run: |
+          cd Native/POSIX64/
+          cmake ./CMakeLists.txt
+          make
+      - name: Publish linux x64 artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-linux-x64
+          path: Native/POSIX64/lib-linux-x64
+      - name: Publish managed library
+        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      - name: Set version variable
+        id: setvarStep
+        run: |
+          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
+          echo "::set-output name=csprojVersion::$Matches[1]"
+        shell: pwsh
+      - name: Publish managed artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-managed
+          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      - name: Run unit tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tests/Unit/*.csproj --logger:trx
+        name: Run unit tests
+
+  build_linux_arm64:
+    runs-on: ubuntu-20.04
+    needs: build_linux_x64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compile linux arm64 library
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          cd Native/POSIX64/
+          cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
+          make
+      - name: Publish linux arm64 artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-linux-arm64
+          path: Native/POSIX64/lib-linux-arm64
+      - name: Publish managed library
+        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      - name: Set version variable
+        id: setvarStep
+        run: |
+          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
+          echo "::set-output name=csprojVersion::$Matches[1]"
+        shell: pwsh
+      - name: Publish managed artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-managed
+          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      - name: Run unit tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tests/Unit/*.csproj --logger:trx
+        name: Run unit tests
+
+  build_osx_x64:
+    runs-on: macos-12
+    needs: build_linux_arm64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compile osx x64 library
+        run: |
+          cd Native/POSIX64/
+          cmake ./CMakeLists.txt
+          make
+      - name: Publish osx x64 artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-osx-x64
+          path: Native/POSIX64/lib-osx-x64
+      - name: Publish managed library
+        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      - name: Set version variable
+        id: setvarStep
+        run: |
+          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
+          echo "::set-output name=csprojVersion::$Matches[1]"
+        shell: pwsh
+      - name: Publish managed artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-managed
+          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      - name: Run unit tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tests/Unit/*.csproj --logger:trx
+        name: Run unit tests
+
+  build_osx_arm64:
+    runs-on: macos-12
+    needs: build_osx_x64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compile osx arm64 library
+        run: |
+          cd Native/POSIX64/
+          cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
+          make
+      - name: Publish osx arm64 artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-osx-arm64
+          path: Native/POSIX64/lib-osx-arm64
+      - name: Publish managed library
+        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      - name: Set version variable
+        id: setvarStep
+        run: |
+          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
+          echo "::set-output name=csprojVersion::$Matches[1]"
+        shell: pwsh
+      - name: Publish managed artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib-managed
+          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      - name: Run unit tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tests/Unit/*.csproj --logger:trx
+        name: Run unit tests
+
+  acceptance:
+    runs-on: windows-latest
+    needs:
+      - build_win_x64
+      - build_osx_arm64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compliance tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet test Tests/Acceptance/*.csproj --logger:trx
+        name: Run acceptance tests
+      - name: Archive files
+        uses: actions/upload-artifact@v3
+        with:
+          name: AcceptanceImages-win-x64-${{ github.run_id }}
+          path: Tests/Acceptance/bin/debug/net8.0/out
+
+  deploy:
+    runs-on: windows-latest
