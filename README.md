@@ -30,16 +30,16 @@ The following CODECS are implemented:
  
 - Add the standard fo-dicom nuget packages to your project (tested with 4.0.8 and 5.0.3)
  
-### With fo-dicom 4.0
-- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native/) to your .net Standard or .net Core project (minimum version is 2.0) 
-- Add the standard fo-dicom nuget packages to your project (version 4.0.x)
+### With fo-dicom 4.x
+- Add the [nuget package](https://www.nuget.org/packages/Efferent.Native/) to your .NET Standard or .NET Core project (minimum version is 2.0) 
+- Add the standard fo-dicom nuget packages to your project (version 4.x)
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   Dicom.Imaging.Codec.TranscoderManager.SetImplementation(new Dicom.Imaging.NativeCodec.NativeTranscoderManager());
   ````
-### With fo-dicom 5.0
-- Add the [nuget package](https://www.nuget.org/packages/fo-dicom.Codecs) to your .net Standard or .NET project (minimum version is .NET 5.0) 
-- Add the standard fo-dicom nuget packages to your project (version 5.0.x)
+### With fo-dicom 5.x
+- Add the [nuget package](https://www.nuget.org/packages/fo-dicom.Codecs) to your .NET Standard or .NET project (minimum version is .NET 5.0) 
+- Add the standard fo-dicom nuget packages to your project (version 5.x)
 - At the beginning of your application, replace the transcoder manager, as:
   ````C#
   new DicomSetupBuilder()
