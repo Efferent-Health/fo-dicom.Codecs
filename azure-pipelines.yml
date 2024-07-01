@@ -2,6 +2,28 @@ trigger:
 - master
 
 stages:
+- stage: Preconditions
+  jobs:
+  - job: versions
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+    - task: PowerShell@2
+      displayName: 'Version comparison'
+      inputs:
+        targetType: inline
+        script: |
+          $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
+          $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
+          $version1 = $xml1.Project.PropertyGroup.VersionPrefix;
+          $version2 = $xml2.package.metadata.version;
+
+          if ($version1 -ne $version2)
+          {
+              Fail -Message  "csproj and nuspec versions are different"
+          }
+      continueOnError: false
+
 - stage: Build
   jobs:
   - job: win_x64
