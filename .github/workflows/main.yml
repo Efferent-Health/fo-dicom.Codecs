@@ -27,6 +27,7 @@ jobs:
 
   build_win_x64:
     runs-on: windows-2019
+    needs: versions    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -224,6 +225,7 @@ jobs:
 
   nuget:
     runs-on: windows-latest
+    needs: acceptance
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
