@@ -105,19 +105,6 @@ jobs:
         with:
           name: lib-linux-arm64
           path: Native/POSIX64/lib-linux-arm64
-      # - name: Publish managed library
-      #   run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      # - name: Publish managed artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: lib-managed
-      #     path: Platform/fo-dicom/bin/Release/netstandard2.0
-      # - name: Setup .NET 8.0
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '8.0.x'
-      # - name: Run unit tests
-      #   run: dotnet test Tests/Unit/*.csproj --logger:trx
         
   build_osx_x64:
     runs-on: macos-12
@@ -135,13 +122,6 @@ jobs:
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
-      # - name: Publish managed library
-      #   run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      # - name: Publish managed artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: lib-managed
-      #     path: Platform/fo-dicom/bin/Release/netstandard2.0
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
@@ -165,19 +145,6 @@ jobs:
         with:
           name: lib-osx-arm64
           path: Native/POSIX64/lib-osx-arm64
-      # - name: Publish managed library
-      #   run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      # - name: Publish managed artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: lib-managed
-      #     path: Platform/fo-dicom/bin/Release/netstandard2.0
-      # - name: Setup .NET 8.0
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '8.0.x'
-      # - name: Run unit tests
-      #   run: dotnet test Tests/Unit/*.csproj --logger:trx
         
   acceptance:
     runs-on: windows-latest
@@ -208,13 +175,10 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          # name: build-artifacts
           path: bin
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
         run: nuget pack Setup/fo-dicom.Codecs.nuspec
       - name: Publish NuGet package
-        # env:
-        #  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: nuget push "fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
