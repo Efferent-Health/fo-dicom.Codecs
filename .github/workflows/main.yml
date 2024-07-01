@@ -85,12 +85,12 @@ jobs:
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
-      - name: Run unit tests
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet test Tests/Unit/*.csproj --logger:trx
-        name: Run unit tests
+      - name: Run unit tests
+        run: dotnet test Tests/Unit/*.csproj --logger:trx      
 
   build_linux_arm64:
     runs-on: ubuntu-20.04
@@ -123,13 +123,13 @@ jobs:
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
-      - name: Run unit tests
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet test Tests/Unit/*.csproj --logger:trx
-        name: Run unit tests
-
+      - name: Run unit tests
+        run: dotnet test Tests/Unit/*.csproj --logger:trx
+        
   build_osx_x64:
     runs-on: macos-12
     needs: build_linux_arm64
@@ -159,12 +159,12 @@ jobs:
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
-      - name: Run unit tests
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet test Tests/Unit/*.csproj --logger:trx
-        name: Run unit tests
+      - name: Run unit tests
+        run: dotnet test Tests/Unit/*.csproj --logger:trx
 
   build_osx_arm64:
     runs-on: macos-12
@@ -195,13 +195,13 @@ jobs:
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
-      - name: Run unit tests
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet test Tests/Unit/*.csproj --logger:trx
-        name: Run unit tests
-
+      - name: Run unit tests
+        run: dotnet test Tests/Unit/*.csproj --logger:trx
+        
   acceptance:
     runs-on: windows-latest
     needs:
@@ -210,12 +210,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Compliance tests
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet test Tests/Acceptance/*.csproj --logger:trx
-        name: Run acceptance tests
+      - name: Run acceptance tests
+        run: dotnet test Tests/Acceptance/*.csproj --logger:trx
       - name: Archive files
         uses: actions/upload-artifact@v3
         with:
