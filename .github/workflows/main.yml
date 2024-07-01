@@ -75,12 +75,6 @@ jobs:
           path: Native/POSIX64/lib-linux-x64
       - name: Publish managed library
         run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      - name: Set version variable
-        id: setvarStep
-        run: |
-          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
-          echo "::set-output name=csprojVersion::$Matches[1]"
-        shell: pwsh
       - name: Publish managed artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -111,19 +105,13 @@ jobs:
         with:
           name: lib-linux-arm64
           path: Native/POSIX64/lib-linux-arm64
-      - name: Publish managed library
-        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      - name: Set version variable
-        id: setvarStep
-        run: |
-          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
-          echo "::set-output name=csprojVersion::$Matches[1]"
-        shell: pwsh
-      - name: Publish managed artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib-managed
-          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      # - name: Publish managed library
+      #   run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      # - name: Publish managed artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: lib-managed
+      #     path: Platform/fo-dicom/bin/Release/netstandard2.0
       # - name: Setup .NET 8.0
       #   uses: actions/setup-dotnet@v4
       #   with:
@@ -147,19 +135,13 @@ jobs:
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
-      - name: Publish managed library
-        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      - name: Set version variable
-        id: setvarStep
-        run: |
-          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
-          echo "::set-output name=csprojVersion::$Matches[1]"
-        shell: pwsh
-      - name: Publish managed artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib-managed
-          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      # - name: Publish managed library
+      #   run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      # - name: Publish managed artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: lib-managed
+      #     path: Platform/fo-dicom/bin/Release/netstandard2.0
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
@@ -183,19 +165,13 @@ jobs:
         with:
           name: lib-osx-arm64
           path: Native/POSIX64/lib-osx-arm64
-      - name: Publish managed library
-        run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
-      - name: Set version variable
-        id: setvarStep
-        run: |
-          $version = (Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>' | Out-Null; 
-          echo "::set-output name=csprojVersion::$Matches[1]"
-        shell: pwsh
-      - name: Publish managed artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib-managed
-          path: Platform/fo-dicom/bin/Release/netstandard2.0
+      # - name: Publish managed library
+      #   run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
+      # - name: Publish managed artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: lib-managed
+      #     path: Platform/fo-dicom/bin/Release/netstandard2.0
       # - name: Setup .NET 8.0
       #   uses: actions/setup-dotnet@v4
       #   with:
