@@ -211,10 +211,10 @@ jobs:
           # name: build-artifacts
           path: bin
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1
+        uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
         run: nuget pack Setup/fo-dicom.Codecs.nuspec
       - name: Publish NuGet package
         # env:
         #  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: nuget push Setup/fo-dicom.Codecs.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
+        run: nuget push "fo-dicom.Codecs/fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
