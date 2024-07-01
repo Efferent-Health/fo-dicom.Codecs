@@ -46,7 +46,7 @@ jobs:
         run: |
           msbuild Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Publish windows x64 artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-win-x64
           path: Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native
@@ -69,7 +69,7 @@ jobs:
           cmake ./CMakeLists.txt
           make
       - name: Publish linux x64 artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-linux-x64
           path: Native/POSIX64/lib-linux-x64
@@ -82,7 +82,7 @@ jobs:
           echo "::set-output name=csprojVersion::$Matches[1]"
         shell: pwsh
       - name: Publish managed artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
@@ -107,7 +107,7 @@ jobs:
           cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
           make
       - name: Publish linux arm64 artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-linux-arm64
           path: Native/POSIX64/lib-linux-arm64
@@ -120,7 +120,7 @@ jobs:
           echo "::set-output name=csprojVersion::$Matches[1]"
         shell: pwsh
       - name: Publish managed artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
@@ -143,7 +143,7 @@ jobs:
           cmake ./CMakeLists.txt
           make
       - name: Publish osx x64 artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
@@ -156,7 +156,7 @@ jobs:
           echo "::set-output name=csprojVersion::$Matches[1]"
         shell: pwsh
       - name: Publish managed artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
@@ -179,7 +179,7 @@ jobs:
           cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
           make
       - name: Publish osx arm64 artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-osx-arm64
           path: Native/POSIX64/lib-osx-arm64
@@ -192,7 +192,7 @@ jobs:
           echo "::set-output name=csprojVersion::$Matches[1]"
         shell: pwsh
       - name: Publish managed artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
@@ -218,7 +218,7 @@ jobs:
       - name: Run acceptance tests
         run: dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Archive files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: AcceptanceImages-win-x64-${{ github.run_id }}
           path: Tests/Acceptance/bin/debug/net8.0/out
@@ -230,9 +230,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: build-artifacts
+          # name: build-artifacts
           path: bin
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1
