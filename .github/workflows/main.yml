@@ -28,16 +28,19 @@ jobs:
   build_win_x64:
     runs-on: windows-latest
     steps:
-      #- name: Add build path
-      #  run: |
-      #    echo “::add-path::C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin”
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
-      - name: Compile libijg* libraries
+      - name: Compile libijg8 libraries
         run: |
-          msbuild Native/Windows64/build_ALL/libijg*.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+          msbuild Native/Windows64/build_ALL/libijg8.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+      - name: Compile libijg12 libraries
+        run: |
+          msbuild Native/Windows64/build_ALL/libijg12.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+      - name: Compile libijg16 libraries
+        run: |
+          msbuild Native/Windows64/build_ALL/libijg16.x64.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Compile windows x64 library
         run: |
           msbuild Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
