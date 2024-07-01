@@ -217,4 +217,4 @@ jobs:
       - name: Publish NuGet package
         # env:
         #  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: nuget push "fo-dicom.Codecs/fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
+        run: nuget push "fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
