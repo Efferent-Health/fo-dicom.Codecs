@@ -213,6 +213,3 @@ jobs:
         with:
           name: AcceptanceImages-win-x64-${{ github.run_id }}
           path: Tests/Acceptance/bin/debug/net8.0/out
-
-  deploy:
-    runs-on: windows-latest
