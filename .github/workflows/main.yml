@@ -33,8 +33,7 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
         with:
-          vs-version: '14.16'
-          vswhere-path: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise'    
+          vs-version: '[14.16, 14.16]'
       - name: Compile libijg8 libraries
         run: |
           msbuild Native/Windows64/build_ALL/libijg8.x64.vcxproj /p:Configuration=Release /p:Platform=x64
