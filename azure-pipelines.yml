@@ -9,14 +9,14 @@ stages:
       vmImage: 'windows-2019'
     steps:
     - task: PowerShell@2
-      displayName: 'Unit Test'
+      displayName: 'Version comparison'
       inputs:
         targetType: inline
         script: |
           $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
           $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
-          $version1 = $xml.Project.PropertyGroup.VersionPrefix;
-          $version2 = $xml.package.metadata.version;
+          $version1 = $xml1.Project.PropertyGroup.VersionPrefix;
+          $version2 = $xml2.package.metadata.version;
 
           Write-Host 'v1: '$version1
           Write-Host 'v2: '$version2
