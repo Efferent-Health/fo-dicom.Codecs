@@ -13,8 +13,8 @@ stages:
       inputs:
         targetType: inline
         script: |
-          $xml1 = [xml](Get-Content -Path $(System.ArtifactsDirectory)/Platform/fo-dicom/fo-dicom.Codecs.csproj)
-          $xml2 = [xml](Get-Content -Path $(System.ArtifactsDirectory)/Setup/fo-dicom.Codecs.nuspec)
+          $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
+          $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
           $version1 = $xml.Project.PropertyGroup.VersionPrefix;
           $version2 = $xml.package.metadata.version;
 
