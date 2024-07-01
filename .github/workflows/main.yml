@@ -26,14 +26,15 @@ jobs:
         shell: pwsh
 
   build_win_x64:
-    runs-on: windows-latest
+    runs-on: windows-2019
+    #runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
-        with:
-          vs-version: '[16.0, 16.10]'
+        #with:
+        #  vs-version: '[16.0, 16.10]'
       - name: Compile libijg8 libraries
         run: |
           msbuild Native/Windows64/build_ALL/libijg8.x64.vcxproj /p:Configuration=Release /p:Platform=x64
