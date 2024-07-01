@@ -33,12 +33,14 @@ jobs:
       #    echo “::add-path::C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin”
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v2
       - name: Compile libijg* libraries
         run: |
-          msbuild.exe Native/Windows64/build_ALL/libijg*.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+          msbuild Native/Windows64/build_ALL/libijg*.x64.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Compile windows x64 library
         run: |
-          msbuild.exe Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
+          msbuild Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Publish windows x64 artifacts
         uses: actions/upload-artifact@v3
         with:
