@@ -18,7 +18,7 @@ stages:
           $version1 = $xml1.Project.PropertyGroup.VersionPrefix;
           $version2 = $xml2.package.metadata.version;
 
-          if ($version1 -eq $version2)
+          if ($version1 -ne $version2)
           {
               Fail -Message  "csproj and nuspec versions are different"
           }
