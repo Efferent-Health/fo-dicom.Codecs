@@ -2,6 +2,26 @@ trigger:
 - master
 
 stages:
+- stage: Preconditions
+  jobs:
+  - job: versions
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+    - task: PowerShell@2
+      displayName: 'Unit Test'
+      inputs:
+        targetType: inline
+        script: |
+          $xml1 = [xml](Get-Content -Path $(System.ArtifactsDirectory)/Platform/fo-dicom/fo-dicom.Codecs.csproj)
+          $xml2 = [xml](Get-Content -Path $(System.ArtifactsDirectory)/Setup/fo-dicom.Codecs.nuspec)
+          $version1 = $xml.Project.PropertyGroup.VersionPrefix;
+          $version2 = $xml.package.metadata.version;
+
+          Write-Host 'v1: '$version1
+          Write-Host 'v2: '$version2
+      continueOnError: false
+
 - stage: Build
   jobs:
   - job: win_x64
