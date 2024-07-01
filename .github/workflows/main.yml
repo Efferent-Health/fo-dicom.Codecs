@@ -28,6 +28,9 @@ jobs:
   build_win_x64:
     runs-on: windows-latest
     steps:
+      - name: Add build path
+        run: |
+          echo “::add-path::C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin”
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Compile libijg* libraries
