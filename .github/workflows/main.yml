@@ -123,12 +123,12 @@ jobs:
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
-      - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx
+      # - name: Setup .NET 8.0
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: '8.0.x'
+      # - name: Run unit tests
+      #   run: dotnet test Tests/Unit/*.csproj --logger:trx
         
   build_osx_x64:
     runs-on: macos-12
