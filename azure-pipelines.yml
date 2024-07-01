@@ -264,6 +264,9 @@ stages:
         buildType: 'current'
         downloadType: 'specific'
         downloadPath: 'bin'
+    - task: NuGetToolInstaller@1
+      inputs:
+        checkLatest: true
     - task: NuGetCommand@2
       displayName: Prepare nuget package
       inputs:
@@ -279,4 +282,3 @@ stages:
         nuGetFeedType: 'external'
         publishFeedCredentials: 'Nuget.org'
         versioningScheme: 'off'
-  
