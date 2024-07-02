@@ -424,7 +424,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public static extern unsafe void Opj_destroy_compress_winx64(void* codec);
 
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "Opj_stream_tell")]
-        public static extern unsafe int Opj_stream_tell_winx64(void* stream);
+        public static extern unsafe long Opj_stream_tell_winx64(void* stream);
 
         //Decode OpenJPEG library for winx64
 
