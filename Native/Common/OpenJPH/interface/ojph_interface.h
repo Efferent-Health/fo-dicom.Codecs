@@ -28,14 +28,14 @@ struct Decoded_outdata
 
 struct Ipoint
 {
-    Ipoint(uint32_t x = 0, uint32_t y = 0) : x(x), y(y) {}
+    Ipoint(ui32 x = 0, ui32 y = 0) : x(x), y(y) {}
     ui32 x;
     ui32 y;
 };
 
 struct Isize
 {
-    Isize(uint32_t width = 0, uint32_t height = 0) : width(width), height(height) {}
+    Isize(ui32 width = 0, ui32 height = 0) : width(width), height(height) {}
     ui32 width;
     ui32 height;
 };
