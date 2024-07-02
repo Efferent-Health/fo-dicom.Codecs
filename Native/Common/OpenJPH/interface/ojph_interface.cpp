@@ -63,7 +63,7 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
 
     // Setup encoding parameters
     ojph::param_cod cod = codestream.access_cod();
-    cod.set_num_decomposition(decompositions_);
+    cod.set_num_decomposition((ui32)decompositions_);
     cod.set_block_dims(blockDimensions_.width, blockDimensions_.height);
     std::vector<ojph::size> precincts;
     precincts.resize(precincts_.size());
@@ -235,8 +235,6 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     int decompositionLevel = 0;
     // Isize sizeAtDecompositionLevel = calculateSizeAtDecompositionLevel(decompositionLevel, frameInfo);
     Isize sizeAtDecompositionLevel(frameInfo.width, frameInfo.height);
-
-    int resolutionLevel = numDecompositions - decompositionLevel;
 
     const size_t bytesPerPixel = (frameInfo.bitsPerSample + 8 - 1) / 8;
     const size_t destinationSize = sizeAtDecompositionLevel.width * sizeAtDecompositionLevel.height * frameInfo.componentCount * bytesPerPixel;
