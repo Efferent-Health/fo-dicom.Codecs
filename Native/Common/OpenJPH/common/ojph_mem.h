@@ -134,8 +134,6 @@ namespace ojph {
   /////////////////////////////////////////////////////////////////////////////
   struct line_buf
   {
-    line_buf() : size(0), pre_size(0), i32(0) {}
-
     template<typename T>
     void pre_alloc(mem_fixed_allocator *p, size_t num_ele, ui32 pre_size)
     {
@@ -157,14 +155,6 @@ namespace ojph {
       si32* i32;
       float* f32;
     };
-  };
-
-  /////////////////////////////////////////////////////////////////////////////
-  struct lifting_buf
-  {
-    lifting_buf() { line = NULL;  active = false; }
-    line_buf *line;
-    bool active;
   };
 
   /////////////////////////////////////////////////////////////////////////////

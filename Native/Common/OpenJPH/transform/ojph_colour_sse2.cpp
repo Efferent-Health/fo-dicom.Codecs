@@ -41,7 +41,7 @@
 #include "ojph_arch.h"
 #include "ojph_colour.h"
 
-#include <emmintrin.h>
+#include <immintrin.h>
 
 namespace ojph {
   namespace local {
