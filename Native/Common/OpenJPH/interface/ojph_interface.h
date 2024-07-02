@@ -29,15 +29,15 @@ struct Decoded_outdata
 struct Ipoint
 {
     Ipoint(uint32_t x = 0, uint32_t y = 0) : x(x), y(y) {}
-    uint32_t x;
-    uint32_t y;
+    ui32 x;
+    ui32 y;
 };
 
 struct Isize
 {
     Isize(uint32_t width = 0, uint32_t height = 0) : width(width), height(height) {}
-    uint32_t width;
-    uint32_t height;
+    ui32 width;
+    ui32 height;
 };
 
 struct Frameinfo

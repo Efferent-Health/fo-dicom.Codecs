@@ -73,7 +73,7 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
         precincts[i].w = precincts_[i].width;
         precincts[i].h = precincts_[i].height;
     }
-    cod.set_precinct_size(precincts_.size(), precincts.data());
+    cod.set_precinct_size((int)precincts_.size(), precincts.data());
 
     const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
     switch (progression_order)
