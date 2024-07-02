@@ -176,7 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp" />
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp" />
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.HtJpeg2000.cpp" />
     <ClCompile Include="..\..\Dicom.Imaging.Codec.JpegLS.cpp" />
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_12.cpp" />
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_16.cpp" />
