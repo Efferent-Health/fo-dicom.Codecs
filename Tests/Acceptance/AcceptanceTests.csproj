@@ -24,6 +24,6 @@
   <ItemGroup>
     <!--PackageReference Include="fo-dicom.Codecs" Version="5.14.0-beta1" /-->
     <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
-    <file src="../../bin/lib-win-x64/Dicom.Native.dll" target="runtimes/win-x64/native" />
+    <file src="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>
