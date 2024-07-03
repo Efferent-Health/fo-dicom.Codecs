@@ -4,16 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Reflection;
-using System.Drawing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using FellowOakDicom;
-using FellowOakDicom.Imaging;
 using FellowOakDicom.Imaging.Codec;
-using FellowOakDicom.Imaging.NativeCodec;
 
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace FellowOakDicom.Imaging.NativeCodec.Test
@@ -23,33 +19,19 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
     {
         const BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
 
-        private static string[] filenames = 
-        {
-            "PM5644-960x540_JPEG-Baseline_YBR422.dcm",
-            "PM5644-960x540_JPEG-Baseline_YBRFull.dcm",
-            "PM5644-960x540_JPEG-Lossless_RGB.dcm",
-            "PM5644-960x540_JPEG-LS_Lossless.dcm",
-            "PM5644-960x540_JPEG-LS_NearLossless.dcm",
-            "PM5644-960x540_JPEG2000-Lossless.dcm",
-            "PM5644-960x540_JPEG2000-Lossy.dcm",
-            "PM5644-960x540_JPEG2000-Lossy50.dcm",
-            "PM5644-960x540_Palette_8.dcm",
-            "PM5644-960x540_Palette_16.dcm",
-            "PM5644-960x540_RGB.dcm",
-            "PM5644-960x540_RLE-Lossless.dcm"
-        };
+        private static string[] filenames;
 
-        private static string[] transferSyntaxes =
+        private static DicomTransferSyntax[] transferSyntaxes =
         {
-            "RLELossless",
-            "JPEG2000Lossless",
-            "JPEG2000Lossy",
-            "HTJ2K",
-            "HTJ2KLossless",
-            "HTJ2KLosslessRPCL",
-            "JPEGLSLossless",
-            "JPEGLSNearLossless",
-            "JPEGProcess1"
+            DicomTransferSyntax.RLELossless,
+            DicomTransferSyntax.JPEG2000Lossless,
+            DicomTransferSyntax.JPEG2000Lossy,
+            DicomTransferSyntax.HTJ2K,
+            DicomTransferSyntax.HTJ2KLossless,
+            DicomTransferSyntax.HTJ2KLosslessRPCL,
+            DicomTransferSyntax.JPEGLSLossless,
+            DicomTransferSyntax.JPEGLSNearLossless,
+            DicomTransferSyntax.JPEGProcess1
         };
 
         private static string[][] resultsPerform;
@@ -64,6 +46,8 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
                 .SkipValidation()
                 .Build();
+
+            filenames = Directory.GetFiles(".","*.dcm").Select(fn => Path.GetFileName(fn)).ToArray();
 
             resultsPerform = new string[filenames.Length][];
             resultsInverse = new string[filenames.Length][];
@@ -88,7 +72,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 var data = DicomFile.Open(filenames[index0]);
 
-                var ts = (DicomTransferSyntax)typeof(DicomTransferSyntax).GetField(transferSyntaxes[index1], binding).GetValue(0);
+                var ts = transferSyntaxes[index1];
 
                 new DicomSetupBuilder()
                 .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
@@ -118,7 +102,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 var data = DicomFile.Open(input);
 
-                var ts = (DicomTransferSyntax)typeof(DicomTransferSyntax).GetField(transferSyntaxes[index1], binding).GetValue(0);
+                var ts = transferSyntaxes[index1];
 
                 new DicomSetupBuilder()
                 .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
@@ -169,7 +153,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             string md = "# Acceptance tests\n";
             md += "The following results indicate the conversions that didn't break, but not the correctness of them. Inspect the Dicom files visually for correctness.\n";
             md += "## PerformTranscode\n\n";
-            md += "Filename|" + string.Join(" | ", transferSyntaxes.Select(ts => splitName(ts))) + "\n";
+            md += "Filename|" + string.Join(" | ", transferSyntaxes.Select(ts => splitName(ts.ToString()))) + "\n";
             md += "-- | " + string.Join(" | ", transferSyntaxes.Select(ts=>":--:")) + "\n";
 
             for (int i=0; i < filenames.Length; i++)
@@ -178,7 +162,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             }
 
             md += "\n## InverseTranscode\n\n";
-            md += "Filename|" + string.Join(" | ", transferSyntaxes.Select(ts => splitName(ts))) + "\n";
+            md += "Filename|" + string.Join(" | ", transferSyntaxes.Select(ts => splitName(ts.ToString()))) + "\n";
             md += "-- | " + string.Join(" | ", transferSyntaxes.Select(ts=>":--:")) + "\n";
 
             for (int i=0; i < filenames.Length; i++)

@@ -18,15 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
+    <None Include="./*.dcm" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="./*.dcm" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/POSIX64/lib-linux-x64/*.so" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/POSIX64/lib-linux-arm64/*.so" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/POSIX64/lib-osx-x64/*.dylib" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/POSIX64/lib-osx-arm64/*.dylib" CopyToOutputDirectory="Always" />
-    <None Include="../../Native/Windows64/lib-win-x64/*.dll" CopyToOutputDirectory="Always" />
+    <!--PackageReference Include="fo-dicom.Codecs" Version="5.14.0-beta1" /-->
+    <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
+    <None Include="../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

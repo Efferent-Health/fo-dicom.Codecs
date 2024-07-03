@@ -1,15 +1,17 @@
 # fo-dicom.Codecs
 
 [![NuGet](https://img.shields.io/nuget/v/fo-dicom.Codecs.svg)](https://www.nuget.org/packages/fo-dicom.Codecs/)
-[![github](https://img.shields.io/github/stars/Efferent-Health/fo-dicom.Codecs.svg)]()
-[![Build Status](https://dev.azure.com/efferent/open-source/_apis/build/status/Efferent-Health.fo-dicom.Codecs?branchName=master)](https://dev.azure.com/efferent/open-source/_build/latest?definitionId=9&branchName=master)
+![downloads](https://img.shields.io/nuget/dt/fo-dicom.Codecs)
+![github](https://img.shields.io/github/stars/Efferent-Health/fo-dicom.Codecs?style=flat&color=yellow)
+![build](https://github.com/Efferent-Health/fo-dicom.Codecs/actions/workflows/main.yml/badge.svg?branch=master)
 
-<img src="https://lh3.googleusercontent.com/-Fq3nigRUo7U/VfaIPuJMjfI/AAAAAAAAALo/7oaLrrTBhnw/s1600/Fellow%2BOak%2BSquare%2BTransp.png" alt="fo-dicom logo" height="80" /><img src="efferent_logo.png" alt="Efferent logo" height="80" />
+<img src="fo-dicom_logo.png" alt="fo-dicom logo" height="80" />
+<img src="efferent_logo.png" alt="Efferent logo" height="80" />
 
 This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent Health, LLC](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
 - Windows 64-bit (tested with Windows 10/11)
-- Linux 64-bit Intel and ARM architectures (tested with Ubuntu 16/18/20 Desktop and Server)
+- Linux 64-bit Intel and ARM architectures (tested with Ubuntu 18/20/22 Desktop and Server)
 - MacOS 64-bit Intel and Apple architectures (tested with Ventura/Sonoma)
 
 ## Supported CODECs
@@ -23,8 +25,12 @@ The following CODECS are implemented:
 - JPEG Lossless, Non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1]): Default Transfer Syntax for Lossless JPEG Image Compression
 - JPEG-LS Lossless Image Compression
 - JPEG-LS Lossy (Near-Lossless) Image Compression
+- High-Throughput JPEG 2000 Image Compression
+- High-Throughput JPEG 2000 Image Compression (Lossless Only)
+- High-Throughput JPEG 2000 with RPCL Options Image Compression (Lossless Only)
 - RLE Lossless
-- **High-Throughput JPEG 2000 (HTJ2K) encoding is already in beta phase!!!** (read https://github.com/Efferent-Health/fo-dicom.Codecs/issues/54)
+
+The HT-JPEG2000 family of codecs is only supported by fo-dicom version 5.1.3+
 
 ## Usage
  
@@ -60,7 +66,7 @@ Unable to load DLL 'Dicom.Native': The specified module could not be found. (Exc
 The installer can be downloaded directly from https://aka.ms/vs/17/release/vc_redist.x64.exe
 
 ### Linux
-The native library has been built on an Ubuntu 18 environment using GNU C Compiler version 7.4.x.
+The native library has been built on an Ubuntu 20.04 environment using GNU C Compiler version 9.4.x.
 
 Therefore, it requires a GLIBC library runtime version 2.27 and GLIBCXX version 3.4. Otherwise, it can throw a runtime error like:
 
