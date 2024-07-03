@@ -11,13 +11,15 @@ on:
 #  RELEASE_VERSION: 'undefined'
 
 jobs:
-  versions:
+  version:
     runs-on: windows-latest
+    outputs:
+      release-version: ${{ steps.compare-versions.outputs.RELEASE_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Version comparison
-        id: get-version
+        id: compare-versions
         run: |
           $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
           $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
@@ -28,14 +30,12 @@ jobs:
               throw "csproj and nuspec versions are different"
           }
 
-          echo "RELEASE_VERSION=$version1" >> $env:GITHUB_ENV          
+          echo "RELEASE_VERSION=$version1" >> $GITHUB_OUTPUT          
         shell: pwsh
-        #outputs:
-        #  RELEASE_VERSION: ${{ env.RELEASE_VERSION}}
 
   build_win_x64:
     runs-on: windows-2019
-    needs: versions    
+    needs: version    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -153,6 +153,7 @@ jobs:
   acceptance:
     runs-on: windows-latest
     needs:
+      - version
       - build_win_x64
       - build_linux_x64
       - build_linux_arm64
@@ -171,7 +172,7 @@ jobs:
           path: bin
       - name: Run acceptance tests
         run: |
-          echo "Running Acceptance Test for version {{ env.RELEASE_VERSION}}..." 
+          echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}}..." 
           dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Archive files
         uses: actions/upload-artifact@v4
@@ -198,8 +199,10 @@ jobs:
 
   release:
     runs-on: windows-latest
-    needs: nuget
-    if: (!contains(vars.RELEASE_VERSION, '-'))
+    needs: 
+      - version
+      - nuget
+    #if: (!contains(vars.RELEASE_VERSION, '-'))
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -212,7 +215,7 @@ jobs:
         uses: actions/create-release@v1
         with: 
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ env.RELEASE_VERSION }}
+          release_name: Release ${{ needs.version.outputs.release-version }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
