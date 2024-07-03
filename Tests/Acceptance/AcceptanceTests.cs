@@ -100,7 +100,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 resultsPerform[index0][index1] = "FAIL";
 
-                File.WriteAllText(output, e.Message);
+                Assert.Fail("Couldn't Transcode from: " + filenames[index0] + " dicom file.");
             }
         }
 
@@ -130,8 +130,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             catch (Exception e)
             {
                 resultsInverse[index0][index1] = "FAIL";
-
-                File.WriteAllText(output, e.Message);
+                Assert.Fail("Couldn't Transcode from: " + filenames[index0] + " dicom file.");
             }
         }
 
@@ -157,7 +156,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 resultsRender[index0] = "FAIL";
             
-                File.WriteAllText(outputFile, e.Message);
+                Assert.Fail("Couldn't extract image from: " + filenames[index0] + " dicom file.");
             }
         }
 
