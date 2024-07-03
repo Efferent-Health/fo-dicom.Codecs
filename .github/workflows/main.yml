@@ -171,7 +171,7 @@ jobs:
           path: bin
       - name: Run acceptance tests
         run: |
-          echo "Running Acceptance Test for version {{ env.RELEASE VERSION}}..." 
+          echo "Running Acceptance Test for version {{ env.RELEASE_VERSION}}..." 
           dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Archive files
         uses: actions/upload-artifact@v4
