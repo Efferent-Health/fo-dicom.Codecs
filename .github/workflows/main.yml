@@ -158,10 +158,11 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Run acceptance tests
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           path: bin
+      - name: Run acceptance tests
         run: dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Archive files
         uses: actions/upload-artifact@v4
