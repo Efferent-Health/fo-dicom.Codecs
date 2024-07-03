@@ -44,6 +44,9 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             "RLELossless",
             "JPEG2000Lossless",
             "JPEG2000Lossy",
+            "HTJ2K",
+            "HTJ2KLossless",
+            "HTJ2KLosslessRPCL",
             "JPEGLSLossless",
             "JPEGLSNearLossless",
             "JPEGProcess1"
@@ -100,7 +103,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 resultsPerform[index0][index1] = "FAIL";
 
-                Assert.Fail("Couldn't Transcode from: " + filenames[index0] + " dicom file.");
+                Assert.Fail("Couldn't change Transfer syntax " + transferSyntaxes[index1] + " from: " + filenames[index0] + " file.");
             }
         }
 
@@ -130,7 +133,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             catch (Exception e)
             {
                 resultsInverse[index0][index1] = "FAIL";
-                Assert.Fail("Couldn't Transcode from: " + filenames[index0] + " dicom file.");
+                Assert.Fail("Couldn't Decode from: " + filenames[index0] + " file.");
             }
         }
 
@@ -156,7 +159,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 resultsRender[index0] = "FAIL";
             
-                Assert.Fail("Couldn't extract image from: " + filenames[index0] + " dicom file.");
+                Assert.Fail("Couldn't extract image from: " + filenames[index0] + " file.");
             }
         }
 
