@@ -73,10 +73,6 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             }
 
             Directory.CreateDirectory("out");
-
-            new DicomSetupBuilder()
-                .RegisterServices(s => s.AddFellowOakDicom().AddImageManager<ImageSharpImageManager>().AddTranscoderManager<NativeTranscoderManager>())
-                .Build();
         }
 
         [DataTestMethod]
@@ -90,6 +86,10 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 var data = DicomFile.Open(filenames[index0]);
 
                 var ts = (DicomTransferSyntax)typeof(DicomTransferSyntax).GetField(transferSyntaxes[index1], binding).GetValue(0);
+
+                new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .Build();
                 var image = new DicomFile(data.Dataset).Clone(ts);
 
                 image.Save(output);
@@ -116,6 +116,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 var data = DicomFile.Open(input);
 
                 var ts = (DicomTransferSyntax)typeof(DicomTransferSyntax).GetField(transferSyntaxes[index1], binding).GetValue(0);
+
+                new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .Build();
+                
                 var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.ExplicitVRLittleEndian);
 
                 image.Save(output);
@@ -139,6 +144,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             try
             {
                 var img = new DicomImage(filenames[index0]);
+
+                new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddImageManager<ImageSharpImageManager>().AddTranscoderManager<NativeTranscoderManager>())
+                .Build();
+
                 img.RenderImage().AsSharpImage().SaveAsPng(Path.Combine($"out", outputFile));
                 
                 resultsRender[index0] = "OK";

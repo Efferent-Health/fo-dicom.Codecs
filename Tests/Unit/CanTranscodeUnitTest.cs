@@ -38,7 +38,6 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             var nativetranscoder = new NativeTranscoderManager();
             Assert.IsTrue(nativetranscoder.CanTranscode(DicomTransferSyntax.ExplicitVRLittleEndian, ts));
             Assert.IsTrue(nativetranscoder.CanTranscode(ts, DicomTransferSyntax.ExplicitVRLittleEndian));
-
         }
     }
 }
