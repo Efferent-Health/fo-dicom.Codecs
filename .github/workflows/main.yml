@@ -159,6 +159,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Run acceptance tests
+        uses: actions/download-artifact@v4
+        with:
+          path: bin
         run: dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Archive files
         uses: actions/upload-artifact@v4

@@ -83,7 +83,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
                 resultsPerform[index0][index1] = "OK";
             }
-            catch (Exception e)
+            catch
             {
                 resultsPerform[index0][index1] = "FAIL";
 
@@ -114,7 +114,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
                 resultsInverse[index0][index1] = "OK";
             }
-            catch (Exception e)
+            catch
             {
                 resultsInverse[index0][index1] = "FAIL";
                 Assert.Fail("Couldn't Decode from: " + filenames[index0] + " file.");
@@ -139,7 +139,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 
                 resultsRender[index0] = "OK";
             }
-            catch (Exception e)
+            catch
             {
                 resultsRender[index0] = "FAIL";
             
