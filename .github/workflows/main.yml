@@ -7,6 +7,9 @@ on:
     paths-ignore:
       - README.md
 
+#env:
+#  RELEASE_VERSION: 'undefined'
+
 jobs:
   versions:
     runs-on: windows-latest
@@ -14,6 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Version comparison
+        id: get-version
         run: |
           $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
           $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
@@ -26,6 +30,8 @@ jobs:
 
           echo "RELEASE_VERSION=$version1" >> $env:GITHUB_ENV          
         shell: pwsh
+        #outputs:
+        #  RELEASE_VERSION: ${{ env.RELEASE_VERSION}}
 
   build_win_x64:
     runs-on: windows-2019
@@ -193,7 +199,7 @@ jobs:
   release:
     runs-on: windows-latest
     needs: nuget
-    if: (!contains(env.RELEASE_VERSION, '-'))
+    if: (!contains(vars.RELEASE_VERSION, '-'))
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v4
