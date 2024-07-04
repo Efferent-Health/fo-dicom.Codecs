@@ -167,6 +167,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: bin
+          pattern: lib-win-x64
       - name: Run acceptance tests
         run: |
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
@@ -178,11 +179,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: AcceptanceTestResults.zip
-          path: ./AcceptanceTestResults.zip
+          path: .
 
   nuget:
     runs-on: windows-latest
     needs: acceptance
+    if: false ########
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -202,7 +204,7 @@ jobs:
     needs: 
       - version
       - acceptance
-      - nuget
+      #- nuget
     if: (!contains(needs.version.outputs.release-version, '-'))
     steps:
       - name: Checkout repository
@@ -225,4 +227,4 @@ jobs:
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}        
-        run: gh release upload ${{ needs.version.outputs.release-version }} bin/AcceptanceTestResults.zip/AcceptanceTestResults.zip
+        run: gh release upload ${{ needs.version.outputs.release-version }} bin/AcceptanceTestResults.zip
