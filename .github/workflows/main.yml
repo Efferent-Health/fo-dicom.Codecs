@@ -220,7 +220,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
         with: 
-          # tag_name: ${{ github.ref }}
+          tag_name: ${{ needs.version.outputs.release-version }}
           release_name: Release ${{ needs.version.outputs.release-version }}
           draft: false
           prerelease: false
