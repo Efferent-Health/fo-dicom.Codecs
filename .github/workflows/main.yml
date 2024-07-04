@@ -224,6 +224,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }} 
-          asset_path: bin/AcceptanceImages-win-x64-${{ github.run_id }}.zip
+          asset_path: bin/AcceptanceImages-win-x64-${{ github.run_id }}
           asset_name: AcceptanceResult.zip
           asset_content_type: application/zip          
