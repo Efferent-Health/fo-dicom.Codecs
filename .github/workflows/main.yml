@@ -199,7 +199,7 @@ jobs:
         run: nuget push "fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
 
   release:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: 
       - version
       - acceptance
@@ -223,14 +223,8 @@ jobs:
           draft: false
           prerelease: false
       - name: Show directory
-        run: DIR bin/AcceptanceTestResults.zip
+        run: ls -l bin/AcceptanceTestResults.zip
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}        
         run: gh release upload ${{ needs.version.outputs.release-version }} bin/AcceptanceTestResults.zip
-      #  uses: actions/upload-release-asset@v1
-      #  with:
-      #    upload_url: ${{ steps.create-release.outputs.upload_url }} 
-      #    asset_path: bin/AcceptanceTestResults.zip
-      #    asset_name: AcceptanceTestResults.zip
-      #    asset_content_type: application/zip
