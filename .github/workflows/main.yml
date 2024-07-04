@@ -199,9 +199,9 @@ jobs:
     runs-on: windows-latest
     needs: 
       - version
-     - nuget
+      - nuget
     #if: (!contains(needs.version.outputs.release-version, '-'))
-    steps: 
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Download build artifacts
