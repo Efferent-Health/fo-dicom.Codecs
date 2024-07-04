@@ -223,8 +223,8 @@ jobs:
           draft: false
           prerelease: false
       - name: Show directory
-        run: ls -l bin/AcceptanceTestResults.zip
+        run: ls -l bin/AcceptanceTestResults.zip/*
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}        
-        run: gh release upload ${{ needs.version.outputs.release-version }} bin/AcceptanceTestResults.zip
+        run: gh release upload ${{ needs.version.outputs.release-version }} bin/AcceptanceTestResults.zip/AcceptanceTestResults.zip
