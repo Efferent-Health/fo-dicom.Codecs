@@ -203,8 +203,8 @@ jobs:
     needs: 
       - version
       - acceptance
-      # - nuget
-    #if: (!contains(needs.version.outputs.release-version, '-'))
+      - nuget
+    if: (!contains(needs.version.outputs.release-version, '-'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -212,6 +212,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: bin
+          pattern: Acceptance*
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
@@ -222,8 +223,6 @@ jobs:
           release_name: Release ${{ needs.version.outputs.release-version }}
           draft: false
           prerelease: false
-      - name: Show directory
-        run: ls -l bin/AcceptanceTestResults.zip/*
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}        
