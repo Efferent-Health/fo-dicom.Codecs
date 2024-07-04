@@ -205,7 +205,7 @@ jobs:
       - version
       - acceptance
       #- nuget
-    if: (!contains(needs.version.outputs.release-version, '-'))
+    #if: (!contains(needs.version.outputs.release-version, '-'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
