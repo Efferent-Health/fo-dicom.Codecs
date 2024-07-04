@@ -33,7 +33,6 @@ jobs:
   build_win_x64:
     runs-on: windows-2019
     needs: version
-    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -62,7 +61,6 @@ jobs:
   build_linux_x64:
     runs-on: ubuntu-20.04
     needs: build_win_x64
-    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -93,7 +91,6 @@ jobs:
   build_linux_arm64:
     runs-on: ubuntu-20.04
     needs: build_win_x64
-    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -113,7 +110,6 @@ jobs:
   build_osx_x64:
     runs-on: macos-12
     needs: build_win_x64
-    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -137,7 +133,6 @@ jobs:
   build_osx_arm64:
     runs-on: macos-12
     needs: build_win_x64
-    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -154,7 +149,6 @@ jobs:
         
   acceptance:
     runs-on: windows-latest
-    if: false
     needs:
       - version
       - build_win_x64
@@ -205,7 +199,7 @@ jobs:
     runs-on: windows-latest
     needs: 
       - version
-      # - nuget
+     - nuget
     #if: (!contains(needs.version.outputs.release-version, '-'))
     steps: 
       - name: Checkout repository
