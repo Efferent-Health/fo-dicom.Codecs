@@ -216,8 +216,7 @@ jobs:
         id: create-release
         uses: actions/create-release@v1
         env:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ github.token }}        
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with: 
           tag_name: ${{ needs.version.outputs.release-version }}
           release_name: Release ${{ needs.version.outputs.release-version }}
@@ -226,6 +225,8 @@ jobs:
       - name: Show directory
         run: DIR bin/AcceptanceTestResults.zip
       - name: Upload Release Asset
+        env:
+          GH_TOKEN: ${{ github.token }}        
         run: gh release upload ${{ needs.version.outputs.release-version }} bin/AcceptanceTestResults.zip
       #  uses: actions/upload-release-asset@v1
       #  with:
