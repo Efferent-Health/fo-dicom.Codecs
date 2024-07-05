@@ -213,7 +213,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: bin
-          pattern: Acceptance*
+          pattern: test
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
