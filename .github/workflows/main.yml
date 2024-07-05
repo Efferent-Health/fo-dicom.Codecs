@@ -184,7 +184,6 @@ jobs:
   nuget:
     runs-on: windows-latest
     needs: acceptance
-    if: false ########
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -204,8 +203,8 @@ jobs:
     needs: 
       - version
       - acceptance
-      #- nuget
-    #if: (!contains(needs.version.outputs.release-version, '-'))
+      - nuget
+    if: (!contains(needs.version.outputs.release-version, '-'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
