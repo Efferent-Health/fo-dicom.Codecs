@@ -31,7 +31,10 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             DicomTransferSyntax.HTJ2KLosslessRPCL,
             DicomTransferSyntax.JPEGLSLossless,
             DicomTransferSyntax.JPEGLSNearLossless,
-            DicomTransferSyntax.JPEGProcess1
+            DicomTransferSyntax.JPEGProcess1,
+            DicomTransferSyntax.JPEGProcess2_4,
+            DicomTransferSyntax.JPEGProcess14,
+            DicomTransferSyntax.JPEGProcess14SV1
         };
 
         private static string[][] resultsPerform;
@@ -203,6 +206,14 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 {
                         yield return new object[] { i };
                 }
+            }
+        }
+
+        public static void PrintTransferSyntaxes()
+        {
+            foreach (var ts in transferSyntaxes)
+            {
+                Console.WriteLine("|" + ts.UID.UID + "|" + ts.ToString() + "|");
             }
         }
 

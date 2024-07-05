@@ -16,20 +16,23 @@ The codecs in this repository are written in pure C/C++ code and wrapped with C#
 ## Supported CODECs
 
 The following CODECS are implemented:
-- JPEG 2000 Image Compression (Lossless Only)
-- JPEG 2000 Image Compression
-- JPEG Baseline (Process 1): Default Transfer Syntax for Lossy JPEG 8 Bit Image Compression
-- JPEG Extended (Process 2 & 4): Default Transfer Syntax for Lossy JPEG 12 Bit Image Compression - (Process 4 only)
-- JPEG Lossless, Non-Hierarchical (Process 14)
-- JPEG Lossless, Non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1]): Default Transfer Syntax for Lossless JPEG Image Compression
-- JPEG-LS Lossless Image Compression
-- JPEG-LS Lossy (Near-Lossless) Image Compression
-- High-Throughput JPEG 2000 Image Compression
-- High-Throughput JPEG 2000 Image Compression (Lossless Only)
-- High-Throughput JPEG 2000 with RPCL Options Image Compression (Lossless Only)
-- RLE Lossless
 
-The HT-JPEG2000 family of codecs is only supported by fo-dicom version 5.1.3+
+|Transfer Syntax UID|Description|
+|--|--|
+|1.2.840.10008.1.2.5|RLE Lossless|
+|1.2.840.10008.1.2.4.50|JPEG Baseline (Process 1): Default Transfer Syntax for Lossy JPEG 8 Bit Image Compression|
+|1.2.840.10008.1.2.4.51|JPEG Extended (Process 2 & 4): Default Transfer Syntax for Lossy JPEG 12 Bit Image Compression (Process 4 only)|
+|1.2.840.10008.1.2.4.57|JPEG Lossless, Non-Hierarchical (Process 14)|
+|1.2.840.10008.1.2.4.70|JPEG Lossless, Non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1]): Default Transfer Syntax for Lossless JPEG Image Compression|
+|1.2.840.10008.1.2.4.80|JPEG-LS Lossless Image Compression|
+|1.2.840.10008.1.2.4.81|JPEG-LS Lossy (Near-Lossless) Image Compression|
+|1.2.840.10008.1.2.4.90|JPEG 2000 Image Compression (Lossless Only)|
+|1.2.840.10008.1.2.4.91|JPEG 2000 Image Compression|
+|1.2.840.10008.1.2.4.201|High-Throughput JPEG 2000 Image Compression (Lossless Only)|
+|1.2.840.10008.1.2.4.202|High-Throughput JPEG 2000 with RPCL Options Image Compression (Lossless Only)|
+|1.2.840.10008.1.2.4.203|High-Throughput JPEG 2000 Image Compression|
+
+The HT-JPEG2000 family of codecs is only supported since fo-dicom version 5.1.3
 
 ## Usage
  

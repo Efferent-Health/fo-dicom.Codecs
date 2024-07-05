@@ -8,6 +8,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         {
             // For debugging purposes only
             // var tcm = new Codec.NativeTranscoderManager();
+            // AcceptanceTests.PrintTransferSyntaxes();
         }
     }
 }
