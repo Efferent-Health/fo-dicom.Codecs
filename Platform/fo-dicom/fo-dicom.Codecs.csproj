@@ -3,8 +3,10 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom codecs for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
-    <VersionPrefix>5.14.0.2</VersionPrefix>
+    <VersionPrefix>5.14.0.3</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyOriginatorKeyFile>fo-dicom.Codecs.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
     <RootNamespace>FellowOakDicom.Imaging.NativeCodec</RootNamespace>
     <AssemblyName>Dicom.NativeCodecs</AssemblyName>
     <PackageId>fo-dicom.Codecs</PackageId>

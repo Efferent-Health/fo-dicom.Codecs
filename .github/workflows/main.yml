@@ -74,6 +74,9 @@ jobs:
         with:
           name: lib-linux-x64
           path: Native/POSIX64/lib-linux-x64
+      - name: Prepare SN key
+        run: |
+          echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Publish managed library
         run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
       - name: Publish managed artifacts
