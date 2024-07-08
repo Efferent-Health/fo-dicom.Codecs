@@ -56,8 +56,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Prepare SN Key
-        run: echo ${{ secrets.STRONG_NAME_KEY }} | %{ [System.Convert]::FromBase64String($_) } > Platform/fo-dicom/fo-dicom.Codecs.snk
-        shell: pwsh
+        run: |
+          echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
+          certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
         run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
 
@@ -176,8 +177,9 @@ jobs:
           path: bin
           pattern: lib-win-x64
       - name: Prepare SN Key
-        run: echo ${{ secrets.STRONG_NAME_KEY }} | %{ [System.Convert]::FromBase64String($_) } > Platform/fo-dicom/fo-dicom.Codecs.snk
-        shell: pwsh
+        run: |
+          echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
+          certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run acceptance tests
         run: |        
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
