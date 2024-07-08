@@ -5,3 +5,4 @@
 **/build_*/Makefile
 **/build_*/cmake_install.cmake
 **/build_*/CMakeCache.txt
+**/.DS_Store
