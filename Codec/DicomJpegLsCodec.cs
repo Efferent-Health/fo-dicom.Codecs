@@ -253,137 +253,54 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     jls.allowedLossyError = jparams.AllowedError;
                 }
 
-                var pool = ArrayPool<byte>.Shared;
-                byte[] jpegData = null;
-                byte[] newJpegData = null;
-
-                try
-                {
-                    for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
-                    {
-                        IByteBuffer frameData = oldPixelData.GetFrame(frame);
-
-                        //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
-                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
-                        {
-                            frameData = PixelDataConverter.YbrFullToRgb(frameData);
-                        }
-                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                        {
-                            frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
-                        }
-
-                        PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
-
-                        jpegData = pool.Rent((int)frameData.Size);
-
-                        try
-                        {
-                            fixed (byte* jpegDataPointer = jpegData)
-                            {
-                                uint jpegDataSize = 0;
-                                char[] errorMessage = new char[256];
-
-                                CharlsApiResultType err = CharlsApiResultType.Unknown;
-
-                                if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    err = JpegLSEncode_winx64(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
-                                else
-                                    err = JpegLSEncode(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
-
-                                newJpegData = pool.Rent((int)jpegDataSize);
-                                Array.Copy(jpegData, newJpegData, newJpegData.Length);
-                                pool.Return(jpegData);
-
-                                IByteBuffer buffer;
-
-                                if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                                {
-                                    buffer = new TempFileBuffer(newJpegData);
-                                    buffer = EvenLengthBuffer.Create(buffer);
-                                }
-                                else
-                                    buffer = new MemoryByteBuffer(newJpegData);
-
-                                if (oldPixelData.NumberOfFrames == 1)
-                                    buffer = EvenLengthBuffer.Create(buffer);
-
-                                newPixelData.AddFrame(buffer);
-                            }
-                        }
-                        finally
-                        {
-                            if (frameArray != null)
-                            {
-                                frameArray.Dispose();
-                                frameArray = null;
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    if (newJpegData != null)
-                    {
-                        pool.Return(newJpegData);
-                        newJpegData = null;
-                    }
-                }
-            }
-        }
-
-        public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
-        {
-            if (Platform.Current == Platform.Type.unsupported)
-            {
-                throw new InvalidOperationException("Unsupported OS Platform");
-            }
-
-            var pool = ArrayPool<byte>.Shared;
-            byte[] frameData = null;
-
-            try
-            {
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
-                    IByteBuffer jpegData = oldPixelData.GetFrame(frame);
+                    var pool = ArrayPool<byte>.Shared;
+                    byte[] jpegData = null;
+                    byte[] newJpegData = null;
+                    IByteBuffer frameData = oldPixelData.GetFrame(frame);
 
                     //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
                     if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                     {
-                        jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                        frameData = PixelDataConverter.YbrFullToRgb(frameData);
                     }
                     else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                     {
-                        jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                        frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
                     }
 
-                    PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
+                    PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
-                    frameData = pool.Rent(newPixelData.UncompressedFrameSize);
-
-                    PinnedByteArray frameArray = new PinnedByteArray(frameData);
+                    jpegData = pool.Rent((int)frameData.Size);
 
                     try
                     {
-                        JlsParameters jls = new JlsParameters();
-
-                        char[] errorMessage = new char[256];
-
-                        CharlsApiResultType err = CharlsApiResultType.Unknown;
-
-                        unsafe
+                        fixed (byte* jpegDataPointer = jpegData)
                         {
+                            uint jpegDataSize = 0;
+                            char[] errorMessage = new char[256];
+
+                            CharlsApiResultType err = CharlsApiResultType.Unknown;
+
                             if (Platform.Current.Equals(Platform.Type.win_x64))
-                                err = JpegLSDecode_winx64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                                err = JpegLSEncode_winx64(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
                             else
-                                err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                                err = JpegLSEncode(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+
+                            newJpegData = pool.Rent((int)jpegDataSize);
+                            Array.Copy(jpegData, newJpegData, newJpegData.Length);
+                            pool.Return(jpegData);
 
                             IByteBuffer buffer;
-                            if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                                buffer = new TempFileBuffer(frameData);
+
+                            if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            {
+                                buffer = new TempFileBuffer(newJpegData);
+                                buffer = EvenLengthBuffer.Create(buffer);
+                            }
                             else
-                                buffer = new MemoryByteBuffer(frameData);
+                                buffer = new MemoryByteBuffer(newJpegData);
 
                             if (oldPixelData.NumberOfFrames == 1)
                                 buffer = EvenLengthBuffer.Create(buffer);
@@ -399,20 +316,98 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             frameArray = null;
                         }
 
-                        if (jpegArray != null)
+                        if (newJpegData != null)
                         {
-                            jpegArray.Dispose();
-                            jpegArray = null;
+                            pool.Return(newJpegData);
+                            newJpegData = null;
+                        }
+
+                        if (jpegData != null)
+                        {
+                            pool.Return(jpegData);
+                            jpegData = null;
                         }
                     }
                 }
             }
-            finally
+        }
+
+        public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        {
+            if (Platform.Current == Platform.Type.unsupported)
             {
-                if (frameData != null)
+                throw new InvalidOperationException("Unsupported OS Platform");
+            }
+
+            for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
+            {
+                var pool = ArrayPool<byte>.Shared;
+                byte[] frameData = null;
+
+                IByteBuffer jpegData = oldPixelData.GetFrame(frame);
+
+                //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
-                    pool.Return(frameData);
-                    frameData = null;
+                    jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                }
+                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                {
+                    jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                }
+
+                PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
+
+                frameData = pool.Rent(newPixelData.UncompressedFrameSize);
+
+                PinnedByteArray frameArray = new PinnedByteArray(frameData);
+
+                try
+                {
+                    JlsParameters jls = new JlsParameters();
+
+                    char[] errorMessage = new char[256];
+
+                    CharlsApiResultType err = CharlsApiResultType.Unknown;
+
+                    unsafe
+                    {
+                        if (Platform.Current.Equals(Platform.Type.win_x64))
+                            err = JpegLSDecode_winx64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                        else
+                            err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+
+                        IByteBuffer buffer;
+                        if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            buffer = new TempFileBuffer(frameData);
+                        else
+                            buffer = new MemoryByteBuffer(frameData);
+
+                        if (oldPixelData.NumberOfFrames == 1)
+                            buffer = EvenLengthBuffer.Create(buffer);
+
+                        newPixelData.AddFrame(buffer);
+                    }
+                }
+                finally
+                {
+                    if (frameData != null)
+                    {
+                        pool.Return(frameData);
+                        frameData = null;
+                    }
+
+                    if (frameArray != null)
+                    {
+                        frameArray.Dispose();
+                        frameArray = null;
+                    }
+
+                    if (jpegArray != null)
+                    {
+                        jpegArray.Dispose();
+                        jpegArray = null;
+                    }
                 }
             }
         }
