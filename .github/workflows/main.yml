@@ -55,6 +55,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Prepare SN Key
+        run: [io.file]::WriteAllBytes("Platform/fo-dicom/fo-dicom.Codecs", [System.Convert]::FromBase64String("${{ secrets.STRONG_NAME_KEY }}"))
+        shell: pwsh
       - name: Run unit tests
         run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
 
@@ -75,8 +78,7 @@ jobs:
           name: lib-linux-x64
           path: Native/POSIX64/lib-linux-x64
       - name: Prepare SN key
-        run: |
-          echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
+        run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Publish managed library
         run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
       - name: Publish managed artifacts
@@ -130,6 +132,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Prepare SN key
+        run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
         run: dotnet test Tests/Unit/*.csproj --logger:trx
 
@@ -171,8 +175,11 @@ jobs:
         with:
           path: bin
           pattern: lib-win-x64
+      - name: Prepare SN Key
+        run: [io.file]::WriteAllBytes("Platform/fo-dicom/fo-dicom.Codecs", [System.Convert]::FromBase64String("${{ secrets.STRONG_NAME_KEY }}"))
+        shell: pwsh
       - name: Run acceptance tests
-        run: |
+        run: |        
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
           dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Compress results
