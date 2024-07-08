@@ -56,7 +56,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Prepare SN Key
-        run: [io.file]::WriteAllBytes("Platform/fo-dicom/fo-dicom.Codecs", [System.Convert]::FromBase64String("${{ secrets.STRONG_NAME_KEY }}"))
+        run: echo ${{ secrets.STRONG_NAME_KEY }} | %{ [System.Convert]::FromBase64String($_) } > Platform/fo-dicom/fo-dicom.Codecs.snk
         shell: pwsh
       - name: Run unit tests
         run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
@@ -176,7 +176,7 @@ jobs:
           path: bin
           pattern: lib-win-x64
       - name: Prepare SN Key
-        run: [io.file]::WriteAllBytes("Platform/fo-dicom/fo-dicom.Codecs", [System.Convert]::FromBase64String("${{ secrets.STRONG_NAME_KEY }}"))
+        run: echo ${{ secrets.STRONG_NAME_KEY }} | %{ [System.Convert]::FromBase64String($_) } > Platform/fo-dicom/fo-dicom.Codecs.snk
         shell: pwsh
       - name: Run acceptance tests
         run: |        
