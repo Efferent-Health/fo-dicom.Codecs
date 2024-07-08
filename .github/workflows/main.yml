@@ -19,13 +19,13 @@ jobs:
         id: compare-versions
         run: |
           $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
-          $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
+          # $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
           $version1 = $xml1.Project.PropertyGroup.Version;
-          $version2 = $xml2.package.metadata.version;
+          # $version2 = $xml2.package.metadata.version;
 
-          if ($version1 -ne $version2) {
-              throw "csproj and nuspec versions are different"
-          }
+          # if ($version1 -ne $version2) {
+          #    throw "csproj and nuspec versions are different"
+          # }
 
           echo "RELEASE_VERSION=$version1" >> $env:GITHUB_OUTPUT          
         shell: pwsh
@@ -195,7 +195,9 @@ jobs:
 
   nuget:
     runs-on: windows-latest
-    needs: acceptance
+    needs: 
+      - version
+      - acceptance
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -206,7 +208,7 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
-        run: nuget pack Setup/fo-dicom.Codecs.nuspec
+        run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version ${{ needs.version.outputs.release-version }}
       - name: Publish NuGet package
         run: nuget push "fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
 
