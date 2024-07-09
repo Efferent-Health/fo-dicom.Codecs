@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom codecs for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
-    <Version>5.14.0.5</Version>
+    <Version>5.14.0.6</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -15,7 +15,7 @@
     <PackageTags>dicom;netcore;netstandard;fo-dicom;codec;transfer-syntax</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Efferent-Health/fo-dicom.Codecs</RepositoryUrl>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
