@@ -11,22 +11,15 @@ jobs:
   version:
     runs-on: windows-latest
     outputs:
-      release-version: ${{ steps.compare-versions.outputs.RELEASE_VERSION }}
+      release-version: ${{ steps.get-version.outputs.RELEASE_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Version comparison
-        id: compare-versions
+      - name: Version extraction
+        id: get-version
         run: |
           $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
-          # $xml2 = [xml](Get-Content -Path Setup/fo-dicom.Codecs.nuspec)
           $version1 = $xml1.Project.PropertyGroup.Version;
-          # $version2 = $xml2.package.metadata.version;
-
-          # if ($version1 -ne $version2) {
-          #    throw "csproj and nuspec versions are different"
-          # }
-
           echo "RELEASE_VERSION=$version1" >> $env:GITHUB_OUTPUT          
         shell: pwsh
 
