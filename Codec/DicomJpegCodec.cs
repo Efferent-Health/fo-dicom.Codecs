@@ -17,7 +17,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     {
         public jpeg_source_mgr pub;
         public int skip_bytes;
-        public byte* next_buffer;
+        public IntPtr next_buffer;
         public uint next_buffer_size;
     }
 
@@ -150,7 +150,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public int output_components;
         public int rec_outbuf_height;
         public int actual_number_of_colors;
-        public short** colormap;
+        public IntPtr colormap;
         public uint output_scanline;
         public int input_scan_number;
         public uint input_iMCU_row;
@@ -193,7 +193,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public int max_v_samp_factor;
         public int min_codec_data_unit;
         public uint total_iMCU_rows;
-        public byte* sample_range_limit;
+        public IntPtr sample_range_limit;
         public int comps_in_scan;
         public jpeg_component_info* cur_comp_info_1;
         public jpeg_component_info* cur_comp_info_2;
@@ -315,7 +315,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jpeg_source_mgr
     {
-        public byte* next_input_byte;
+        public IntPtr next_input_byte;
         public uint bytes_in_buffer;
         public IntPtr init_source;
         public IntPtr fill_input_buffer;
@@ -373,7 +373,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public byte marker;
         public uint original_length;
         public int data_length;
-        public byte* data;
+        public IntPtr data;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -495,7 +495,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jvirt_sarray_control
     {
-        public byte** mem_buffer;
+        public IntPtr mem_buffer;
         public uint rows_in_array;
         public uint samplesperrow;
         public uint maxaccess;
@@ -529,7 +529,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public unsafe struct jvirt_barray_control
     {
-        public byte*** mem_buffer;
+        public IntPtr mem_buffer;
         public uint rows_in_array;
         public uint samplesperrow;
         public uint maxaccess;
@@ -625,7 +625,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         };
 
         public class JpegCodec : JpegNativeCodec
-        {   
+        {
             // DLLIMPORT libijg8 library for winx64
             // Encode Native functions
 
@@ -687,7 +687,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
             public static extern unsafe void format_message_winx64(j_common_ptr* cinfo, char[] buffer);
 
-            
+
             // DLLIMPORT libijg12 library for winx64
 
             // Encode Native functions
@@ -716,7 +716,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe void jpeg_start_compress_12_winx64(ref j_compress_ptr cinfo, int write_all_tables);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
-            public static extern unsafe uint jpeg_write_scanlines_12_winx64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
+            public static extern unsafe uint jpeg_write_scanlines_12_winx64(ref j_compress_ptr cinfo, short** scanlines, uint num_lines);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
             public static extern unsafe void jpeg_finish_compress_12_winx64(ref j_compress_ptr cinfo);
@@ -738,7 +738,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_12_winx64(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
-            public static extern unsafe uint jpeg_read_scanlines_12_winx64(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_12_winx64(ref j_decompress_ptr dinfo, short ** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
             public static extern unsafe void jpeg_destroy_decompress_12_winx64(ref j_decompress_ptr dinfo);
@@ -774,7 +774,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe void jpeg_start_compress_16_winx64(ref j_compress_ptr cinfo, int write_all_tables);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_16")]
-            public static extern unsafe void jpeg_write_scanlines_16_winx64(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
+            public static extern unsafe void jpeg_write_scanlines_16_winx64(ref j_compress_ptr cinfo, ushort** scanlines, uint num_lines);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_16")]
             public static extern unsafe void jpeg_finish_compress_16_winx64(ref j_compress_ptr cinfo);
@@ -796,7 +796,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_16_winx64(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
-            public static extern unsafe uint jpeg_read_scanlines_16_winx64(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_16_winx64(ref j_decompress_ptr dinfo, ushort ** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
             public static extern unsafe void jpeg_destroy_decompress_16_winx64(ref j_decompress_ptr dinfo);
@@ -865,7 +865,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "format_message_8")]
             public static extern unsafe void format_message(j_common_ptr* cinfo, char[] buffer);
 
-            
+
             // DLLIMPORT libijg12 library
 
             // Encode Native functions
@@ -894,7 +894,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe void jpeg_start_compress_12(ref j_compress_ptr cinfo, int write_all_tables);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, EntryPoint = "jpeg_write_scanlines_12")]
-            public static extern unsafe uint jpeg_write_scanlines_12(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
+            public static extern unsafe uint jpeg_write_scanlines_12(ref j_compress_ptr cinfo, short** scanlines, uint num_lines);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, EntryPoint = "jpeg_finish_compress_12")]
             public static extern unsafe void jpeg_finish_compress_12(ref j_compress_ptr cinfo);
@@ -916,7 +916,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_12(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
-            public static extern unsafe uint jpeg_read_scanlines_12(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_12(ref j_decompress_ptr dinfo, short ** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
             public static extern unsafe void jpeg_destroy_decompress_12(ref j_decompress_ptr dinfo);
@@ -924,7 +924,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_resync_to_restart_12")]
             public static extern unsafe int jpeg_resync_to_restart_12(ref j_decompress_ptr dinfo, int desired);
 
-            
+
             // DLLIMPORT libijg16 library
 
             // Encode Native functions
@@ -953,7 +953,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe void jpeg_start_compress_16(ref j_compress_ptr cinfo, int write_all_tables);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_write_scanlines_16")]
-            public static extern unsafe void jpeg_write_scanlines_16(ref j_compress_ptr cinfo, byte** scanlines, uint num_lines);
+            public static extern unsafe void jpeg_write_scanlines_16(ref j_compress_ptr cinfo, ushort** scanlines, uint num_lines);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_finish_compress_16")]
             public static extern unsafe void jpeg_finish_compress_16(ref j_compress_ptr cinfo);
@@ -975,7 +975,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_16(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
-            public static extern unsafe uint jpeg_read_scanlines_16(ref j_decompress_ptr dinfo, byte** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_16(ref j_decompress_ptr dinfo, ushort ** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
             public static extern unsafe void jpeg_destroy_decompress_16(ref j_decompress_ptr dinfo);
@@ -1019,14 +1019,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
             }
 
             public static unsafe void initSource(j_decompress_ptr* dinfo)
-            {         
+            {
             }
 
             public static unsafe void OutputMessage(j_common_ptr* cinfo)
             {
-                jpeg_error_mgr * myerr = (jpeg_error_mgr*)cinfo->err;
+                jpeg_error_mgr* myerr = (jpeg_error_mgr*)cinfo->err;
                 char[] buffer = new char[200];
-                
+
                 if (Platform.Current.Equals(Platform.Type.win_x64))
                     format_message_winx64(cinfo, buffer);
                 else
@@ -1040,7 +1040,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 {
                     src->pub.next_input_byte = src->next_buffer;
                     src->pub.bytes_in_buffer = src->next_buffer_size;
-                    src->next_buffer = null;
+                    src->next_buffer = IntPtr.Zero;
                     src->next_buffer_size = 0;
 
                     if (src->skip_bytes > 0)
@@ -1048,7 +1048,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (src->pub.bytes_in_buffer < (uint)src->skip_bytes)
                         {
                             src->skip_bytes -= Convert.ToInt32(src->pub.bytes_in_buffer);
-                            src->pub.next_input_byte += src->pub.bytes_in_buffer;
+                            byte* p = (byte*)src->pub.next_input_byte.ToPointer();
+
+                            p += src->pub.bytes_in_buffer;
+
                             src->pub.bytes_in_buffer = 0;
                             // cause a suspension return
                             return 0;
@@ -1071,7 +1074,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 if (src->pub.bytes_in_buffer < (uint)num_bytes)
                 {
                     src->skip_bytes = num_bytes - Convert.ToInt32(src->pub.bytes_in_buffer);
-                    src->pub.next_input_byte += src->pub.bytes_in_buffer;
+                    byte* p = (byte*)src->pub.next_input_byte.ToPointer();
+                    p += src->pub.bytes_in_buffer;
+
                     src->pub.bytes_in_buffer = 0; // causes a suspension return
                 }
                 else
@@ -1258,21 +1263,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         //jpeg_std_error 8, 12 and 16 bit for Linux, Windows and Osx64 for 64 bits
                         if (Bits == 8)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 cinfo.err = jpeg_std_error_8_winx64(ref jerr);
                             else
                                 cinfo.err = jpeg_std_error_8(ref jerr);
                         }
                         else if (Bits <= 12 && Bits > 8)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 cinfo.err = jpeg_std_error_12_winx64(ref jerr);
                             else
                                 cinfo.err = jpeg_std_error_12(ref jerr);
                         }
                         else if (Bits <= 16 && Bits > 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 cinfo.err = jpeg_std_error_16_winx64(ref jerr);
                             else
@@ -1280,7 +1285,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         ouput_Message errorexit_ = null;
-                        ouput_Message ouput_Message_  = null;
+                        ouput_Message ouput_Message_ = null;
 
                         errorexit_ = OutputMessage;
                         jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
@@ -1290,34 +1295,34 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         //jpeg_create_compress 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_create_compress_8_winx64(ref cinfo);
                             else
                                 jpeg_create_compress_8(ref cinfo);
                         }
                         else if (Bits <= 12 && Bits > 8)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_create_compress_12_winx64(ref cinfo);
                             else
                                 jpeg_create_compress_12(ref cinfo);
                         }
                         else if (Bits <= 16 && Bits > 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_create_compress_16_winx64(ref cinfo);
                             else
                                 jpeg_create_compress_16(ref cinfo);
                         }
-                        
+
                         cinfo.client_data = null;
 
                         This = this;
                         // Specify destination manager
                         jpeg_destination_mgr dest = new jpeg_destination_mgr();
 
-                        init_destination init_Destination_ =  initDestination;
+                        init_destination init_Destination_ = initDestination;
                         dest.init_Destination = Marshal.GetFunctionPointerForDelegate(init_Destination_);
 
                         empty_output_buffer empty_Output_Buffer_ = emptyOutputBuffer;
@@ -1334,21 +1339,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         //jpeg_set_defaults 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_set_defaults_8_winx64(ref cinfo);
                             else
-                                jpeg_set_defaults_8(ref cinfo);  
+                                jpeg_set_defaults_8(ref cinfo);
                         }
                         else if (Bits <= 12 && Bits > 8)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_set_defaults_12_winx64(ref cinfo);
                             else
-                                jpeg_set_defaults_12(ref cinfo); 
+                                jpeg_set_defaults_12(ref cinfo);
                         }
                         else if (Bits <= 16 && Bits > 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_set_defaults_16_winx64(ref cinfo);
                             else
@@ -1361,50 +1366,50 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             //jpeg_set_quality 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                             if (Bits.Equals(8))
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_quality_8_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 else
                                     jpeg_set_quality_8(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             }
                             else if (Bits <= 12 && Bits > 8)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_quality_12_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 else
                                     jpeg_set_quality_12(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             }
                             else if (Bits <= 16 && Bits > 12)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_quality_16_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 else
-                                    jpeg_set_quality_16(ref cinfo, jpegParams.Quality, Convert.ToInt32(false)); 
+                                    jpeg_set_quality_16(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             }
                         }
                         else if (Mode == JpegMode.SpectralSelection)
                         {
                             //jpeg_set_quality 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                             if (Bits.Equals(8))
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_quality_8_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 else
                                     jpeg_set_quality_8(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             }
                             else if (Bits <= 12 && Bits > 8)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_quality_12_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 else
                                     jpeg_set_quality_12(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             }
                             else if (Bits <= 16 && Bits > 12)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_quality_16_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                                 else
-                                    jpeg_set_quality_16(ref cinfo, jpegParams.Quality, Convert.ToInt32(false)); 
+                                    jpeg_set_quality_16(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
                             }
 
                             jpeg_simple_spectral_selection(ref cinfo);
@@ -1414,7 +1419,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             //jpeg_set_quality 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                             if (Bits.Equals(8))
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                 {
                                     jpeg_set_quality_8_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
@@ -1427,7 +1432,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 }
                             }
                             else if (Bits <= 12 && Bits > 8)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                 {
                                     jpeg_set_quality_12_winx64(ref cinfo, jpegParams.Quality, Convert.ToInt32(false));
@@ -1457,14 +1462,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             //jpeg_simple_lossless 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                             if (Bits.Equals(8))
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_simple_lossless_8_winx64(ref cinfo, Predictor, PointTransform);
                                 else
                                     jpeg_simple_lossless_8(ref cinfo, Predictor, PointTransform);
                             }
                             else if (Bits <= 12 && Bits > 8)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_simple_lossless_12_winx64(ref cinfo, Predictor, PointTransform);
                                 else
@@ -1485,21 +1490,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             //jpeg_set_colorspace 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                             if (Bits.Equals(8))
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_colorspace_8_winx64(ref cinfo, cinfo.in_color_space);
                                 else
-                                    jpeg_set_colorspace_8(ref cinfo, cinfo.in_color_space); 
+                                    jpeg_set_colorspace_8(ref cinfo, cinfo.in_color_space);
                             }
                             else if (Bits <= 12 && Bits > 8)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_colorspace_12_winx64(ref cinfo, cinfo.in_color_space);
                                 else
                                     jpeg_set_colorspace_12(ref cinfo, cinfo.in_color_space);
                             }
                             else if (Bits <= 16 && Bits > 12)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_set_colorspace_16_winx64(ref cinfo, cinfo.in_color_space);
                                 else
@@ -1531,14 +1536,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     //jpeg_set_colorspace 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                                     if (Bits.Equals(8))
-                                    {   
+                                    {
                                         if (Platform.Current.Equals(Platform.Type.win_x64))
                                             jpeg_set_colorspace_8_winx64(ref cinfo, cinfo.in_color_space);
                                         else
                                             jpeg_set_colorspace_8(ref cinfo, cinfo.in_color_space);
                                     }
                                     else if (Bits <= 12 && Bits > 8)
-                                    {   
+                                    {
                                         if (Platform.Current.Equals(Platform.Type.win_x64))
                                             jpeg_set_colorspace_12_winx64(ref cinfo, cinfo.in_color_space);
                                         else
@@ -1566,21 +1571,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         //jpeg_start_compress 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_start_compress_8_winx64(ref cinfo, Convert.ToInt32(true));
                             else
                                 jpeg_start_compress_8(ref cinfo, Convert.ToInt32(true));
                         }
                         else if (Bits <= 12 && Bits > 8)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_start_compress_12_winx64(ref cinfo, Convert.ToInt32(true));
                             else
                                 jpeg_start_compress_12(ref cinfo, Convert.ToInt32(true));
                         }
                         else if (Bits <= 16 && Bits > 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_start_compress_16_winx64(ref cinfo, Convert.ToInt32(true));
                             else
@@ -1598,31 +1603,31 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             //jpeg_write_scanlines 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                             if (Bits.Equals(8))
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_write_scanlines_8_winx64(ref cinfo, &row_pointer, 1);
                                 else
-                                   jpeg_write_scanlines_8(ref cinfo, &row_pointer, 1); 
-                            }  
+                                    jpeg_write_scanlines_8(ref cinfo, &row_pointer, 1);
+                            }
                             else if (Bits <= 12 && Bits > 8)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    jpeg_write_scanlines_12_winx64(ref cinfo, &row_pointer, 1);
+                                    jpeg_write_scanlines_12_winx64(ref cinfo, (short**)(&row_pointer), 1);
                                 else
-                                    jpeg_write_scanlines_12(ref cinfo, &row_pointer, 1);
+                                    jpeg_write_scanlines_12(ref cinfo, (short**)(&row_pointer), 1);
                             }
                             else if (Bits <= 16 && Bits > 12)
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    jpeg_write_scanlines_16_winx64(ref cinfo, &row_pointer, 1);
+                                    jpeg_write_scanlines_16_winx64(ref cinfo, (ushort**)(&row_pointer), 1);
                                 else
-                                    jpeg_write_scanlines_16(ref cinfo, &row_pointer, 1);
+                                    jpeg_write_scanlines_16(ref cinfo, (ushort**)(&row_pointer), 1);
                             }
                         }
 
                         //jpeg_finish_compress and jpeg_destroy_compress 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 jpeg_finish_compress_8_winx64(ref cinfo);
@@ -1635,7 +1640,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
                         }
                         else if (Bits <= 12 && Bits > 8)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 jpeg_finish_compress_12_winx64(ref cinfo);
@@ -1648,7 +1653,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
                         }
                         else if (Bits <= 16 && Bits > 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 jpeg_finish_compress_16_winx64(ref cinfo);
@@ -1675,7 +1680,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         IByteBuffer buffer;
 
                         if (MemoryBuffer.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                        {   
+                        {
                             buffer = new TempFileBuffer(MemoryBuffer.ToArray());
                             buffer = EvenLengthBuffer.Create(buffer);
                         }
@@ -1697,7 +1702,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
                 finally
-                {   
+                {
                     if (MemoryBuffer != null)
                     {
                         MemoryBuffer.Dispose();
@@ -1705,7 +1710,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     if (frameArray != null)
-                    {   
+                    {
                         frameArray.Dispose();
                         frameArray = null;
                     }
@@ -1720,7 +1725,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 unsafe
-                {   
+                {
                     PinnedByteArray jpegArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
                     PinnedByteArray frameArray = null;
 
@@ -1742,7 +1747,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         Resync_to_restart resync_to_restart_;
 
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 resync_to_restart_ = jpeg_resync_to_restart_8_winx64;
                             else
@@ -1751,7 +1756,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
                         else if (Bits > 8 && Bits <= 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 resync_to_restart_ = jpeg_resync_to_restart_12_winx64;
                             else
@@ -1760,7 +1765,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                         }
                         else if (Bits > 12 && Bits <= 16)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 resync_to_restart_ = jpeg_resync_to_restart_16_winx64;
                             else
@@ -1771,30 +1776,30 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         src.pub.term_source = IntPtr.Zero;
                         src.pub.bytes_in_buffer = 0;
-                        src.pub.next_input_byte = null;
+                        src.pub.next_input_byte = IntPtr.Zero;
                         src.skip_bytes = 0;
-                        src.next_buffer = (byte*)(void*)jpegArray.Pointer;
+                        src.next_buffer = jpegArray.Pointer;
                         src.next_buffer_size = (uint)jpegArray.ByteSize;
 
                         jpeg_error_mgr jerr = new jpeg_error_mgr();
 
                         //jpeg_std_error 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 dinfo.err = jpeg_std_error_8_winx64(ref jerr);
                             else
                                 dinfo.err = jpeg_std_error_8(ref jerr);
                         }
                         else if (Bits > 8 && Bits <= 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 dinfo.err = jpeg_std_error_12_winx64(ref jerr);
                             else
                                 dinfo.err = jpeg_std_error_12(ref jerr);
                         }
                         else if (Bits > 12 && Bits <= 16)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 dinfo.err = jpeg_std_error_16_winx64(ref jerr);
                             else
@@ -1802,7 +1807,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         ouput_Message errorexit_ = null;
-                        ouput_Message ouput_Message_  = null;
+                        ouput_Message ouput_Message_ = null;
 
                         errorexit_ = OutputMessage;
                         jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
@@ -1812,21 +1817,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         //jpeg_create_decompress 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_create_decompress_8_winx64(ref dinfo);
                             else
                                 jpeg_create_decompress_8(ref dinfo);
                         }
                         else if (Bits > 8 && Bits <= 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_create_decompress_12_winx64(ref dinfo);
                             else
                                 jpeg_create_decompress_12(ref dinfo);
                         }
                         else if (Bits > 12 && Bits <= 16)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_create_decompress_16_winx64(ref dinfo);
                             else
@@ -1841,7 +1846,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             int jpeg_read_header_value = 0;
 
                             try
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_read_header_value = jpeg_read_header_8_winx64(ref dinfo, 1);
                                 else
@@ -1862,7 +1867,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             int jpeg_read_header_value = 0;
 
                             try
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_read_header_value = jpeg_read_header_12_winx64(ref dinfo, 1);
                                 else
@@ -1883,11 +1888,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             int jpeg_read_header_value = 0;
 
                             try
-                            {   
+                            {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
                                     jpeg_read_header_value = jpeg_read_header_16_winx64(ref dinfo, 1);
                                 else
-                                   jpeg_read_header_value = jpeg_read_header_16(ref dinfo, 1); 
+                                    jpeg_read_header_value = jpeg_read_header_16(ref dinfo, 1);
                             }
                             catch
                             {
@@ -1904,27 +1909,27 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             jpegParams.ConvertColorSpaceToRGB = true;
                         }
-                        
+
                         newPixelData.PhotometricInterpretation = oldPixelData.PhotometricInterpretation;
 
                         if (jpegParams.ConvertColorSpaceToRGB && (dinfo.out_color_space == J_COLOR_SPACE.JCS_YCbCr || dinfo.out_color_space == J_COLOR_SPACE.JCS_RGB))
                         {
                             if (oldPixelData.PixelRepresentation == PixelRepresentation.Signed)
                                 throw new DicomCodecException("JPEG codec unable to perform colorspace conversion on signed pixel data");
-                            
+
                             dinfo.out_color_space = J_COLOR_SPACE.JCS_RGB;
                             newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                             newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
                         }
                         else
                         {
-                            dinfo.jpeg_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
-                            dinfo.out_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
+                            //dinfo.jpeg_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
+                            //dinfo.out_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
                         }
 
                         //jpeg_calc_output_dimensions 8, 12 and 16 bit and jpeg_start_decompress_8 for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 jpeg_calc_output_dimensions_8_winx64(ref dinfo);
@@ -1933,11 +1938,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             else
                             {
                                 jpeg_calc_output_dimensions_8(ref dinfo);
-                                jpeg_start_decompress_8(ref dinfo); 
+                                jpeg_start_decompress_8(ref dinfo);
                             }
                         }
                         else if (Bits > 8 && Bits <= 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 jpeg_calc_output_dimensions_12_winx64(ref dinfo);
@@ -1950,7 +1955,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
                         }
                         else if (Bits > 12 && Bits <= 16)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                             {
                                 jpeg_calc_output_dimensions_16_winx64(ref dinfo);
@@ -1959,16 +1964,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             else
                             {
                                 jpeg_calc_output_dimensions_16(ref dinfo);
-                                jpeg_start_decompress_16(ref dinfo);  
+                                jpeg_start_decompress_16(ref dinfo);
                             }
                         }
 
-                        int rowSize = 0;
+                        uint rowSize = 0;
 
-                        if (Bits.Equals(8)) 
-                            rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
-                        else 
-                            rowSize = Convert.ToInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
+                        if (Bits.Equals(8))
+                            rowSize = Convert.ToUInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
+                        else
+                            rowSize = Convert.ToUInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
 
                         int frameSize = Convert.ToInt32(rowSize * dinfo.output_height);
 
@@ -1976,20 +1981,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             frameSize++;
 
                         frameArray = new PinnedByteArray(frameSize);
-                        byte* framePtr = (byte*)(void*)frameArray.Pointer;
+                        //byte* framePtr = (byte*)(void*)frameArray.Pointer;
 
-                        while (dinfo.output_scanline < dinfo.output_height)
+                        if (Bits.Equals(8))
                         {
-                            //jpeg_read_scanlines 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
-                            if (Bits.Equals(8))
+                            byte* framePtr = (byte*)(void*)frameArray.Pointer;
+
+                            while (dinfo.output_scanline < dinfo.output_height)
                             {
-                                int rows = 0;
+                                uint rows = 0;
 
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    rows = Convert.ToInt32(jpeg_read_scanlines_8_winx64(ref dinfo, (byte**)&framePtr, 1));
+                                    rows = jpeg_read_scanlines_8_winx64(ref dinfo, (byte**)&framePtr, 1);
                                 else
-                                    rows = Convert.ToInt32(jpeg_read_scanlines_8(ref dinfo, (byte**)&framePtr, 1));
-                                
+                                    rows = jpeg_read_scanlines_8(ref dinfo, (byte**)&framePtr, 1);
+
                                 if (rows == 0)
                                 {
                                     throw new DicomCodecException("JPEG 8 bit codec unable to perform reading scanlines on pixel data");
@@ -1997,15 +2003,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 8 && Bits <= 12)
+                        }
+                        else if (Bits > 8 && Bits <= 12)
+                        {
+                            byte* framePtr = (byte*)(void*)frameArray.Pointer;
+
+                            while (dinfo.output_scanline < dinfo.output_height)
                             {
-                                int rows = 0;
-                                
+                                uint rows = 0;
+
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    rows = Convert.ToInt32(jpeg_read_scanlines_12_winx64(ref dinfo, (byte**)&framePtr, 1));
+                                    rows = jpeg_read_scanlines_12_winx64(ref dinfo, (short**)&framePtr, 1);
                                 else
-                                    rows = Convert.ToInt32(jpeg_read_scanlines_12(ref dinfo, (byte**)&framePtr, 1));
-                                
+                                    rows = jpeg_read_scanlines_12(ref dinfo, (short**)&framePtr, 1);
+
                                 if (rows == 0)
                                 {
                                     throw new DicomCodecException("JPEG 12 bit codec unable to perform reading scanlines pixel data");
@@ -2013,15 +2024,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 framePtr += rows * rowSize;
                             }
-                            else if (Bits > 12 && Bits <= 16)
+                        }
+                        else if (Bits > 12 && Bits <= 16)
+                        {   
+                            byte* framePtr = (byte*)(void*)frameArray.Pointer;
+
+                            while (dinfo.output_scanline < dinfo.output_height)
                             {
-                                int rows = 0;
+                                uint rows = 0;
 
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    rows = Convert.ToInt32(jpeg_read_scanlines_16_winx64(ref dinfo, (byte**)&framePtr, 1));
+                                    rows = jpeg_read_scanlines_16_winx64(ref dinfo, (ushort**)&framePtr, 1);
                                 else
-                                    rows = Convert.ToInt32(jpeg_read_scanlines_16(ref dinfo, (byte**)&framePtr, 1));
-                                
+                                    rows = jpeg_read_scanlines_16(ref dinfo, (ushort**)&framePtr, 1);
+
                                 if (rows == 0)
                                 {
                                     throw new DicomCodecException("JPEG 16 bit codec unable to perform reading scanlines on pixel data");
@@ -2033,21 +2049,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         //jpeg_destroy_decompress 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                         if (Bits.Equals(8))
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_destroy_decompress_8_winx64(ref dinfo);
                             else
                                 jpeg_destroy_decompress_8(ref dinfo);
                         }
                         else if (Bits > 8 && Bits <= 12)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_destroy_decompress_12_winx64(ref dinfo);
                             else
                                 jpeg_destroy_decompress_12(ref dinfo);
                         }
                         else if (Bits > 12 && Bits <= 16)
-                        {   
+                        {
                             if (Platform.Current.Equals(Platform.Type.win_x64))
                                 jpeg_destroy_decompress_16_winx64(ref dinfo);
                             else
@@ -2064,7 +2080,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (newPixelData.PlanarConfiguration == PlanarConfiguration.Planar && newPixelData.SamplesPerPixel > 1)
                         {
                             if (oldPixelData.SamplesPerPixel != 3 || oldPixelData.BitsStored > 8)
-                                throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel=3 && BitsStores <= 8");
+                                throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel = 3 && BitsStored <= 8");
 
                             buffer = PixelDataConverter.InterleavedToPlanar24(buffer);
                         }
@@ -2080,12 +2096,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     finally
                     {
                         if (frameArray != null)
-                        {   
+                        {
                             frameArray.Dispose();
                             frameArray = null;
                         }
                         if (jpegArray != null)
-                        {   
+                        {
                             jpegArray.Dispose();
                             jpegArray = null;
                         }
@@ -2120,21 +2136,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 Resync_to_restart resync_to_restart_ = null;
 
                 if (Bits.Equals(8))
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         resync_to_restart_ = jpeg_resync_to_restart_8_winx64;
                     else
-                        resync_to_restart_ = jpeg_resync_to_restart_8;                    
+                        resync_to_restart_ = jpeg_resync_to_restart_8;
                 }
                 else if (Bits > 8 && Bits <= 12)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         resync_to_restart_ = jpeg_resync_to_restart_12_winx64;
                     else
-                        resync_to_restart_ = jpeg_resync_to_restart_12;  
+                        resync_to_restart_ = jpeg_resync_to_restart_12;
                 }
                 else if (Bits > 12 && Bits <= 16)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         resync_to_restart_ = jpeg_resync_to_restart_16_winx64;
                     else
@@ -2144,38 +2160,38 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 src.pub.resync_to_restart = Marshal.GetFunctionPointerForDelegate(resync_to_restart_);
                 src.pub.term_source = IntPtr.Zero;
                 src.pub.bytes_in_buffer = 0;
-                src.pub.next_input_byte = null;
+                src.pub.next_input_byte = IntPtr.Zero;
                 src.skip_bytes = 0;
-                src.next_buffer = (byte*)(void*)jpegArray.Pointer;
+                src.next_buffer = jpegArray.Pointer;
                 src.next_buffer_size = (uint)jpegArray.ByteSize;
 
                 jpeg_error_mgr jerr = new jpeg_error_mgr();
 
                 //jpeg_std_error 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                 if (Bits.Equals(8))
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         dinfo.err = jpeg_std_error_8_winx64(ref jerr);
                     else
                         dinfo.err = jpeg_std_error_8(ref jerr);
                 }
                 else if (Bits > 8 && Bits <= 12)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         dinfo.err = jpeg_std_error_12_winx64(ref jerr);
                     else
                         dinfo.err = jpeg_std_error_12(ref jerr);
                 }
                 else if (Bits > 12 && Bits <= 16)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         dinfo.err = jpeg_std_error_16_winx64(ref jerr);
                     else
                         dinfo.err = jpeg_std_error_16(ref jerr);
                 }
-                
+
                 ouput_Message errorexit_ = null;
-                ouput_Message ouput_Message_  = null;
+                ouput_Message ouput_Message_ = null;
 
                 errorexit_ = OutputMessage;
                 jerr.error_exit = Marshal.GetFunctionPointerForDelegate(errorexit_);
@@ -2185,21 +2201,21 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 //jpeg_create_decompress 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                 if (Bits.Equals(8))
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         jpeg_create_decompress_8_winx64(ref dinfo);
                     else
                         jpeg_create_decompress_8(ref dinfo);
                 }
                 else if (Bits > 8 && Bits <= 12)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         jpeg_create_decompress_12_winx64(ref dinfo);
                     else
                         jpeg_create_decompress_12(ref dinfo);
                 }
                 else if (Bits > 12 && Bits <= 16)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                         jpeg_create_decompress_16_winx64(ref dinfo);
                     else
@@ -2210,11 +2226,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 //jpeg_read_header 8, 12 and 16 bit for Linux, Windows and Osx for 64 bits
                 if (Bits.Equals(8))
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                     {
                         if (jpeg_read_header_8_winx64(ref dinfo, 1) == 0)
-                        {   
+                        {
                             jpeg_destroy_decompress_8_winx64(ref dinfo);
                             throw new DicomCodecException("Unable to read JPEG header: Suspended");
                         }
@@ -2224,7 +2240,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     else
                     {
                         if (jpeg_read_header_8(ref dinfo, 1) == 0)
-                        {   
+                        {
                             jpeg_destroy_decompress_8(ref dinfo);
                             throw new DicomCodecException("Unable to read JPEG header: Suspended");
                         }
@@ -2233,11 +2249,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
                 else if (Bits > 8 && Bits <= 12)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                     {
                         if (jpeg_read_header_12_winx64(ref dinfo, 1) == 0)
-                        {   
+                        {
                             jpeg_destroy_decompress_12_winx64(ref dinfo);
                             throw new DicomCodecException("Unable to read JPEG header: Suspended");
                         }
@@ -2247,7 +2263,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     else
                     {
                         if (jpeg_read_header_12(ref dinfo, 1) == 0)
-                        {   
+                        {
                             jpeg_destroy_decompress_12(ref dinfo);
                             throw new DicomCodecException("Unable to read JPEG header: Suspended");
                         }
@@ -2256,11 +2272,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
                 else if (Bits > 12 && Bits <= 16)
-                {   
+                {
                     if (Platform.Current.Equals(Platform.Type.win_x64))
                     {
                         if (jpeg_read_header_16_winx64(ref dinfo, 1) == 0)
-                        {   
+                        {
                             jpeg_destroy_decompress_16_winx64(ref dinfo);
                             throw new DicomCodecException("Unable to read JPEG header: Suspended");
                         }
@@ -2270,7 +2286,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     else
                     {
                         if (jpeg_read_header_16(ref dinfo, 1) == 0)
-                        {   
+                        {
                             jpeg_destroy_decompress_16(ref dinfo);
                             throw new DicomCodecException("Unable to read JPEG header: Suspended");
                         }
@@ -2287,7 +2303,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 return dinfo.data_precision;
             }
 
-            [ThreadStatic] 
+            [ThreadStatic]
             internal static JpegCodec This;
         }
     }
@@ -2338,22 +2354,26 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             try
             {
-                precision = JpegHelper.ScanJpegForBitDepth(oldPixelData);
+                try
+                {
+                    precision = JpegHelper.ScanJpegForBitDepth(oldPixelData);
+                }
+                catch
+                {
+                    // if the internal scanner chokes on an image, try again using ijg
+                    JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
+                    precision = c.ScanHeaderForPrecision(oldPixelData);
+                }
             }
             catch
             {
-                // if the internal scanner chokes on an image, try again using ijg
-                JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
-                precision = c.ScanHeaderForPrecision(oldPixelData);
+                // the old scanner choked on several valid images...
+                // assume the correct encoder was used and let libijg handle the rest
+                precision = oldPixelData.BitsStored;
             }
 
-            // the old scanner choked on several valid images...
-            // assume the correct encoder was used and let libijg handle the rest
-            if (precision != 0)
-                precision = oldPixelData.BitsStored;
-
             if (newPixelData.BitsStored <= 8 && precision > 8)
-                newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)16); // embedded overlay?
+                newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)16);
 
             JpegNativeCodec codec = GetCodec(precision, jparams);
 
