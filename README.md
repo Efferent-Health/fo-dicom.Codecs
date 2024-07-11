@@ -9,16 +9,19 @@
 
 This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent Health, LLC](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
-- Windows 64-bit, Intel architecture (tested with Windows 10/11)
-- Linux 64-bit, Intel and ARM architectures (tested with Ubuntu 18/20/22 Desktop and Server)
-- MacOS 64-bit, Intel and Apple architectures (tested with Ventura/Sonoma)
+
+|OS|&numsp;&numsp;x64&numsp;&numsp;|Arm64|Tested with|
+|:--|:--:|:--:|:--|
+|Windows|:white_check_mark:| |Windows 10/11|
+|Linux|:white_check_mark:|:white_check_mark:|Ubuntu 18/20/22|
+|MacOS|:white_check_mark:|:white_check_mark:|Ventura/Sonoma|
 
 ## Supported CODECs
 
 The following CODECS are implemented:
 
 |Transfer Syntax UID|Description|
-|--|--|
+|:--|--|
 |1.2.840.10008.1.2.5|RLE Lossless|
 |1.2.840.10008.1.2.4.50|JPEG Baseline (Process 1): Default Transfer Syntax for Lossy JPEG 8 Bit Image Compression|
 |1.2.840.10008.1.2.4.51|JPEG Extended (Process 2 & 4): Default Transfer Syntax for Lossy JPEG 12 Bit Image Compression (Process 4 only)|
@@ -35,9 +38,7 @@ The following CODECS are implemented:
 The HT-JPEG2000 family of codecs is only supported since fo-dicom version 5.1.3
 
 ## Usage
- 
-- Add the standard fo-dicom nuget packages to your project
- 
+  
 ### With fo-dicom 4.x
 - Add the [nuget package](https://www.nuget.org/packages/Efferent.Native/) to your .NET Standard or .NET Core project (minimum version is 2.0) 
 - Add the standard fo-dicom nuget packages to your project (version 4.x)
