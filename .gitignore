@@ -1,6 +1,9 @@
 **/bin
 **/obj
 **/.vs
+**/*.dll
+**/*.so
+**.dylib
 **/build_*/CMakeFiles
 **/build_*/Makefile
 **/build_*/cmake_install.cmake
