@@ -690,12 +690,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         {
                                             if (oldPixelData.BitsStored < 16)
                                             {
-                                                short* frameData16 = (short*)frameArray.Pointer.ToPointer();
-                                                short sign = (short)(1 << oldPixelData.HighBit);
-                                                short mask = (short)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
-                                                for (int p = 0; p < pixelCount; p++)
+                                                ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
+                                                ushort sign = (ushort)(1 << oldPixelData.HighBit);
+                                                ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
+                                                for (int p = 0; p < pixelCount; p++) 
                                                 {
-                                                    short pixel = frameData16[pos];
+                                                    ushort pixel = frameData16[pos];
                                                     if (Convert.ToBoolean(pixel & sign))
                                                         comp->data[p] = -(((-pixel) & mask) + 1);
                                                     else
@@ -724,13 +724,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                                 for (int p = 0; p < pixelCount; p++)
                                                 {
                                                     ushort pixel = frameData16[pos];
-                                                    if (Convert.ToBoolean(pixel & sign))
-                                                    {
-                                                        comp->data[p] = -(((-pixel) & mask) + 1);
-                                                        comp->sgnd = 1;
-                                                    }
-                                                    else
-                                                        comp->data[p] = pixel;
+                                                    comp->data[p] = (pixel & mask) + 1;
                                                     pos += offset;
                                                 }
                                             }
