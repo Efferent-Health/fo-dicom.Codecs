@@ -1923,8 +1923,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         else
                         {
-                            //dinfo.jpeg_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
-                            //dinfo.out_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
+                            dinfo.jpeg_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
+                            dinfo.out_color_space = J_COLOR_SPACE.JCS_UNKNOWN;
                         }
 
                         //jpeg_calc_output_dimensions 8, 12 and 16 bit and jpeg_start_decompress_8 for Linux, Windows and Osx for 64 bits
