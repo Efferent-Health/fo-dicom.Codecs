@@ -333,7 +333,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
     public class DicomJpeg2000Params : DicomCodecParams
     {
-        private int[] _rates;
+        private double[] _rates;
         public DicomJpeg2000Params()
         {
             Irreversible = true;
@@ -343,7 +343,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             UpdatePhotometricInterpretation = true;
             EncodeSignedPixelValuesAsUnsigned = false;
 
-            _rates = new int[9];
+            _rates = new double[9];
             _rates[0] = 1280;
             _rates[1] = 640;
             _rates[2] = 320;
@@ -358,9 +358,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
 
         public bool Irreversible { get; set; }
-        public int Rate { get; set; }
+        public double Rate { get; set; }
         public OPJ_PROG_ORDER ProgressionOrder { get; set; } = OPJ_PROG_ORDER.LRCP;
-        public int[] RateLevels { get; set; }
+        public double[] RateLevels { get; set; }
         public bool IsVerbose { get; set; }
         public bool AllowMCT { get; set; }
         public bool UpdatePhotometricInterpretation { get; set; }
@@ -598,14 +598,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 if (jparams.RateLevels[r] > jparams.Rate)
                                 {
                                     eparams.tcp_numlayers++;
-                                    eparams.tcp_rates[r] = jparams.RateLevels[r];
+                                    eparams.tcp_rates[r] = (float)jparams.RateLevels[r];
                                 }
                                 else
                                     break;
                             }
 
                             eparams.tcp_numlayers++;
-                            eparams.tcp_rates[r] = jparams.Rate;
+                            eparams.tcp_rates[r] = (float)(jparams.Rate * oldPixelData.BitsStored / oldPixelData.BitsAllocated);
 
                             if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossless && jparams.Rate > 0)
                                 eparams.tcp_rates[eparams.tcp_numlayers++] = 0;
@@ -724,7 +724,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                                 for (int p = 0; p < pixelCount; p++)
                                                 {
                                                     ushort pixel = frameData16[pos];
-                                                    comp->data[p] = (pixel & mask) + 1;
+                                                    comp->data[p] = pixel & mask;
                                                     pos += offset;
                                                 }
                                             }
