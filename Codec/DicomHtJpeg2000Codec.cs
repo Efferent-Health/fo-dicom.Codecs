@@ -198,6 +198,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         newPixelData.AddFrame(buffer);
                     }
+                    catch (DicomCodecException d)
+                    {
+                        throw new DicomCodecException(d.Message + " => " + d.StackTrace);
+                    }
                     finally
                     {
                         if (jpegHT2KData != null)
@@ -270,6 +274,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         newPixelData.AddFrame(buffer);
                     }
+                }
+                catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }
                 finally
                 {

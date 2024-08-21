@@ -1701,6 +1701,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         GC.KeepAlive(term_Destination_);
                     }
                 }
+                catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                }
                 finally
                 {
                     if (MemoryBuffer != null)
@@ -2092,6 +2096,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         GC.KeepAlive(skip_input_data_);
                         GC.KeepAlive(errorexit_);
                         GC.KeepAlive(ouput_Message_);
+                    }
+                    catch (DicomCodecException e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                     }
                     finally
                     {

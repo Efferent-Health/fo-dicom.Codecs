@@ -308,6 +308,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             newPixelData.AddFrame(buffer);
                         }
                     }
+                    catch (DicomCodecException e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
                     finally
                     {
                         if (frameArray != null)
@@ -388,6 +392,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         newPixelData.AddFrame(buffer);
                     }
+                }
+                catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }
                 finally
                 {

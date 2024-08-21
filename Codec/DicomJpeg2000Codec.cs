@@ -799,6 +799,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 else
                                     throw new DicomCodecException("Unable to JPEG 2000 encode image");
                             }
+                            catch (DicomCodecException e)
+                            {
+                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                            }
                             finally
                             {
                                 if (c_stream != null)
@@ -948,11 +952,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
 
                             if (image == null)
-                                throw new DicomCodecException("Error in JPEG 2000 code stream!");
+                                throw new DicomCodecException("Error in JPEG 2000 decode stream => output image data is null");
 
                             for (int c = 0; c < image->numcomps; c++)
                             {
                                 opj_image_comp_t* comp = &image->comps[c];
+
+                                if (comp->data == null)
+                                    throw new DicomCodecException("Error in JPEG 2000 decode stream => output image component data is null");
 
                                 int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
                                 int offset = (int)(newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps);
@@ -975,7 +982,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             pos += offset;
                                         }
                                     }
-
                                     else
                                     {
                                         for (int p = 0; p < pixelCount; p++)
@@ -985,7 +991,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         }
                                     }
                                 }
-
                                 else if (newPixelData.BytesAllocated == 2)
                                 {
                                     ushort sign = (ushort)(1 << newPixelData.HighBit);
@@ -1005,7 +1010,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             pos += offset;
                                         }
                                     }
-
                                     else
                                     {
                                         for (int p = 0; p < pixelCount; p++)
@@ -1015,7 +1019,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         }
                                     }
                                 }
-
                                 else
                                     throw new DicomCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
                             }
