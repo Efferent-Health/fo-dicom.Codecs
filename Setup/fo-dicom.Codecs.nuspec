@@ -3,7 +3,7 @@
     <metadata>
         <id>fo-dicom.Codecs</id>
         <title>fo-dicom Codecs</title>
-        <version>$version$-$VersionSuffix$</version>
+        <version>$version$-beta1</version>
         <authors>Efferent-Health,fo-dicom</authors>
         <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
         <projectUrl>https://github.com/Efferent-Health/fo-dicom-codecs</projectUrl>
