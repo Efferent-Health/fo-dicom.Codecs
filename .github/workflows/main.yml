@@ -201,7 +201,7 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
-        run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version ${{ needs.version.outputs.release-version }}
+        run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version 5.15.0-beta1
       - name: Publish NuGet package
         run: nuget push "fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
 
