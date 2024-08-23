@@ -876,8 +876,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             if (jparams == null)
                 jparams = (DicomJpeg2000Params)GetDefaultParameters();
 
-            int pixelCount = oldPixelData.Height * oldPixelData.Width;
-
             if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct)
                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
 
@@ -951,15 +949,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 image = Opj_decode(codec, d_stream);
                             }
 
+                            int pixelCount = 0;
+
                             if (image == null)
+                            {
                                 throw new DicomCodecException("Error in JPEG 2000 decode stream => output image data is null");
+                            }
+                            else
+                            {
+                                pixelCount = (int)(image->x1 * image->y1);
+                            }
 
                             for (int c = 0; c < image->numcomps; c++)
                             {
                                 opj_image_comp_t* comp = &image->comps[c];
 
                                 if (comp->data == null)
+                                {
                                     throw new DicomCodecException("Error in JPEG 2000 decode stream => output image component data is null");
+                                }
 
                                 int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
                                 int offset = (int)(newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps);
@@ -972,7 +980,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         byte mask = (byte)(0xFF ^ sign);
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            int i = (int)comp->data[p];
+                                            int i = comp->data[p];
                                             if (i < 0)
                                                 //destArray->Data[pos] = (unsigned char)(-i | sign);
                                                 destArray.Data[pos] = (byte)((i & mask) | sign);
@@ -983,9 +991,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         }
                                     }
                                     else
-                                    {
+                                    {   
                                         for (int p = 0; p < pixelCount; p++)
-                                        {
+                                        {   
                                             destArray.Data[pos] = (byte)comp->data[p];
                                             pos += offset;
                                         }
@@ -1001,7 +1009,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     {
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            int i = (int)comp->data[p];
+                                            int i = comp->data[p];
 
                                             if (i < 0)
                                                 destData16[pos] = (ushort)((i & mask) | sign);
@@ -1034,16 +1042,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             newPixelData.AddFrame(buffer);
                         }
+                        catch (DicomCodecException ex)
+                        {
+                            Console.WriteLine("{0} => {1}", ex.Message, ex.StackTrace);
+                        }
                         finally
                         {
-                            if (d_stream != null)
-                            {
-                                if (Platform.Current.Equals(Platform.Type.win_x64))
-                                    Opj_stream_close_winx64(d_stream);
-                                else
-                                    Opj_stream_close(d_stream);
-                            }
-
                             if (codec != null)
                             {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
@@ -1058,6 +1062,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     Opj_image_destroy_winx64(image);
                                 else
                                     Opj_image_destroy(image);
+                            }
+
+                            if (d_stream != null)
+                            {
+                                if (Platform.Current.Equals(Platform.Type.win_x64))
+                                {   
+                                    Opj_stream_close_winx64(d_stream);
+                                }
+                                else
+                                    Opj_stream_close(d_stream);
                             }
                         }
                     }

@@ -201,25 +201,38 @@ EXPORT_OpenJPEG OPJ_BOOL Opj_encode(opj_codec_t* codec, opj_stream_t* stream, op
         
     if (!opj_start_compress(codec, image, stream)) 
     {
-        opj_stream_destroy(stream);
-        opj_destroy_codec(codec);
-        opj_image_destroy(image);
         return OPJ_FALSE;
     }
+    else
+        bSuccess = OPJ_TRUE;
         
-    bSuccess = opj_encode(codec, stream);
-    bSuccess = opj_end_compress(codec, stream);
+    bSuccess = bSuccess && opj_encode(codec, stream);
+    if (!bSuccess)
+    {
+        return OPJ_FALSE;
+    }
+
+    bSuccess = bSuccess && opj_end_compress(codec, stream);
+    if (!bSuccess)
+    {   
+        return OPJ_FALSE;
+    }
+
     return bSuccess;
 }
 
 EXPORT_OpenJPEG void Opj_stream_close(opj_stream_t* stream)
-{
-    opj_stream_destroy(stream);
+{   
+    if (stream)
+    {
+        opj_stream_destroy(stream);
+    }
 }
 
 EXPORT_OpenJPEG void Opj_image_destroy(opj_image_t* image)
-{
-    opj_image_destroy(image);  
+{   
+    if (image)
+        opj_image_destroy(image);  
 }
 
 EXPORT_OpenJPEG void Opj_destroy_compress(opj_codec_t* codec)
@@ -254,28 +267,27 @@ EXPORT_OpenJPEG void Opj_setup_decoder(opj_codec_t* codec, opj_dparameters_t* pa
 
 EXPORT_OpenJPEG opj_image_t* Opj_decode(opj_codec_t* codec, opj_stream_t* stream)
 {
-    OPJ_BOOL bSuccess;
     opj_image_t* pImage;
     
     int num_threads = opj_get_num_cpus();
     opj_codec_set_threads(codec, num_threads);
 
     if (!opj_read_header(stream, codec, &pImage))
-    {
-        opj_stream_destroy(stream);
-        opj_destroy_codec(codec);
         return NULL;
-    }
 
-    bSuccess = opj_decode(codec, stream, pImage);
-    bSuccess = opj_end_decompress(codec, stream);
+    if(!opj_decode(codec, stream, pImage))
+        return NULL;
+
+    if (!opj_end_decompress(codec, stream))
+        return NULL;
+    
     return pImage;
 }
 
 
 EXPORT_OpenJPEG void Opj_destroy_decompress(opj_codec_t* codec)
 {
-    if (codec) 
+    if (codec)
        opj_destroy_codec(codec);
 }
 
