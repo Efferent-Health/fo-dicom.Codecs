@@ -250,7 +250,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public sbyte tcp_mct;
         /** Enable JPIP indexing*/
         public int jpip_on;
-        public void * mct_data;
+        public void* mct_data;
         /**
         * Maximum size (in bytes) for the whole codestream.
         * If == 0, codestream size limitation is not considered
@@ -693,7 +693,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                                 ushort* frameData16 = (ushort*)(void*)frameArray.Pointer;
                                                 ushort sign = (ushort)(1 << oldPixelData.HighBit);
                                                 ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
-                                                for (int p = 0; p < pixelCount; p++) 
+                                                for (int p = 0; p < pixelCount; p++)
                                                 {
                                                     ushort pixel = frameData16[pos];
                                                     if (Convert.ToBoolean(pixel & sign))
@@ -714,7 +714,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             }
                                         }
                                         else
-                                        {   
+                                        {
                                             if (oldPixelData.BitsStored < 16)
                                             {
                                                 ushort* frameData16 = (ushort*)frameArray.Pointer.ToPointer();
@@ -749,7 +749,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     img_size += image->comps[i].w * image->comps[i].h * image->comps[i].prec;
                                 }
 
-                                var outlen = (uint) (0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
+                                var outlen = (uint)(0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
                                 var buf = new PinnedByteArray(new byte[outlen]);
 
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
@@ -777,7 +777,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         clen = (int)Opj_stream_tell_winx64(c_stream);
                                     else
                                         clen = (int)Opj_stream_tell(c_stream);
-                                    
+
                                     //cbuf = pool.Rent(clen);
                                     //Marshal.Copy(buf.Pointer, cbuf, 0, clen);
                                     var cbuf1 = buf.Data.Take(clen).ToArray();
@@ -887,19 +887,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
-                IByteBuffer jpegData = oldPixelData.GetFrame(frame);
+                IByteBuffer j2kData = oldPixelData.GetFrame(frame);
 
                 //Converting photometricinterpretation YbrFull or YbrFull422 to RGB
                 if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 {
-                    jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                    j2kData = PixelDataConverter.YbrFullToRgb(j2kData);
                 }
                 else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                 {
-                    jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                    j2kData = PixelDataConverter.YbrFull422ToRgb(j2kData, oldPixelData.Width);
                 }
 
-                PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
+                PinnedByteArray j2kArray = new PinnedByteArray(j2kData.Data);
                 PinnedByteArray destArray = new PinnedByteArray(newPixelData.UncompressedFrameSize);
 
                 try
@@ -919,7 +919,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         dparams.cp_layer = 0;
                         dparams.cp_reduce = 0;
 
-                        byte* buf = (byte*)(void*)jpegArray.Pointer;
+                        byte* buf = (byte*)(void*)j2kArray.Pointer;
 
                         OPJ_CODEC_FORMAT format;
 
@@ -934,7 +934,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 codec = Opj_create_decompress_winx64(format);
                                 Opj_setup_decoder_winx64(codec, &dparams);
 
-                                d_stream = Opj_create_stream_winx64(buf, (uint)jpegArray.ByteSize, true);
+                                d_stream = Opj_create_stream_winx64(buf, (uint)j2kArray.ByteSize, true);
                                 image = Opj_decode_winx64(codec, d_stream);
                             }
                             else
@@ -945,7 +945,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 codec = Opj_create_decompress(format);
                                 Opj_setup_decoder(codec, &dparams);
 
-                                d_stream = Opj_create_stream(buf, (uint)jpegArray.ByteSize, true);
+                                d_stream = Opj_create_stream(buf, (uint)j2kArray.ByteSize, true);
                                 image = Opj_decode(codec, d_stream);
                             }
 
@@ -968,67 +968,120 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     throw new DicomCodecException("Error in JPEG 2000 decode stream => output image component data is null");
                                 }
+                                else
+                                {
+                                    if (comp->h != image->y1)
+                                        throw new DicomCodecException("Error in JPEG 2000 decode stream");
+
+                                    if (comp->w != image->x1)
+                                        throw new DicomCodecException("Error in JPEG 2000 decode stream");
+                                }
 
                                 int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
                                 int offset = (int)(newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps);
 
-                                if (newPixelData.BytesAllocated == 1)
+                                if (comp->prec == 8)
                                 {
                                     if (Convert.ToBoolean(comp->sgnd))
                                     {
-                                        byte sign = (byte)(1 << newPixelData.HighBit);
+                                        byte sign = (byte)(1 << (byte)(comp->prec -1));
                                         byte mask = (byte)(0xFF ^ sign);
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            int i = comp->data[p];
-                                            if (i < 0)
-                                                //destArray->Data[pos] = (unsigned char)(-i | sign);
-                                                destArray.Data[pos] = (byte)((i & mask) | sign);
-                                            else
-                                                //destArray->Data[pos] = (unsigned char)(i);
-                                                destArray.Data[pos] = (byte)(i & mask);
-                                            pos += offset;
+                                            try
+                                            {
+                                                int i = comp->data[p];
+                                                if (i < 0)
+                                                    //destArray->Data[pos] = (unsigned char)(-i | sign);
+                                                    destArray.Data[pos] = (byte)((i & mask) | sign);
+                                                else
+                                                    //destArray->Data[pos] = (unsigned char)(i);
+                                                    destArray.Data[pos] = (byte)(i & mask);
+                                                pos += offset;
+                                            }
+                                            catch (DicomCodecException e)
+                                            {
+                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
                                         }
                                     }
                                     else
-                                    {   
+                                    {
                                         for (int p = 0; p < pixelCount; p++)
-                                        {   
-                                            destArray.Data[pos] = (byte)comp->data[p];
-                                            pos += offset;
+                                        {
+                                            try
+                                            {
+                                                destArray.Data[pos] = (byte)comp->data[p];
+                                                pos += offset;
+                                            }
+                                            catch (DicomCodecException e)
+                                            {
+                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
                                         }
                                     }
                                 }
-                                else if (newPixelData.BytesAllocated == 2)
+                                else if (comp->prec > 8 && comp->prec <= 16)
                                 {
-                                    ushort sign = (ushort)(1 << newPixelData.HighBit);
+                                    ushort sign = (ushort)(1 << (ushort)(comp->prec -1));
                                     ushort mask = (ushort)(0xFFFF ^ sign);
                                     ushort* destData16 = (ushort*)(void*)destArray.Pointer;
 
                                     if (Convert.ToBoolean(comp->sgnd))
                                     {
-                                        for (int p = 0; p < pixelCount; p++)
+                                        try
                                         {
-                                            int i = comp->data[p];
+                                            for (int p = 0; p < pixelCount; p++)
+                                            {
+                                                int i = comp->data[p];
 
-                                            if (i < 0)
-                                                destData16[pos] = (ushort)((i & mask) | sign);
-                                            else
-                                                destData16[pos] = (ushort)(i & mask);
-                                            pos += offset;
+                                                if (i < 0)
+                                                    destData16[pos] = (ushort)((i & mask) | sign);
+                                                else
+                                                    destData16[pos] = (ushort)(i & mask);
+                                                pos += offset;
+                                            }
+                                        }
+                                        catch (DicomCodecException e)
+                                        {
+                                            throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                                         }
                                     }
                                     else
                                     {
                                         for (int p = 0; p < pixelCount; p++)
                                         {
-                                            destData16[pos] = (ushort)comp->data[p];
-                                            pos += offset;
+                                            try
+                                            {
+                                                var pixel = (ushort)comp->data[p];
+                                                destData16[pos] = pixel;
+                                                pos += offset;
+                                            }
+                                            catch (DicomCodecException e)
+                                            {
+                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
                                         }
                                     }
                                 }
                                 else
-                                    throw new DicomCodecException("JPEG 2000 module only supports Bytes Allocated == 8 or 16!");
+                                    throw new DicomCodecException("JPEG 2000 module only supports bits Allocated == 8 or 16!");
                             }
 
                             IByteBuffer buffer;
@@ -1044,7 +1097,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         catch (DicomCodecException ex)
                         {
-                            Console.WriteLine("{0} => {1}", ex.Message, ex.StackTrace);
+                            throw new DicomCodecException(ex.Message + " => " + ex.StackTrace);
                         }
                         finally
                         {
@@ -1067,7 +1120,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (d_stream != null)
                             {
                                 if (Platform.Current.Equals(Platform.Type.win_x64))
-                                {   
+                                {
                                     Opj_stream_close_winx64(d_stream);
                                 }
                                 else
@@ -1076,12 +1129,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                     }
                 }
+                catch (DicomCodecException ex)
+                {
+                    throw new DicomCodecException(ex.Message + " => " + ex.StackTrace);
+                }
                 finally
                 {
-                    if (jpegArray != null)
+                    if (j2kArray != null)
                     {
-                        jpegArray.Dispose();
-                        jpegArray = null;
+                        j2kArray.Dispose();
+                        j2kArray = null;
                     }
 
                     if (destArray != null)
