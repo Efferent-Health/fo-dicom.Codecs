@@ -312,6 +312,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                     }
+                    catch (Exception e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
                     finally
                     {
                         if (frameArray != null)
@@ -350,20 +354,26 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
 
-                //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
-                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                try
                 {
-                    jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                    //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                    {
+                        jpegData = PixelDataConverter.YbrFullToRgb(jpegData);
+                    }
+                    else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                    {
+                        jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                    }
                 }
-                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                catch (Exception ex)
                 {
-                    jpegData = PixelDataConverter.YbrFull422ToRgb(jpegData, oldPixelData.Width);
+                    Console.WriteLine("Cannot convert JPEG-LS buffer data from PhotometricInterpretation = {0} to RGB => {1} => {2}", oldPixelData
+                    .PhotometricInterpretation.ToString(), ex.Message, ex.StackTrace);
                 }
 
                 PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
-
                 frameData = pool.Rent(newPixelData.UncompressedFrameSize);
-
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
                 try
@@ -394,6 +404,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
                 catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                }
+                catch (Exception e)
                 {
                     throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }

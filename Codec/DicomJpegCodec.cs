@@ -738,7 +738,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_12_winx64(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
-            public static extern unsafe uint jpeg_read_scanlines_12_winx64(ref j_decompress_ptr dinfo, short ** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_12_winx64(ref j_decompress_ptr dinfo, short** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
             public static extern unsafe void jpeg_destroy_decompress_12_winx64(ref j_decompress_ptr dinfo);
@@ -796,7 +796,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_16_winx64(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
-            public static extern unsafe uint jpeg_read_scanlines_16_winx64(ref j_decompress_ptr dinfo, ushort ** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_16_winx64(ref j_decompress_ptr dinfo, ushort** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
             public static extern unsafe void jpeg_destroy_decompress_16_winx64(ref j_decompress_ptr dinfo);
@@ -916,7 +916,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_12(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_12")]
-            public static extern unsafe uint jpeg_read_scanlines_12(ref j_decompress_ptr dinfo, short ** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_12(ref j_decompress_ptr dinfo, short** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_12")]
             public static extern unsafe void jpeg_destroy_decompress_12(ref j_decompress_ptr dinfo);
@@ -975,7 +975,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public static extern unsafe int jpeg_start_decompress_16(ref j_decompress_ptr dinfo);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_read_scanlines_16")]
-            public static extern unsafe uint jpeg_read_scanlines_16(ref j_decompress_ptr dinfo, ushort ** scanlines, uint max_lines);
+            public static extern unsafe uint jpeg_read_scanlines_16(ref j_decompress_ptr dinfo, ushort** scanlines, uint max_lines);
 
             [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "jpeg_destroy_decompress_16")]
             public static extern unsafe void jpeg_destroy_decompress_16(ref j_decompress_ptr dinfo);
@@ -2030,7 +2030,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
                         }
                         else if (Bits > 12 && Bits <= 16)
-                        {   
+                        {
                             byte* framePtr = (byte*)(void*)frameArray.Pointer;
 
                             while (dinfo.output_scanline < dinfo.output_height)
@@ -2101,6 +2101,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                     }
+                    catch (Exception e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
                     finally
                     {
                         if (frameArray != null)
@@ -2124,7 +2128,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 var jpegFile = new byte[] { 255, 216, 255, 224 };
 
-                if (!jpegArray.Data.SequenceEqual(jpegArray.Data.Take(jpegFile.Length)))
+                if (!jpegFile.SequenceEqual(jpegArray.Data.Take(jpegFile.Length)))
                 {
                     throw new DicomCodecException("Not a JPEG file.");
                 }
@@ -2344,50 +2348,57 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
-            if (oldPixelData.NumberOfFrames == 0)
-                return;
-
-            // IJG eats the extra padding bits. Is there a better way to test for this?
-            if (newPixelData.BitsAllocated == 16 && newPixelData.BitsStored <= 8)
-            {
-                // check for embedded overlays here or below?
-                newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)8);
-            }
-
-            if (parameters == null || parameters.GetType() != typeof(DicomJpegParams))
-                parameters = GetDefaultParameters();
-
-            DicomJpegParams jparams = (DicomJpegParams)parameters;
-            int precision = 0;
-
             try
             {
+                if (oldPixelData.NumberOfFrames == 0)
+                    return;
+
+                // IJG eats the extra padding bits. Is there a better way to test for this?
+                if (newPixelData.BitsAllocated == 16 && newPixelData.BitsStored <= 8)
+                {
+                    // check for embedded overlays here or below?
+                    newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)8);
+                }
+
+                if (parameters == null || parameters.GetType() != typeof(DicomJpegParams))
+                    parameters = GetDefaultParameters();
+
+                DicomJpegParams jparams = (DicomJpegParams)parameters;
+                int precision = 0;
+
                 try
                 {
-                    precision = JpegHelper.ScanJpegForBitDepth(oldPixelData);
+                    try
+                    {
+                        precision = JpegHelper.ScanJpegForBitDepth(oldPixelData);
+                    }
+                    catch
+                    {
+                        // if the internal scanner chokes on an image, try again using ijg
+                        JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
+                        precision = c.ScanHeaderForPrecision(oldPixelData);
+                    }
                 }
                 catch
                 {
-                    // if the internal scanner chokes on an image, try again using ijg
-                    JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
-                    precision = c.ScanHeaderForPrecision(oldPixelData);
+                    // the old scanner choked on several valid images...
+                    // assume the correct encoder was used and let libijg handle the rest
+                    precision = oldPixelData.BitsStored;
+                }
+
+                if (newPixelData.BitsStored <= 8 && precision > 8)
+                    newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)16);
+
+                JpegNativeCodec codec = GetCodec(precision, jparams);
+
+                for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
+                {
+                    codec.Decode(oldPixelData, newPixelData, jparams, frame);
                 }
             }
-            catch
+            catch (DicomCodecException e)
             {
-                // the old scanner choked on several valid images...
-                // assume the correct encoder was used and let libijg handle the rest
-                precision = oldPixelData.BitsStored;
-            }
-
-            if (newPixelData.BitsStored <= 8 && precision > 8)
-                newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)16);
-
-            JpegNativeCodec codec = GetCodec(precision, jparams);
-
-            for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
-            {
-                codec.Decode(oldPixelData, newPixelData, jparams, frame);
+                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
             }
         }
 

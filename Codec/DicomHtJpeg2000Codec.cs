@@ -137,14 +137,22 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     var pool = ArrayPool<byte>.Shared;
                     byte[] jpegHT2KData = null;
 
-                    //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
-                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                    try
                     {
-                        frameData = PixelDataConverter.YbrFullToRgb(frameData);
+                        //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
+                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                        {
+                            frameData = PixelDataConverter.YbrFullToRgb(frameData);
+                        }
+                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                        {
+                            frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
+                        }
                     }
-                    else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                    catch (Exception ex)
                     {
-                        frameData = PixelDataConverter.YbrFull422ToRgb(frameData, oldPixelData.Width);
+                        Console.WriteLine("Cannot convert HTJ2K buffer data from PhotometricInterpretation = {0} to RGB => {1} => {2}", oldPixelData
+                        .PhotometricInterpretation.ToString(), ex.Message, ex.StackTrace);
                     }
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
@@ -201,6 +209,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     catch (DicomCodecException d)
                     {
                         throw new DicomCodecException(d.Message + " => " + d.StackTrace);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                     }
                     finally
                     {
@@ -276,6 +288,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
                 catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                }
+                catch (Exception e)
                 {
                     throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }

@@ -7,6 +7,7 @@ using System.Linq;
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
+using System.Linq.Expressions;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
@@ -803,6 +804,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             {
                                 throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                             }
+                            catch (Exception e)
+                            {
+                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                            }
                             finally
                             {
                                 if (c_stream != null)
@@ -830,6 +835,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 }
                             }
                         }
+                        catch (DicomCodecException e)
+                        {
+                            throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                        }
                         finally
                         {
                             if (frameArray != null)
@@ -839,6 +852,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
                         }
                     }
+                }
+                catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                }
+                catch (Exception e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }
                 finally
                 {
@@ -879,24 +900,32 @@ namespace FellowOakDicom.Imaging.NativeCodec
             if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct)
                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
 
-            if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422 || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422)
-                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull;
+            if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422 || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422 || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
 
-            if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
-                newPixelData.PlanarConfiguration = PlanarConfiguration.Planar;
+            //if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+            //    newPixelData.PlanarConfiguration = PlanarConfiguration.Planar;
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer j2kData = oldPixelData.GetFrame(frame);
 
-                //Converting photometricinterpretation YbrFull or YbrFull422 to RGB
-                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                try
                 {
-                    j2kData = PixelDataConverter.YbrFullToRgb(j2kData);
+                    //Converting photometricinterpretation YbrFull or YbrFull422 to RGB
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                    {
+                        j2kData = PixelDataConverter.YbrFullToRgb(j2kData);
+                    }
+                    else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                    {
+                        j2kData = PixelDataConverter.YbrFull422ToRgb(j2kData, oldPixelData.Width);
+                    }
                 }
-                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                catch (Exception ex)
                 {
-                    j2kData = PixelDataConverter.YbrFull422ToRgb(j2kData, oldPixelData.Width);
+                    Console.WriteLine("Cannot convert J2k buffer data from PhotometricInterpretation = {0} to RGB => {1} => {2}", oldPixelData
+                    .PhotometricInterpretation.ToString(), ex.Message, ex.StackTrace);
                 }
 
                 PinnedByteArray j2kArray = new PinnedByteArray(j2kData.Data);
@@ -1130,6 +1159,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                 }
                 catch (DicomCodecException ex)
+                {
+                    throw new DicomCodecException(ex.Message + " => " + ex.StackTrace);
+                }
+                catch (Exception ex)
                 {
                     throw new DicomCodecException(ex.Message + " => " + ex.StackTrace);
                 }
