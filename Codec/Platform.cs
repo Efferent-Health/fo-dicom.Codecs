@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -32,26 +33,33 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         private static Type getCurrentType()
         {
-            var arch = typeof(string).Assembly.GetName().ProcessorArchitecture;
+            var arch = RuntimeInformation.OSArchitecture;
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (arch.Equals(Architecture.X64))
             {
-                if (arch == ProcessorArchitecture.Amd64)
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
                     return Type.win_x64;
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                if (arch == ProcessorArchitecture.Amd64)
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
                     return Type.linux_x64;
-                else if (arch == ProcessorArchitecture.MSIL)
-                    return Type.linux_arm64;
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                if (arch == ProcessorArchitecture.Amd64)
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
                     return Type.osx_x64;
-                else if (arch == ProcessorArchitecture.MSIL)
+                }
+            }
+            else if (arch.Equals(Architecture.Arm64))
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    return Type.linux_arm64;
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
                     return Type.osx_arm64;
+                }
             }
 
             return Type.unsupported;
