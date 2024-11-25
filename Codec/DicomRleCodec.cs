@@ -67,10 +67,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         }
 
         public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
-        {
-            var pool = ArrayPool<byte>.Shared;
-            byte[] byteBuf = null;
-            
+        {   
             try
             {
                 for (var frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
@@ -84,8 +81,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         ++frameSize;
                     }
 
-                    byteBuf = pool.Rent(frameSize);
-                    var frameData = new MemoryByteBuffer(byteBuf);
+                    var frameData = new MemoryByteBuffer(new byte[frameSize]);
 
                     var pixelCount = oldPixelData.Width * oldPixelData.Height;
                     var numberOfSegments = oldPixelData.BytesAllocated * oldPixelData.SamplesPerPixel;
@@ -122,13 +118,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     newPixelData.AddFrame(frameData);
                 }
             }
-            finally
+            catch (DicomCodecException ex)
             {
-                if (byteBuf != null)
-                {
-                    pool.Return(byteBuf);
-                    byteBuf = null;
-                }
+                throw new DicomCodecException(ex.Message + " => " + ex.StackTrace);
             }
         }
 
