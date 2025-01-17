@@ -7,7 +7,7 @@
 
 <img src="fo-dicom_logo.png" alt="fo-dicom logo" height="80" /> <img src="efferent_logo.png" alt="Efferent logo" height="80" />
 
-This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent Health, LLC](https://efferenthealth.com).
+This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent, Inc.](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
 
 |OS|&numsp;&numsp;x64&numsp;&numsp;|Arm64|Tested with|
