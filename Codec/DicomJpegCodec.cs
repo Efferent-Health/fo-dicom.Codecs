@@ -615,7 +615,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             public abstract void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame);
             public abstract void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomJpegParams jpegParams, int frame);
 
-            internal abstract int ScanHeaderForPrecision(DicomPixelData pixelData);
+            internal abstract int ScanHeaderForPrecision(DicomPixelData pixelData, bool isjPEG);
             internal MemoryStream MemoryBuffer;
             internal PinnedByteArray DataArray;
             internal JpegMode Mode;
@@ -2121,7 +2121,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
             }
 
-            internal override unsafe int ScanHeaderForPrecision(DicomPixelData pixelData)
+            internal override unsafe int ScanHeaderForPrecision(DicomPixelData pixelData, bool isjPEG)
             {
                 PinnedByteArray jpegArray = new PinnedByteArray(pixelData.GetFrame(0).Data);
                 j_decompress_ptr dinfo = new j_decompress_ptr();
@@ -2132,6 +2132,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 {
                     throw new DicomCodecException("Not a JPEG file.");
                 }
+
+                isjPEG = true;
 
                 SourceManagerStruct src = new SourceManagerStruct();
 
@@ -2365,6 +2367,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 DicomJpegParams jparams = (DicomJpegParams)parameters;
                 int precision = 0;
+                bool isjPEG = false;
 
                 try
                 {
@@ -2376,14 +2379,25 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         // if the internal scanner chokes on an image, try again using ijg
                         JpegCodec c = new JpegCodec(JpegMode.Baseline, 0, 0, 8);
-                        precision = c.ScanHeaderForPrecision(oldPixelData);
+
+                        try
+                        {
+                            precision = c.ScanHeaderForPrecision(oldPixelData, isjPEG);
+                        }
+                        catch (DicomCodecException e)
+                        {
+                            throw new DicomCodecException(e.Message);
+                        }
                     }
                 }
-                catch
+                catch (DicomCodecException e)
                 {
                     // the old scanner choked on several valid images...
                     // assume the correct encoder was used and let libijg handle the rest
-                    precision = oldPixelData.BitsStored;
+                    if (isjPEG)
+                        precision = oldPixelData.BitsStored;
+                    else
+                        throw new DicomCodecException(e.Message);
                 }
 
                 if (newPixelData.BitsStored <= 8 && precision > 8)

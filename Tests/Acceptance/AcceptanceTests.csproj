@@ -13,12 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.1.4"/>
-    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.1.4" />
+    <PackageReference Include="fo-dicom" Version="5.1.5"/>
+    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.1.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" />
+    <!--None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" /-->
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
