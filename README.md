@@ -7,7 +7,7 @@
 
 <img src="fo-dicom_logo.png" alt="fo-dicom logo" height="80" /> <img src="efferent_logo.png" alt="Efferent logo" height="80" />
 
-This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent Health, LLC](https://efferenthealth.com).
+This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent, Inc.](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
 
 |OS|&numsp;&numsp;x64&numsp;&numsp;|Arm64|Tested with|
@@ -56,6 +56,17 @@ The HT-JPEG2000 family of codecs is only supported since fo-dicom version 5.1.3
     .SkipValidation()
     .Build();
   ````
+
+### Temporary file management
+
+The transcoders use temporary files during the conversion of the pixel data, and the required space surpasses a threshold of 1 MB by default.
+This treshold can be adjusted by setting a static field, as follows:
+
+````C#
+NativeTranscoderManager.MemoryBufferThreshold = // new value in bytes
+````
+
+As with any application, the temporary files won't be deleted in case of a crash or Operating System shutdown.
 
 ## Dependencies
 
