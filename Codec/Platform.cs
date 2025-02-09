@@ -60,6 +60,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 {
                     return Type.osx_arm64;
                 }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return Type.win_arm64;
+                }
             }
 
             return Type.unsupported;
