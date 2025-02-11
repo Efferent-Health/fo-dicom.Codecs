@@ -55,6 +55,36 @@ jobs:
       - name: Run unit tests
         run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
 
+  build_win_arm64:
+    runs-on: windows-2019
+    needs: version
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Compile libijg8 libraries
+        run: msbuild Native/Windows64/build_ALL/libijg8.x64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Compile libijg12 libraries
+        run: msbuild Native/Windows64/build_ALL/libijg12.x64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Compile libijg16 libraries
+        run: msbuild Native/Windows64/build_ALL/libijg16.x64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Compile windows x64 library
+        run: msbuild Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Publish windows x64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib-win-arm64
+          path: Native/Windows64/build_ALL/bin/arm64/Release/Dicom.Native
+      - name: Setup .NET 8.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Prepare SN Key
+        run: |
+          echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
+          certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
+
   build_linux_x64:
     runs-on: ubuntu-20.04
     needs: build_win_x64
@@ -153,6 +183,7 @@ jobs:
     needs:
       - version
       - build_win_x64
+      - build_win_arm64
       - build_linux_x64
       - build_linux_arm64
       - build_osx_x64
