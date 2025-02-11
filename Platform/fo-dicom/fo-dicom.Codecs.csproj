@@ -3,9 +3,10 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom codecs for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
-    <Version>5.16.0.0-beta1</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
+    <VersionPrefix>5.16.0.0</VersionPrefix>
+    <Version>$(VersionPrefix)-beta1</Version>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+    <FileVersion>$(VersionPrefix)</FileVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyOriginatorKeyFile>fo-dicom.Codecs.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
