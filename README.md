@@ -13,8 +13,8 @@ The codecs in this repository are written in pure C/C++ code and wrapped with C#
 |OS|&numsp;&numsp;x64&numsp;&numsp;|Arm64|Tested with|
 |:--|:--:|:--:|:--|
 |Windows|:white_check_mark:|:hammer_and_wrench:|Windows 10/11|
-|Linux|:white_check_mark:|:white_check_mark:|Ubuntu 18/20/22|
-|MacOS|:white_check_mark:|:white_check_mark:|Ventura/Sonoma|
+|Linux|:white_check_mark:|:white_check_mark:|Ubuntu 18/20/22/24|
+|MacOS|:white_check_mark:|:white_check_mark:|Ventura/Sonoma/Sequoia|
 
 ## Supported CODECs
 
