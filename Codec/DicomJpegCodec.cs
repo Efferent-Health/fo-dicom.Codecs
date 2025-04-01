@@ -1973,24 +1973,18 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
 
                         uint rowSize = 0;
-
-                        if (Bits.Equals(8))
-                            rowSize = Convert.ToUInt32(dinfo.output_width * dinfo.output_components * sizeof(short) / 2);
-                        else
-                            rowSize = Convert.ToUInt32(dinfo.output_width * dinfo.output_components * sizeof(short));
-
+                        rowSize = Convert.ToUInt32(dinfo.output_width * dinfo.output_components * oldPixelData.BytesAllocated);
+                        
                         int frameSize = Convert.ToInt32(rowSize * dinfo.output_height);
 
                         if ((frameSize % 2) != 0 && oldPixelData.NumberOfFrames == 1)
                             frameSize++;
 
                         frameArray = new PinnedByteArray(frameSize);
-                        //byte* framePtr = (byte*)(void*)frameArray.Pointer;
+                        byte* framePtr = (byte*)(void*)frameArray.Pointer;
 
                         if (Bits.Equals(8))
                         {
-                            byte* framePtr = (byte*)(void*)frameArray.Pointer;
-
                             while (dinfo.output_scanline < dinfo.output_height)
                             {
                                 uint rows = 0;
@@ -2010,8 +2004,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         else if (Bits > 8 && Bits <= 12)
                         {
-                            byte* framePtr = (byte*)(void*)frameArray.Pointer;
-
                             while (dinfo.output_scanline < dinfo.output_height)
                             {
                                 uint rows = 0;
@@ -2031,8 +2023,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         }
                         else if (Bits > 12 && Bits <= 16)
                         {
-                            byte* framePtr = (byte*)(void*)frameArray.Pointer;
-
                             while (dinfo.output_scanline < dinfo.output_height)
                             {
                                 uint rows = 0;
