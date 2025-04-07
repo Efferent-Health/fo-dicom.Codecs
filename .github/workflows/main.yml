@@ -56,7 +56,7 @@ jobs:
       - name: Run unit tests
         run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
   build_win_arm64:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: build_win_x64
     steps:
       - name: Checkout repository
