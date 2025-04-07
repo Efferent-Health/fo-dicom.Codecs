@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lib-win-arm64
-          path: Native/Windows64/build_ALL/bin/ARM64/Release/Dicom.Native
+          path: Native/Windows64/build_ARM64/bin/ARM64/Release/Dicom.Native
   build_linux_x64:
     runs-on: ubuntu-20.04
     needs: build_win_x64
