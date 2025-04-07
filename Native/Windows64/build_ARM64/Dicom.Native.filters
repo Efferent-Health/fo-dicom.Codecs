@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6a6404cf-2f41-46e2-b03b-4f23f473c1b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{c8f73060-cf82-4119-9b3b-e0570bf76122}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenJPEG">
+      <UniqueIdentifier>{4639f7e6-cec7-4971-a148-5ecf3b7505b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OpenJPEG">
+      <UniqueIdentifier>{948e659c-2b28-487f-897b-dde6d6a6b820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CharLS">
+      <UniqueIdentifier>{f46ec9c6-df02-4989-99af-e533de5310a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CharLS">
+      <UniqueIdentifier>{17b4dfe5-94fd-4686-98ed-d753ab25b4b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OpenJPH">
+      <UniqueIdentifier>{867FC348-5573-4812-B881-F84F44AF2C70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenJPH">
+      <UniqueIdentifier>{6179E6B3-1446-4EB2-85FE-7C0788701242}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Common\OpenJPEG\tpix_manager.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\thread.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\thix_manager.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\tgt.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\test_sparse_array.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\tcd.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t2.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1_ht_generate_luts.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1_generate_luts.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\t1.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\sparse_array.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\ppix_manager.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\pi.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\phix_manager.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_malloc.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\opj_clock.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\openjpeg.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\mqc.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\mct.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\jp2.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\j2k.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\invert.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\image.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\ht_dec.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\function_list.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\event.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\dwt.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\cio.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\cidx_manager.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPEG\bio.c">
+      <Filter>Source Files\OpenJPEG</Filter>
+    </ClCompile>
+    
+    <ClCompile Include="..\..\Common\CharLS\jpegls.cpp">
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\jpegmarkersegment.cpp">
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\jpegstreamreader.cpp">
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\jpegstreamwriter.cpp">
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\interface.cpp" />
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_codeblock.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_codeblock_fun.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_codestream.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_codestream_gen.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_codestream_local.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_params.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_precinct.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_resolution.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_subband.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_tile.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\codestream\ojph_tile_comp.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_common.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_decoder.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_encoder.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\..\Common\OpenJPH\others\ojph_arch.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\others\ojph_file.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\others\ojph_mem.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\others\ojph_message.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\..\Common\OpenJPH\transform\ojph_colour.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\transform\ojph_transform.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\..\Common\OpenJPH\interface\ojph_interface.cpp">
+      <Filter>Source Files\OpenJPH</Filter>
+    </ClCompile>
+
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_8.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_16.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.HtJpeg2000.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.JpegLS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\OpenJPEG\tls_keys.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\thread.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\tgt.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\tcd.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\t2.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\t1_luts.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\t1_ht_luts.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\t1.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\sparse_array.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\pi.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_malloc.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_intmath.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_includes.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_config_private.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_config.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_common.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_codec.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\opj_clock.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\openjpeg.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\mqc_inl.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\mqc.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\mct.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\jp2.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\j2k.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\invert.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\indexbox_manager.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\image.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\function_list.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\event.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\dwt.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\cio.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\cidx_manager.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPEG\bio.h">
+      <Filter>Header Files\OpenJPEG</Filter>
+    </ClInclude>
+
+    <ClInclude Include="..\..\Common\CharLS\charls.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\colortransform.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\context.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\contextrunmode.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\decoderstrategy.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\defaulttraits.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\encoderstrategy.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jlscodecfactory.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegimagedatasegment.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegmarkercode.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegmarkersegment.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegsegment.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegstreamreader.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegstreamwriter.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\lookuptable.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\losslesstraits.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\processline.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\publictypes.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\scan.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\util.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_codestream.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_defs.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_file.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_mem.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_read.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_write.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_codeblock.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_codeblock_fun.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_codestream_local.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_params_local.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_precinct.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_resolution.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_tile.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_tile_comp.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+
+    <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_common.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_decoder.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\coding\ojph_block_encoder.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\coding\table0.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\coding\table1.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+
+    <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_colour.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_colour_local.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_transform.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\OpenJPH\transform\ojph_transform_local.h">
+      <Filter>Header Files\OpenJPH</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

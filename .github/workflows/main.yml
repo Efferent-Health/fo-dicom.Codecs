@@ -55,7 +55,27 @@ jobs:
           certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
         run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
-
+  build_win_arm64:
+    runs-on: windows-2019
+    needs: build_win_x64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Compile libijg8 libraries
+        run: msbuild Native/Windows64/build_ARM64/libijg8.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Compile libijg12 libraries
+        run: msbuild Native/Windows64/build_ARM64/libijg12.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Compile libijg16 libraries
+        run: msbuild Native/Windows64/build_ARM64/libijg16.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Compile windows ARM64 library
+        run: msbuild Native/Windows64/build_ARM64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=ARM64
+      - name: Publish windows ARM64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib-win-arm64
+          path: Native/Windows64/build_ALL/bin/ARM64/Release/Dicom.Native
   build_linux_x64:
     runs-on: ubuntu-20.04
     needs: build_win_x64

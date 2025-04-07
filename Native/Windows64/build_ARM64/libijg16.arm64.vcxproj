@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DD846D57-B93B-46C8-BFFF-AE4C11E408B3}</ProjectGuid>
+    <Platform Condition="'$(Platform)' == ''">ARM64</Platform>
+    <RootNamespace>libijg16ARM64</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">bin\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">bin\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">obj\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Midl>
+      <TargetEnvironment>ARM64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <Midl>
+      <TargetEnvironment>ARM64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Common\libijg16\jaricom.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcapimin.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcapistd.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcarith.c" />
+    <ClCompile Include="..\..\Common\libijg16\jccoefct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jccolor.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcdctmgr.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcdiffct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jchuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcinit.c" />
+    <ClCompile Include="..\..\Common\libijg16\jclhuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jclossls.c" />
+    <ClCompile Include="..\..\Common\libijg16\jclossy.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcmainct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcmarker.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcmaster.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcodec.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcomapi.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcparam.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcphuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcpred.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcprepct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcsample.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcscale.c" />
+    <ClCompile Include="..\..\Common\libijg16\jcshuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jctrans.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdapimin.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdapistd.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdarith.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdatadst.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdatasrc.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdcoefct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdcolor.c" />
+    <ClCompile Include="..\..\Common\libijg16\jddctmgr.c" />
+    <ClCompile Include="..\..\Common\libijg16\jddiffct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdhuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdinput.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdlhuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdlossls.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdlossy.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdmainct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdmarker.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdmaster.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdmerge.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdphuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdpostct.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdpred.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdsample.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdscale.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdshuff.c" />
+    <ClCompile Include="..\..\Common\libijg16\jdtrans.c" />
+    <ClCompile Include="..\..\Common\libijg16\jerror.c" />
+    <ClCompile Include="..\..\Common\libijg16\jfdctflt.c" />
+    <ClCompile Include="..\..\Common\libijg16\jfdctfst.c" />
+    <ClCompile Include="..\..\Common\libijg16\jfdctint.c" />
+    <ClCompile Include="..\..\Common\libijg16\jidctflt.c" />
+    <ClCompile Include="..\..\Common\libijg16\jidctfst.c" />
+    <ClCompile Include="..\..\Common\libijg16\jidctint.c" />
+    <ClCompile Include="..\..\Common\libijg16\jidctred.c" />
+    <ClCompile Include="..\..\Common\libijg16\jmemmgr.c" />
+    <ClCompile Include="..\..\Common\libijg16\jmemnobs.c" />
+    <ClCompile Include="..\..\Common\libijg16\jquant1.c" />
+    <ClCompile Include="..\..\Common\libijg16\jquant2.c" />
+    <ClCompile Include="..\..\Common\libijg16\jutils.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\libijg16\jchuff16.h" />
+    <ClInclude Include="..\..\POSIX64\libijg16\jconfig16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jdct16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jdhuff16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jerror16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jinclude16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jlossls16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jlossy16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jmemsys16.h" />
+    <ClInclude Include="..\..\POSIARM64\libijg16\jmorecfg16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jpegint16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jpeglib16.h" />
+    <ClInclude Include="..\..\Common\libijg16\jversion16.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
