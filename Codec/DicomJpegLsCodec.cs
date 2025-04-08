@@ -194,13 +194,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
     public abstract class DicomJpegLsNativeCodec : DicomJpegLsCodec
     {
-        //Encode JPEGLS for winx64
+        //Encode JPEGLS for win_x64 or win_arm64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode_winx64(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSEncode_win(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //Decode JPEGLS for winx64
         [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode_winx64(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_win(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
@@ -283,8 +283,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             CharlsApiResultType err = CharlsApiResultType.Unknown;
 
-                            if (Platform.Current.Equals(Platform.Type.win_x64))
-                                err = JpegLSEncode_winx64(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                err = JpegLSEncode_win(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
                             else
                                 err = JpegLSEncode(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
 
@@ -386,8 +386,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     unsafe
                     {
-                        if (Platform.Current.Equals(Platform.Type.win_x64))
-                            err = JpegLSDecode_winx64((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            err = JpegLSDecode_win((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                         else
                             err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
 

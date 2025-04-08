@@ -102,11 +102,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
     {
         // Encode HTJ2K for win_x64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
-        public static extern unsafe void InvokeHTJ2KEncode_winx64(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
+        public static extern unsafe void InvokeHTJ2KEncode_win(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
         // Decode HTJ2K for win_x64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
-        public static extern unsafe void InvokeHTJ2KDecode_winx64(ref Raw_outdata raw_outinfo, byte* source, uint sourceLength);
+        public static extern unsafe void InvokeHTJ2KDecode_win(ref Raw_outdata raw_outinfo, byte* source, uint sourceLength);
 
         // Encode HTJ2k
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
@@ -181,8 +181,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     try
                     {
-                        if (Platform.Current.Equals(Platform.Type.win_x64))
-                            InvokeHTJ2KEncode_winx64(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
                         else
                             InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
 
@@ -268,8 +268,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     unsafe
                     {
-                        if (Platform.Current.Equals(Platform.Type.win_x64))
-                            InvokeHTJ2KDecode_winx64(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
+                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            InvokeHTJ2KDecode_win(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
                         else
                             InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count); ;
 

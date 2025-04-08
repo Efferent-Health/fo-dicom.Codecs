@@ -51,8 +51,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
             }
             else if (arch.Equals(Architecture.Arm64))
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {   
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return Type.win_arm64;
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     return Type.linux_arm64;
                 }

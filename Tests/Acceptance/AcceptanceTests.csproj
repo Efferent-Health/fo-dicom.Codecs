@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--PackageReference Include="fo-dicom.Codecs" Version="5.15.0" /-->
+    <!--PackageReference Include="fo-dicom.Codecs" Version="5.2.1" /-->
     <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
   </ItemGroup>
 </Project>
