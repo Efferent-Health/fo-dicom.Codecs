@@ -33,18 +33,18 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
       - name: Compile libijg8 libraries
-        run: msbuild Native/Windows64/build_ALL/libijg8.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+        run: msbuild Native/Windows64/build_x64/libijg8.x64.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Compile libijg12 libraries
-        run: msbuild Native/Windows64/build_ALL/libijg12.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+        run: msbuild Native/Windows64/build_x64/libijg12.x64.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Compile libijg16 libraries
-        run: msbuild Native/Windows64/build_ALL/libijg16.x64.vcxproj /p:Configuration=Release /p:Platform=x64
+        run: msbuild Native/Windows64/build_x64/libijg16.x64.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Compile windows x64 library
-        run: msbuild Native/Windows64/build_ALL/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
+        run: msbuild Native/Windows64/build_x64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Publish windows x64 artifacts
         uses: actions/upload-artifact@v4
         with:
           name: lib-win-x64
-          path: Native/Windows64/build_ALL/bin/x64/Release/Dicom.Native
+          path: Native/Windows64/build_x64/bin/x64/Release/Dicom.Native
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
@@ -64,18 +64,18 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
       - name: Compile libijg8 libraries
-        run: msbuild Native/Windows64/build_ARM64/libijg8.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+        run: msbuild Native/Windows64/build_arm64/libijg8.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
       - name: Compile libijg12 libraries
-        run: msbuild Native/Windows64/build_ARM64/libijg12.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+        run: msbuild Native/Windows64/build_arm64/libijg12.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
       - name: Compile libijg16 libraries
-        run: msbuild Native/Windows64/build_ARM64/libijg16.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
+        run: msbuild Native/Windows64/build_arm64/libijg16.arm64.vcxproj /p:Configuration=Release /p:Platform=ARM64
       - name: Compile windows ARM64 library
-        run: msbuild Native/Windows64/build_ARM64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=ARM64
+        run: msbuild Native/Windows64/build_arm64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=ARM64
       - name: Publish windows ARM64 artifacts
         uses: actions/upload-artifact@v4
         with:
           name: lib-win-arm64
-          path: Native/Windows64/build_ARM64/bin/ARM64/Release/Dicom.Native
+          path: Native/Windows64/build_arm64/bin/ARM64/Release/Dicom.Native
   build_linux_x64:
     runs-on: ubuntu-20.04
     needs: build_win_x64
