@@ -94,7 +94,7 @@ SET(CHARLS_SRCS
 
 #libijg8 library
 SET(LIBIJG8_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jaricom.c
+#  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jaricom.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcapimin.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcapistd.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcarith.c
@@ -162,7 +162,7 @@ SET(LIBIJG8_SRCS
 
 #libijg12 library
 SET(LIBIJG12_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jaricom.c
+#  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jaricom.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcapimin.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcapistd.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcarith.c
@@ -230,7 +230,7 @@ SET(LIBIJG12_SRCS
 
 #libijg12 library
 SET(LIBIJG16_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jaricom.c
+#  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jaricom.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcapimin.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcapistd.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcarith.c
