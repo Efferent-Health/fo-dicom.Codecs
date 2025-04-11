@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,20 +35,20 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #ifndef OJPH_BASE_H
 #define OJPH_BASE_H
 
 #include "ojph_defs.h"
 
-namespace ojph {
+namespace ojph
+{
 
   /////////////////////////////////////////////////////////////////////////////
   struct size
   {
     explicit size(ui32 w = 0, ui32 h = 0) : w(w), h(h) {}
-    ui32 w; //width
-    ui32 h; //height
+    ui32 w; // width
+    ui32 h; // height
 
     ui64 area() const { return (ui64)w * (ui64)h; }
   };
@@ -66,7 +66,7 @@ namespace ojph {
     point org;
     size siz;
   };
-  
+
 }
 
 #endif // !OJPH_BASE_H

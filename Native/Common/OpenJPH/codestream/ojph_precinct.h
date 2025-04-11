@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,45 +35,48 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #ifndef OJPH_PRECINCT_H
 #define OJPH_PRECINCT_H
 
 #include "ojph_defs.h"
 
-namespace ojph {
+namespace ojph
+{
 
   ////////////////////////////////////////////////////////////////////////////
-  //defined elsewhere
+  // defined elsewhere
   class mem_elastic_allocator;
   struct coded_lists;
 
-  namespace local {
+  namespace local
+  {
 
     //////////////////////////////////////////////////////////////////////////
-    //defined here
+    // defined here
     class subband;
-    
+
     //////////////////////////////////////////////////////////////////////////
     struct precinct
     {
-      precinct() {
-        scratch = NULL; bands = NULL; coded = NULL;
-        num_bands = 0; may_use_sop = uses_eph = false;
+      precinct()
+      {
+        scratch = NULL;
+        bands = NULL;
+        coded = NULL;
+        may_use_sop = uses_eph = false;
       }
-      ui32 prepare_precinct(int tag_tree_size, ui32* lev_idx,
+      ui32 prepare_precinct(int tag_tree_size, ui32 *lev_idx,
                             mem_elastic_allocator *elastic);
       void write(outfile_base *file);
-      void parse(int tag_tree_size, ui32* lev_idx,
+      void parse(int tag_tree_size, ui32 *lev_idx,
                  mem_elastic_allocator *elastic,
-                 ui32& data_left, infile_base *file, bool skipped);
+                 ui32 &data_left, infile_base *file, bool skipped);
 
       ui8 *scratch;
-      point img_point;   //the precinct projected to full resolution
-      rect cb_idxs[4]; //indices of codeblocks
-      subband *bands;  //the subbands
-      coded_lists* coded;
-      ui32 num_bands;
+      point img_point; // the precinct projected to full resolution
+      rect cb_idxs[4]; // indices of codeblocks
+      subband *bands;  // the subbands
+      coded_lists *coded;
       bool may_use_sop, uses_eph;
     };
 

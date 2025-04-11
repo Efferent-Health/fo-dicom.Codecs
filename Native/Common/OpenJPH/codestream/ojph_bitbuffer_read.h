@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,22 +35,22 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #ifndef OJPH_BITBUFFER_READ_H
 #define OJPH_BITBUFFER_READ_H
 
 #include "ojph_defs.h"
 #include "ojph_file.h"
 
-namespace ojph {
+namespace ojph
+{
 
   ////////////////////////////////////////////////////////////////////////////
-  //defined elsewhere
+  // defined elsewhere
   class mem_elastic_allocator;
   struct coded_lists;
 
-  namespace local {
-
+  namespace local
+  {
 
     //////////////////////////////////////////////////////////////////////////
     struct bit_read_buf
@@ -63,8 +63,7 @@ namespace ojph {
     };
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    void bb_init(bit_read_buf *bbp, ui32 bytes_left, infile_base* file)
+    static inline void bb_init(bit_read_buf *bbp, ui32 bytes_left, infile_base *file)
     {
       bbp->avail_bits = 0;
       bbp->file = file;
@@ -74,8 +73,7 @@ namespace ojph {
     }
 
     /////////////////////////////////////////////////////////////////////////////
-    static inline
-    bool bb_read(bit_read_buf *bbp)
+    static inline bool bb_read(bit_read_buf *bbp)
     {
       if (bbp->bytes_left > 0)
       {
@@ -98,8 +96,7 @@ namespace ojph {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    bool bb_read_bit(bit_read_buf *bbp, ui32& bit)
+    static inline bool bb_read_bit(bit_read_buf *bbp, ui32 &bit)
     {
       bool result = true;
       if (bbp->avail_bits == 0)
@@ -109,14 +106,14 @@ namespace ojph {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    bool bb_read_bits(bit_read_buf *bbp, int num_bits, ui32& bits)
+    static inline bool bb_read_bits(bit_read_buf *bbp, int num_bits, ui32 &bits)
     {
       assert(num_bits <= 32);
 
       bits = 0;
       bool result = true;
-      while (num_bits) {
+      while (num_bits)
+      {
         if (bbp->avail_bits == 0)
           result = bb_read(bbp);
         int tx_bits = ojph_min(bbp->avail_bits, num_bits);
@@ -129,28 +126,25 @@ namespace ojph {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    bool bb_read_chunk(bit_read_buf *bbp, ui32 num_bytes,
-                       coded_lists*& cur_coded_list,
-                       mem_elastic_allocator *elastic)
+    static inline bool bb_read_chunk(bit_read_buf *bbp, ui32 num_bytes,
+                                     coded_lists *&cur_coded_list,
+                                     mem_elastic_allocator *elastic)
     {
       assert(bbp->avail_bits == 0 && bbp->unstuff == false);
-      elastic->get_buffer(num_bytes + coded_cb_header::prefix_buf_size
-        + coded_cb_header::suffix_buf_size, cur_coded_list);
+      elastic->get_buffer(num_bytes + coded_cb_header::prefix_buf_size + coded_cb_header::suffix_buf_size, cur_coded_list);
       ui32 bytes = ojph_min(num_bytes, bbp->bytes_left);
       ui32 bytes_read = (ui32)bbp->file->read(
-        cur_coded_list->buf + coded_cb_header::prefix_buf_size, bytes);
+          cur_coded_list->buf + coded_cb_header::prefix_buf_size, bytes);
       if (num_bytes > bytes_read)
         memset(
-          cur_coded_list->buf + coded_cb_header::prefix_buf_size + bytes_read,
-          0, num_bytes - bytes_read);
+            cur_coded_list->buf + coded_cb_header::prefix_buf_size + bytes_read,
+            0, num_bytes - bytes_read);
       bbp->bytes_left -= bytes_read;
       return bytes_read == bytes;
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    void bb_skip_eph(bit_read_buf *bbp)
+    static inline void bb_skip_eph(bit_read_buf *bbp)
     {
       if (bbp->bytes_left >= 2)
       {
@@ -164,8 +158,7 @@ namespace ojph {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    bool bb_terminate(bit_read_buf *bbp, bool uses_eph)
+    static inline bool bb_terminate(bit_read_buf *bbp, bool uses_eph)
     {
       bool result = true;
       if (bbp->unstuff)
@@ -179,8 +172,7 @@ namespace ojph {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline
-    bool bb_skip_sop(bit_read_buf *bbp)
+    static inline bool bb_skip_sop(bit_read_buf *bbp)
     {
       if (bbp->bytes_left >= 2)
       {
@@ -198,8 +190,8 @@ namespace ojph {
             com_len = swap_byte(com_len);
             if (com_len != 4)
               throw "something is wrong with SOP length";
-            int result = 
-              bbp->file->seek(com_len - 2, infile_base::OJPH_SEEK_CUR);
+            int result =
+                bbp->file->seek(com_len - 2, infile_base::OJPH_SEEK_CUR);
             if (result != 0)
               throw "error seeking file";
             bbp->bytes_left -= com_len;
@@ -210,7 +202,7 @@ namespace ojph {
         }
         else
         {
-          //put the bytes back
+          // put the bytes back
           if (bbp->file->seek(-2, infile_base::OJPH_SEEK_CUR) != 0)
             throw "error seeking file";
           return false;

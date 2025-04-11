@@ -19,16 +19,16 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     bool set_tilepart_divisions_at_resolutions_ = true;
     float quantizationStep_ = -1.0f;
 
-    std::vector<Ipoint> downSamples_;
+    vector<Ipoint> downSamples_;
     Ipoint imageOffset_;
     Isize tileSize_;
     Ipoint tileOffset_;
     Isize blockDimensions_ = Isize(64, 64);
-    std::vector<Isize> precincts_;
+    vector<Isize> precincts_;
     precincts_.resize(0);
 
-    const size_t bytesPerPixelInfo = (finfo->bitsPerSample + 8 - 1) / 8;
-    const size_t decodedSizeInfo = finfo->width * finfo->height * finfo->componentCount * bytesPerPixelInfo;
+    const ui8 bytesPerPixelInfo = (finfo->bitsPerSample + 8 - 1) / 8;
+    const ui16 decodedSizeInfo = finfo->width * finfo->height * finfo->componentCount * bytesPerPixelInfo;
     downSamples_.resize(finfo->componentCount);
     for (int c = 0; c < finfo->componentCount; ++c)
     {
@@ -45,16 +45,16 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     encoder.open();
 
     // Setup image size parameters
-    ojph::codestream codestream;
-    ojph::param_siz siz = codestream.access_siz();
-    siz.set_image_extent(ojph::point(finfo->width, finfo->height));
-    int num_comps = finfo->componentCount;
+    codestream codestream;
+    param_siz siz = codestream.access_siz();
+    siz.set_image_extent(point(finfo->width, finfo->height));
+    ui8 num_comps = finfo->componentCount;
 
     siz.set_num_components(num_comps);
 
     for (int c = 0; c < num_comps; ++c)
     {
-        siz.set_component(c, ojph::point(downSamples_[c].x, downSamples_[c].y), finfo->bitsPerSample, finfo->isSigned);
+        siz.set_component(c, point(downSamples_[c].x, downSamples_[c].y), finfo->bitsPerSample, finfo->isSigned);
     }
 
     siz.set_image_offset(point(imageOffset_.x, imageOffset_.y));
@@ -65,7 +65,7 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     ojph::param_cod cod = codestream.access_cod();
     cod.set_num_decomposition((ui32)decompositions_);
     cod.set_block_dims(blockDimensions_.width, blockDimensions_.height);
-    std::vector<ojph::size> precincts;
+    vector<ojph::size> precincts;
     precincts.resize(precincts_.size());
 
     for (size_t i = 0; i < precincts_.size(); i++)
@@ -113,12 +113,12 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     codestream.write_headers(&encoder);
 
     // Encode the image
-    const size_t bytesPerPixel = finfo->bitsPerSample / 8;
-    ojph::ui32 next_comp;
-    ojph::line_buf *cur_line = codestream.exchange(NULL, next_comp);
+    const ui8 bytesPerPixel = finfo->bitsPerSample / 8;
+    ui32 next_comp;
+    line_buf *cur_line = codestream.exchange(NULL, next_comp);
 
     siz = codestream.access_siz();
-    int height = siz.get_image_extent().y - siz.get_image_offset().y;
+    ui32 height = siz.get_image_extent().y - siz.get_image_offset().y;
 
     for (size_t y = 0; y < height; y++)
     {
@@ -183,14 +183,14 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
 
     // getting and setting decoding parameters
     Frameinfo frameInfo;
-    ojph::param_siz siz = codestream.access_siz();
+    param_siz siz = codestream.access_siz();
     frameInfo.width = siz.get_image_extent().x - siz.get_image_offset().x;
     frameInfo.height = siz.get_image_extent().y - siz.get_image_offset().y;
     frameInfo.componentCount = siz.get_num_components();
     frameInfo.bitsPerSample = siz.get_bit_depth(0);
     frameInfo.isSigned = siz.is_signed(0);
 
-    std::vector<Ipoint> downSamples;
+    vector<Ipoint> downSamples;
     downSamples.resize(frameInfo.componentCount);
 
     for (size_t i = 0; i < frameInfo.componentCount; i++)
@@ -211,7 +211,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     tileOffset.x = siz.get_tile_offset().x;
     tileOffset.y = siz.get_tile_offset().y;
 
-    ojph::param_cod cod = codestream.access_cod();
+    param_cod cod = codestream.access_cod();
     size_t numDecompositions = cod.get_num_decompositions();
     bool isReversible = cod.is_reversible();
     int progressionOrder = cod.get_progression_order();
@@ -220,7 +220,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     blockDimensions.width = cod.get_block_dims().w;
     blockDimensions.height = cod.get_block_dims().h;
 
-    std::vector<Isize> precincts;
+    vector<Isize> precincts;
     precincts.resize(numDecompositions);
     for (size_t i = 0; i < numDecompositions; i++)
     {
@@ -238,7 +238,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
 
     const size_t bytesPerPixel = (frameInfo.bitsPerSample + 8 - 1) / 8;
     const size_t destinationSize = sizeAtDecompositionLevel.width * sizeAtDecompositionLevel.height * frameInfo.componentCount * bytesPerPixel;
-    std::vector<uint8_t> decoded_buffer;
+    vector<uint8_t> decoded_buffer;
     decoded_buffer.resize(destinationSize);
 
     // set the level to read to and reconstruction level to the specified decompositionLevel
@@ -262,13 +262,13 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     codestream.create();
 
     // Extract the data line by line
-    ojph::ui32 comp_num;
-    for (int y = 0; y < sizeAtDecompositionLevel.height; y++)
+    ui32 comp_num;
+    for (uint32_t y = 0; y < sizeAtDecompositionLevel.height; y++)
     {
         size_t lineStart = y * sizeAtDecompositionLevel.width * frameInfo.componentCount * bytesPerPixel;
         if (frameInfo.componentCount == 1)
         {
-            ojph::line_buf *line = codestream.pull(comp_num);
+            line_buf *line = codestream.pull(comp_num);
             if (frameInfo.bitsPerSample <= 8)
             {
                 unsigned char *pOut = (unsigned char *)&(decoded_buffer)[lineStart];
@@ -304,7 +304,7 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
         {
             for (int c = 0; c < frameInfo.componentCount; c++)
             {
-                ojph::line_buf *line = codestream.pull(comp_num);
+                line_buf *line = codestream.pull(comp_num);
                 if (frameInfo.bitsPerSample <= 8)
                 {
                     uint8_t *pOut = &(decoded_buffer)[lineStart] + c;

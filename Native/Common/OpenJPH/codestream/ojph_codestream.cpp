@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,7 +35,6 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #include <climits>
 #include <cmath>
 
@@ -44,7 +43,8 @@
 #include "ojph_codestream.h"
 #include "ojph_codestream_local.h"
 
-namespace ojph {
+namespace ojph
+{
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -57,7 +57,8 @@ namespace ojph {
   ////////////////////////////////////////////////////////////////////////////
   codestream::~codestream()
   {
-    if (state) delete state;
+    if (state)
+      delete state;
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -85,6 +86,12 @@ namespace ojph {
   }
 
   ////////////////////////////////////////////////////////////////////////////
+  param_nlt codestream::access_nlt()
+  {
+    return param_nlt(&state->nlt);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
   void codestream::set_planar(bool planar)
   {
     state->set_planar(planar ? 1 : 0);
@@ -97,7 +104,7 @@ namespace ojph {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  void codestream::set_tilepart_divisions(bool at_resolutions, 
+  void codestream::set_tilepart_divisions(bool at_resolutions,
                                           bool at_components)
   {
     ui32 value = 0;
@@ -141,8 +148,8 @@ namespace ojph {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  void codestream::write_headers(outfile_base *file, 
-                                 const comment_exchange* comments,
+  void codestream::write_headers(outfile_base *file,
+                                 const comment_exchange *comments,
                                  ui32 num_comments)
   {
     state->write_headers(file, comments, num_comments);
@@ -165,7 +172,7 @@ namespace ojph {
                                              ui32 skipped_res_for_recon)
   {
     state->restrict_input_resolution(skipped_res_for_read,
-      skipped_res_for_recon);
+                                     skipped_res_for_recon);
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -175,11 +182,10 @@ namespace ojph {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  line_buf* codestream::pull(ui32 &comp_num)
+  line_buf *codestream::pull(ui32 &comp_num)
   {
     return state->pull(comp_num);
   }
-
 
   ////////////////////////////////////////////////////////////////////////////
   void codestream::flush()
@@ -194,9 +200,8 @@ namespace ojph {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  line_buf* codestream::exchange(line_buf* line, ui32& next_component)
+  line_buf *codestream::exchange(line_buf *line, ui32 &next_component)
   {
     return state->exchange(line, next_component);
   }
-
 }

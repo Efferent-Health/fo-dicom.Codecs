@@ -341,7 +341,11 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_decoder.cpp">
+    <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_decoder32.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\coding\ojph_block_decoder64.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
     </ClCompile>

@@ -63,7 +63,39 @@
 #include <intrin.h>
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
+// preprocessor directives for architecture
+///////////////////////////////////////////////////////////////////////////////
+#if defined(__arm__) || defined(__TARGET_ARCH_ARM)  \
+  || defined(__aarch64__) || defined(_M_ARM64)
+  #define OJPH_ARCH_ARM
+#elif defined(__i386) || defined(__i386__) || defined(_M_IX86)
+  #define OJPH_ARCH_I386
+#elif defined(__x86_64) || defined(__x86_64__) || defined(__amd64) \
+  || defined(_M_X64)
+  #define OJPH_ARCH_X86_64
+#elif defined(__ia64) || defined(__ia64__) || defined(_M_IA64)
+  #define OJPH_ARCH_IA64
+#elif defined(__ppc__) || defined(__ppc) || defined(__powerpc__)  \
+  || defined(_ARCH_COM) || defined(_ARCH_PWR) || defined(_ARCH_PPC)  \
+  || defined(_M_MPPC) || defined(_M_PPC)
+  #if defined(__ppc64__) || defined(__powerpc64__) || defined(__64BIT__)
+    #define OJPH_ARCH_PPC64
+  #else
+    #define OJPH_ARCH_PPC
+  #endif
+#else  
+  #define OJPH_ARCH_UNKNOWN
+#endif
+
 namespace ojph {
+  ////////////////////////////////////////////////////////////////////////////
+  //                  disable SIMD for unknown architecture
+  ////////////////////////////////////////////////////////////////////////////
+#if !defined(OJPH_ARCH_X86_64) && !defined(OJPH_ARCH_I386) &&  \
+    !defined(OJPH_ARCH_ARM) && !defined(OJPH_DISABLE_SIMD)
+#define OJPH_DISABLE_SIMD
+#endif // !OJPH_ARCH_UNKNOWN
 
   ////////////////////////////////////////////////////////////////////////////
   //                         OS detection definitions
@@ -72,6 +104,8 @@ namespace ojph {
 #define OJPH_OS_WINDOWS
 #elif (defined __APPLE__)
 #define OJPH_OS_APPLE
+#elif (defined __ANDROID__)
+#define OJPH_OS_ANDROID
 #elif (defined __linux)
 #define OJPH_OS_LINUX
 #endif
@@ -79,7 +113,7 @@ namespace ojph {
   /////////////////////////////////////////////////////////////////////////////
   // defines for dll
   /////////////////////////////////////////////////////////////////////////////
-#if defined(OJPH_OS_WINDOWS)
+#if defined(OJPH_OS_WINDOWS) && defined(OJPH_BUILD_SHARED_LIBRARY)
 #define OJPH_EXPORT __declspec(dllexport)
 #else
 #define OJPH_EXPORT
@@ -106,10 +140,19 @@ namespace ojph {
     X86_CPU_EXT_LEVEL_AVX512 = 11,
   };
 
+  enum : int {
+    ARM_CPU_EXT_LEVEL_GENERIC = 0,
+    ARM_CPU_EXT_LEVEL_NEON = 1,
+    ARM_CPU_EXT_LEVEL_ASIMD = 1,
+    ARM_CPU_EXT_LEVEL_SVE = 2,
+    ARM_CPU_EXT_LEVEL_SVE2 = 3,
+  };
+
   /////////////////////////////////////////////////////////////////////////////
   static inline ui32 population_count(ui32 val)
   {
-  #ifdef OJPH_COMPILER_MSVC
+  #if defined(OJPH_COMPILER_MSVC)  \
+    && (defined(OJPH_ARCH_X86_64) || defined(OJPH_ARCH_I386))
     return (ui32)__popcnt(val);
   #elif (defined OJPH_COMPILER_GNUC)
     return (ui32)__builtin_popcount(val);
@@ -144,6 +187,43 @@ namespace ojph {
     return 32 - population_count(val);
   #endif
   }
+
+  /////////////////////////////////////////////////////////////////////////////  
+#ifdef OJPH_COMPILER_MSVC
+  #if (defined OJPH_ARCH_X86_64)
+    #pragma intrinsic(_BitScanReverse64)
+  #elif (defined OJPH_ARCH_I386)
+    #pragma intrinsic(_BitScanReverse)
+  #endif
+#endif
+  static inline ui32 count_leading_zeros(ui64 val)
+  {
+  #ifdef OJPH_COMPILER_MSVC
+    unsigned long result = 0;
+    #ifdef OJPH_ARCH_X86_64
+      _BitScanReverse64(&result, val);
+    #elif (defined OJPH_ARCH_I386)
+      ui32 msb = (ui32)(val >> 32), lsb = (ui32)val;
+      if (msb == 0)
+        _BitScanReverse(&result, lsb);
+      else {
+        _BitScanReverse(&result, msb);
+        result += 32;
+      }
+    #endif
+    return 63 ^ (ui32)result;
+  #elif (defined OJPH_COMPILER_GNUC)
+    return (ui32)__builtin_clzll(val);
+  #else
+    val |= (val >> 1);
+    val |= (val >> 2);
+    val |= (val >> 4);
+    val |= (val >> 8);
+    val |= (val >> 16);
+    val |= (val >> 32);
+    return 64 - population_count64(val);
+  #endif
+  }  
 
   /////////////////////////////////////////////////////////////////////////////
 #ifdef OJPH_COMPILER_MSVC
@@ -194,13 +274,15 @@ namespace ojph {
   ////////////////////////////////////////////////////////////////////////////
   // constants
   ////////////////////////////////////////////////////////////////////////////
-#ifdef OJPH_ENABLE_INTEL_AVX512
-  const ui32 byte_alignment = 64; //64 bytes == 512 bits
-#else
-  const ui32 byte_alignment = 32; //32 bytes == 256 bits
-#endif
-  const ui32 log_byte_alignment = 31 - count_leading_zeros(byte_alignment);
-  const ui32 object_alignment = 8;
+  #ifndef OJPH_EMSCRIPTEN
+    const ui32 byte_alignment = 64; // 64 bytes == 512 bits
+    const ui32 log_byte_alignment = 31 - count_leading_zeros(byte_alignment);
+    const ui32 object_alignment = 8;
+  #else
+    const ui32 byte_alignment = 16; // 16 bytes == 128 bits
+    const ui32 log_byte_alignment = 31 - count_leading_zeros(byte_alignment);
+    const ui32 object_alignment = 8;
+    #endif
 
   ////////////////////////////////////////////////////////////////////////////
   // templates for alignment
@@ -208,17 +290,17 @@ namespace ojph {
 
   ////////////////////////////////////////////////////////////////////////////
   // finds the size such that it is a multiple of byte_alignment
-  template <typename T, int N>
+  template <typename T, ui32 N>
   size_t calc_aligned_size(size_t size) {
     size = size * sizeof(T) + N - 1;
     size &= ~((1ULL << (31 - count_leading_zeros(N))) - 1);
-    size >>= (31 - count_leading_zeros(sizeof(T)));
+    size >>= (63 - count_leading_zeros((ui64)sizeof(T)));
     return size;
   }
 
   ////////////////////////////////////////////////////////////////////////////
   // moves the pointer to first address that is a multiple of byte_alignment
-  template <typename T, int N>
+  template <typename T, ui32 N>
   inline T *align_ptr(T *ptr) {
     intptr_t p = reinterpret_cast<intptr_t>(ptr);
     p += N - 1;

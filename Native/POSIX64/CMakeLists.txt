@@ -32,10 +32,8 @@ if("${ARCH_FLAG}" STREQUAL "arm64")
   if(UNIX AND NOT APPLE)
     set(CMAKE_C_COMPILER "/usr/bin/aarch64-linux-gnu-gcc")
     set(CMAKE_CXX_COMPILER "/usr/bin/aarch64-linux-gnu-g++")
-    add_compile_options(-DOJPH_DISABLE_INTEL_SIMD)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch arm64")
-    add_compile_options(-DOJPH_DISABLE_INTEL_SIMD)
   endif()
 
   set(CMAKE_OSX_ARCHITECTURES "arm64")
@@ -382,7 +380,8 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/table0.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/table1.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_common.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder32.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder64.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder.cpp
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arch.h
@@ -419,7 +418,10 @@ SET(OPJH_INTEL_SIMD_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx2.cpp
   
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_avx2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_ssse3.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder_avx2.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder_avx512.cpp
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx.cpp
@@ -429,16 +431,28 @@ SET(OPJH_INTEL_SIMD_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx2.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx512.cpp
 )
 
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse.cpp PROPERTIES COMPILE_FLAGS -msse)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_codestream_sse2.cpp PROPERTIES COMPILE_FLAGS -msse2)
+
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_ssse3.cpp PROPERTIES COMPILE_FLAGS -mssse3)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder_avx512.cpp PROPERTIES COMPILE_FLAGS -mavx512cd)
+
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_sse.cpp PROPERTIES COMPILE_FLAGS -msse)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour_sse2.cpp PROPERTIES COMPILE_FLAGS -msse2)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx.cpp PROPERTIES COMPILE_FLAGS -mavx)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse.cpp PROPERTIES COMPILE_FLAGS -msse)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse2.cpp PROPERTIES COMPILE_FLAGS -msse2)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx512.cpp PROPERTIES COMPILE_FLAGS -mavx512cf)
 
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
@@ -451,14 +465,14 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-  add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
-  #Setting properties for shared or dynamic library 
-  set_target_properties(Dicom.Native
-    PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
-    PREFIX ""
-  ) 
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
+    #Setting properties for shared or dynamic library 
+    set_target_properties(Dicom.Native
+      PROPERTIES
+      LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
+      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib-linux-x64"
+      PREFIX ""
+    ) 
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")

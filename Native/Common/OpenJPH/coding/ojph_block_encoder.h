@@ -35,35 +35,54 @@
 // Date: 17 September 2019
 //***************************************************************************/
 
-
 #ifndef OJPH_BLOCK_ENCODER_H
 #define OJPH_BLOCK_ENCODER_H
 
 #include "ojph_defs.h"
 
-namespace ojph {
+namespace ojph
+{
 
   ////////////////////////////////////////////////////////////////////////////
   // defined elsewhere
   class mem_elastic_allocator;
   struct coded_lists;
 
-  namespace local {
+  namespace local
+  {
 
     //////////////////////////////////////////////////////////////////////////
     void
-      ojph_encode_codeblock(ui32* buf, ui32 missing_msbs, ui32 num_passes,
+    ojph_encode_codeblock32(ui32 *buf, ui32 missing_msbs, ui32 num_passes,
                             ui32 width, ui32 height, ui32 stride,
-                            ui32* lengths, 
+                            ui32 *lengths,
                             ojph::mem_elastic_allocator *elastic,
-                            ojph::coded_lists *& coded);
+                            ojph::coded_lists *&coded);
 
     void
-      ojph_encode_codeblock_avx512(ui32* buf, ui32 missing_msbs, 
-                                   ui32 num_passes, ui32 width, ui32 height, 
-                                   ui32 stride, ui32* lengths,
-                                   ojph::mem_elastic_allocator *elastic,
-                                   ojph::coded_lists *& coded);
+    ojph_encode_codeblock64(ui64 *buf, ui32 missing_msbs, ui32 num_passes,
+                            ui32 width, ui32 height, ui32 stride,
+                            ui32 *lengths,
+                            ojph::mem_elastic_allocator *elastic,
+                            ojph::coded_lists *&coded);
+
+    void
+    ojph_encode_codeblock_avx2(ui32 *buf, ui32 missing_msbs,
+                               ui32 num_passes, ui32 width, ui32 height,
+                               ui32 stride, ui32 *lengths,
+                               ojph::mem_elastic_allocator *elastic,
+                               ojph::coded_lists *&coded);
+
+    void
+    ojph_encode_codeblock_avx512(ui32 *buf, ui32 missing_msbs,
+                                 ui32 num_passes, ui32 width, ui32 height,
+                                 ui32 stride, ui32 *lengths,
+                                 ojph::mem_elastic_allocator *elastic,
+                                 ojph::coded_lists *&coded);
+
+    bool initialize_block_encoder_tables();
+    bool initialize_block_encoder_tables_avx2();
+    bool initialize_block_encoder_tables_avx512();
   }
 }
 

@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,36 +35,36 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #ifndef OJPH_TYPES_H
 #define OJPH_TYPES_H
 
 #include <cstdint>
 #include "ojph_version.h"
 
-namespace ojph {
+namespace ojph
+{
 
-/////////////////////////////////////////////////////////////////////////////
-//                               types
-/////////////////////////////////////////////////////////////////////////////
-typedef uint8_t ui8;
-typedef int8_t si8;
-typedef uint16_t ui16;
-typedef int16_t si16;
-typedef uint32_t ui32;
-typedef int32_t si32;
-typedef uint64_t ui64;
-typedef int64_t si64;
+    /////////////////////////////////////////////////////////////////////////////
+    //                               types
+    /////////////////////////////////////////////////////////////////////////////
+    typedef uint8_t ui8;
+    typedef int8_t si8;
+    typedef uint16_t ui16;
+    typedef int16_t si16;
+    typedef uint32_t ui32;
+    typedef int32_t si32;
+    typedef uint64_t ui64;
+    typedef int64_t si64;
 
 /////////////////////////////////////////////////////////////////////////////
 #define OJPH_INT_STRINGIFY(I) #I
 #define OJPH_INT_TO_STRING(I) OJPH_INT_STRINGIFY(I)
 
-/////////////////////////////////////////////////////////////////////////////
-// number of fractional bits for 16 bit representation
-// for 32 bits, it is NUM_FRAC_BITS + 16
-// All numbers are in the range of [-0.5, 0.5)
-const int NUM_FRAC_BITS = 13;
+    /////////////////////////////////////////////////////////////////////////////
+    // number of fractional bits for 16 bit representation
+    // for 32 bits, it is NUM_FRAC_BITS + 16
+    // All numbers are in the range of [-0.5, 0.5)
+    const int NUM_FRAC_BITS = 13;
 
 /////////////////////////////////////////////////////////////////////////////
 #define ojph_div_ceil(a, b) (((a) + (b) - 1) / (b))
@@ -76,7 +76,6 @@ const int NUM_FRAC_BITS = 13;
 #define ojph_min(a, b) (((a) < (b)) ? (a) : (b))
 
 #define ojph_unused(x) (void)(x)
-
 
 }
 

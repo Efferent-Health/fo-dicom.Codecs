@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,7 +35,6 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #include <climits>
 #include <cmath>
 
@@ -45,34 +44,37 @@
 #include "ojph_tile_comp.h"
 #include "ojph_resolution.h"
 
-namespace ojph {
+namespace ojph
+{
 
   namespace local
   {
 
     //////////////////////////////////////////////////////////////////////////
-    void tile_comp::pre_alloc(codestream *codestream, const rect& comp_rect,
-                              const rect& recon_comp_rect)
+    void tile_comp::pre_alloc(codestream *codestream, ui32 comp_num,
+                              const rect &comp_rect,
+                              const rect &recon_comp_rect)
     {
-      mem_fixed_allocator* allocator = codestream->get_allocator();
+      mem_fixed_allocator *allocator = codestream->get_allocator();
 
-      //allocate a resolution
-      ui32 num_decomps = codestream->access_cod().get_num_decompositions();
+      // allocate a resolution
+      ui32 num_decomps;
+      num_decomps = codestream->get_coc(comp_num)->get_num_decompositions();
       allocator->pre_alloc_obj<resolution>(1);
 
-      resolution::pre_alloc(codestream, comp_rect, recon_comp_rect, 
+      resolution::pre_alloc(codestream, comp_rect, recon_comp_rect, comp_num,
                             num_decomps);
     }
 
     //////////////////////////////////////////////////////////////////////////
     void tile_comp::finalize_alloc(codestream *codestream, tile *parent,
-                                  ui32 comp_num, const rect& comp_rect,
-                                  const rect& recon_comp_rect)
+                                   ui32 comp_num, const rect &comp_rect,
+                                   const rect &recon_comp_rect)
     {
-      mem_fixed_allocator* allocator = codestream->get_allocator();
+      mem_fixed_allocator *allocator = codestream->get_allocator();
 
-      //allocate a resolution
-      num_decomps = codestream->get_cod()->get_num_decompositions();
+      // allocate a resolution
+      num_decomps = codestream->get_coc(comp_num)->get_num_decompositions();
 
       comp_downsamp = codestream->get_siz()->get_downsampling(comp_num);
       this->comp_rect = comp_rect;
@@ -82,11 +84,12 @@ namespace ojph {
       this->num_bytes = 0;
       res = allocator->post_alloc_obj<resolution>(1);
       res->finalize_alloc(codestream, comp_rect, recon_comp_rect, comp_num,
-                          num_decomps, comp_downsamp, this, NULL);
+                          num_decomps, comp_downsamp, comp_downsamp, this,
+                          NULL);
     }
 
     //////////////////////////////////////////////////////////////////////////
-    line_buf* tile_comp::get_line()
+    line_buf *tile_comp::get_line()
     {
       return res->get_line();
     }
@@ -98,7 +101,7 @@ namespace ojph {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    line_buf* tile_comp::pull_line()
+    line_buf *tile_comp::pull_line()
     {
       return res->pull_line();
     }
@@ -114,29 +117,28 @@ namespace ojph {
     void tile_comp::write_precincts(ui32 res_num, outfile_base *file)
     {
       assert(res_num <= num_decomps);
-      res_num = num_decomps - res_num; //how many levels to go down
+      res_num = num_decomps - res_num; // how many levels to go down
       resolution *r = res;
       while (res_num > 0 && r != NULL)
       {
         r = r->next_resolution();
         --res_num;
       }
-      if (r) //resolution does not exist if r is NULL
+      if (r) // resolution does not exist if r is NULL
         r->write_precincts(file);
     }
 
     //////////////////////////////////////////////////////////////////////////
     bool tile_comp::get_top_left_precinct(ui32 res_num, point &top_left)
     {
-      assert(res_num <= num_decomps);
-      res_num = num_decomps - res_num;
+      int resolution_num = (int)num_decomps - (int)res_num;
       resolution *r = res;
-      while (res_num > 0 && r != NULL)
+      while (resolution_num > 0 && r != NULL)
       {
         r = r->next_resolution();
-        --res_num;
+        --resolution_num;
       }
-      if (r) //resolution does not exist if r is NULL
+      if (r) // resolution does not exist if r is NULL
         return r->get_top_left_precinct(top_left);
       else
         return false;
@@ -145,37 +147,35 @@ namespace ojph {
     //////////////////////////////////////////////////////////////////////////
     void tile_comp::write_one_precinct(ui32 res_num, outfile_base *file)
     {
-      assert(res_num <= num_decomps);
-      res_num = num_decomps - res_num;
+      int resolution_num = (int)num_decomps - (int)res_num;
       resolution *r = res;
-      while (res_num > 0 && r != NULL)
+      while (resolution_num > 0 && r != NULL)
       {
         r = r->next_resolution();
-        --res_num;
+        --resolution_num;
       }
-      if (r) //resolution does not exist if r is NULL
+      if (r) // resolution does not exist if r is NULL
         r->write_one_precinct(file);
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void tile_comp::parse_precincts(ui32 res_num, ui32& data_left,
+    void tile_comp::parse_precincts(ui32 res_num, ui32 &data_left,
                                     infile_base *file)
     {
       assert(res_num <= num_decomps);
-      res_num = num_decomps - res_num; //how many levels to go down
+      res_num = num_decomps - res_num; // how many levels to go down
       resolution *r = res;
       while (res_num > 0 && r != NULL)
       {
         r = r->next_resolution();
         --res_num;
       }
-      if (r) //resolution does not exist if r is NULL
+      if (r) // resolution does not exist if r is NULL
         r->parse_all_precincts(data_left, file);
     }
 
-
     //////////////////////////////////////////////////////////////////////////
-    void tile_comp::parse_one_precinct(ui32 res_num, ui32& data_left,
+    void tile_comp::parse_one_precinct(ui32 res_num, ui32 &data_left,
                                        infile_base *file)
     {
       assert(res_num <= num_decomps);
@@ -186,7 +186,7 @@ namespace ojph {
         r = r->next_resolution();
         --res_num;
       }
-      if (r) //resolution does not exist if r is NULL
+      if (r) // resolution does not exist if r is NULL
         r->parse_one_precinct(data_left, file);
     }
 

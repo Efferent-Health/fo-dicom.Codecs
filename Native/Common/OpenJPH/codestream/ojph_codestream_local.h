@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -35,40 +35,40 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
-
 #ifndef OJPH_CODESTREAM_LOCAL_H
 #define OJPH_CODESTREAM_LOCAL_H
 
 #include "ojph_defs.h"
 #include "ojph_params_local.h"
 
-namespace ojph {
+namespace ojph
+{
 
   ////////////////////////////////////////////////////////////////////////////
-  //defined elsewhere
-  struct line_buf;
+  // defined elsewhere
+  class line_buf;
   class mem_fixed_allocator;
   class mem_elastic_allocator;
   class codestream;
 
-  namespace local {
+  namespace local
+  {
 
     /////////////////////////////////////////////////////////////////////////
-    static inline
-    ui16 swap_byte(ui16 t)
+    static inline ui16 swap_byte(ui16 t)
     {
       return (ui16)((t << 8) | (t >> 8));
     }
 
     //////////////////////////////////////////////////////////////////////////
-    //defined elsewhere
+    // defined elsewhere
     class tile;
 
     //////////////////////////////////////////////////////////////////////////
     class codestream
     {
       friend ::ojph::codestream;
-      
+
     public:
       codestream();
       ~codestream();
@@ -76,40 +76,59 @@ namespace ojph {
       void pre_alloc();
       void finalize_alloc();
 
-      ojph::param_siz access_siz()            //return externally wrapped siz
-      { return ojph::param_siz(&siz); }
-      const param_siz* get_siz() //return internal siz
-      { return &siz; }
-      ojph::param_cod access_cod()            //return externally wrapped cod
-      { return ojph::param_cod(&cod); }
-      const param_cod* get_cod() //return internal code
-      { return &cod; }
-      param_qcd* access_qcd(ui32 comp_num)
-      { 
-        if (used_qcc_fields > 0)
-          for (int v = 0; v < used_qcc_fields; ++v)
-            if (qcc[v].get_comp_num() == comp_num)
-              return qcc + v;
-        return &qcd; 
+      ojph::param_siz access_siz() // return externally wrapped siz
+      {
+        return ojph::param_siz(&siz);
       }
-      mem_fixed_allocator* get_allocator() { return allocator; }
-      mem_elastic_allocator* get_elastic_alloc() { return elastic_alloc; }
-      outfile_base* get_file() { return outfile; }
+      const param_siz *get_siz() // return internal siz
+      {
+        return &siz;
+      }
+      ojph::param_cod access_cod() // return externally wrapped cod
+      {
+        return ojph::param_cod(&cod);
+      }
+      const param_cod *get_cod() // return internal cod
+      {
+        return &cod;
+      }
+      const param_cod *get_coc(ui32 comp_num) // return internal cod
+      {
+        return cod.get_coc(comp_num);
+      }
+      const param_qcd *access_qcd()
+      {
+        return &qcd;
+      }
+      const param_dfs *access_dfs()
+      {
+        if (dfs.exists())
+          return &dfs;
+        else
+          return NULL;
+      }
+      const param_nlt *get_nlt()
+      {
+        return &nlt;
+      }
+      mem_fixed_allocator *get_allocator() { return allocator; }
+      mem_elastic_allocator *get_elastic_alloc() { return elastic_alloc; }
+      outfile_base *get_file() { return outfile; }
 
-      line_buf* exchange(line_buf* line, ui32& next_component);
-      void write_headers(outfile_base *file, const comment_exchange* comments,
+      line_buf *exchange(line_buf *line, ui32 &next_component);
+      void write_headers(outfile_base *file, const comment_exchange *comments,
                          ui32 num_comments);
       void enable_resilience();
       bool is_resilient() { return resilient; }
       void read_headers(infile_base *file);
       void restrict_input_resolution(ui32 skipped_res_for_data,
-        ui32 skipped_res_for_recon);
+                                     ui32 skipped_res_for_recon);
       void read();
       void set_planar(int planar);
       void set_profile(const char *s);
       void set_tilepart_divisions(ui32 value);
       void request_tlm_marker(bool needed);
-      line_buf* pull(ui32 &comp_num);
+      line_buf *pull(ui32 &comp_num);
       void flush();
       void close();
 
@@ -121,15 +140,19 @@ namespace ojph {
       void check_imf_validity();
       void check_broadcast_validity();
 
-      ui8* get_precinct_scratch() { return precinct_scratch; }
+      ui8 *get_precinct_scratch() { return precinct_scratch; }
       ui32 get_skipped_res_for_recon()
-      { return skipped_res_for_recon; }
+      {
+        return skipped_res_for_recon;
+      }
       ui32 get_skipped_res_for_read()
-      { return skipped_res_for_read; }
+      {
+        return skipped_res_for_read;
+      }
 
     private:
       ui32 precinct_scratch_needed_bytes;
-      ui8* precinct_scratch;
+      ui8 *precinct_scratch;
 
     private:
       ui32 cur_line;
@@ -141,28 +164,29 @@ namespace ojph {
     private:
       size num_tiles;
       tile *tiles;
-      line_buf* lines;
+      line_buf *lines;
       ui32 num_comps;
-      size *comp_size;       //stores full resolution no. of lines and width
-      size *recon_comp_size; //stores number of lines and width of each comp
+      size *comp_size;       // stores full resolution no. of lines and width
+      size *recon_comp_size; // stores number of lines and width of each comp
       bool employ_color_transform;
       int planar;
       int profile;
-      ui32 tilepart_div;    // tilepart division value
-      bool need_tlm;       // true if tlm markers are needed
-      
+      ui32 tilepart_div; // tilepart division value
+      bool need_tlm;     // true if tlm markers are needed
+
     private:
-      param_siz siz;
-      param_cod cod;
-      param_cap cap;
-      param_qcd qcd;
-      param_tlm tlm;
+      param_siz siz; // image and tile size
+      param_cod cod; // coding style default
+      param_cap cap; // extended capabilities
+      param_qcd qcd; // quantization default
+      param_tlm tlm; // tile-part lengths
+      param_nlt nlt; // non-linearity point transformation
 
-    private: // this is to handle qcc
-      int used_qcc_fields;
-      param_qcc qcc_store[4], *qcc; // we allocate 4, 
-                                    // if not enough, we allocate more
-
+    private:                  // these are from Part 2 of the standard
+      param_dfs dfs;          // downsmapling factor styles
+      param_atk *atk;         // a pointer to atk
+      param_atk atk_store[3]; // 0 and 1 are for DWT from Part 1, 2 onward are
+                              // for arbitrary transformation kernels
     private:
       mem_fixed_allocator *allocator;
       mem_elastic_allocator *elastic_alloc;
