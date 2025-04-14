@@ -39,7 +39,7 @@ jobs:
       - name: Compile libijg16 libraries
         run: msbuild Native/Windows64/build_x64/libijg16.x64.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Compile windows x64 library
-        run: msbuild Native/Windows64/build_x64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64 /D OJPH_DISABLE_AVX512=ON
+        run: msbuild Native/Windows64/build_x64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Publish windows x64 artifacts
         uses: actions/upload-artifact@v4
         with:
