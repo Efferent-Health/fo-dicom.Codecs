@@ -452,7 +452,7 @@ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transf
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx2.cpp PROPERTIES COMPILE_FLAGS -mavx2)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse.cpp PROPERTIES COMPILE_FLAGS -msse)
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_sse2.cpp PROPERTIES COMPILE_FLAGS -msse2)
-set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx512.cpp PROPERTIES COMPILE_FLAGS -mavx512cf)
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_transform_avx512.cpp PROPERTIES COMPILE_FLAGS -mavx512cd)
 
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
