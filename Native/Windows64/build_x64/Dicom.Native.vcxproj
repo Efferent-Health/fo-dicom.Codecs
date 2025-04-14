@@ -59,33 +59,34 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHARLS_STATIC;OPJ_STATIC;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHARLS_STATIC;OPJ_STATIC;WIN32;_DEBUG;OJPH_DISABLE_AVX512;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4691</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>Default</LanguageStandard>
-      <UndefinePreprocessorDefinitions>OJPH_DISABLE_AVX512</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies></AdditionalDependencies>
-      <ForceFileOutput></ForceFileOutput>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <ForceFileOutput>
+      </ForceFileOutput>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHARLS_STATIC;OPJ_STATIC;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHARLS_STATIC;OPJ_STATIC;WIN32;NDEBUG;OJPH_DISABLE_AVX512;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <DisableSpecificWarnings>4691</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <UndefinePreprocessorDefinitions>OJPH_DISABLE_AVX512</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies></AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
