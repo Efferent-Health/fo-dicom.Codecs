@@ -118,19 +118,28 @@
       <Filter>Source Files\OpenJPEG</Filter>
     </ClCompile>
     
-    <ClCompile Include="..\..\Common\CharLS\jpegls.cpp">
+    <ClCompile Include="..\..\Common\CharLS\charls_jpegls_decoder.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CharLS\jpegmarkersegment.cpp">
+    <ClCompile Include="..\..\Common\CharLS\charls_jpegls_encoder.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CharLS\jpegstreamreader.cpp">
+    <ClCompile Include="..\..\Common\CharLS\jpeg_stream_reader.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CharLS\jpegstreamwriter.cpp">
+    <ClCompile Include="..\..\Common\CharLS\jpeg_stream_writer.cpp">
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CharLS\interface.cpp" />
+    <ClCompile Include="..\..\Common\CharLS\jpegls_error.cpp" />
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\jpegls.cpp" />
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\validate_spiff_header.cpp" />
+      <Filter>Source Files\CharLS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CharLS\version.cpp" />
       <Filter>Source Files\CharLS</Filter>
     </ClCompile>
 
@@ -326,58 +335,91 @@
       <Filter>Header Files\OpenJPEG</Filter>
     </ClInclude>
 
-    <ClInclude Include="..\..\Common\CharLS\charls.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\annotations.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\colortransform.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\api_abi.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\context.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\charls_jpegls_decoder.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\contextrunmode.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\charls_jpegls_encoder.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\decoderstrategy.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\charls.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\defaulttraits.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\jpegls_error.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\encoderstrategy.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\public_types.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jlscodecfactory.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\validate_spiff_header.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpegimagedatasegment.h">
+    <ClInclude Include="..\..\Common\CharLS\charls\version.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpegmarkercode.h">
+    <ClInclude Include="..\..\Common\CharLS\byte_span.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpegmarkersegment.h">
+    <ClInclude Include="..\..\Common\CharLS\coding_parameters.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpegsegment.h">
+    <ClInclude Include="..\..\Common\CharLS\color_transform.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpegstreamreader.h">
+    <ClInclude Include="..\..\Common\CharLS\conditional_static_cast.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpegstreamwriter.h">
+    <ClInclude Include="..\..\Common\CharLS\constants.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\lookuptable.h">
+    <ClInclude Include="..\..\Common\CharLS\context_regular_mode.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\losslesstraits.h">
+    <ClInclude Include="..\..\Common\CharLS\context_run_mode.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\processline.h">
+    <ClInclude Include="..\..\Common\CharLS\decoder_strategy.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\CharLS\publictypes.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\default_traits.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\encoder_strategy.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jls_codec_factory.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpeg_maker_code.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpeg_stream_reader.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpeg_stream_writer.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegls_preset_coding_parameters.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\jpegls_preset_parameters_type.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\lookup_table.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\lossless_traits.h">
+      <Filter>Header Files\CharLS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CharLS\process_line.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\CharLS\scan.h">

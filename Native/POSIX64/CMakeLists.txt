@@ -63,29 +63,44 @@ SET(CROSSPLATFORM_SRCS
 
 #CharLS Library
 SET(CHARLS_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/interface.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls_jpegls_decoder.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls_jpegls_encoder.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_stream_reader.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_stream_writer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegls_error.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegls.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegmarkersegment.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegstreamreader.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegstreamwriter.cpp	
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/publictypes.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/colortransform.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/context.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/contextrunmode.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/decoderstrategy.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/defaulttraits.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/encoderstrategy.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jlscodecfactory.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegimagedatasegment.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegmarkercode.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegmarkersegment.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegsegment.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegstreamreader.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegstreamwriter.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/lookuptable.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/losslesstraits.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/processline.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/validate_spiff_header.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/version.cpp
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/annotations.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/api_abi.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/charls_jpegls_decoder.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/charls_jpegls_encoder.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/charls.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/jpegls_error.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/public_types.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/validate_spiff_header.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/charls/version.h
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/byte_span.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/coding_parameters.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/color_transform.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/conditional_static_cast.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/constants.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/context_regular_mode.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/context_run_mode.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/decoder_strategy.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/default_traits.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/encoder_strategy.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jls_codec_factory.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_maker_code.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_stream_reader.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_stream_writer.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegls_preset_coding_parameters.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegls_preset_parameters_type.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/lookup_table.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/lossless_traits.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/process_line.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/scan.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/util.h
 )

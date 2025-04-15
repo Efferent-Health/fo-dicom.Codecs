@@ -51,7 +51,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public CharlsColorTransformationType colorTransformation;
         public JpegLSPresetCodingParameters custom;
         public JfifParameters jfif;
-        public char outputBgr;
+        public sbyte outputBgr;
     }
 
     [Flags]

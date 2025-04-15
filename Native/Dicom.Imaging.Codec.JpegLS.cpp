@@ -4,19 +4,19 @@
 #include <iostream>
 #include <new>
 
+#include "./Common/CharLS/charls/charls_jpegls_decoder.h"
+#include "./Common/CharLS/charls/charls_jpegls_encoder.h"
+
 #if defined (_WIN32)
-#include "./Common/CharLS/charls.h"
 #define EXPORT_Charls __declspec(dllexport)
 
 #elif defined(__linux__)
-#include "./Common/CharLS/charls.h"
 #define EXPORT_Charls extern 
 
 #elif defined(__APPLE__)
 #include "TargetConditionals.h"
     #ifdef TARGET_OS_MAC
         #define EXPORT_Charls extern
-		#include "./Common/CharLS/charls.h"
     #endif
 
 #endif

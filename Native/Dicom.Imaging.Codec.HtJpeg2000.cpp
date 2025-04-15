@@ -4,6 +4,8 @@
 #include <iostream>
 #include <new>
 
+#include "./Common/OpenJPH/interface/ojph_interface.h"
+
 #if defined(_WIN32)
 #define EXPORT_OpenJPH  __declspec(dllexport)
 
@@ -16,8 +18,6 @@
         #define EXPORT_OpenJPH extern
     #endif
 #endif
-
-#include "./Common/OpenJPH/interface/ojph_interface.h"
 
 namespace Dicom {
 namespace Imaging {
