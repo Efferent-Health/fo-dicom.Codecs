@@ -93,7 +93,7 @@ SET(CHARLS_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/default_traits.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/encoder_strategy.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jls_codec_factory.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_maker_code.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_marker_code.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_stream_reader.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpeg_stream_writer.h
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/jpegls_preset_coding_parameters.h

@@ -111,7 +111,7 @@
     <ClInclude Include="..\..\Common\CharLS\default_traits.h" />
     <ClInclude Include="..\..\Common\CharLS\encoder_strategy.h" />
     <ClInclude Include="..\..\Common\CharLS\jls_codec_factory.h" />
-    <ClInclude Include="..\..\Common\CharLS\jpeg_maker_code.h" />
+    <ClInclude Include="..\..\Common\CharLS\jpeg_marker_code.h" />
     <ClInclude Include="..\..\Common\CharLS\jpeg_stream_reader.h" />
     <ClInclude Include="..\..\Common\CharLS\jpeg_stream_writer.h" />
     <ClInclude Include="..\..\Common\CharLS\jpegls_preset_coding_parameters.h" />

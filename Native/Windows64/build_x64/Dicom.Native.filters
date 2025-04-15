@@ -449,7 +449,7 @@
     <ClInclude Include="..\..\Common\CharLS\jls_codec_factory.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Common\CharLS\jpeg_maker_code.h">
+    <ClInclude Include="..\..\Common\CharLS\jpeg_marker_code.h">
       <Filter>Header Files\CharLS</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\CharLS\jpeg_stream_reader.h">
