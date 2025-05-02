@@ -1009,7 +1009,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 int pos = newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? (c * pixelCount) : c;
                                 int offset = (int)(newPixelData.PlanarConfiguration == PlanarConfiguration.Planar ? 1 : image->numcomps);
 
-                                if (comp->prec == 8)
+                                var prec = comp->prec < oldPixelData.BitsStored ? oldPixelData.BitsStored : comp->prec;
+
+                                if (prec == 8)
                                 {
                                     if (Convert.ToBoolean(comp->sgnd))
                                     {
@@ -1058,7 +1060,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         }
                                     }
                                 }
-                                else if (comp->prec > 8 && comp->prec <= 16)
+                                else if (prec > 8 && prec <= 16)
                                 {
                                     ushort sign = (ushort)(1 << (ushort)(comp->prec -1));
                                     ushort mask = (ushort)(0xFFFF ^ sign);
