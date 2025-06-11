@@ -1730,7 +1730,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 unsafe
                 {
-                    PinnedByteArray jpegArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
+                    PinnedByteArray jpegArray = new PinnedByteArray(this.TrytoFixPixelData(oldPixelData.GetFrame(frame).Data));
                     PinnedByteArray frameArray = null;
 
                     try
@@ -1782,6 +1782,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         src.pub.bytes_in_buffer = 0;
                         src.pub.next_input_byte = IntPtr.Zero;
                         src.skip_bytes = 0;
+
                         src.next_buffer = jpegArray.Pointer;
                         src.next_buffer_size = (uint)jpegArray.ByteSize;
 
@@ -1974,7 +1975,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         uint rowSize = 0;
                         rowSize = Convert.ToUInt32(dinfo.output_width * dinfo.output_components * oldPixelData.BytesAllocated);
-                        
+
                         int frameSize = Convert.ToInt32(rowSize * dinfo.output_height);
 
                         if ((frameSize % 2) != 0 && oldPixelData.NumberOfFrames == 1)
@@ -2116,7 +2117,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 PinnedByteArray jpegArray = new PinnedByteArray(pixelData.GetFrame(0).Data);
                 j_decompress_ptr dinfo = new j_decompress_ptr();
 
-                var jpegFile = new byte[] { 255, 216, 255, 224 };
+                var jpegFile = new byte[] { 255, 216, 255 };
 
                 if (!jpegFile.SequenceEqual(jpegArray.Data.Take(jpegFile.Length)))
                 {
@@ -2307,6 +2308,23 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 return dinfo.data_precision;
             }
 
+            private byte[] TrytoFixPixelData(byte[] buffer)
+            {   
+                if (!buffer[buffer.Length - 1].Equals(217) && !buffer[buffer.Length - 2].Equals(255))
+                { 
+                    var newbf = new byte[buffer.Length + 2];
+                    buffer.CopyTo(newbf, 0);
+                    newbf[buffer.Length] = 255;
+                    newbf[buffer.Length + 1] = 217;
+
+                    return newbf;
+                }
+                else
+                {
+                    return buffer;
+                }
+            }
+
             [ThreadStatic]
             internal static JpegCodec This;
         }
@@ -2394,10 +2412,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     newPixelData.Dataset.AddOrUpdate(DicomTag.BitsAllocated, (ushort)16);
 
                 JpegNativeCodec codec = GetCodec(precision, jparams);
+                var fragments = oldPixelData.Dataset.GetDicomItem<DicomFragmentSequence>(DicomTag.PixelData).Fragments;
 
-                for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
-                {
-                    codec.Decode(oldPixelData, newPixelData, jparams, frame);
+                for (int frame = 0; frame < fragments.Count; frame++)
+                {   
+                    if (!(fragments[frame] is EmptyBuffer))
+                    {
+                        codec.Decode(oldPixelData, newPixelData, jparams, frame);
+                    }     
                 }
             }
             catch (DicomCodecException e)

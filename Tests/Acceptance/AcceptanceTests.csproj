@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.2.1"/>
-    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.2.1" />
+    <PackageReference Include="fo-dicom" Version="5.2.2"/>
+    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.2.2" />
   </ItemGroup>
 
   <ItemGroup>
