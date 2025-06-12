@@ -1,11 +1,11 @@
+<img src="fo-dicom_logo.png" alt="fo-dicom logo" height="80" /> <img src="efferent_logo.png" alt="Efferent logo" height="80" />
+
 # fo-dicom.Codecs
 
 [![NuGet](https://img.shields.io/nuget/v/fo-dicom.Codecs.svg)](https://www.nuget.org/packages/fo-dicom.Codecs/)
 ![downloads](https://img.shields.io/nuget/dt/fo-dicom.Codecs)
 ![github](https://img.shields.io/github/stars/Efferent-Health/fo-dicom.Codecs?style=flat&color=yellow)
 ![build](https://github.com/Efferent-Health/fo-dicom.Codecs/actions/workflows/main.yml/badge.svg?branch=master)
-
-<img src="fo-dicom_logo.png" alt="fo-dicom logo" height="80" /> <img src="efferent_logo.png" alt="Efferent logo" height="80" />
 
 This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent, Inc.](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
