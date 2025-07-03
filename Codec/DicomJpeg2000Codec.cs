@@ -719,7 +719,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             if (oldPixelData.BitsStored < 16)
                                             {
                                                 ushort* frameData16 = (ushort*)frameArray.Pointer.ToPointer();
-                                                ushort sign = (ushort)(1 << oldPixelData.HighBit);
                                                 ushort mask = (ushort)(0xffff >> (oldPixelData.BitsAllocated - oldPixelData.BitsStored));
 
                                                 for (int p = 0; p < pixelCount; p++)
@@ -1011,94 +1010,80 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 var prec = comp->prec < oldPixelData.BitsStored ? oldPixelData.BitsStored : comp->prec;
 
-                                if (prec == 8)
+                                if (oldPixelData.BytesAllocated == 1)
                                 {
-                                    if (Convert.ToBoolean(comp->sgnd))
+                                    if (prec <= 8)
                                     {
-                                        byte sign = (byte)(1 << (byte)(comp->prec -1));
-                                        byte mask = (byte)(0xFF ^ sign);
-                                        for (int p = 0; p < pixelCount; p++)
+                                        if (Convert.ToBoolean(comp->sgnd))
                                         {
-                                            try
+                                            byte sign = (byte)(1 << (byte)(comp->prec - 1));
+                                            byte mask = (byte)(0xFF ^ sign);
+                                            for (int p = 0; p < pixelCount; p++)
                                             {
-                                                int i = comp->data[p];
-                                                if (i < 0)
-                                                    //destArray->Data[pos] = (unsigned char)(-i | sign);
-                                                    destArray.Data[pos] = (byte)((i & mask) | sign);
-                                                else
-                                                    //destArray->Data[pos] = (unsigned char)(i);
-                                                    destArray.Data[pos] = (byte)(i & mask);
-                                                pos += offset;
-                                            }
-                                            catch (DicomCodecException e)
-                                            {
-                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                try
+                                                {
+                                                    int i = comp->data[p];
+                                                    if (i < 0)
+                                                        //destArray->Data[pos] = (unsigned char)(-i | sign);
+                                                        destArray.Data[pos] = (byte)((i & mask) | sign);
+                                                    else
+                                                        //destArray->Data[pos] = (unsigned char)(i);
+                                                        destArray.Data[pos] = (byte)(i & mask);
+                                                    pos += offset;
+                                                }
+                                                catch (DicomCodecException e)
+                                                {
+                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                }
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        for (int p = 0; p < pixelCount; p++)
+                                        else
                                         {
-                                            try
+                                            for (int p = 0; p < pixelCount; p++)
                                             {
-                                                destArray.Data[pos] = (byte)comp->data[p];
-                                                pos += offset;
-                                            }
-                                            catch (DicomCodecException e)
-                                            {
-                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                try
+                                                {
+                                                    destArray.Data[pos] = (byte)comp->data[p];
+                                                    pos += offset;
+                                                }
+                                                catch (DicomCodecException e)
+                                                {
+                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                }
                                             }
                                         }
                                     }
                                 }
-                                else if (prec > 8 && prec <= 16)
+                                else if (oldPixelData.BytesAllocated == 2)
                                 {
-                                    ushort sign = (ushort)(1 << (ushort)(comp->prec -1));
-                                    ushort mask = (ushort)(0xFFFF ^ sign);
-                                    ushort* destData16 = (ushort*)(void*)destArray.Pointer;
-
-                                    if (Convert.ToBoolean(comp->sgnd))
+                                    if (prec <= 16)
                                     {
-                                        try
-                                        {
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                int i = comp->data[p];
+                                        ushort sign = (ushort)(1 << (ushort)(comp->prec - 1));
+                                        ushort mask = (ushort)(0xFFFF ^ sign);
+                                        ushort* destData16 = (ushort*)(void*)destArray.Pointer;
 
-                                                if (i < 0)
-                                                    destData16[pos] = (ushort)((i & mask) | sign);
-                                                else
-                                                    destData16[pos] = (ushort)(i & mask);
-                                                pos += offset;
-                                            }
-                                        }
-                                        catch (DicomCodecException e)
-                                        {
-                                            throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int p = 0; p < pixelCount; p++)
+                                        if (Convert.ToBoolean(comp->sgnd))
                                         {
                                             try
                                             {
-                                                var pixel = (ushort)comp->data[p];
-                                                destData16[pos] = pixel;
-                                                pos += offset;
+                                                for (int p = 0; p < pixelCount; p++)
+                                                {
+                                                    int i = comp->data[p];
+
+                                                    if (i < 0)
+                                                        destData16[pos] = (ushort)((i & mask) | sign);
+                                                    else
+                                                        destData16[pos] = (ushort)(i & mask);
+                                                    pos += offset;
+                                                }
                                             }
                                             catch (DicomCodecException e)
                                             {
@@ -1107,6 +1092,26 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                             catch (Exception e)
                                             {
                                                 throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (int p = 0; p < pixelCount; p++)
+                                            {
+                                                try
+                                                {
+                                                    var pixel = (ushort)comp->data[p];
+                                                    destData16[pos] = pixel;
+                                                    pos += offset;
+                                                }
+                                                catch (DicomCodecException e)
+                                                {
+                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                                                }
                                             }
                                         }
                                     }
