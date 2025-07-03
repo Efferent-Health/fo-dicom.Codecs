@@ -25,7 +25,7 @@ jobs:
         shell: pwsh
 
   build_win_x64:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: version
     steps:
       - name: Checkout repository
