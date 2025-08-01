@@ -1,5 +1,3 @@
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace FellowOakDicom.Imaging.NativeCodec
