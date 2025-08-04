@@ -208,13 +208,16 @@ jobs:
           path: ./AcceptanceTestResults.zip
 
   check-paths:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+    needs: 
+      - acceptance
     outputs:
       only-tests: ${{ steps.check.outputs.only-tests }}
     steps:
       - uses: actions/checkout@v4
       - name: Check if only Tests folder changed
         id: check
+        shell: bash
         run: |
           CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           echo "Changed files:"
@@ -227,7 +230,7 @@ jobs:
             fi
           done
           echo "only-tests=$ONLY_TESTS" >> $GITHUB_OUTPUT
-
+          
   nuget:
     runs-on: windows-latest
     needs: 
