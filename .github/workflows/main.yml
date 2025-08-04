@@ -215,6 +215,8 @@ jobs:
       only-tests: ${{ steps.check.outputs.only-tests }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Check if only Tests folder changed
         id: check
         shell: bash
