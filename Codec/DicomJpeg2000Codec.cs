@@ -1010,7 +1010,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 var prec = comp->prec < oldPixelData.BitsStored ? oldPixelData.BitsStored : comp->prec;
 
-                                if (oldPixelData.BytesAllocated == 1 || oldPixelData.BitsStored <= 8)
+                                if (oldPixelData.BytesAllocated == 1 || (oldPixelData.BitsStored <= 8 && oldPixelData.SamplesPerPixel > 1))
                                 {
                                     if (prec <= 8 || (oldPixelData.BitsStored <= 8 && prec <= 16))
                                     {
