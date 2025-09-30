@@ -207,11 +207,39 @@ jobs:
           name: test
           path: ./AcceptanceTestResults.zip
 
+  check-paths:
+    runs-on: windows-latest
+    needs: 
+      - acceptance
+    outputs:
+      only-tests: ${{ steps.check.outputs.only-tests }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check if only Tests folder changed
+        id: check
+        shell: bash
+        run: |
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo "Changed files:"
+          echo "$CHANGED"
+          ONLY_TESTS=true
+          for file in $CHANGED; do
+            if [[ ! "$file" =~ ^Tests/ ]]; then
+              ONLY_TESTS=false
+              break
+            fi
+          done
+          echo "only-tests=$ONLY_TESTS" >> $GITHUB_OUTPUT
+          
   nuget:
     runs-on: windows-latest
     needs: 
       - version
       - acceptance
+      - check-paths
+    if: needs.check-paths.outputs.only-tests != 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

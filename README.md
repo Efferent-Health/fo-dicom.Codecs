@@ -6,6 +6,7 @@
 ![downloads](https://img.shields.io/nuget/dt/fo-dicom.Codecs)
 ![github](https://img.shields.io/github/stars/Efferent-Health/fo-dicom.Codecs?style=flat&color=yellow)
 ![build](https://github.com/Efferent-Health/fo-dicom.Codecs/actions/workflows/main.yml/badge.svg?branch=master)
+![Dependabot PRs](https://img.shields.io/github/issues-pr-raw/Efferent-Health/fo-dicom.Codecs/dependabot?label=Dependabot%20PRs&logo=dependabot)
 
 This is collaborative project mantained by [Fellow Oak Dicom](https://github.com/fo-dicom/fo-dicom) and [Efferent, Inc.](https://efferenthealth.com).
 The codecs in this repository are written in pure C/C++ code and wrapped with C# and netstandard2.0. The supported platforms so far are:
