@@ -290,7 +290,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             newJpegData = pool.Rent((int)jpegDataSize);
                             Array.Copy(jpegData, newJpegData, newJpegData.Length);
-                            pool.Return(jpegData);
 
                             IByteBuffer buffer;
 
