@@ -1249,7 +1249,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar && oldPixelData.SamplesPerPixel > 1)
                     {
                         if (oldPixelData.SamplesPerPixel != 3 || oldPixelData.BitsStored > 8)
-                            throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel=3 && BitsStores <= 8");
+                            throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel=3 && BitsStored <= 8");
 
                         newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
                         frameArray = new PinnedByteArray(PixelDataConverter.PlanarToInterleaved24(new MemoryByteBuffer(frameArray.Data)).Data);
