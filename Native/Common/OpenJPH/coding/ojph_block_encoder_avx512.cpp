@@ -34,6 +34,9 @@
 // File: ojph_block_encoder_avx512.cpp
 //***************************************************************************/
 
+#include "ojph_arch.h"
+#if defined(OJPH_ARCH_X86_64)
+
 #include <cassert>
 #include <cstring>
 #include <cstdint>
@@ -41,7 +44,6 @@
 #include <immintrin.h>
 
 #include "ojph_mem.h"
-#include "ojph_arch.h"
 #include "ojph_block_encoder.h"
 #include "ojph_message.h"
 
@@ -1260,3 +1262,5 @@ static void print_epi32(const char *msg, __m512i &val)
 
   } /* namespace local */
 } /* namespace ojph */
+
+#endif
