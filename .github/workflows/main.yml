@@ -209,6 +209,7 @@ jobs:
 
   check-paths:
     runs-on: windows-latest
+    if: false
     needs: 
       - acceptance
     outputs:
@@ -238,8 +239,6 @@ jobs:
     needs: 
       - version
       - acceptance
-      - check-paths
-    if: needs.check-paths.outputs.only-tests != 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
