@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.11.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
     <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
   </ItemGroup>
 
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" />
+    <!--None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" /-->
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
