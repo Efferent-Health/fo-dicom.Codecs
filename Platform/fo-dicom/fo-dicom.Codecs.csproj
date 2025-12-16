@@ -8,7 +8,7 @@
     <FileVersion>$(Version)</FileVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyOriginatorKeyFile>fo-dicom.Codecs.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <RootNamespace>FellowOakDicom.Imaging.NativeCodec</RootNamespace>
     <AssemblyName>fo-dicom.Codecs</AssemblyName>
     <PackageId>fo-dicom.Codecs</PackageId>
@@ -57,3 +57,4 @@
     <None Include="../../README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
   </ItemGroup>  
 </Project>
+
