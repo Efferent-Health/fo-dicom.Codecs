@@ -539,8 +539,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         IByteBuffer frameData = oldPixelData.GetFrame(frame);
 
-                        //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
-                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                        //Converting photometric interpretation YbrFull or YbrFull422 to RGB
+                        if (oldPixelData.PlanarConfiguration == PlanarConfiguration.Planar && oldPixelData.SamplesPerPixel > 1)
+                        {
+                            if (oldPixelData.SamplesPerPixel != 3 || oldPixelData.BitsStored > 8)
+                                throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel=3 && BitsStored <= 8");
+
+                            frameData = PixelDataConverter.PlanarToInterleaved24(new MemoryByteBuffer(frameData.Data));
+                            oldPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+
+                            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+                                frameData = PixelDataConverter.YbrFullToRgb(frameData);
+                        }
+                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                         {
                             frameData = PixelDataConverter.YbrFullToRgb(frameData);
                         }

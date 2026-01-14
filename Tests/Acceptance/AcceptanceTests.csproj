@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.10.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.10.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.2.2"/>
-    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.2.2" />
+    <PackageReference Include="fo-dicom" Version="5.2.5"/>
+    <PackageReference Include="fo-dicom.Imaging.ImageSharp" Version="5.2.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--PackageReference Include="fo-dicom.Codecs" Version="5.16.4" /-->
+    <!--PackageReference Include="fo-dicom.Codecs" Version="5.16.5" /-->
     <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
   </ItemGroup>
 </Project>

@@ -65,7 +65,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             Directory.CreateDirectory("out");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DynamicData(nameof(Data), DynamicDataSourceType.Property)]
         public void PerformTranscode(int index0, int index1)
         { 
@@ -94,7 +94,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             }
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DynamicData(nameof(Data), DynamicDataSourceType.Property)]
         public void InverseTranscode(int index0, int index1)
         {
@@ -124,7 +124,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             }
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DynamicData(nameof(ImageData), DynamicDataSourceType.Property)]
         public void RenderImages(int index0)
         {

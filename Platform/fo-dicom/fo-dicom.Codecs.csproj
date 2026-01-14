@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Cross-platform Dicom codecs for fo-dicom</Description>
     <Copyright>(c) Efferent Health, LLC, fo-dicom contributors</Copyright>
-    <Version>5.16.4.0</Version>
+    <Version>5.16.5.1</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="fo-dicom" Version="5.2.2"/>
+    <PackageReference Include="fo-dicom" Version="5.2.5"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -57,3 +57,4 @@
     <None Include="../../README.md" Pack="true" PackagePath="$(PackageReadmeFile)" />
   </ItemGroup>  
 </Project>
+
