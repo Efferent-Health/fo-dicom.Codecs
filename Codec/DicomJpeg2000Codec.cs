@@ -8,6 +8,7 @@ using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
@@ -383,6 +384,113 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public DicomCodecParams GetDefaultParameters()
         {
             return new DicomJpeg2000Params();
+        }
+
+        public unsafe PinnedByteArray ExtractDataLineByLinefor8bit(PinnedByteArray destData, int pixelCount, opj_image_comp_t* component, int offsetAcumulator, int offset)
+        {
+            if (Convert.ToBoolean(component->sgnd))
+            {
+                byte sign = (byte)(1 << (byte)(component->prec - 1));
+                byte mask = (byte)(0xFF ^ sign);
+
+                for (int p = 0; p < 2 * pixelCount; p++)
+                {
+                    try
+                    {
+                        int i = component->data[p];
+                        if (i < 0)
+                            //destArray->Data[pos] = (unsigned char)(-i | sign);
+                            destData.Data[offsetAcumulator] = (byte)((i & mask) | sign);
+                        else
+                            //destArray->Data[pos] = (unsigned char)(i);
+                            destData.Data[offsetAcumulator] = (byte)(i & mask);
+                        offsetAcumulator += offset;
+                    }
+                    catch (DicomCodecException e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
+                }
+            }
+            else
+            {
+                for (int p = 0; p < pixelCount; p++)
+                {
+                    try
+                    {
+                        destData.Data[offsetAcumulator] = (byte)component->data[p];
+                        offsetAcumulator += offset;
+                    }
+                    catch (DicomCodecException e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
+                }
+            }
+
+            return destData;
+        }
+
+        public unsafe PinnedByteArray ExtractDataLineByLinefor16bit(PinnedByteArray destData, int pixelCount, opj_image_comp_t* component, int offsetAcumulator, int offset)
+        {
+            ushort sign = (ushort)(1 << (ushort)(component->prec - 1));
+            ushort mask = (ushort)(0xFFFF ^ sign);
+            ushort* destData16 = (ushort*)(void*)destData.Pointer;
+
+            if (Convert.ToBoolean(component->sgnd))
+            {
+                try
+                {
+                    for (int p = 0; p < pixelCount; p++)
+                    {
+                        int i = component->data[p];
+
+                        if (i < 0)
+                            destData16[offsetAcumulator] = (ushort)((i & mask) | sign);
+                        else
+                            destData16[offsetAcumulator] = (ushort)(i & mask);
+                        offsetAcumulator += offset;
+                    }
+                }
+                catch (DicomCodecException e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                }
+                catch (Exception e)
+                {
+                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                }
+            }
+            else
+            {
+                for (int p = 0; p < pixelCount; p++)
+                {
+                    try
+                    {
+                        var pixel = (ushort)component->data[p];
+                        destData16[offsetAcumulator] = pixel;
+                        offsetAcumulator += offset;
+                    }
+                    catch (DicomCodecException e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new DicomCodecException(e.Message + " => " + e.StackTrace);
+                    }
+                }
+            }
+
+            return destData;
         }
 
         public abstract void Encode(
@@ -907,10 +1015,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
             if (jparams == null)
                 jparams = (DicomJpeg2000Params)GetDefaultParameters();
 
-            if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct)
+            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrIct || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrRct)
                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
 
-            if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422 || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422 || newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
+            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422 || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial422 || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
 
             //if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
@@ -1021,110 +1129,22 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 var prec = comp->prec < oldPixelData.BitsStored ? oldPixelData.BitsStored : comp->prec;
 
-                                if (oldPixelData.BytesAllocated == 1 || (oldPixelData.BitsStored <= 8 && oldPixelData.SamplesPerPixel > 1))
+                                if (oldPixelData.BytesAllocated == 1)
                                 {
-                                    if (prec <= 8 || (oldPixelData.BitsStored <= 8 && prec <= 16))
+                                    if (prec <= 8)
                                     {
-                                        if (Convert.ToBoolean(comp->sgnd))
-                                        {
-                                            byte sign = (byte)(1 << (byte)(comp->prec - 1));
-                                            byte mask = (byte)(0xFF ^ sign);
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                try
-                                                {
-                                                    int i = comp->data[p];
-                                                    if (i < 0)
-                                                        //destArray->Data[pos] = (unsigned char)(-i | sign);
-                                                        destArray.Data[pos] = (byte)((i & mask) | sign);
-                                                    else
-                                                        //destArray->Data[pos] = (unsigned char)(i);
-                                                        destArray.Data[pos] = (byte)(i & mask);
-                                                    pos += offset;
-                                                }
-                                                catch (DicomCodecException e)
-                                                {
-                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                try
-                                                {
-                                                    destArray.Data[pos] = (byte)comp->data[p];
-                                                    pos += offset;
-                                                }
-                                                catch (DicomCodecException e)
-                                                {
-                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                                }
-                                            }
-                                        }
+                                        destArray = ExtractDataLineByLinefor8bit(destArray, pixelCount, comp, pos, offset);
                                     }
                                 }
                                 else if (oldPixelData.BytesAllocated == 2)
-                                {
-                                    if (prec <= 16)
+                                {   
+                                    if (prec <= 8)
                                     {
-                                        ushort sign = (ushort)(1 << (ushort)(comp->prec - 1));
-                                        ushort mask = (ushort)(0xFFFF ^ sign);
-                                        ushort* destData16 = (ushort*)(void*)destArray.Pointer;
-
-                                        if (Convert.ToBoolean(comp->sgnd))
-                                        {
-                                            try
-                                            {
-                                                for (int p = 0; p < pixelCount; p++)
-                                                {
-                                                    int i = comp->data[p];
-
-                                                    if (i < 0)
-                                                        destData16[pos] = (ushort)((i & mask) | sign);
-                                                    else
-                                                        destData16[pos] = (ushort)(i & mask);
-                                                    pos += offset;
-                                                }
-                                            }
-                                            catch (DicomCodecException e)
-                                            {
-                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (int p = 0; p < pixelCount; p++)
-                                            {
-                                                try
-                                                {
-                                                    var pixel = (ushort)comp->data[p];
-                                                    destData16[pos] = pixel;
-                                                    pos += offset;
-                                                }
-                                                catch (DicomCodecException e)
-                                                {
-                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                                                }
-                                            }
-                                        }
+                                        destArray = ExtractDataLineByLinefor8bit(destArray, pixelCount, comp, pos, offset);
+                                    }
+                                    else if (prec <= 16)
+                                    {
+                                        destArray = ExtractDataLineByLinefor16bit(destArray, pixelCount, comp, pos, offset);
                                     }
                                 }
                                 else
