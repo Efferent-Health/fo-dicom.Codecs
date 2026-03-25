@@ -157,15 +157,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
-                    uint jpegHT2KDataSize = 0;
                     Frameinfo frameinfo = new Frameinfo
                     {
                         width = oldPixelData.Width,
                         height = oldPixelData.Height,
                         bitsPerSample = (byte)oldPixelData.BitsAllocated,
                         componentCount = (byte)oldPixelData.SamplesPerPixel,
-                        isSigned = oldPixelData.PixelRepresentation == PixelRepresentation.Signed ? true : false,
-                        isUsingColorTransform = oldPixelData.SamplesPerPixel > 1 ? true : false
+                        isSigned = oldPixelData.PixelRepresentation == PixelRepresentation.Signed,
+                        isUsingColorTransform = oldPixelData.SamplesPerPixel > 1
                     };
 
                     if (newPixelData.Syntax.Equals(DicomTransferSyntax.HTJ2KLossless) || newPixelData.Syntax.Equals(DicomTransferSyntax.HTJ2KLosslessRPCL))
@@ -177,7 +176,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (newPixelData.Syntax.Equals(DicomTransferSyntax.HTJ2KLosslessRPCL))
                         progressionOrder = jparams.ProgressionOrder;
 
-                    Htj2k_outdata j2c_outinfo = new Htj2k_outdata();
+                    Htj2k_outdata j2c_outinfo = new Htj2k_outdata
+                    {
+                        buffer = (byte*)new PinnedByteArray(frameData.Data.Length).Pointer
+                    };
 
                     try
                     {
@@ -186,7 +188,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else
                             InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
 
-                        jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
+                        var jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
 
                         jpegHT2KData = pool.Rent((int)jpegHT2KDataSize);
                         Marshal.Copy((IntPtr)j2c_outinfo.buffer, jpegHT2KData, 0, (int)jpegHT2KDataSize);
@@ -219,13 +221,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (jpegHT2KData != null)
                         {
                             pool.Return(jpegHT2KData);
-                            jpegHT2KData = null;
                         }
 
                         if (frameArray != null)
                         {
                             frameArray.Dispose();
-                            frameArray = null;
                         }
                     }
                 }
@@ -265,7 +265,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     try
                     {
-                        Raw_outdata raw_Outdata = new Raw_outdata();
+                        Raw_outdata raw_Outdata = new Raw_outdata()
+                        {
+                            buffer = (byte*)new PinnedByteArray(frameData.Length).Pointer
+                        };
 
                         unsafe
                         {

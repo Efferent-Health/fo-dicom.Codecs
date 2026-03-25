@@ -393,7 +393,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte sign = (byte)(1 << (byte)(component->prec - 1));
                 byte mask = (byte)(0xFF ^ sign);
 
-                for (int p = 0; p < 2 * pixelCount; p++)
+                for (int p = 0; p < pixelCount; p++)
                 {
                     try
                     {
