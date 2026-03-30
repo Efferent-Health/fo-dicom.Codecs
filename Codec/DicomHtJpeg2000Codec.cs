@@ -174,7 +174,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         progressionOrder = jparams.ProgressionOrder;
 
                     var pool = ArrayPool<byte>.Shared;
-                    byte[] jpegHT2KData = pool.Rent(frameData.Data.Length);//new byte[frameData.Data.Length];
+                    byte[] jpegHT2KData = pool.Rent(frameData.Data.Length);
                     
                     try
                     {   
@@ -192,12 +192,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             else
                                 InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
 
-                            var jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
-                            pool.Resize(ref jpegHT2KData, (int)jpegHT2KDataSize);
+                            pool.Resize(ref jpegHT2KData, (int)j2c_outinfo.size_outbuffer);
 
                             IByteBuffer buffer;
 
-                            if (jpegHT2KDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            if (j2c_outinfo.size_outbuffer >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             {
                                 buffer = new TempFileBuffer(jpegHT2KData);
                                 buffer = EvenLengthBuffer.Create(buffer);
