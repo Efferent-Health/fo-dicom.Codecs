@@ -1,7 +1,7 @@
 using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
-
+using CommunityToolkit.HighPerformance;
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
@@ -134,9 +134,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 {
                     IByteBuffer frameData = oldPixelData.GetFrame(frame);
 
-                    var pool = ArrayPool<byte>.Shared;
-                    byte[] jpegHT2KData = null;
-
                     try
                     {
                         //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
@@ -176,37 +173,45 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (newPixelData.Syntax.Equals(DicomTransferSyntax.HTJ2KLosslessRPCL))
                         progressionOrder = jparams.ProgressionOrder;
 
-                    Htj2k_outdata j2c_outinfo = new Htj2k_outdata
-                    {
-                        buffer = (byte*)new PinnedByteArray(frameData.Data.Length).Pointer
-                    };
-
+                    var pool = ArrayPool<byte>.Shared;
+                    byte[] jpegHT2KData = pool.Rent(frameData.Data.Length);//new byte[frameData.Data.Length];
+                    
                     try
-                    {
-                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                            InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
-                        else
-                            InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+                    {   
+                        Htj2k_outdata j2c_outinfo;
 
-                        var jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
-
-                        jpegHT2KData = pool.Rent((int)jpegHT2KDataSize);
-                        Marshal.Copy((IntPtr)j2c_outinfo.buffer, jpegHT2KData, 0, (int)jpegHT2KDataSize);
-
-                        IByteBuffer buffer;
-
-                        if (jpegHT2KDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                        fixed (byte * pjpegHT2KData = jpegHT2KData)
                         {
-                            buffer = new TempFileBuffer(jpegHT2KData);
-                            buffer = EvenLengthBuffer.Create(buffer);
+                            j2c_outinfo = new Htj2k_outdata
+                            {
+                                buffer = pjpegHT2KData
+                            };
+
+                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+                            else
+                                InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+
+                            var jpegHT2KDataSize = j2c_outinfo.size_outbuffer;
+                            pool.Resize(ref jpegHT2KData, (int)jpegHT2KDataSize);
+
+                            IByteBuffer buffer;
+
+                            if (jpegHT2KDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            {
+                                buffer = new TempFileBuffer(jpegHT2KData);
+                                buffer = EvenLengthBuffer.Create(buffer);
+                            }
+                            else
+                            {
+                                buffer = new MemoryByteBuffer(jpegHT2KData);
+                            }
+
+                            if (oldPixelData.NumberOfFrames == 1)
+                                buffer = EvenLengthBuffer.Create(buffer);
+
+                            newPixelData.AddFrame(buffer);
                         }
-                        else
-                            buffer = new MemoryByteBuffer(jpegHT2KData);
-
-                        if (oldPixelData.NumberOfFrames == 1)
-                            buffer = EvenLengthBuffer.Create(buffer);
-
-                        newPixelData.AddFrame(buffer);
                     }
                     catch (DicomCodecException d)
                     {
@@ -223,10 +228,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             pool.Return(jpegHT2KData);
                         }
 
-                        if (frameArray != null)
-                        {
-                            frameArray.Dispose();
-                        }
+                        frameArray?.Dispose();
                     }
                 }
             }
@@ -235,7 +237,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public override unsafe void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             try
-            {   
+            {
                 if (Platform.Current == Platform.Type.unsupported)
                 {
                     throw new InvalidOperationException("Unsupported OS Platform");
@@ -244,9 +246,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
                     IByteBuffer htjpeg2kData = oldPixelData.GetFrame(frame);
-
-                    var pool = ArrayPool<byte>.Shared;
-                    byte[] frameData = null;
 
                     //Converting photmetricinterpretation YbrFull or YbrFull422 to RGB
                     if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
@@ -260,35 +259,40 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     PinnedByteArray htjpeg2kArray = new PinnedByteArray(htjpeg2kData.Data);
 
-                    frameData = pool.Rent(newPixelData.UncompressedFrameSize);
-                    PinnedByteArray frameArray = new PinnedByteArray(frameData);
+                    var pool = ArrayPool<byte>.Shared;
+                    byte[] frameData = pool.Rent(newPixelData.UncompressedFrameSize);
 
                     try
                     {
-                        Raw_outdata raw_Outdata = new Raw_outdata()
-                        {
-                            buffer = (byte*)new PinnedByteArray(frameData.Length).Pointer
-                        };
+                        Raw_outdata raw_Outdata;
 
                         unsafe
-                        {
-                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                InvokeHTJ2KDecode_win(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
-                            else
-                                InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count); ;
+                        {   
+                            fixed (byte * prawdata = frameData)
+                            {
+                                raw_Outdata = new Raw_outdata
+                                {
+                                    buffer = prawdata
+                                };
 
-                            Marshal.Copy((IntPtr)raw_Outdata.buffer, frameData, 0, (int)raw_Outdata.size_outbuffer);
+                                if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                    InvokeHTJ2KDecode_win(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
+                                else
+                                    InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count); ;
 
-                            IByteBuffer buffer;
-                            if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                                buffer = new TempFileBuffer(frameData);
-                            else
-                                buffer = new MemoryByteBuffer(frameData);
+                                pool.Resize(ref frameData, (int)raw_Outdata.size_outbuffer);
 
-                            if (oldPixelData.NumberOfFrames == 1)
-                                buffer = EvenLengthBuffer.Create(buffer);
+                                IByteBuffer buffer;
+                                if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                    buffer = new TempFileBuffer(frameData);
+                                else
+                                    buffer = new MemoryByteBuffer(frameData);
 
-                            newPixelData.AddFrame(buffer);
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
+                                newPixelData.AddFrame(buffer);
+                            }
                         }
                     }
                     catch (DicomCodecException e)
@@ -311,17 +315,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             htjpeg2kArray.Dispose();
                             htjpeg2kArray = null;
                         }
-
-                        if (frameArray != null)
-                        {
-                            frameArray.Dispose();
-                            frameArray = null;
-                        }
                     }
                 }
             }
             catch (DicomCodecException e)
-            { 
+            {
                 throw new DicomCodecException(e.Message + " => " + e.StackTrace);
             }
         }

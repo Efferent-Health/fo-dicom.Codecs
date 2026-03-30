@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
-
+using CommunityToolkit.HighPerformance;
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
@@ -255,9 +255,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
-                    var pool = ArrayPool<byte>.Shared;
-                    byte[] jpegData = null;
-                    byte[] newJpegData = null;
                     IByteBuffer frameData = oldPixelData.GetFrame(frame);
 
                     //Converting photometric interpretation YbrFull or YbrFull422 to RGB
@@ -279,11 +276,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
-                    jpegData = pool.Rent((int)frameData.Size);
+                    var pool = ArrayPool<byte>.Shared;
+                    var jpeglsData = pool.Rent((int)frameData.Size);
 
                     try
                     {
-                        fixed (byte* jpegDataPointer = jpegData)
+                        fixed (byte* jpegDataPointer = jpeglsData)
                         {
                             uint jpegDataSize = 0;
                             char[] errorMessage = new char[256];
@@ -291,22 +289,23 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             CharlsApiResultType err = CharlsApiResultType.Unknown;
 
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                err = JpegLSEncode_win(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+                                err = JpegLSEncode_win(jpegDataPointer, (uint)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
                             else
-                                err = JpegLSEncode(jpegDataPointer, (uint)jpegData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+                                err = JpegLSEncode(jpegDataPointer, (uint)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
 
-                            newJpegData = pool.Rent((int)jpegDataSize);
-                            Array.Copy(jpegData, newJpegData, newJpegData.Length);
+                            pool.Resize(ref jpeglsData, (int)jpegDataSize);
 
                             IByteBuffer buffer;
 
                             if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             {
-                                buffer = new TempFileBuffer(newJpegData);
+                                buffer = new TempFileBuffer(jpeglsData);
                                 buffer = EvenLengthBuffer.Create(buffer);
                             }
                             else
-                                buffer = new MemoryByteBuffer(newJpegData);
+                            {
+                                buffer = new MemoryByteBuffer(jpeglsData);
+                            }
 
                             if (oldPixelData.NumberOfFrames == 1)
                                 buffer = EvenLengthBuffer.Create(buffer);
@@ -330,16 +329,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             frameArray = null;
                         }
 
-                        if (newJpegData != null)
+                        if (jpeglsData != null)
                         {
-                            pool.Return(newJpegData);
-                            newJpegData = null;
-                        }
-
-                        if (jpegData != null)
-                        {
-                            pool.Return(jpegData);
-                            jpegData = null;
+                            pool.Return(jpeglsData);
+                            jpeglsData = null;
                         }
                     }
                 }
@@ -355,9 +348,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
-                var pool = ArrayPool<byte>.Shared;
-                byte[] frameData = null;
-
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
 
                 try
@@ -378,8 +368,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     .PhotometricInterpretation.ToString(), ex.Message, ex.StackTrace);
                 }
 
-                PinnedByteArray jpegArray = new PinnedByteArray(jpegData.Data);
-                frameData = pool.Rent(newPixelData.UncompressedFrameSize);
+                PinnedByteArray jpeglsArray = new PinnedByteArray(jpegData.Data);
+
+                var pool = ArrayPool<byte>.Shared;
+                byte[] frameData = frameData = pool.Rent(newPixelData.UncompressedFrameSize);
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
                 try
@@ -393,9 +385,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     unsafe
                     {
                         if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                            err = JpegLSDecode_win((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                            err = JpegLSDecode_win((void*)frameArray.Pointer, frameData.Length, (void*)jpeglsArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
                         else
-                            err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpegArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                            err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpeglsArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
 
                         IByteBuffer buffer;
                         if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
@@ -431,10 +423,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         frameArray = null;
                     }
 
-                    if (jpegArray != null)
+                    if (jpeglsArray != null)
                     {
-                        jpegArray.Dispose();
-                        jpegArray = null;
+                        jpeglsArray.Dispose();
+                        jpeglsArray = null;
                     }
                 }
             }
