@@ -11,7 +11,7 @@
 using namespace ojph;
 using namespace std;
 
-void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *source, size_t sourceLength, const struct Frameinfo *finfo, ojph::PROGRESSION_ORDER progression_order)
+EncodeStatus HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *source, size_t sourceLength, const struct Frameinfo *finfo, ojph::PROGRESSION_ORDER progression_order)
 {
     size_t decompositions_ = 5;
     bool request_tlm_marker_ = true;
@@ -24,22 +24,13 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     Isize tileSize_;
     Ipoint tileOffset_;
     Isize blockDimensions_ = Isize(64, 64);
-    vector<Isize> precincts_;
-    precincts_.resize(0);
 
-    const ui8 bytesPerPixelInfo = (finfo->bitsPerSample + 8 - 1) / 8;
-    const ui16 decodedSizeInfo = finfo->width * finfo->height * finfo->componentCount * bytesPerPixelInfo;
     downSamples_.resize(finfo->componentCount);
     for (int c = 0; c < finfo->componentCount; ++c)
     {
         downSamples_[c].x = 1;
         downSamples_[c].y = 1;
     }
-
-    // Set source data
-    std::vector<uint8_t> rawdata;
-    rawdata.resize(sourceLength);
-    rawdata.insert(rawdata.begin(), source, source + decodedSizeInfo);
 
     encoded_buffer encoder;
     encoder.open();
@@ -65,15 +56,6 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     ojph::param_cod cod = codestream.access_cod();
     cod.set_num_decomposition((ui32)decompositions_);
     cod.set_block_dims(blockDimensions_.width, blockDimensions_.height);
-    vector<ojph::size> precincts;
-    precincts.resize(precincts_.size());
-
-    for (size_t i = 0; i < precincts_.size(); i++)
-    {
-        precincts[i].w = precincts_[i].width;
-        precincts[i].h = precincts_[i].height;
-    }
-    cod.set_precinct_size((int)precincts_.size(), precincts.data());
 
     const char *progOrders[] = {"LRCP", "RLCP", "RPCL", "PCRL", "CPRL"};
     switch (progression_order)
@@ -160,13 +142,24 @@ void HTJpeg2000EncodeStream(Htj2k_outdata *j2c_outinfo, const unsigned char *sou
     }
 
     codestream.flush();
+    EncodeStatus status;
 
-    j2c_outinfo->size_outbuffer = encoder.getBuffer().size();
-    memcpy(j2c_outinfo->j2c_buffer, encoder.getBuffer().data(), sizeof(unsigned char) * j2c_outinfo->size_outbuffer);
+    if (encoder.getBuffer().size() < sourceLength)
+    {
+        j2c_outinfo->size_outbuffer = encoder.getBuffer().size();
+        memcpy(j2c_outinfo->j2c_buffer, encoder.getBuffer().data(), sizeof(unsigned char) * j2c_outinfo->size_outbuffer);
+        status = EncodeStatus::Success;
+    }
+    else
+    {
+        status = EncodeStatus::Failed;
+    }
 
     // cleanup
     codestream.close();
     encoder.close();
+
+    return status;
 }
 
 void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *source, size_t sourceLength)
@@ -187,15 +180,6 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     frameInfo.componentCount = siz.get_num_components();
     frameInfo.bitsPerSample = siz.get_bit_depth(0);
     frameInfo.isSigned = siz.is_signed(0);
-
-    vector<Ipoint> downSamples;
-    downSamples.resize(frameInfo.componentCount);
-
-    for (size_t i = 0; i < frameInfo.componentCount; i++)
-    {
-        downSamples[i].x = siz.get_downsampling(i).x;
-        downSamples[i].y = siz.get_downsampling(i).y;
-    }
 
     Ipoint imageOffset;
     imageOffset.x = siz.get_image_offset().x;
@@ -218,20 +202,11 @@ void HTJpeg2000DecodeStream(Decoded_outdata *raw_outinfo, const unsigned char *s
     blockDimensions.width = cod.get_block_dims().w;
     blockDimensions.height = cod.get_block_dims().h;
 
-    vector<Isize> precincts;
-    precincts.resize(numDecompositions);
-    for (size_t i = 0; i < numDecompositions; i++)
-    {
-        precincts[i].width = cod.get_precinct_size(i).w;
-        precincts[i].height = cod.get_precinct_size(i).h;
-    }
-
     int numLayers_ = cod.get_num_layers();
     frameInfo.isUsingColorTransform = cod.is_using_color_transform();
 
     // calculate the resolution at the requested decomposition level and allocate destination buffer
     int decompositionLevel = 0;
-    // Isize sizeAtDecompositionLevel = calculateSizeAtDecompositionLevel(decompositionLevel, frameInfo);
     Isize sizeAtDecompositionLevel(frameInfo.width, frameInfo.height);
 
     const size_t bytesPerPixel = (frameInfo.bitsPerSample + 8 - 1) / 8;

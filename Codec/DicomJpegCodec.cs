@@ -1678,7 +1678,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         IByteBuffer buffer;
 
-                        if (MemoryBuffer.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                        if (MemoryBuffer.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                         {
                             buffer = new TempFileBuffer(MemoryBuffer.ToArray());
                             buffer = EvenLengthBuffer.Create(buffer);
@@ -2066,7 +2066,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                         IByteBuffer buffer;
 
-                        if (frameArray.Count >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                        if (frameArray.Count >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             buffer = new TempFileBuffer(frameArray.Data);
                         else
                             buffer = new MemoryByteBuffer(frameArray.Data);

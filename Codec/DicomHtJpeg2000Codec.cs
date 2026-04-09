@@ -12,14 +12,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
     public unsafe struct Raw_outdata
     {
         public unsafe byte* buffer;
-        public unsafe uint size_outbuffer;
+        public unsafe ulong size_outbuffer;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct Htj2k_outdata
     {
         public unsafe byte* buffer;
-        public unsafe uint size_outbuffer;
+        public unsafe ulong size_outbuffer;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -59,6 +59,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
         /// true if lossless, false is lossy
         /// </summary>
         [MarshalAs(UnmanagedType.I1)] public bool isReversible;
+    }
+
+    [Flags]
+    public enum EncodeStatus
+    {
+        Success = 1,
+        Failed = 0,
+        Unknown = -1
     }
 
     public class DicomHtJpeg2000Params : DicomCodecParams
@@ -102,7 +110,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
     {
         // Encode HTJ2K for win_x64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
-        public static extern unsafe void InvokeHTJ2KEncode_win(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
+        public static extern unsafe EncodeStatus InvokeHTJ2KEncode_win(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
         // Decode HTJ2K for win_x64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
@@ -110,7 +118,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         // Encode HTJ2k
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
-        public static extern unsafe void InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
+        public static extern unsafe EncodeStatus InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
         // Decode HTJ2k
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
@@ -187,10 +195,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 buffer = pjpegHT2KData
                             };
 
+                            EncodeStatus status = EncodeStatus.Unknown;
+
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+                                status = InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameData.Data.Length, ref frameinfo, progressionOrder);
                             else
-                                InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameArray.Count, ref frameinfo, progressionOrder);
+                                status = InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameData.Data.Length, ref frameinfo, progressionOrder);
+
+                            if (!status.Equals(EncodeStatus.Success))
+                            {
+                                throw new DicomCodecException("Error in HTJ2K encode stream => output buffer data has an incorrect size");
+                            }
 
                             pool.Resize(ref jpegHT2KData, (int)j2c_outinfo.size_outbuffer);
 
@@ -282,7 +297,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 pool.Resize(ref frameData, (int)raw_Outdata.size_outbuffer);
 
                                 IByteBuffer buffer;
-                                if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                     buffer = new TempFileBuffer(frameData);
                                 else
                                     buffer = new MemoryByteBuffer(frameData);

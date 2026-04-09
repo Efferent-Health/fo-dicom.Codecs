@@ -326,13 +326,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (frameArray != null)
                         {
                             frameArray.Dispose();
-                            frameArray = null;
                         }
 
                         if (jpeglsData != null)
                         {
                             pool.Return(jpeglsData);
-                            jpeglsData = null;
                         }
                     }
                 }
@@ -371,7 +369,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 PinnedByteArray jpeglsArray = new PinnedByteArray(jpegData.Data);
 
                 var pool = ArrayPool<byte>.Shared;
-                byte[] frameData = frameData = pool.Rent(newPixelData.UncompressedFrameSize);
+                byte[] frameData = pool.Rent(newPixelData.UncompressedFrameSize);
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
                 try
@@ -390,7 +388,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpeglsArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
 
                         IByteBuffer buffer;
-                        if (frameData.Length >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                        if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             buffer = new TempFileBuffer(frameData);
                         else
                             buffer = new MemoryByteBuffer(frameData);
@@ -414,19 +412,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (frameData != null)
                     {
                         pool.Return(frameData);
-                        frameData = null;
                     }
 
                     if (frameArray != null)
                     {
                         frameArray.Dispose();
-                        frameArray = null;
                     }
 
                     if (jpeglsArray != null)
                     {
                         jpeglsArray.Dispose();
-                        jpeglsArray = null;
                     }
                 }
             }

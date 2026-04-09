@@ -78,5 +78,12 @@ struct Frameinfo
     bool isReversible{true};
 };
 
-void HTJpeg2000EncodeStream(Htj2k_outdata* htj2k_outinfo, const unsigned char* source, size_t sourceLength, const struct Frameinfo* finfo, ojph::PROGRESSION_ORDER progression_order);
+enum EncodeStatus
+{
+    Success = 1,
+    Failed = 0,
+    Unknown = -1
+};
+
+EncodeStatus HTJpeg2000EncodeStream(Htj2k_outdata* htj2k_outinfo, const unsigned char* source, size_t sourceLength, const struct Frameinfo* finfo, ojph::PROGRESSION_ORDER progression_order);
 void HTJpeg2000DecodeStream(Decoded_outdata* raw_outinfo, const unsigned char* source, size_t sourceLength);

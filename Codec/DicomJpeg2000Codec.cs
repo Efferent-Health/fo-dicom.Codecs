@@ -7,8 +7,6 @@ using System.Linq;
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
@@ -902,7 +900,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     var cbuf1 = buf.Data.Take(clen).ToArray();
 
                                     IByteBuffer buffer;
-                                    if (clen >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                    if (clen >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                     {
                                         buffer = new TempFileBuffer(cbuf1);
                                         buffer = EvenLengthBuffer.Create(buffer);
@@ -1152,7 +1150,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
 
                             IByteBuffer buffer;
-                            if (destArray.Count >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            if (destArray.Count >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                 buffer = new TempFileBuffer(destArray.Data);
                             else
                                 buffer = new MemoryByteBuffer(destArray.Data);
