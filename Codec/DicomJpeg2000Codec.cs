@@ -2,11 +2,10 @@
 using System.Buffers;
 using System.Runtime.InteropServices;
 
-using System.Linq;
-
 using FellowOakDicom.Imaging.Codec;
 using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
+using CommunityToolkit.HighPerformance;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
@@ -867,54 +866,55 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 }
 
                                 var outlen = (uint)(0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
-                                var buf = new PinnedByteArray(new byte[outlen]);
+                                cbuf = pool.Rent((int)outlen);
 
-                                if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                fixed (byte * buf = cbuf)
                                 {
-                                    Opj_setup_encoder_win(codec, ref eparams, image);
-                                    c_stream = Opj_create_stream_win((byte*)buf.Pointer, (uint)buf.ByteSize, false);
-                                }
-                                else
-                                {
-                                    Opj_setup_encoder(codec, ref eparams, image);
-                                    c_stream = Opj_create_stream((byte*)buf.Pointer, (uint)buf.ByteSize, false);
-                                }
-
-                                var isEncodeSuccess = false;
-                                if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode_win(codec, c_stream, image));
-                                else
-                                    isEncodeSuccess = Convert.ToBoolean(Opj_encode(codec, c_stream, image));
-
-                                if (isEncodeSuccess)
-                                {
-                                    int clen = 0;
-
                                     if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                        clen = (int)Opj_stream_tell_win(c_stream);
-                                    else
-                                        clen = (int)Opj_stream_tell(c_stream);
-
-                                    //cbuf = pool.Rent(clen);
-                                    //Marshal.Copy(buf.Pointer, cbuf, 0, clen);
-                                    var cbuf1 = buf.Data.Take(clen).ToArray();
-
-                                    IByteBuffer buffer;
-                                    if (clen >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                     {
-                                        buffer = new TempFileBuffer(cbuf1);
-                                        buffer = EvenLengthBuffer.Create(buffer);
+                                        Opj_setup_encoder_win(codec, ref eparams, image);
+                                        c_stream = Opj_create_stream_win((byte*)buf, (uint)cbuf.Length, false);
                                     }
                                     else
-                                        buffer = new MemoryByteBuffer(cbuf1);
+                                    {
+                                        Opj_setup_encoder(codec, ref eparams, image);
+                                        c_stream = Opj_create_stream((byte*)buf, (uint)cbuf.Length, false);
+                                    }
 
-                                    if (oldPixelData.NumberOfFrames == 1)
-                                        buffer = EvenLengthBuffer.Create(buffer);
+                                    var isEncodeSuccess = false;
+                                    if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                        isEncodeSuccess = Convert.ToBoolean(Opj_encode_win(codec, c_stream, image));
+                                    else
+                                        isEncodeSuccess = Convert.ToBoolean(Opj_encode(codec, c_stream, image));
 
-                                    newPixelData.AddFrame(buffer);
+                                    if (isEncodeSuccess)
+                                    {
+                                        int clen = 0;
+
+                                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                            clen = (int)Opj_stream_tell_win(c_stream);
+                                        else
+                                            clen = (int)Opj_stream_tell(c_stream);
+
+                                        pool.Resize(ref cbuf, clen);
+
+                                        IByteBuffer buffer;
+                                        if (clen >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                        {
+                                            buffer = new TempFileBuffer(cbuf);
+                                            buffer = EvenLengthBuffer.Create(buffer);
+                                        }
+                                        else
+                                            buffer = new MemoryByteBuffer(cbuf);
+
+                                        if (oldPixelData.NumberOfFrames == 1)
+                                            buffer = EvenLengthBuffer.Create(buffer);
+
+                                        newPixelData.AddFrame(buffer);
+                                    }
+                                    else
+                                        throw new DicomCodecException("Unable to JPEG 2000 encode image");
                                 }
-                                else
-                                    throw new DicomCodecException("Unable to JPEG 2000 encode image");
                             }
                             catch (DicomCodecException e)
                             {
@@ -982,7 +982,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (cbuf != null)
                     {
                         pool.Return(cbuf);
-                        cbuf = null;
                     }
                 }
 
