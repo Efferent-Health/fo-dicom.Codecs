@@ -1136,11 +1136,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 }
                                 else if (oldPixelData.BytesAllocated == 2)
                                 {   
-                                    if (prec <= 8)
-                                    {
-                                        destArray = ExtractDataLineByLinefor8bit(destArray, pixelCount, comp, pos, offset);
-                                    }
-                                    else if (prec <= 16)
+                                    if (prec <= 16)
                                     {
                                         destArray = ExtractDataLineByLinefor16bit(destArray, pixelCount, comp, pos, offset);
                                     }
