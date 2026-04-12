@@ -35,6 +35,7 @@ The following CODECS are implemented:
 |1.2.840.10008.1.2.4.201|High-Throughput JPEG 2000 Image Compression (Lossless Only)|
 |1.2.840.10008.1.2.4.202|High-Throughput JPEG 2000 with RPCL Options Image Compression (Lossless Only)|
 |1.2.840.10008.1.2.4.203|High-Throughput JPEG 2000 Image Compression|
+|1.2.840.10008.1.2.4.110<br>1.2.840.10008.1.2.4.111<br>1.2.840.10008.1.2.4.112|⚠️ In development<br>JPEG XL Encoding| 
 
 The HT-JPEG2000 family of codecs is only supported since fo-dicom version 5.1.3
 
