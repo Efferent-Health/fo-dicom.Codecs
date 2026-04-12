@@ -89,3 +89,9 @@ Therefore, it requires a GLIBC library runtime version 2.27 and GLIBCXX version 
 Unhandled Exception: System.DllNotFoundException: Unable to load shared library 'Dicom.Native.so' or one of its dependencies.
 ````
 
+### Self-contained and single-file publishing
+
+Publishing as a self-contained app (`<SelfContained>true</SelfContained>`) or as a single file (`<PublishSingleFile>true</PublishSingleFile>`) is not directly supported. The native library (`Dicom.Native.dll` / `Dicom.Native.so` / `Dicom.Native.dylib`) will not be bundled automatically and must be deployed alongside the application.
+
+A solution has been provided at: https://github.com/Efferent-Health/fo-dicom.Codecs/issues/123 
+
