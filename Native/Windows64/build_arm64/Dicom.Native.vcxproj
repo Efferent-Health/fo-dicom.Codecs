@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM64">
@@ -62,7 +62,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHARLS_STATIC;OPJ_STATIC;WIN32;_DEBUG;OJPH_DISABLE_INTEL_SIMD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DisableSpecificWarnings>4691</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..\..\Common\libjpeg-turbo;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>Default</LanguageStandard_C>
       <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
@@ -81,7 +81,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <DisableSpecificWarnings>4691</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Common\OpenJPH\common\;..\..\Common\libjpeg-turbo;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -188,9 +188,412 @@
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp" />
     <ClCompile Include="..\..\Dicom.Imaging.Codec.HtJpeg2000.cpp" />
     <ClCompile Include="..\..\Dicom.Imaging.Codec.JpegLS.cpp" />
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_12.cpp" />
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_16.cpp" />
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_8.cpp" />
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg.cpp" />
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcapimin.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jchuff.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcicc.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcinit.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jclhuff.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcmarker.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcmaster.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcomapi.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcparam.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcphuff.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jctrans.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdapimin.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdatadst.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdatasrc.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdhuff.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdicc.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdinput.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdlhuff.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdmarker.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdmaster.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdphuff.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdtrans.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jerror.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jfdctflt.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jmemmgr.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jmemnobs.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jpeg_nbits.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jaricom.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jcarith.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\jdarith.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcapistd-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcapistd-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcapistd-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jccoefct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jccoefct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jccolor-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jccolor-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jccolor-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcdctmgr-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcdctmgr-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcdiffct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcdiffct-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcdiffct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jclossls-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jclossls-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jclossls-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcmainct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcmainct-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcmainct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcprepct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcprepct-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcprepct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcsample-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcsample-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jcsample-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdapistd-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdapistd-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdapistd-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdcoefct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdcoefct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdcolor-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdcolor-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdcolor-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jddctmgr-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jddctmgr-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jddiffct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jddiffct-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jddiffct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdlossls-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdlossls-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdlossls-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdmainct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdmainct-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdmainct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdmerge-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdmerge-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdpostct-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdpostct-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdpostct-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdsample-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdsample-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jdsample-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jfdctfst-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jfdctfst-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jfdctint-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jfdctint-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctflt-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctflt-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctfst-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctfst-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctint-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctint-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctred-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jidctred-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jquant1-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jquant1-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jquant2-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jquant2-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jutils-12.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jutils-16.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\libjpeg-turbo\wrapper\jutils-8.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
+    </ClCompile>
+
     <ClCompile Include="..\..\Common\CharLS\charls_jpegls_decoder.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
@@ -403,17 +806,6 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">false</CompileAsManaged>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="libijg12.arm64.vcxproj">
-      <Project>{1b3557d4-1146-428a-aec9-12cadf994527}</Project>
-    </ProjectReference>
-    <ProjectReference Include="libijg16.arm64.vcxproj">
-      <Project>{dd846d57-b93b-46c8-bfff-ae4c11e408b3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="libijg8.arm64.vcxproj">
-      <Project>{808528f3-15dc-4cc6-a15a-0f91cbdb54e6}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

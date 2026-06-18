@@ -1,0 +1,60 @@
+name: Validate Native (libjpeg-turbo migration, no signing/tests)
+
+on:
+  push:
+    branches:
+      - libjpeg-turbo-migration
+  workflow_dispatch:
+
+jobs:
+  win_x64:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - run: msbuild Native/Windows64/build_x64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
+
+  win_arm64:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - run: msbuild Native/Windows64/build_arm64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=ARM64
+
+  linux_x64:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd Native/POSIX64/
+          cmake ./CMakeLists.txt
+          make
+
+  linux_arm64:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          cd Native/POSIX64/
+          cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
+          make
+
+  osx_x64:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd Native/POSIX64/
+          cmake ./CMakeLists.txt
+          make
+
+  osx_arm64:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd Native/POSIX64/
+          cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
+          make

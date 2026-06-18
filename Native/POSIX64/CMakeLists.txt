@@ -56,9 +56,8 @@ SET(CROSSPLATFORM_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.JpegLS.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg2000.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.HtJpeg2000.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_8.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_12.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_16.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg.cpp
+
 )
 
 #CharLS Library
@@ -105,211 +104,111 @@ SET(CHARLS_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/util.h
 )
 
-#libijg8 library
-SET(LIBIJG8_SRCS
-#  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jaricom.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcapistd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jccoefct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jccolor.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcdctmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcdiffct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jchuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcinit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jclhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jclossls.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jclossy.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcmainct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcodec.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcomapi.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcparam.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcpred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcprepct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcsample.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcscale.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jcshuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jctrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdapistd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdatadst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdatasrc.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdcoefct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdcolor.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jddctmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jddiffct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdinput.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdlhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdlossls.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdlossy.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdmainct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdmerge.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdpostct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdpred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdsample.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdscale.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdshuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jdtrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jerror.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jfdctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jfdctfst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jfdctint.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jidctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jidctfst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jidctint.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jidctred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jmemmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jmemnobs.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jquant1.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jquant2.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg8/jutils.c
-)
-
-#libijg12 library
-SET(LIBIJG12_SRCS
-#  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jaricom.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcapistd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jccoefct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jccolor.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcdctmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcdiffct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jchuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcinit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jclhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jclossls.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jclossy.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcmainct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcodec.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcomapi.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcparam.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcpred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcprepct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcsample.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcscale.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jcshuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jctrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdapistd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdatadst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdatasrc.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdcoefct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdcolor.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jddctmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jddiffct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdinput.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdlhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdlossls.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdlossy.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdmainct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdmerge.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdpostct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdpred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdsample.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdscale.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdshuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jdtrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jerror.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jfdctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jfdctfst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jfdctint.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jidctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jidctfst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jidctint.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jidctred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jmemmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jmemnobs.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jquant1.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jquant2.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg12/jutils.c
-)
-
-#libijg12 library
-SET(LIBIJG16_SRCS
-#  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jaricom.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcapistd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jccoefct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jccolor.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcdctmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcdiffct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jchuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcinit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jclhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jclossls.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jclossy.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcmainct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcodec.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcomapi.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcparam.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcpred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcprepct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcsample.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcscale.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jcshuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jctrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdapistd.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdatadst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdatasrc.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdcoefct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdcolor.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jddctmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jddiffct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdinput.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdlhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdlossls.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdlossy.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdmainct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdmerge.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdpostct.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdpred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdsample.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdscale.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdshuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jdtrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jerror.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jfdctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jfdctfst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jfdctint.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jidctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jidctfst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jidctint.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jidctred.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jmemmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jmemnobs.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jquant1.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jquant2.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libijg16/jutils.c
-)
-
-#OpenJPEG Library
+#libjpeg-turbo library
+SET(TURBO_SRCS
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcapimin.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jchuff.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcicc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcinit.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jclhuff.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcmarker.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcmaster.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcomapi.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcparam.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcphuff.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jctrans.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdapimin.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatadst.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatasrc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdhuff.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdicc.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdinput.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdlhuff.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdmarker.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdmaster.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdphuff.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdtrans.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jerror.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jfdctflt.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jmemmgr.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jmemnobs.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jpeg_nbits.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jaricom.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcarith.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdarith.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccoefct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccoefct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdctmgr-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdctmgr-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcoefct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcoefct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddctmgr-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddctmgr-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmerge-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmerge-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctfst-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctfst-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctint-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctint-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctflt-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctflt-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctfst-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctfst-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctint-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctint-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctred-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctred-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant1-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant1-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant2-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant2-8.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-12.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-16.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-8.c
+)
+
 SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thread.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thread.h
@@ -364,6 +263,7 @@ SET(OPENJPEG_SRCS
 
 #OpenJPH Library
 include_directories(../Common/OpenJPH/common/)
+include_directories(../Common/libjpeg-turbo/)
 
 SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_bitbuffer_read.h
@@ -471,7 +371,7 @@ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transf
 
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${TURBO_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -480,7 +380,7 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${TURBO_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -491,7 +391,7 @@ if(UNIX AND NOT APPLE)
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${TURBO_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -500,7 +400,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${TURBO_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
