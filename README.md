@@ -72,6 +72,18 @@ As with any application, the temporary files won't be deleted in case of a crash
 
 ## Dependencies
 
+### Software Bill of Materials (SBOM)
+
+The native imaging codecs are provided by third-party C/C++ libraries that are
+*vendored* into this repository (their source lives under `Native/Common/` and
+is statically linked into the `Dicom.Native` binary). Because they are not
+NuGet packages, they are invisible to NuGet/Dependabot, so they are enumerated
+in an [SPDX 2.3](https://spdx.dev/) SBOM at
+[`fo-dicom.Codecs.spdx.json`](fo-dicom.Codecs.spdx.json) for supply-chain and
+license tracking. The vendored codecs are: libijg, OpenJPEG, CharLS, and
+OpenJPH. When a vendored codec is added, removed, or version-bumped, update the
+SBOM (and `LICENSE.txt`) to match.
+
 ### Windows
 It is required to have Visual C++ Redistributable v14 installed in the target Windows machine. Otherwise, it will throw a runtime error:
 
