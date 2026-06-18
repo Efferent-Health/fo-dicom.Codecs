@@ -124,6 +124,7 @@ extern "C"
         unsigned int rowStride,
         unsigned char **out_buffer,
         unsigned int *out_size,
+        int *out_jpegColorSpace,
         char *errorMessage,
         unsigned int errorMessageSize)
     {
@@ -185,6 +186,12 @@ extern "C"
         // Sampling factors.
         if (mode == DJ_MODE_LOSSLESS)
         {
+            // A lossless process must not apply a lossy RGB->YCbCr conversion.
+            // jpeg_set_defaults defaults RGB input to a YCbCr JPEG colorspace;
+            // force the JPEG colorspace back to the input colorspace so libjpeg
+            // does not error with JERR_CONVERSION_NOTIMPL (and so the stored
+            // samples are truly lossless).
+            jpeg_set_colorspace(&cinfo, cinfo.in_color_space);
             for (int i = 0; i < cinfo.num_components; i++)
             {
                 cinfo.comp_info[i].h_samp_factor = 1;
@@ -246,6 +253,10 @@ extern "C"
 
         jpeg_finish_compress(&cinfo);
 
+        // Report the JPEG colorspace actually selected so the managed layer can
+        // set the resulting photometric interpretation (e.g. RGB input encoded
+        // as YCbCr for a lossy process).
+        *out_jpegColorSpace = static_cast<int>(cinfo.jpeg_color_space);
         *out_buffer = encoded;
         *out_size = static_cast<unsigned int>(encodedSize);
 
