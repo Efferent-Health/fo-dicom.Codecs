@@ -112,7 +112,7 @@ void jpeg_stream_reader::decode(byte_span destination, size_t stride)
     const uint32_t width{rect_.Width != 0 ? static_cast<uint32_t>(rect_.Width) : frame_info_.width};
     const size_t components_in_plane_count{
         parameters_.interleave_mode == interleave_mode::none ? 1U : static_cast<size_t>(frame_info_.component_count)};
-    const size_t minimum_stride{components_in_plane_count * width * bit_to_byte_count(frame_info_.bits_per_sample)};
+    const size_t minimum_stride{checked_mul(components_in_plane_count * bit_to_byte_count(frame_info_.bits_per_sample), width)};
 
     if (stride == auto_calculate_stride)
     {
@@ -127,7 +127,7 @@ void jpeg_stream_reader::decode(byte_span destination, size_t stride)
     // Compute the layout of the destination buffer.
     const size_t bytes_per_plane{stride * rect_.Height};
     const size_t plane_count{parameters_.interleave_mode == interleave_mode::none ? frame_info_.component_count : 1U};
-    const size_t minimum_destination_size = bytes_per_plane * plane_count - (stride - minimum_stride);
+    const size_t minimum_destination_size = checked_mul(bytes_per_plane, plane_count) - (stride - minimum_stride);
     if (UNLIKELY(destination.size < minimum_destination_size))
         throw_jpegls_error(jpegls_errc::destination_buffer_too_small);
 
@@ -142,7 +142,8 @@ void jpeg_stream_reader::decode(byte_span destination, size_t stride)
         const unique_ptr<decoder_strategy> codec{jls_codec_factory<decoder_strategy>().create_codec(
             frame_info_, parameters_, get_validated_preset_coding_parameters())};
         unique_ptr<process_line> process_line(codec->create_process_line(destination, stride));
-        const size_t bytes_read{codec->decode_scan(std::move(process_line), rect_, const_byte_span{position_, end_position_})};
+        const size_t bytes_read{
+            codec->decode_scan(std::move(process_line), rect_, const_byte_span{position_, end_position_})};
         advance_position(bytes_read);
         state_ = state::scan_section;
     }
@@ -153,8 +154,14 @@ void jpeg_stream_reader::read_end_of_image()
 {
     ASSERT(state_ == state::scan_section);
 
-    const jpeg_marker_code marker_code{read_next_marker_code()};
-    if (UNLIKELY(marker_code != jpeg_marker_code::end_of_image))
+    auto start_byte{read_byte_checked()};
+
+    // Some legacy JPEG encoders write a padding zero byte after the pixel data, which is not compliant but supported.
+    if (UNLIKELY(start_byte == 0))
+    {
+        start_byte = read_byte_checked();
+    }
+    if (UNLIKELY(start_byte != jpeg_marker_start_byte || read_marker_code() != jpeg_marker_code::end_of_image))
         throw_jpegls_error(jpegls_errc::end_of_image_marker_not_found);
 
 #ifndef NDEBUG
@@ -181,17 +188,25 @@ void jpeg_stream_reader::read_next_start_of_scan()
 
 USE_DECL_ANNOTATIONS jpeg_marker_code jpeg_stream_reader::read_next_marker_code()
 {
-    auto byte{read_byte_checked()};
+    const auto byte{read_byte_checked()};
     if (UNLIKELY(byte != jpeg_marker_start_byte))
         throw_jpegls_error(jpegls_errc::jpeg_marker_start_byte_not_found);
 
-    // Read all preceding 0xFF fill values until a non 0xFF value has been found. (see ISO/IEC 10918-1, B.1.1.2)
-    do
-    {
-        byte = read_byte_checked();
-    } while (byte == jpeg_marker_start_byte);
+    return read_marker_code();
+}
 
-    return static_cast<jpeg_marker_code>(byte);
+
+USE_DECL_ANNOTATIONS jpeg_marker_code jpeg_stream_reader::read_marker_code()
+{
+    auto marker_code{read_byte_checked()};
+
+    // Read all preceding 0xFF fill values until a non 0xFF value has been found. (see ISO/IEC 10918-1, B.1.1.2)
+    while (marker_code == jpeg_marker_start_byte)
+    {
+        marker_code = read_byte_checked();
+    }
+
+    return static_cast<jpeg_marker_code>(marker_code);
 }
 
 
@@ -781,10 +796,10 @@ void jpeg_stream_reader::skip_remaining_segment_data() noexcept
 
 void jpeg_stream_reader::check_frame_info() const
 {
-    if (UNLIKELY(frame_info_.height < 1))
-        throw_jpegls_error(jpegls_errc::parameter_value_not_supported);
+    if (UNLIKELY(frame_info_.height < 1 || frame_info_.height > maximum_height))
+        throw_jpegls_error(jpegls_errc::invalid_parameter_height);
 
-    if (UNLIKELY(frame_info_.width < 1))
+    if (UNLIKELY(frame_info_.width < 1 || frame_info_.width > maximum_width))
         throw_jpegls_error(jpegls_errc::invalid_parameter_width);
 }
 
