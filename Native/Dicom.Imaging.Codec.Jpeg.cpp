@@ -20,6 +20,9 @@
 
 extern "C"
 {
+// jpeglib.h references FILE (jpeg_stdio_src/dest) and therefore requires
+// <stdio.h> to have been included beforehand.
+#include <stdio.h>
 #include "./Common/libjpeg-turbo/jpeglib.h"
 #include "./Common/libjpeg-turbo/jerror.h"
 }
