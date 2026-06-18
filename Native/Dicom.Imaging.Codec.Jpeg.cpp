@@ -353,9 +353,10 @@ extern "C"
         const size_t frameSize = rowSize * dinfo.output_height;
 
         // Guard against a crafted codestream whose decoded frame size exceeds
-        // what the managed layer can represent / allocate (Int32). Computed with
-        // size_t (64-bit on all targets) from the codestream's own dimensions and
-        // precision, so it cannot silently wrap. (ADO 194230 heap-write overflow.)
+        // what the caller can represent / allocate (Int32). Computed with size_t
+        // (64-bit on all targets) from the codestream's own dimensions and data
+        // precision, so it cannot silently wrap and produce an undersized buffer
+        // that jpeg_read_scanlines would then overrun.
         if (frameSize > 0x7FFFFFFFu)
         {
             if (errorMessage != nullptr && errorMessageSize > 0)
