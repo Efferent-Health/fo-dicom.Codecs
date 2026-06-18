@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/component-detection-manifest.json",
+  "version": 1,
+  "registrations": [
+    {
+      "component": {
+        "type": "other",
+        "other": {
+          "name": "libijg",
+          "version": "6b",
+          "downloadUrl": "https://www.ijg.org/files/jpegsrc.v6b.tar.gz"
+        }
+      },
+      "developmentDependency": false
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/uclouvain/openjpeg",
+          "commitHash": "v2.5.4"
+        }
+      },
+      "developmentDependency": false
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/team-charls/charls",
+          "commitHash": "2.4.2"
+        }
+      },
+      "developmentDependency": false
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/aous72/OpenJPH",
+          "commitHash": "0.21.2"
+        }
+      },
+      "developmentDependency": false
+    }
+  ]
+}
