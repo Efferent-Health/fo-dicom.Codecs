@@ -44,22 +44,21 @@
 #include "ojph_colour.h"
 #include "ojph_colour_local.h"
 
-namespace ojph
-{
-  namespace local
-  {
+namespace ojph {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
-    static inline v128_t ojph_convert_float_to_i32(v128_t a, v128_t zero, v128_t half)
+    static inline
+    v128_t ojph_convert_float_to_i32(v128_t a, v128_t zero, v128_t half)
     { // We implement ojph_round, which is
       // val + (val >= 0.0f ? 0.5f : -0.5f), where val is float
-      v128_t c = wasm_f32x4_ge(a, zero);    // greater or equal to zero
-      v128_t p = wasm_f32x4_add(a, half);   // for positive, add half
-      v128_t n = wasm_f32x4_sub(a, half);   // for negative, subtract half
-      v128_t d = wasm_v128_and(c, p);       // keep positive only
-      v128_t e = wasm_v128_andnot(n, c);    // keep negative only
-      v128_t v = wasm_v128_or(d, e);        // combine
-      return wasm_i32x4_trunc_sat_f32x4(v); // truncate (towards 0)
+      v128_t c = wasm_f32x4_ge(a, zero);   // greater or equal to zero
+      v128_t p = wasm_f32x4_add(a, half);  // for positive, add half
+      v128_t n = wasm_f32x4_sub(a, half);  // for negative, subtract half
+      v128_t d = wasm_v128_and(c, p);      // keep positive only
+      v128_t e = wasm_v128_andnot(n, c);   // keep negative only
+      v128_t v = wasm_v128_or(d, e);       // combine
+      return wasm_i32x4_trunc_sat_f32x4(v);// truncate (towards 0)
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -76,7 +75,7 @@ namespace ojph
           const si32 *sp = src_line->i32 + src_line_offset;
           si32 *dp = dst_line->i32 + dst_line_offset;
           v128_t sh = wasm_i32x4_splat((si32)shift);
-          for (int i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+          for (int i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
           {
             v128_t s = wasm_v128_load(sp);
             s = wasm_i32x4_add(s, sh);
@@ -88,7 +87,7 @@ namespace ojph
           const si32 *sp = src_line->i32 + src_line_offset;
           si64 *dp = dst_line->i64 + dst_line_offset;
           v128_t sh = wasm_i64x2_splat(shift);
-          for (int i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+          for (int i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
           {
             v128_t s, t;
             s = wasm_v128_load(sp);
@@ -110,7 +109,7 @@ namespace ojph
         const si64 *sp = src_line->i64 + src_line_offset;
         si32 *dp = dst_line->i32 + dst_line_offset;
         v128_t sh = wasm_i64x2_splat(shift);
-        for (int i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+        for (int i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
         {
           v128_t s0, s1;
           s0 = wasm_v128_load(sp);
@@ -194,17 +193,17 @@ namespace ojph
           // m for mask, and tm for temp
           v128_t s, t0, t1, p, n, m, tm;
           s = wasm_v128_load(sp);
-          m = wasm_i64x2_lt(s, zero); // 64b -1 for -ve value
-          tm = wasm_i64x2_sub(sh, s); // - shift - value
-          n = wasm_v128_and(m, tm);   // -ve
-          p = wasm_v128_andnot(s, m); // +ve
+          m = wasm_i64x2_lt(s, zero);   // 64b -1 for -ve value
+          tm = wasm_i64x2_sub(sh, s);   // - shift - value
+          n = wasm_v128_and(m, tm);     // -ve
+          p = wasm_v128_andnot(s, m);   // +ve
           t0 = wasm_v128_or(n, p);
 
           s = wasm_v128_load(sp + 2);
-          m = wasm_i64x2_lt(s, zero); // 64b -1 for -ve value
-          tm = wasm_i64x2_sub(sh, s); // - shift - value
-          n = wasm_v128_and(m, tm);   // -ve
-          p = wasm_v128_andnot(s, m); // +ve
+          m = wasm_i64x2_lt(s, zero);   // 64b -1 for -ve value
+          tm = wasm_i64x2_sub(sh, s);   // - shift - value
+          n = wasm_v128_and(m, tm);     // -ve
+          p = wasm_v128_andnot(s, m);   // +ve
           t1 = wasm_v128_or(n, p);
 
           t0 = wasm_i32x4_shuffle(t0, t1, 0, 2, 4 + 0, 4 + 2);
@@ -219,7 +218,7 @@ namespace ojph
     {
       v128_t shift = wasm_f32x4_splat(0.5f);
       v128_t m = wasm_f32x4_splat(mul);
-      for (ui32 i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+      for (ui32 i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
       {
         v128_t t = wasm_v128_load(sp);
         v128_t s = wasm_f32x4_convert_i32x4(t);
@@ -234,7 +233,7 @@ namespace ojph
                                   ui32 width)
     {
       v128_t m = wasm_f32x4_splat(mul);
-      for (ui32 i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+      for (ui32 i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
       {
         v128_t t = wasm_v128_load(sp);
         v128_t s = wasm_f32x4_convert_i32x4(t);
@@ -250,7 +249,7 @@ namespace ojph
       const v128_t zero = wasm_f32x4_splat(0.0f);
       const v128_t half = wasm_f32x4_splat(0.5f);
       v128_t m = wasm_f32x4_splat(mul);
-      for (int i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+      for (int i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
       {
         v128_t t = wasm_v128_load(sp);
         v128_t s = wasm_f32x4_add(t, half);
@@ -267,7 +266,7 @@ namespace ojph
       const v128_t zero = wasm_f32x4_splat(0.0f);
       const v128_t half = wasm_f32x4_splat(0.5f);
       v128_t m = wasm_f32x4_splat(mul);
-      for (int i = (width + 3) >> 2; i > 0; --i, sp += 4, dp += 4)
+      for (int i = (width + 3) >> 2; i > 0; --i, sp+=4, dp+=4)
       {
         v128_t t = wasm_v128_load(sp);
         v128_t s = wasm_f32x4_mul(t, m);
@@ -277,7 +276,8 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline v128_t ojph_wasm_i32x4_max_ge(v128_t a, v128_t b, v128_t x, v128_t y)
+    static inline
+    v128_t ojph_wasm_i32x4_max_ge(v128_t a, v128_t b, v128_t x, v128_t y)
     {
       v128_t c = wasm_f32x4_ge(x, y);    // 0xFFFFFFFF for x >= y
       v128_t d = wasm_v128_and(c, a);    // keep only a, where x >= y
@@ -286,7 +286,8 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline v128_t ojph_wasm_i32x4_min_lt(v128_t a, v128_t b, v128_t x, v128_t y)
+    static inline
+    v128_t ojph_wasm_i32x4_min_lt(v128_t a, v128_t b, v128_t x, v128_t y)
     {
       v128_t c = wasm_f32x4_lt(x, y);    // 0xFFFFFFFF for x < y
       v128_t d = wasm_v128_and(c, a);    // keep only a, where x <  y
@@ -296,9 +297,10 @@ namespace ojph
 
     //////////////////////////////////////////////////////////////////////////
     template <bool NLT_TYPE3>
-    static inline void local_wasm_irv_convert_to_integer(const line_buf *src_line,
-                                                         line_buf *dst_line, ui32 dst_line_offset,
-                                                         ui32 bit_depth, bool is_signed, ui32 width)
+    static inline
+    void local_wasm_irv_convert_to_integer(const line_buf *src_line,
+      line_buf *dst_line, ui32 dst_line_offset,
+      ui32 bit_depth, bool is_signed, ui32 width)
     {
       assert((src_line->flags & line_buf::LFT_32BIT) &&
              (src_line->flags & line_buf::LFT_INTEGER) == 0 &&
@@ -306,8 +308,8 @@ namespace ojph
              (dst_line->flags & line_buf::LFT_INTEGER));
 
       assert(bit_depth <= 32);
-      const float *sp = src_line->f32;
-      si32 *dp = dst_line->i32 + dst_line_offset;
+      const float* sp = src_line->f32;
+      si32* dp = dst_line->i32 + dst_line_offset;
       // There is the possibility that converting to integer will
       // exceed the dynamic range of 32bit integer; therefore, care must be
       // exercised.
@@ -326,8 +328,7 @@ namespace ojph
         const v128_t zero = wasm_f32x4_splat(0.0f);
         const v128_t half = wasm_f32x4_splat(0.5f);
         v128_t bias = wasm_i32x4_splat(-(si32)((1ULL << (bit_depth - 1)) + 1));
-        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4)
-        {
+        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4) {
           v128_t t = wasm_v128_load(sp);
           t = wasm_f32x4_mul(t, mul);
           v128_t u = ojph_convert_float_to_i32(t, zero, half);
@@ -349,8 +350,7 @@ namespace ojph
         const v128_t zero = wasm_f32x4_splat(0.0f);
         const v128_t half = wasm_f32x4_splat(0.5f);
         v128_t ihalf = wasm_i32x4_splat((si32)(1ULL << (bit_depth - 1)));
-        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4)
-        {
+        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4) {
           v128_t t = wasm_v128_load(sp);
           t = wasm_f32x4_mul(t, mul);
           v128_t u = ojph_convert_float_to_i32(t, zero, half);
@@ -364,27 +364,28 @@ namespace ojph
 
     //////////////////////////////////////////////////////////////////////////
     void wasm_irv_convert_to_integer(const line_buf *src_line,
-                                     line_buf *dst_line, ui32 dst_line_offset,
-                                     ui32 bit_depth, bool is_signed, ui32 width)
+      line_buf *dst_line, ui32 dst_line_offset,
+      ui32 bit_depth, bool is_signed, ui32 width)
     {
-      local_wasm_irv_convert_to_integer<false>(src_line, dst_line,
-                                               dst_line_offset, bit_depth, is_signed, width);
+      local_wasm_irv_convert_to_integer<false>(src_line, dst_line, 
+        dst_line_offset, bit_depth, is_signed, width);
     }
 
     //////////////////////////////////////////////////////////////////////////
     void wasm_irv_convert_to_integer_nlt_type3(const line_buf *src_line,
-                                               line_buf *dst_line, ui32 dst_line_offset,
-                                               ui32 bit_depth, bool is_signed, ui32 width)
+      line_buf *dst_line, ui32 dst_line_offset,
+      ui32 bit_depth, bool is_signed, ui32 width)
     {
-      local_wasm_irv_convert_to_integer<true>(src_line, dst_line,
-                                              dst_line_offset, bit_depth, is_signed, width);
+      local_wasm_irv_convert_to_integer<true>(src_line, dst_line, 
+        dst_line_offset, bit_depth, is_signed, width);
     }
 
     //////////////////////////////////////////////////////////////////////////
     template <bool NLT_TYPE3>
-    static inline void local_wasm_irv_convert_to_float(const line_buf *src_line,
-                                                       ui32 src_line_offset, line_buf *dst_line,
-                                                       ui32 bit_depth, bool is_signed, ui32 width)
+    static inline
+    void local_wasm_irv_convert_to_float(const line_buf *src_line,
+      ui32 src_line_offset, line_buf *dst_line,
+      ui32 bit_depth, bool is_signed, ui32 width)
     {
       assert((src_line->flags & line_buf::LFT_32BIT) &&
              (src_line->flags & line_buf::LFT_INTEGER) &&
@@ -394,14 +395,13 @@ namespace ojph
       assert(bit_depth <= 32);
       v128_t mul = wasm_f32x4_splat((float)(1.0 / (double)(1ULL << bit_depth)));
 
-      const si32 *sp = src_line->i32 + src_line_offset;
-      float *dp = dst_line->f32;
+      const si32* sp = src_line->i32 + src_line_offset;
+      float* dp = dst_line->f32;
       if (is_signed)
       {
         v128_t zero = wasm_i32x4_splat(0);
         v128_t bias = wasm_i32x4_splat(-(si32)((1ULL << (bit_depth - 1)) + 1));
-        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4)
-        {
+        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4) {
           v128_t t = wasm_v128_load(sp);
           if (NLT_TYPE3)
           {
@@ -419,8 +419,7 @@ namespace ojph
       else
       {
         v128_t half = wasm_i32x4_splat((si32)(1ULL << (bit_depth - 1)));
-        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4)
-        {
+        for (int i = (int)width; i > 0; i -= 4, sp += 4, dp += 4) {
           v128_t t = wasm_v128_load(sp);
           t = wasm_i32x4_sub(t, half);
           v128_t v = wasm_f32x4_convert_i32x4(t);
@@ -432,20 +431,20 @@ namespace ojph
 
     //////////////////////////////////////////////////////////////////////////
     void wasm_irv_convert_to_float(const line_buf *src_line,
-                                   ui32 src_line_offset, line_buf *dst_line,
-                                   ui32 bit_depth, bool is_signed, ui32 width)
+      ui32 src_line_offset, line_buf *dst_line,
+      ui32 bit_depth, bool is_signed, ui32 width)
     {
       local_wasm_irv_convert_to_float<false>(src_line, src_line_offset,
-                                             dst_line, bit_depth, is_signed, width);
+        dst_line, bit_depth, is_signed, width);
     }
 
     //////////////////////////////////////////////////////////////////////////
     void wasm_irv_convert_to_float_nlt_type3(const line_buf *src_line,
-                                             ui32 src_line_offset, line_buf *dst_line,
-                                             ui32 bit_depth, bool is_signed, ui32 width)
+      ui32 src_line_offset, line_buf *dst_line,
+      ui32 bit_depth, bool is_signed, ui32 width)
     {
       local_wasm_irv_convert_to_float<true>(src_line, src_line_offset,
-                                            dst_line, bit_depth, is_signed, width);
+        dst_line, bit_depth, is_signed, width);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -455,23 +454,23 @@ namespace ojph
                           line_buf *y, line_buf *cb, line_buf *cr,
                           ui32 repeat)
     {
-      assert((y->flags & line_buf::LFT_INTEGER) &&
+      assert((y->flags  & line_buf::LFT_INTEGER) &&
              (cb->flags & line_buf::LFT_INTEGER) &&
              (cr->flags & line_buf::LFT_INTEGER) &&
-             (r->flags & line_buf::LFT_INTEGER) &&
-             (g->flags & line_buf::LFT_INTEGER) &&
-             (b->flags & line_buf::LFT_INTEGER));
+             (r->flags  & line_buf::LFT_INTEGER) &&
+             (g->flags  & line_buf::LFT_INTEGER) &&
+             (b->flags  & line_buf::LFT_INTEGER));
 
-      if (y->flags & line_buf::LFT_32BIT)
+      if  (y->flags & line_buf::LFT_32BIT)
       {
-        assert((y->flags & line_buf::LFT_32BIT) &&
+        assert((y->flags  & line_buf::LFT_32BIT) &&
                (cb->flags & line_buf::LFT_32BIT) &&
                (cr->flags & line_buf::LFT_32BIT) &&
-               (r->flags & line_buf::LFT_32BIT) &&
-               (g->flags & line_buf::LFT_32BIT) &&
-               (b->flags & line_buf::LFT_32BIT));
-        const si32 *rp = r->i32, *gp = g->i32, *bp = b->i32;
-        si32 *yp = y->i32, *cbp = cb->i32, *crp = cr->i32;
+               (r->flags  & line_buf::LFT_32BIT) &&
+               (g->flags  & line_buf::LFT_32BIT) &&
+               (b->flags  & line_buf::LFT_32BIT));
+        const si32 *rp = r->i32, * gp = g->i32, * bp = b->i32;
+        si32 *yp = y->i32, * cbp = cb->i32, * crp = cr->i32;
 
         for (int i = (repeat + 3) >> 2; i > 0; --i)
         {
@@ -486,22 +485,18 @@ namespace ojph
           t = wasm_i32x4_sub(mr, mg);
           wasm_v128_store(crp, t);
 
-          rp += 4;
-          gp += 4;
-          bp += 4;
-          yp += 4;
-          cbp += 4;
-          crp += 4;
+            rp += 4; gp += 4; bp += 4;
+            yp += 4; cbp += 4; crp += 4;
         }
       }
       else
       {
-        assert((y->flags & line_buf::LFT_64BIT) &&
+        assert((y->flags  & line_buf::LFT_64BIT) &&
                (cb->flags & line_buf::LFT_64BIT) &&
                (cr->flags & line_buf::LFT_64BIT) &&
-               (r->flags & line_buf::LFT_32BIT) &&
-               (g->flags & line_buf::LFT_32BIT) &&
-               (b->flags & line_buf::LFT_32BIT));
+               (r->flags  & line_buf::LFT_32BIT) &&
+               (g->flags  & line_buf::LFT_32BIT) &&
+               (b->flags  & line_buf::LFT_32BIT));
         const si32 *rp = r->i32, *gp = g->i32, *bp = b->i32;
         si64 *yp = y->i64, *cbp = cb->i64, *crp = cr->i64;
         for (int i = (repeat + 3) >> 2; i > 0; --i)
@@ -522,9 +517,7 @@ namespace ojph
           t = wasm_i64x2_sub(mr, mg);
           wasm_v128_store(crp, t);
 
-          yp += 2;
-          cbp += 2;
-          crp += 2;
+          yp += 2; cbp += 2; crp += 2;
 
           mr = wasm_i64x2_extend_high_i32x4(mr32);
           mg = wasm_i64x2_extend_high_i32x4(mg32);
@@ -538,12 +531,8 @@ namespace ojph
           t = wasm_i64x2_sub(mr, mg);
           wasm_v128_store(crp, t);
 
-          rp += 4;
-          gp += 4;
-          bp += 4;
-          yp += 2;
-          cbp += 2;
-          crp += 2;
+          rp += 4; gp += 4; bp += 4;
+          yp += 2; cbp += 2; crp += 2;
         }
       }
     }
@@ -555,26 +544,26 @@ namespace ojph
                            line_buf *r, line_buf *g, line_buf *b,
                            ui32 repeat)
     {
-      assert((y->flags & line_buf::LFT_INTEGER) &&
+      assert((y->flags  & line_buf::LFT_INTEGER) &&
              (cb->flags & line_buf::LFT_INTEGER) &&
              (cr->flags & line_buf::LFT_INTEGER) &&
-             (r->flags & line_buf::LFT_INTEGER) &&
-             (g->flags & line_buf::LFT_INTEGER) &&
-             (b->flags & line_buf::LFT_INTEGER));
+             (r->flags  & line_buf::LFT_INTEGER) &&
+             (g->flags  & line_buf::LFT_INTEGER) &&
+             (b->flags  & line_buf::LFT_INTEGER));
 
       if (y->flags & line_buf::LFT_32BIT)
       {
-        assert((y->flags & line_buf::LFT_32BIT) &&
+        assert((y->flags  & line_buf::LFT_32BIT) &&
                (cb->flags & line_buf::LFT_32BIT) &&
                (cr->flags & line_buf::LFT_32BIT) &&
-               (r->flags & line_buf::LFT_32BIT) &&
-               (g->flags & line_buf::LFT_32BIT) &&
-               (b->flags & line_buf::LFT_32BIT));
+               (r->flags  & line_buf::LFT_32BIT) &&
+               (g->flags  & line_buf::LFT_32BIT) &&
+               (b->flags  & line_buf::LFT_32BIT));
         const si32 *yp = y->i32, *cbp = cb->i32, *crp = cr->i32;
         si32 *rp = r->i32, *gp = g->i32, *bp = b->i32;
         for (int i = (repeat + 3) >> 2; i > 0; --i)
         {
-          v128_t my = wasm_v128_load(yp);
+          v128_t my  = wasm_v128_load(yp);
           v128_t mcb = wasm_v128_load(cbp);
           v128_t mcr = wasm_v128_load(crp);
 
@@ -586,28 +575,24 @@ namespace ojph
           u = wasm_i32x4_add(mcr, t);
           wasm_v128_store(rp, u);
 
-          yp += 4;
-          cbp += 4;
-          crp += 4;
-          rp += 4;
-          gp += 4;
-          bp += 4;
+          yp += 4; cbp += 4; crp += 4;
+          rp += 4; gp += 4; bp += 4;
         }
       }
       else
       {
-        assert((y->flags & line_buf::LFT_64BIT) &&
+        assert((y->flags  & line_buf::LFT_64BIT) &&
                (cb->flags & line_buf::LFT_64BIT) &&
                (cr->flags & line_buf::LFT_64BIT) &&
-               (r->flags & line_buf::LFT_32BIT) &&
-               (g->flags & line_buf::LFT_32BIT) &&
-               (b->flags & line_buf::LFT_32BIT));
+               (r->flags  & line_buf::LFT_32BIT) &&
+               (g->flags  & line_buf::LFT_32BIT) &&
+               (b->flags  & line_buf::LFT_32BIT));
         const si64 *yp = y->i64, *cbp = cb->i64, *crp = cr->i64;
         si32 *rp = r->i32, *gp = g->i32, *bp = b->i32;
         for (int i = (repeat + 3) >> 2; i > 0; --i)
         {
           v128_t my, mcb, mcr, tr0, tg0, tb0, tr1, tg1, tb1;
-          my = wasm_v128_load(yp);
+          my  = wasm_v128_load(yp);
           mcb = wasm_v128_load(cbp);
           mcr = wasm_v128_load(crp);
 
@@ -616,11 +601,9 @@ namespace ojph
           tb0 = wasm_i64x2_add(mcb, tg0);
           tr0 = wasm_i64x2_add(mcr, tg0);
 
-          yp += 2;
-          cbp += 2;
-          crp += 2;
+          yp += 2; cbp += 2; crp += 2;
 
-          my = wasm_v128_load(yp);
+          my  = wasm_v128_load(yp);
           mcb = wasm_v128_load(cbp);
           mcr = wasm_v128_load(crp);
 
@@ -637,12 +620,8 @@ namespace ojph
           wasm_v128_store(gp, tg0);
           wasm_v128_store(bp, tb0);
 
-          yp += 2;
-          cbp += 2;
-          crp += 2;
-          rp += 4;
-          gp += 4;
-          bp += 4;
+          yp += 2; cbp += 2; crp += 2;
+          rp += 4; gp += 4; bp += 4;
         }
       }
     }
@@ -667,12 +646,8 @@ namespace ojph
         wasm_v128_store(cb, wasm_f32x4_mul(beta_cbf, wasm_f32x4_sub(mb, my)));
         wasm_v128_store(cr, wasm_f32x4_mul(beta_crf, wasm_f32x4_sub(mr, my)));
 
-        r += 4;
-        g += 4;
-        b += 4;
-        y += 4;
-        cb += 4;
-        cr += 4;
+        r += 4; g += 4; b += 4;
+        y += 4; cb += 4; cr += 4;
       }
     }
 
@@ -694,12 +669,8 @@ namespace ojph
         wasm_v128_store(r, wasm_f32x4_add(my, wasm_f32x4_mul(gamma_cr2r, mcr)));
         wasm_v128_store(b, wasm_f32x4_add(my, wasm_f32x4_mul(gamma_cb2b, mcb)));
 
-        y += 4;
-        cb += 4;
-        cr += 4;
-        r += 4;
-        g += 4;
-        b += 4;
+        y += 4; cb += 4; cr += 4;
+        r += 4; g += 4; b += 4;
       }
     }
 

@@ -35,6 +35,7 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #ifndef OJPH_CODESTREAM_H
 #define OJPH_CODESTREAM_H
 
@@ -43,18 +44,16 @@
 #include "ojph_arch.h"
 #include "ojph_defs.h"
 
-namespace ojph
-{
+namespace ojph {
 
   ////////////////////////////////////////////////////////////////////////////
-  // local prototyping
-  namespace local
-  {
+  //local prototyping
+  namespace local {
     class codestream;
   };
 
   ////////////////////////////////////////////////////////////////////////////
-  // defined elsewhere
+  //defined elsewhere
   class param_siz;
   class param_cod;
   class param_qcd;
@@ -92,18 +91,35 @@ namespace ojph
     /**
      *  @brief default constructor
      *
-     *  This object instantiate the actual implementation object
+     *  This function instantiate the actual implementation object
      *  local::codestream, using new.
      *
      */
     codestream();
+
     /**
      *  @brief default destructor
      *
-     *  This object destroys the internal local::codestream object.
+     *  This function destroys the internal local::codestream object.
      *
      */
     ~codestream();
+
+    /**
+     *  @brief Restarts the codestream.
+     *
+     *  This function restarts the codestream; after this call, the
+     *  codestream object behaves like it has never been used before,
+     *  except that all memory allocations are preserved.  Thus, after
+     *  restart(), there is no need to allocate memory, unless the new
+     *  codestream needs more storage to store codeblocks, or has a
+     *  different structure.
+     *
+     *  restart() is useful if we are decoding multiple codestreams that
+     *  have largely the same structure and byte length.
+     *
+     */
+    void restart();
 
     /**
      *  @brief Sets the sequence of pushing or pull rows from the machinery.
@@ -132,7 +148,7 @@ namespace ojph
      *           OJPH_PN_STRING_XXXX, where only IMF and BROADCAST
      *           are currently supported.
      */
-    void set_profile(const char *s);
+    void set_profile(const char* s);
 
     /**
      *  @brief Sets the locations where a tile is partitioned into tile parts.
@@ -211,7 +227,7 @@ namespace ojph
      *
      */
     void write_headers(outfile_base *file,
-                       const comment_exchange *comments = NULL,
+                       const comment_exchange* comments = NULL,
                        ui32 num_comments = 0);
 
     /**
@@ -236,7 +252,7 @@ namespace ojph
      *                    exchange again to pass this line.
      */
 
-    line_buf *exchange(line_buf *line, ui32 &next_component);
+    line_buf* exchange(line_buf* line, ui32& next_component);
 
     /**
      * @brief This is the last call to a writing (encoding) codestream.
@@ -254,7 +270,7 @@ namespace ojph
      *        should be called before all other calls, before
      *        codestream::read_headers().
      */
-    void enable_resilience(); // before read_headers
+    void enable_resilience();             // before read_headers
 
     /**
      * @brief This call reads the headers of a codestream.  It is for a
@@ -287,7 +303,7 @@ namespace ojph
      *                              make sense otherwise.
      */
     void restrict_input_resolution(ui32 skipped_res_for_data,
-                                   ui32 skipped_res_for_recon); // before create
+                                   ui32 skipped_res_for_recon); //before create
 
     /**
      * @brief This call is for a decoding (or reading) codestream.  Call this
@@ -307,7 +323,7 @@ namespace ojph
      * @return line_buf* this object holds one row of the component indexed
      *                   by comp_num.
      */
-    line_buf *pull(ui32 &comp_num);
+    line_buf* pull(ui32 &comp_num);
 
     /**
      * @brief Call this function to close the underlying file; works for both
@@ -363,7 +379,7 @@ namespace ojph
     bool is_planar() const;
 
   private:
-    local::codestream *state;
+    local::codestream* state;
   };
 
 }

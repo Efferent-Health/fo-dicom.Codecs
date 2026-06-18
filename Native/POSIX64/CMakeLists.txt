@@ -413,6 +413,7 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_arch.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_file.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_mem.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_mem_c.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_message.cpp
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transform/ojph_colour.h

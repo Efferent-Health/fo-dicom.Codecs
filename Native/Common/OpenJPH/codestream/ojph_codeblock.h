@@ -1,5 +1,4 @@
 
-
 //***************************************************************************/
 // This software is released under the 2-Clause BSD license, included
 // below.
@@ -37,6 +36,7 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #ifndef OJPH_CODEBLOCK_H
 #define OJPH_CODEBLOCK_H
 
@@ -44,21 +44,19 @@
 #include "ojph_file.h"
 #include "ojph_codeblock_fun.h"
 
-namespace ojph
-{
+namespace ojph {
 
   ////////////////////////////////////////////////////////////////////////////
-  // defined elsewhere
+  //defined elsewhere
   class line_buf;
   class mem_elastic_allocator;
   class codestream;
   struct coded_lists;
 
-  namespace local
-  {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
-    // defined here
+    //defined here
     struct precinct;
     class subband;
     struct coded_cb_header;
@@ -67,38 +65,36 @@ namespace ojph
     class codeblock
     {
       friend struct precinct;
-      enum : ui32
-      {
+      enum : ui32 {
         BUF32 = 4,
         BUF64 = 8,
       };
 
     public:
-      static void pre_alloc(codestream *codestream, const size &nominal,
+      static void pre_alloc(codestream *codestream, const size& nominal,
                             ui32 precision);
-      void finalize_alloc(codestream *codestream, subband *parent,
-                          const size &nominal, const size &cb_size,
-                          coded_cb_header *coded_cb, ui32 K_max,
+      void finalize_alloc(codestream *codestream, subband* parent,
+                          const size& nominal, const size& cb_size,
+                          coded_cb_header* coded_cb, ui32 K_max,
                           int tbx0, ui32 precision, ui32 comp_idx);
       void push(line_buf *line);
       void encode(mem_elastic_allocator *elastic);
-      void recreate(const size &cb_size, coded_cb_header *coded_cb);
+      void recreate(const size& cb_size, coded_cb_header* coded_cb);
 
       void decode();
       void pull_line(line_buf *line);
 
     private:
       ui32 precision;
-      union
-      {
-        ui32 *buf32;
-        ui64 *buf64;
+      union {
+        ui32* buf32;
+        ui64* buf64;
       };
       size nominal_size;
       size cb_size;
       ui32 stride;
       ui32 buf_size;
-      subband *parent;
+      subband* parent;
       int line_offset;
       ui32 cur_line;
       float delta, delta_inv;
@@ -107,12 +103,11 @@ namespace ojph
       bool resilient;
       bool stripe_causal;
       bool zero_block; // true when the decoded block is all zero
-      union
-      {
+      union {
         ui32 max_val32[8]; // supports up to 256 bits
         ui64 max_val64[4]; // supports up to 256 bits
       };
-      coded_cb_header *coded_cb;
+      coded_cb_header* coded_cb;
       codeblock_fun codeblock_functions;
     };
 
@@ -120,7 +115,7 @@ namespace ojph
     struct coded_cb_header
     {
       ui32 pass_length[2];
-      ui32 num_passes;
+      ui32 num_passes;       // number of passes to be decoded
       ui32 Kmax;
       ui32 missing_msbs;
       coded_lists *next_coded;
