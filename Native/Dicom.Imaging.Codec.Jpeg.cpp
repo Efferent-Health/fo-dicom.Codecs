@@ -264,6 +264,7 @@ extern "C"
         const unsigned char *jpegData,
         unsigned int jpegSize,
         int convertColorSpaceToRGB,
+        int isSigned,
         unsigned char **out_pixels,
         unsigned int *out_size,
         unsigned int *out_width,
@@ -301,14 +302,34 @@ extern "C"
 
         jpeg_read_header(&dinfo, TRUE);
 
-        if (convertColorSpaceToRGB &&
-            (dinfo.jpeg_color_space == JCS_YCbCr || dinfo.jpeg_color_space == JCS_RGB))
+        const bool willConvert = convertColorSpaceToRGB &&
+            (dinfo.jpeg_color_space == JCS_YCbCr || dinfo.jpeg_color_space == JCS_RGB);
+
+        if (willConvert)
         {
+            // Reject colorspace conversion of signed pixel data (matches the
+            // managed contract; signed YCbCr/RGB conversion is not defined).
+            if (isSigned)
+            {
+                if (errorMessage != nullptr && errorMessageSize > 0)
+                {
+                    std::strncpy(errorMessage,
+                        "JPEG codec unable to perform colorspace conversion on signed pixel data",
+                        errorMessageSize - 1);
+                    errorMessage[errorMessageSize - 1] = '\0';
+                }
+                jpeg_destroy_decompress(&dinfo);
+                return 5;
+            }
             dinfo.out_color_space = JCS_RGB;
         }
         else
         {
-            // Pass component data through unchanged (no color conversion).
+            // Pass component data through unchanged. libjpeg's deconverter only
+            // permits a null conversion when out_color_space == jpeg_color_space,
+            // so both must be set to JCS_UNKNOWN (otherwise grayscale and other
+            // non-converted images error with JERR_CONVERSION_NOTIMPL).
+            dinfo.jpeg_color_space = JCS_UNKNOWN;
             dinfo.out_color_space = JCS_UNKNOWN;
         }
 
@@ -319,6 +340,23 @@ extern "C"
         const int bytesPerSample = (precision + 7) / 8;
         const size_t rowSize = (size_t)dinfo.output_width * dinfo.output_components * bytesPerSample;
         const size_t frameSize = rowSize * dinfo.output_height;
+
+        // Guard against a crafted codestream whose decoded frame size exceeds
+        // what the managed layer can represent / allocate (Int32). Computed with
+        // size_t (64-bit on all targets) from the codestream's own dimensions and
+        // precision, so it cannot silently wrap. (ADO 194230 heap-write overflow.)
+        if (frameSize > 0x7FFFFFFFu)
+        {
+            if (errorMessage != nullptr && errorMessageSize > 0)
+            {
+                std::strncpy(errorMessage,
+                    "Decoded JPEG frame size exceeds the supported maximum",
+                    errorMessageSize - 1);
+                errorMessage[errorMessageSize - 1] = '\0';
+            }
+            jpeg_destroy_decompress(&dinfo);
+            return 4;
+        }
 
         pixels = static_cast<unsigned char *>(malloc(frameSize));
         if (pixels == nullptr)
