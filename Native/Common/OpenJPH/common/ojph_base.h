@@ -35,20 +35,20 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #ifndef OJPH_BASE_H
 #define OJPH_BASE_H
 
 #include "ojph_defs.h"
 
-namespace ojph
-{
+namespace ojph {
 
   /////////////////////////////////////////////////////////////////////////////
   struct size
   {
     explicit size(ui32 w = 0, ui32 h = 0) : w(w), h(h) {}
-    ui32 w; // width
-    ui32 h; // height
+    ui32 w; //width
+    ui32 h; //height
 
     ui64 area() const { return (ui64)w * (ui64)h; }
   };
@@ -65,7 +65,17 @@ namespace ojph
   {
     point org;
     size siz;
+
+    bool operator==(const rect& a) const {
+      return a.org.x == org.x && a.org.y == org.y
+        && a.siz.w == siz.w && a.siz.h == siz.h;
+    }
+
+    bool operator!=(const rect& a) const
+    { return !(a == *this); }
   };
+
+  /////////////////////////////////////////////////////////////////////////////
 
 }
 
