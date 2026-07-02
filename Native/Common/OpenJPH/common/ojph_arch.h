@@ -2,21 +2,22 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman 
+// Copyright (c) 2019, Aous Naman
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-// 
+// Copyright (c) 2026, Osamu Watanabe
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -63,11 +64,22 @@
 #include <intrin.h>
 #endif
 
+  /////////////////////////////////////////////////////////////////////////////
+  // portable force-inline / no-inline function qualifiers
+  /////////////////////////////////////////////////////////////////////////////
+#ifdef OJPH_COMPILER_MSVC
+  #define OJPH_FORCE_INLINE static __forceinline
+  #define OJPH_NO_INLINE    static __declspec(noinline)
+#else
+  #define OJPH_FORCE_INLINE static inline __attribute__((always_inline))
+  #define OJPH_NO_INLINE    static __attribute__((noinline))
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // preprocessor directives for architecture
 ///////////////////////////////////////////////////////////////////////////////
 #if defined(__arm__) || defined(__TARGET_ARCH_ARM)  \
-  || defined(__aarch64__) || defined(_M_ARM64)
+  || defined(__aarch64__) || defined(_M_ARM64) || defined(_M_ARM64EC)
   #define OJPH_ARCH_ARM
 #elif defined(__i386) || defined(__i386__) || defined(_M_IX86)
   #define OJPH_ARCH_I386
@@ -84,7 +96,7 @@
   #else
     #define OJPH_ARCH_PPC
   #endif
-#else  
+#else
   #define OJPH_ARCH_UNKNOWN
 #endif
 
@@ -108,6 +120,10 @@ namespace ojph {
 #define OJPH_OS_ANDROID
 #elif (defined __linux)
 #define OJPH_OS_LINUX
+#elif (defined __FreeBSD__)
+#define OJPH_OS_FREEBSD
+#elif (defined __OpenBSD__)
+#define OJPH_OS_OPENBSD
 #endif
 
   /////////////////////////////////////////////////////////////////////////////
@@ -188,19 +204,21 @@ namespace ojph {
   #endif
   }
 
-  /////////////////////////////////////////////////////////////////////////////  
+  /////////////////////////////////////////////////////////////////////////////
 #ifdef OJPH_COMPILER_MSVC
-  #if (defined OJPH_ARCH_X86_64)
+  #if (defined OJPH_ARCH_X86_64 || defined OJPH_ARCH_ARM)
     #pragma intrinsic(_BitScanReverse64)
   #elif (defined OJPH_ARCH_I386)
     #pragma intrinsic(_BitScanReverse)
+  #else
+    #error Error unsupport MSVC version
   #endif
 #endif
   static inline ui32 count_leading_zeros(ui64 val)
   {
   #ifdef OJPH_COMPILER_MSVC
     unsigned long result = 0;
-    #ifdef OJPH_ARCH_X86_64
+    #if (defined OJPH_ARCH_X86_64) || (defined OJPH_ARCH_ARM)
       _BitScanReverse64(&result, val);
     #elif (defined OJPH_ARCH_I386)
       ui32 msb = (ui32)(val >> 32), lsb = (ui32)val;
@@ -210,6 +228,8 @@ namespace ojph {
         _BitScanReverse(&result, msb);
         result += 32;
       }
+    #else
+      #error Error unsupport MSVC version
     #endif
     return 63 ^ (ui32)result;
   #elif (defined OJPH_COMPILER_GNUC)
@@ -223,7 +243,7 @@ namespace ojph {
     val |= (val >> 32);
     return 64 - population_count64(val);
   #endif
-  }  
+  }
 
   /////////////////////////////////////////////////////////////////////////////
 #ifdef OJPH_COMPILER_MSVC
@@ -244,6 +264,35 @@ namespace ojph {
     val |= (val << 8);
     val |= (val << 16);
     return 32 - population_count(val);
+  #endif
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+#ifdef OJPH_COMPILER_MSVC
+  #pragma intrinsic(_BitScanForward64)
+#endif
+  static inline ui32 count_trailing_zeros(ui64 val)
+  {
+  #ifdef OJPH_COMPILER_MSVC
+    unsigned long result = 0;
+    #if (defined OJPH_ARCH_X86_64) || (defined OJPH_ARCH_ARM)
+      _BitScanForward64(&result, val);
+    #elif (defined OJPH_ARCH_I386)
+      ui32 lsb = (ui32)val, msb = (ui32)(val >> 32);
+      if (lsb != 0)
+        _BitScanForward(&result, lsb);
+      else {
+        _BitScanForward(&result, msb);
+        result += 32;
+      }
+    #endif
+    return (ui32)result;
+  #elif (defined OJPH_COMPILER_GNUC)
+    return (ui32)__builtin_ctzll(val);
+  #else
+    if ((ui32)val != 0)
+      return count_trailing_zeros((ui32)val);
+    return 32 + count_trailing_zeros((ui32)(val >> 32));
   #endif
   }
 
@@ -308,6 +357,118 @@ namespace ojph {
     return reinterpret_cast<T *>(p);
   }
 
+  ////////////////////////////////////////////////////////////////////////////
+  // Determine the byte order of the target at compile time when possible,
+  // so that the compiler can remove the branches for the other byte order.
+  // __BYTE_ORDER__ is a predefined macro that describes the target
+  // architecture, not the machine running the compiler, so it is also
+  // correct when cross-compiling.
+  // All MSVC targets (x86, x64, ARM64 Windows) are little endian.
+#if defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+  constexpr bool is_machine_little_endian = false;
+#elif defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+  constexpr bool is_machine_little_endian = true;
+#elif defined(OJPH_COMPILER_MSVC)
+  constexpr bool is_machine_little_endian = true;
+#else
+  // fallback in case macro __BYTE_ORDER__ is not defined
+  // If the first byte in memory is 0x01, the machine is Little Endian.
+  // If the first byte in memory is 0x00, the machine is Big Endian.
+  static bool check_if_machine_is_little_endian()
+  {
+    const uint16_t n = 0x0001;
+    bool is_machine_little_endian = (*((uint8_t *)&n) == 0x01);
+    return is_machine_little_endian;
+  }
+  const bool is_machine_little_endian = check_if_machine_is_little_endian();
+#endif
+
+  ////////////////////////////////////////////////////////////////////////////
+  // swap bytes 1 2 --> 2 1 on big-endian machines
+  static inline ui16 swap_bytes_if_be(ui16 t)
+  {
+    if (is_machine_little_endian)
+      return t;
+    else
+      return (ui16)((t << 8) | (t >> 8));
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  // swap bytes 1 2 --> 2 1 on little-endian machines
+  static inline ui16 swap_bytes_if_le(ui16 t)
+  {
+    if (is_machine_little_endian)
+      return (ui16)((t << 8) | (t >> 8));
+    else
+      return t;
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  // swap bytes 1 2 3 4 --> 4 3 2 1 on big-endian machines
+  static inline ui32 swap_bytes_if_be(ui32 t)
+  {
+    if (is_machine_little_endian)
+      return t;
+    else
+    {
+      ui32 u = swap_bytes_if_be((ui16)(t & 0xFFFFu));
+      u <<= 16;
+      u |= swap_bytes_if_be((ui16)(t >> 16));
+      return u;
+    }
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  // swap bytes 1 2 3 4 --> 4 3 2 1 on little-endian machines
+  static inline ui32 swap_bytes_if_le(ui32 t)
+  {
+    if (is_machine_little_endian)
+    {
+      ui32 u = swap_bytes_if_le((ui16)(t & 0xFFFFu));
+      u <<= 16;
+      u |= swap_bytes_if_le((ui16)(t >> 16));
+      return u;
+    }
+    else
+      return t;
+  }
+  ////////////////////////////////////////////////////////////////////////////
+  // swap bytes 1 2 3 4 5 6 7 8 --> 8 7 6 5 4 3 2 1 on little-endian machines
+  static inline ui64 swap_bytes_if_le(ui64 t)
+  {
+    if (is_machine_little_endian)
+    {
+      ui64 u =
+        swap_bytes_if_le((ui32)(t & 0xFFFFFFFFu));
+      u <<= 32;
+      u |= swap_bytes_if_le((ui32)(t >> 32));
+      return u;
+    }
+    else
+      return t;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  // loads 4 bytes from p as a little-endian 32-bit integer; that is, the
+  // byte at the lowest address goes into the least-significant byte of the
+  // result, irrespective of the machine's endianness
+  static inline ui32 load_le_ui32(const ui8 *p)
+  {
+    if (is_machine_little_endian)
+      return *(const ui32 *)p;
+    else
+      return (ui32)p[0] | ((ui32)p[1] << 8)
+        | ((ui32)p[2] << 16) | ((ui32)p[3] << 24);
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  // loads two consecutive ui16 values from p, placing the one at the lower
+  // address in the least-significant 16 bits of the result, irrespective
+  // of the machine's endianness
+  static inline ui32 load_le_ui16x2(const ui16 *p)
+  {
+    if (is_machine_little_endian)
+      return *(const ui32 *)p;
+    else
+      return (ui32)p[0] | ((ui32)p[1] << 16);
+  }
 }
 
 #endif // !OJPH_ARCH_H

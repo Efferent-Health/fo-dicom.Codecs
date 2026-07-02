@@ -35,6 +35,7 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #include <climits>
 #include <cmath>
 
@@ -43,8 +44,7 @@
 #include "ojph_codestream.h"
 #include "ojph_codestream_local.h"
 
-namespace ojph
-{
+namespace ojph {
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -59,12 +59,20 @@ namespace ojph
   {
     if (state)
       delete state;
+    state = NULL;
   }
 
   ////////////////////////////////////////////////////////////////////////////
   codestream::codestream()
   {
     state = new local::codestream;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  void codestream::restart()
+  {
+    assert(state != NULL);
+    state->restart();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -149,7 +157,7 @@ namespace ojph
 
   ////////////////////////////////////////////////////////////////////////////
   void codestream::write_headers(outfile_base *file,
-                                 const comment_exchange *comments,
+                                 const comment_exchange* comments,
                                  ui32 num_comments)
   {
     state->write_headers(file, comments, num_comments);
@@ -172,7 +180,7 @@ namespace ojph
                                              ui32 skipped_res_for_recon)
   {
     state->restrict_input_resolution(skipped_res_for_read,
-                                     skipped_res_for_recon);
+      skipped_res_for_recon);
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -182,10 +190,11 @@ namespace ojph
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  line_buf *codestream::pull(ui32 &comp_num)
+  line_buf* codestream::pull(ui32 &comp_num)
   {
     return state->pull(comp_num);
   }
+
 
   ////////////////////////////////////////////////////////////////////////////
   void codestream::flush()
@@ -200,8 +209,9 @@ namespace ojph
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  line_buf *codestream::exchange(line_buf *line, ui32 &next_component)
+  line_buf* codestream::exchange(line_buf* line, ui32& next_component)
   {
     return state->exchange(line, next_component);
   }
+
 }

@@ -35,11 +35,11 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #include <new>
 #include "ojph_mem.h"
 
-namespace ojph
-{
+namespace ojph {
 
   ////////////////////////////////////////////////////////////////////////////
   //
@@ -50,7 +50,7 @@ namespace ojph
   ////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////
-  template <>
+  template<>
   void line_buf::wrap(si32 *buffer, size_t num_ele, ui32 pre_size)
   {
     this->i32 = buffer;
@@ -60,7 +60,7 @@ namespace ojph
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  template <>
+  template<>
   void line_buf::wrap(float *buffer, size_t num_ele, ui32 pre_size)
   {
     this->f32 = buffer;
@@ -70,7 +70,7 @@ namespace ojph
   }
 
   ////////////////////////////////////////////////////////////////////////////
-  template <>
+  template<>
   void line_buf::wrap(si64 *buffer, size_t num_ele, ui32 pre_size)
   {
     this->i64 = buffer;
@@ -88,27 +88,39 @@ namespace ojph
   ////////////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////
-  void mem_elastic_allocator::get_buffer(ui32 needed_bytes, coded_lists *&p)
+  mem_elastic_allocator::stores_list*
+  mem_elastic_allocator::allocate(mem_elastic_allocator::stores_list** list,
+                                  ui32 extended_bytes)
   {
-    ui32 extended_bytes = needed_bytes + (ui32)sizeof(coded_lists);
+    ui32 bytes = ojph_max(extended_bytes, chunk_size);
+    if (avail != NULL && avail->orig_size >= bytes)
+    {
+      *list = avail;
+      avail = avail->next_store;
+      (*list)->restart();
+      return *list;
+    }
+    else
+    {
+      ui32 store_bytes = stores_list::eval_store_bytes(bytes);
+      *list = (stores_list*) malloc(store_bytes);
+      total_allocated += store_bytes;
+      return new (*list) stores_list(bytes);
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  void mem_elastic_allocator::get_buffer(ui32 needed_bytes, coded_lists* &p)
+  {
+    // Round up so each coded_lists (and coded_lists::buf) stays 16-byte aligned
+    // within the store; avoids alignment fault on 32-bit architectures
+    ui32 raw = needed_bytes + (ui32)sizeof (coded_lists);
+    ui32 extended_bytes = (raw + 15u) & ~15u;
 
     if (store == NULL)
-    {
-      ui32 bytes = ojph_max(extended_bytes, chunk_size);
-      ui32 store_bytes = stores_list::eval_store_bytes(bytes);
-      store = (stores_list *)malloc(store_bytes);
-      cur_store = store = new (store) stores_list(bytes);
-      total_allocated += store_bytes;
-    }
-
-    if (cur_store->available < extended_bytes)
-    {
-      ui32 bytes = ojph_max(extended_bytes, chunk_size);
-      ui32 store_bytes = stores_list::eval_store_bytes(bytes);
-      cur_store->next_store = (stores_list *)malloc(store_bytes);
-      cur_store = new (cur_store->next_store) stores_list(bytes);
-      total_allocated += store_bytes;
-    }
+      cur_store = store = allocate(&store, extended_bytes);
+    else if (cur_store->available < extended_bytes)
+      cur_store = allocate(&cur_store->next_store, extended_bytes);
 
     p = new (cur_store->data) coded_lists(needed_bytes);
 
@@ -116,4 +128,16 @@ namespace ojph
     cur_store->available -= extended_bytes;
     cur_store->data += extended_bytes;
   }
+
+  ////////////////////////////////////////////////////////////////////////////
+  void mem_elastic_allocator::restart()
+  {
+    // move to the end of avail
+    stores_list** p = &avail;
+    while (*p != NULL)
+      p = &((*p)->next_store);
+    *p = store;
+    cur_store = store = NULL;
+  }
+
 }

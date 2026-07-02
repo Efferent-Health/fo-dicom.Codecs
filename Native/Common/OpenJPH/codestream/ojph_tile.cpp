@@ -35,6 +35,7 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #include <climits>
 #include <cmath>
 
@@ -46,43 +47,41 @@
 
 #include "../transform/ojph_colour.h"
 
-namespace ojph
-{
+namespace ojph {
 
   namespace local
   {
 
     //////////////////////////////////////////////////////////////////////////
-    void tile::pre_alloc(codestream *codestream, const rect &tile_rect,
-                         const rect &recon_tile_rect, ui32 &num_tileparts)
+    void tile::pre_alloc(codestream *codestream, const rect& tile_rect,
+                         const rect& recon_tile_rect, ui32& num_tileparts)
     {
-      mem_fixed_allocator *allocator = codestream->get_allocator();
+      mem_fixed_allocator* allocator = codestream->get_allocator();
 
-      // allocate tiles_comp
+      //allocate tiles_comp
       const param_siz *szp = codestream->get_siz();
       ui32 num_comps = szp->get_num_components();
       allocator->pre_alloc_obj<tile_comp>(num_comps);
-      allocator->pre_alloc_obj<rect>(num_comps); // for comp_rects
-      allocator->pre_alloc_obj<rect>(num_comps); // for recon_comp_rects
-      allocator->pre_alloc_obj<ui32>(num_comps); // for line_offsets
-      allocator->pre_alloc_obj<ui32>(num_comps); // for num_bits
-      allocator->pre_alloc_obj<bool>(num_comps); // for is_signed
-      allocator->pre_alloc_obj<bool>(num_comps); // for reversible
-      allocator->pre_alloc_obj<ui8>(num_comps);  // for nlt_type3
-      allocator->pre_alloc_obj<ui32>(num_comps); // for cur_line
+      allocator->pre_alloc_obj<rect>(num_comps); //for comp_rects
+      allocator->pre_alloc_obj<rect>(num_comps); //for recon_comp_rects
+      allocator->pre_alloc_obj<ui32>(num_comps); //for line_offsets
+      allocator->pre_alloc_obj<ui32>(num_comps); //for num_bits
+      allocator->pre_alloc_obj<bool>(num_comps); //for is_signed
+      allocator->pre_alloc_obj<bool>(num_comps); //for reversible
+      allocator->pre_alloc_obj<ui8>(num_comps);  //for nlt_type3
+      allocator->pre_alloc_obj<ui32>(num_comps); //for cur_line
 
       {
         ui32 tilepart_div = codestream->get_tilepart_div();
         ui32 t = tilepart_div & OJPH_TILEPART_MASK;
         if (t == OJPH_TILEPART_NO_DIVISIONS)
-          num_tileparts = 1; // for num_rc_bytes
+          num_tileparts = 1; //for num_rc_bytes
         else if (t == OJPH_TILEPART_COMPONENTS)
           num_tileparts = num_comps;
         else if (t == OJPH_TILEPART_RESOLUTIONS)
         {
           ui32 max_decs = 0;
-          for (ui32 c = 0; c < num_comps; ++c)
-          {
+          for (ui32 c = 0; c < num_comps; ++c) {
             ui32 s = codestream->get_coc(c)->get_num_decompositions();
             max_decs = ojph_max(max_decs, s);
           }
@@ -91,16 +90,14 @@ namespace ojph
         else if (t == (OJPH_TILEPART_COMPONENTS | OJPH_TILEPART_RESOLUTIONS))
         {
           num_tileparts = 0;
-          for (ui32 c = 0; c < num_comps; ++c)
-          {
+          for (ui32 c = 0; c < num_comps; ++c) {
             ui32 s = codestream->get_coc(c)->get_num_decompositions();
             num_tileparts += s + 1;
           }
         }
         if (num_tileparts > 255)
           OJPH_ERROR(0x000300D1, "Trying to create %d tileparts; a tile "
-                                 "cannot have more than 255 tile parts.",
-                     num_tileparts);
+            "cannot have more than 255 tile parts.", num_tileparts);
       }
 
       ui32 tx0 = tile_rect.org.x;
@@ -113,6 +110,7 @@ namespace ojph
       ui32 recon_ty1 = recon_tile_rect.org.y + recon_tile_rect.siz.h;
 
       ui32 width = 0;
+      rect colour_comp_rect[3];
       for (ui32 i = 0; i < num_comps; ++i)
       {
         point downsamp = szp->get_downsampling(i);
@@ -132,6 +130,9 @@ namespace ojph
         comp_rect.siz.w = tcx1 - tcx0;
         comp_rect.siz.h = tcy1 - tcy0;
 
+        if (i < 3)
+          colour_comp_rect[i] = comp_rect;
+
         rect recon_comp_rect;
         recon_comp_rect.org.x = recon_tcx0;
         recon_comp_rect.org.y = recon_tcy0;
@@ -142,23 +143,38 @@ namespace ojph
         width = ojph_max(width, recon_comp_rect.siz.w);
       }
 
-      // allocate lines
-      const param_cod *cdp = codestream->get_cod();
+      //allocate lines
+      const param_cod* cdp = codestream->get_cod();
       if (cdp->is_employing_color_transform())
       {
         bool reversible[3];
         for (ui32 i = 0; i < 3; ++i)
           reversible[i] = codestream->get_coc(i)->is_reversible();
         if (reversible[0] != reversible[1] || reversible[1] != reversible[2])
-          OJPH_ERROR(0x000300A2, "When the colour transform is employed. "
-                                 "all colour components must undergo either reversible or "
-                                 "irreversible wavelet transform; if not, then it is not clear "
-                                 "what colour transform should be used (reversible or "
-                                 "irreversible).  Here we found that the first three colour "
-                                 "components uses %s, %s, and %s transforms, respectively.",
-                     reversible[0] ? "reversible" : "irreversible",
-                     reversible[1] ? "reversible" : "irreversible",
-                     reversible[2] ? "reversible" : "irreversible");
+          OJPH_ERROR(0x000300A2, "When the colour transform is employed, "
+            "all colour components must undergo either reversible or "
+            "irreversible wavelet transform; if not, then it is not clear "
+            "what colour transform should be used (reversible or "
+            "irreversible).  Here we found that the first three colour "
+            "components uses %s, %s, and %s transforms, respectively.",
+            reversible[0] ? "reversible" : "irreversible",
+            reversible[1] ? "reversible" : "irreversible",
+            reversible[2] ? "reversible" : "irreversible");
+
+        if (colour_comp_rect[0] != colour_comp_rect[1] ||
+          colour_comp_rect[1] != colour_comp_rect[2])
+          OJPH_ERROR(0x000300A3, "When the colour transform is employed, "
+            "the first three colour components must have the same rectangle; "
+            "i.e., the same origin on the canvas and the same width and "
+            "height. The first three components have the following "
+            "origin-size (x,y)-(w,h) values. Component 0 (%d,%d)-(%d,%d), "
+            "Component 1 (%d,%d)-(%d,%d), Component 2 (%d,%d)-(%d,%d)",
+            colour_comp_rect[0].org.x, colour_comp_rect[0].org.y,
+            colour_comp_rect[0].siz.w, colour_comp_rect[0].siz.h,
+            colour_comp_rect[1].org.x, colour_comp_rect[1].org.y,
+            colour_comp_rect[1].siz.w, colour_comp_rect[1].siz.h,
+            colour_comp_rect[2].org.x, colour_comp_rect[2].org.y,
+            colour_comp_rect[2].siz.w, colour_comp_rect[2].siz.h);
 
         allocator->pre_alloc_obj<line_buf>(3);
         if (reversible[0])
@@ -171,17 +187,17 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void tile::finalize_alloc(codestream *codestream, const rect &tile_rect,
-                              ui32 tile_idx, ui32 &offset,
+    void tile::finalize_alloc(codestream *codestream, const rect& tile_rect,
+                              ui32 tile_idx, ui32& offset,
                               ui32 &num_tileparts)
     {
-      // this->parent = codestream;
-      mem_fixed_allocator *allocator = codestream->get_allocator();
+      //this->parent = codestream;
+      mem_fixed_allocator* allocator = codestream->get_allocator();
 
       sot.init(0, (ui16)tile_idx, 0, 1);
       prog_order = codestream->access_cod().get_progression_order();
 
-      // allocate tiles_comp
+      //allocate tiles_comp
       const param_siz *szp = codestream->get_siz();
       const param_nlt *nlp = codestream->get_nlt();
 
@@ -205,14 +221,13 @@ namespace ojph
         ui32 tilepart_div = codestream->get_tilepart_div();
         ui32 t = tilepart_div & OJPH_TILEPART_MASK;
         if (t == OJPH_TILEPART_NO_DIVISIONS)
-          num_tileparts = 1; // for num_rc_bytes
+          num_tileparts = 1; //for num_rc_bytes
         else if (t == OJPH_TILEPART_COMPONENTS)
           num_tileparts = num_comps;
         else if (t == OJPH_TILEPART_RESOLUTIONS)
         {
           ui32 max_decs = 0;
-          for (ui32 c = 0; c < num_comps; ++c)
-          {
+          for (ui32 c = 0; c < num_comps; ++c) {
             ui32 s = codestream->get_coc(c)->get_num_decompositions();
             max_decs = ojph_max(max_decs, s);
           }
@@ -221,16 +236,14 @@ namespace ojph
         else if (t == (OJPH_TILEPART_COMPONENTS | OJPH_TILEPART_RESOLUTIONS))
         {
           num_tileparts = 0;
-          for (ui32 c = 0; c < num_comps; ++c)
-          {
+          for (ui32 c = 0; c < num_comps; ++c) {
             ui32 s = codestream->get_coc(c)->get_num_decompositions();
             num_tileparts += s + 1;
           }
         }
         if (num_tileparts > 255)
           OJPH_ERROR(0x000300D1, "Trying to create %d tileparts; a tile "
-                                 "cannot have more than 255 tile parts.",
-                     num_tileparts);
+          "cannot have more than 255 tile parts.", num_tileparts);
       }
 
       this->resilient = codestream->is_resilient();
@@ -244,8 +257,7 @@ namespace ojph
       ui32 width = 0;
       for (ui32 i = 0; i < num_comps; ++i)
       {
-        ui8 bd;
-        bool is; // used for nlt_type3
+        ui8 bd; bool is; // used for nlt_type3
 
         point downsamp = szp->get_downsampling(i);
         point recon_downsamp = szp->get_recon_downsampling(i);
@@ -260,7 +272,7 @@ namespace ojph
         ui32 recon_tcy1 = ojph_div_ceil(ty1, recon_downsamp.y);
 
         line_offsets[i] =
-            recon_tcx0 - ojph_div_ceil(tx0 - offset, recon_downsamp.x);
+          recon_tcx0 - ojph_div_ceil(tx0 - offset, recon_downsamp.x);
         comp_rects[i].org.x = tcx0;
         comp_rects[i].org.y = tcy0;
         comp_rects[i].siz.w = tcx1 - tcx0;
@@ -271,7 +283,7 @@ namespace ojph
         recon_comp_rects[i].siz.h = recon_tcy1 - recon_tcy0;
 
         comps[i].finalize_alloc(codestream, this, i, comp_rects[i],
-                                recon_comp_rects[i]);
+          recon_comp_rects[i]);
         width = ojph_max(width, recon_comp_rects[i].siz.w);
 
         num_bits[i] = szp->get_bit_depth(i);
@@ -279,19 +291,20 @@ namespace ojph
         bool result = nlp->get_nonlinear_transform(i, bd, is, nlt_type3[i]);
         if (result == true && (bd != num_bits[i] || is != is_signed[i]))
           OJPH_ERROR(0x000300A1, "Mismatch between Ssiz (bit_depth = %d, "
-                                 "is_signed = %s) from SIZ marker segment, and BDnlt "
-                                 "(bit_depth = %d, is_signed = %s) from NLT marker segment, "
-                                 "for component %d",
-                     i, num_bits[i],
-                     is_signed[i] ? "True" : "False", bd, is ? "True" : "False");
+            "is_signed = %s) from SIZ marker segment, and BDnlt "
+            "(bit_depth = %d, is_signed = %s) from NLT marker segment, "
+            "for component %d", num_bits[i],
+            is_signed[i] ? "True" : "False", bd, is ? "True" : "False", i);
+        if (result == false)
+          nlt_type3[i] = param_nlt::nonlinearity::OJPH_NLT_NO_NLT;
         cur_line[i] = 0;
         reversible[i] = codestream->get_coc(i)->is_reversible();
       }
 
       offset += tile_rect.siz.w;
 
-      // allocate lines
-      const param_cod *cdp = codestream->get_cod();
+      //allocate lines
+      const param_cod* cdp = codestream->get_cod();
       this->employ_color_transform = cdp->is_employing_color_transform();
       if (this->employ_color_transform)
       {
@@ -300,11 +313,11 @@ namespace ojph
         if (reversible[0])
           for (int i = 0; i < 3; ++i)
             lines[i].wrap(
-                allocator->post_alloc_data<si32>(width, 0), width, 0);
+              allocator->post_alloc_data<si32>(width, 0), width, 0);
         else
           for (int i = 0; i < 3; ++i)
             lines[i].wrap(
-                allocator->post_alloc_data<float>(width, 0), width, 0);
+              allocator->post_alloc_data<float>(width, 0), width, 0);
       }
       else
       {
@@ -318,15 +331,15 @@ namespace ojph
     bool tile::push(line_buf *line, ui32 comp_num)
     {
       constexpr ui8 type3 =
-          param_nlt::nonlinearity::OJPH_NLT_BINARY_COMPLEMENT_NLT;
+        param_nlt::nonlinearity::OJPH_NLT_BINARY_COMPLEMENT_NLT;
 
       assert(comp_num < num_comps);
       if (cur_line[comp_num] >= comp_rects[comp_num].siz.h)
         return false;
       cur_line[comp_num]++;
 
-      // converts to signed representation
-      // employs color transform if there is a need
+      //converts to signed representation
+      //employs color transform if there is a need
       if (!employ_color_transform || comp_num >= 3)
       {
         assert(comp_num < num_comps);
@@ -337,22 +350,21 @@ namespace ojph
           si64 shift = (si64)1 << (num_bits[comp_num] - 1);
           if (is_signed[comp_num] && nlt_type3[comp_num] == type3)
             rev_convert_nlt_type3(line, line_offsets[comp_num],
-                                  tc, 0, shift + 1, comp_width);
-          else
-          {
+              tc, 0, shift + 1, comp_width);
+          else {
             shift = is_signed[comp_num] ? 0 : -shift;
             rev_convert(line, line_offsets[comp_num], tc, 0,
-                        shift, comp_width);
+              shift, comp_width);
           }
         }
         else
         {
           if (nlt_type3[comp_num] == type3)
             irv_convert_to_float_nlt_type3(line, line_offsets[comp_num],
-                                           tc, num_bits[comp_num], is_signed[comp_num], comp_width);
+              tc, num_bits[comp_num], is_signed[comp_num], comp_width);
           else
             irv_convert_to_float(line, line_offsets[comp_num],
-                                 tc, num_bits[comp_num], is_signed[comp_num], comp_width);
+              tc, num_bits[comp_num], is_signed[comp_num], comp_width);
         }
         comps[comp_num].push_line();
       }
@@ -364,12 +376,11 @@ namespace ojph
         {
           if (is_signed[comp_num] && nlt_type3[comp_num] == type3)
             rev_convert_nlt_type3(line, line_offsets[comp_num],
-                                  lines + comp_num, 0, shift + 1, comp_width);
-          else
-          {
+              lines + comp_num, 0, shift + 1, comp_width);
+          else {
             shift = is_signed[comp_num] ? 0 : -shift;
             rev_convert(line, line_offsets[comp_num], lines + comp_num, 0,
-                        shift, comp_width);
+              shift, comp_width);
           }
 
           if (comp_num == 2)
@@ -378,30 +389,30 @@ namespace ojph
                         comps[0].get_line(),
                         comps[1].get_line(),
                         comps[2].get_line(), comp_width);
-            comps[0].push_line();
-            comps[1].push_line();
-            comps[2].push_line();
+                        comps[0].push_line();
+                        comps[1].push_line();
+                        comps[2].push_line();
           }
         }
         else
         {
           if (nlt_type3[comp_num] == type3)
             irv_convert_to_float_nlt_type3(line, line_offsets[comp_num],
-                                           lines + comp_num, num_bits[comp_num], is_signed[comp_num],
-                                           comp_width);
+              lines + comp_num, num_bits[comp_num], is_signed[comp_num],
+              comp_width);
           else
             irv_convert_to_float(line, line_offsets[comp_num],
-                                 lines + comp_num, num_bits[comp_num], is_signed[comp_num],
-                                 comp_width);
+              lines + comp_num, num_bits[comp_num], is_signed[comp_num],
+              comp_width);
           if (comp_num == 2)
           { // irreversible color transform
             ict_forward(lines[0].f32, lines[1].f32, lines[2].f32,
                         comps[0].get_line()->f32,
                         comps[1].get_line()->f32,
                         comps[2].get_line()->f32, comp_width);
-            comps[0].push_line();
-            comps[1].push_line();
-            comps[2].push_line();
+                        comps[0].push_line();
+                        comps[1].push_line();
+                        comps[2].push_line();
           }
         }
       }
@@ -410,10 +421,10 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    bool tile::pull(line_buf *tgt_line, ui32 comp_num)
+    bool tile::pull(line_buf* tgt_line, ui32 comp_num)
     {
       constexpr ui8 type3 =
-          param_nlt::nonlinearity::OJPH_NLT_BINARY_COMPLEMENT_NLT;
+        param_nlt::nonlinearity::OJPH_NLT_BINARY_COMPLEMENT_NLT;
 
       assert(comp_num < num_comps);
       if (cur_line[comp_num] >= recon_comp_rects[comp_num].siz.h)
@@ -421,94 +432,95 @@ namespace ojph
 
       cur_line[comp_num]++;
 
+      ui32 comp_width = recon_comp_rects[comp_num].siz.w;
+      if (comp_width == 0)
+        return true; // nothing to pull, but not an error
+
       if (!employ_color_transform || num_comps == 1)
       {
         line_buf *src_line = comps[comp_num].pull_line();
-        ui32 comp_width = recon_comp_rects[comp_num].siz.w;
         if (reversible[comp_num])
         {
           si64 shift = (si64)1 << (num_bits[comp_num] - 1);
           if (is_signed[comp_num] && nlt_type3[comp_num] == type3)
             rev_convert_nlt_type3(src_line, 0, tgt_line,
-                                  line_offsets[comp_num], shift + 1, comp_width);
-          else
-          {
+              line_offsets[comp_num], shift + 1, comp_width);
+          else {
             shift = is_signed[comp_num] ? 0 : shift;
             rev_convert(src_line, 0, tgt_line,
-                        line_offsets[comp_num], shift, comp_width);
+              line_offsets[comp_num], shift, comp_width);
           }
         }
         else
         {
           if (nlt_type3[comp_num] == type3)
             irv_convert_to_integer_nlt_type3(src_line, tgt_line,
-                                             line_offsets[comp_num], num_bits[comp_num],
-                                             is_signed[comp_num], comp_width);
+              line_offsets[comp_num], num_bits[comp_num],
+              is_signed[comp_num], comp_width);
           else
             irv_convert_to_integer(src_line, tgt_line,
-                                   line_offsets[comp_num], num_bits[comp_num],
-                                   is_signed[comp_num], comp_width);
+              line_offsets[comp_num], num_bits[comp_num],
+              is_signed[comp_num], comp_width);
         }
       }
       else
       {
         assert(num_comps >= 3);
-        ui32 comp_width = recon_comp_rects[comp_num].siz.w;
         if (comp_num == 0)
         {
           if (reversible[comp_num])
             rct_backward(comps[0].pull_line(), comps[1].pull_line(),
-                         comps[2].pull_line(), lines + 0, lines + 1,
-                         lines + 2, comp_width);
+              comps[2].pull_line(), lines + 0, lines + 1,
+              lines + 2, comp_width);
           else
             ict_backward(comps[0].pull_line()->f32, comps[1].pull_line()->f32,
-                         comps[2].pull_line()->f32, lines[0].f32, lines[1].f32,
-                         lines[2].f32, comp_width);
+              comps[2].pull_line()->f32, lines[0].f32, lines[1].f32,
+              lines[2].f32, comp_width);
         }
         if (reversible[comp_num])
         {
           si64 shift = (si64)1 << (num_bits[comp_num] - 1);
-          line_buf *src_line;
+          line_buf* src_line;
           if (comp_num < 3)
             src_line = lines + comp_num;
           else
             src_line = comps[comp_num].pull_line();
           if (is_signed[comp_num] && nlt_type3[comp_num] == type3)
             rev_convert_nlt_type3(src_line, 0, tgt_line,
-                                  line_offsets[comp_num], shift + 1, comp_width);
-          else
-          {
+              line_offsets[comp_num], shift + 1, comp_width);
+          else {
             shift = is_signed[comp_num] ? 0 : shift;
             rev_convert(src_line, 0, tgt_line,
-                        line_offsets[comp_num], shift, comp_width);
+              line_offsets[comp_num], shift, comp_width);
           }
         }
         else
         {
-          line_buf *lbp;
+          line_buf* lbp;
           if (comp_num < 3)
             lbp = lines + comp_num;
           else
             lbp = comps[comp_num].pull_line();
           if (nlt_type3[comp_num] == type3)
             irv_convert_to_integer_nlt_type3(lbp, tgt_line,
-                                             line_offsets[comp_num], num_bits[comp_num],
-                                             is_signed[comp_num], comp_width);
+              line_offsets[comp_num], num_bits[comp_num],
+              is_signed[comp_num], comp_width);
           else
             irv_convert_to_integer(lbp, tgt_line,
-                                   line_offsets[comp_num], num_bits[comp_num],
-                                   is_signed[comp_num], comp_width);
+              line_offsets[comp_num], num_bits[comp_num],
+              is_signed[comp_num], comp_width);
         }
       }
 
       return true;
     }
 
+
     //////////////////////////////////////////////////////////////////////////
     void tile::prepare_for_flush()
     {
       this->num_bytes = 0;
-      // prepare precinct headers
+      //prepare precinct headers
       for (ui32 c = 0; c < num_comps; ++c)
         num_bytes += comps[c].prepare_precincts();
     }
@@ -516,8 +528,7 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
     void tile::fill_tlm(param_tlm *tlm)
     {
-      if (tilepart_div == OJPH_TILEPART_NO_DIVISIONS)
-      {
+      if (tilepart_div == OJPH_TILEPART_NO_DIVISIONS) {
         tlm->set_next_pair(sot.get_tile_index(), this->num_bytes);
       }
       else if (tilepart_div == OJPH_TILEPART_RESOLUTIONS)
@@ -567,27 +578,29 @@ namespace ojph
       }
     }
 
+
     //////////////////////////////////////////////////////////////////////////
     void tile::flush(outfile_base *file)
     {
       ui32 max_decompositions = 0;
       for (ui32 c = 0; c < num_comps; ++c)
         max_decompositions = ojph_max(max_decompositions,
-                                      comps[c].get_num_decompositions());
+          comps[c].get_num_decompositions());
 
       if (tilepart_div == OJPH_TILEPART_NO_DIVISIONS)
       {
-        // write tile header
+        //write tile header
         if (!sot.write(file, this->num_bytes))
           OJPH_ERROR(0x00030081, "Error writing to file");
 
-        // write start of data
-        ui16 t = swap_byte(JP2K_MARKER::SOD);
+        //write start of data
+        ui16 t = swap_bytes_if_le(JP2K_MARKER::SOD);
         if (!file->write(&t, 2))
           OJPH_ERROR(0x00030082, "Error writing to file");
       }
 
-      // sequence the writing of precincts according to progression order
+
+      //sequence the writing of precincts according to progression order
       if (prog_order == OJPH_PO_LRCP || prog_order == OJPH_PO_RLCP)
       {
         if (tilepart_div == OJPH_TILEPART_NO_DIVISIONS)
@@ -604,16 +617,16 @@ namespace ojph
             for (ui32 c = 0; c < num_comps; ++c)
               bytes += comps[c].get_num_bytes(r);
 
-            // write tile header
+            //write tile header
             if (!sot.write(file, bytes, (ui8)r, (ui8)(max_decompositions + 1)))
               OJPH_ERROR(0x00030083, "Error writing to file");
 
-            // write start of data
-            ui16 t = swap_byte(JP2K_MARKER::SOD);
+            //write start of data
+            ui16 t = swap_bytes_if_le(JP2K_MARKER::SOD);
             if (!file->write(&t, 2))
               OJPH_ERROR(0x00030084, "Error writing to file");
 
-            // write precincts
+            //write precincts
             for (ui32 c = 0; c < num_comps; ++c)
               comps[c].write_precincts(r, file);
           }
@@ -623,14 +636,13 @@ namespace ojph
           ui32 num_tileparts = num_comps * (max_decompositions + 1);
           for (ui32 r = 0; r <= max_decompositions; ++r)
             for (ui32 c = 0; c < num_comps; ++c)
-              if (r <= comps[c].get_num_decompositions())
-              {
-                // write tile header
+              if (r <= comps[c].get_num_decompositions()) {
+                //write tile header
                 if (!sot.write(file, comps[c].get_num_bytes(r),
                                (ui8)(c + r * num_comps), (ui8)num_tileparts))
                   OJPH_ERROR(0x00030085, "Error writing to file");
-                // write start of data
-                ui16 t = swap_byte(JP2K_MARKER::SOD);
+                //write start of data
+                ui16 t = swap_bytes_if_le(JP2K_MARKER::SOD);
                 if (!file->write(&t, 2))
                   OJPH_ERROR(0x00030086, "Error writing to file");
                 comps[c].write_precincts(r, file);
@@ -646,12 +658,12 @@ namespace ojph
             ui32 bytes = 0;
             for (ui32 c = 0; c < num_comps; ++c)
               bytes += comps[c].get_num_bytes(r);
-            // write tile header
+            //write tile header
             if (!sot.write(file, bytes, (ui8)r, (ui8)(max_decompositions + 1)))
               OJPH_ERROR(0x00030087, "Error writing to file");
 
-            // write start of data
-            ui16 t = swap_byte(JP2K_MARKER::SOD);
+            //write start of data
+            ui16 t = swap_bytes_if_le(JP2K_MARKER::SOD);
             if (!file->write(&t, 2))
               OJPH_ERROR(0x00030088, "Error writing to file");
           }
@@ -668,15 +680,9 @@ namespace ojph
                 found = true;
 
               if (cur.y < smallest.y)
-              {
-                smallest = cur;
-                comp_num = c;
-              }
+              { smallest = cur; comp_num = c; }
               else if (cur.y == smallest.y && cur.x < smallest.x)
-              {
-                smallest = cur;
-                comp_num = c;
-              }
+              { smallest = cur; comp_num = c; }
             }
             if (found == true)
               comps[comp_num].write_one_precinct(r, file);
@@ -703,31 +709,15 @@ namespace ojph
                 found = true;
 
               if (cur.y < smallest.y)
-              {
-                smallest = cur;
-                comp_num = c;
-                res_num = r;
-              }
+              { smallest = cur; comp_num = c; res_num = r; }
               else if (cur.y == smallest.y && cur.x < smallest.x)
-              {
-                smallest = cur;
-                comp_num = c;
-                res_num = r;
-              }
+              { smallest = cur; comp_num = c; res_num = r; }
               else if (cur.y == smallest.y && cur.x == smallest.x &&
                        c < comp_num)
-              {
-                smallest = cur;
-                comp_num = c;
-                res_num = r;
-              }
+              { smallest = cur; comp_num = c; res_num = r; }
               else if (cur.y == smallest.y && cur.x == smallest.x &&
                        c == comp_num && r < res_num)
-              {
-                smallest = cur;
-                comp_num = c;
-                res_num = r;
-              }
+              { smallest = cur; comp_num = c; res_num = r; }
             }
           }
           if (found == true)
@@ -743,12 +733,12 @@ namespace ojph
           if (tilepart_div == OJPH_TILEPART_COMPONENTS)
           {
             ui32 bytes = comps[c].get_num_bytes();
-            // write tile header
+            //write tile header
             if (!sot.write(file, bytes, (ui8)c, (ui8)num_comps))
               OJPH_ERROR(0x0003008A, "Error writing to file");
 
-            // write start of data
-            ui16 t = swap_byte(JP2K_MARKER::SOD);
+            //write start of data
+            ui16 t = swap_bytes_if_le(JP2K_MARKER::SOD);
             if (!file->write(&t, 2))
               OJPH_ERROR(0x0003008B, "Error writing to file");
           }
@@ -760,21 +750,15 @@ namespace ojph
             point smallest(INT_MAX, INT_MAX), cur;
             for (ui32 r = 0; r <= max_decompositions; ++r)
             {
-              if (!comps[c].get_top_left_precinct(r, cur)) // res exist?
+              if (!comps[c].get_top_left_precinct(r, cur)) //res exist?
                 continue;
               else
                 found = true;
 
               if (cur.y < smallest.y)
-              {
-                smallest = cur;
-                res_num = r;
-              }
+              { smallest = cur; res_num = r; }
               else if (cur.y == smallest.y && cur.x < smallest.x)
-              {
-                smallest = cur;
-                res_num = r;
-              }
+              { smallest = cur; res_num = r; }
             }
             if (found == true)
               comps[c].write_one_precinct(res_num, file);
@@ -785,11 +769,12 @@ namespace ojph
       }
       else
         assert(0);
+
     }
 
     //////////////////////////////////////////////////////////////////////////
     void tile::parse_tile_header(const param_sot &sot, infile_base *file,
-                                 const ui64 &tile_start_location)
+                                 const ui64& tile_start_location)
     {
       if (sot.get_tile_part_index() != next_tile_part)
       {
@@ -800,10 +785,10 @@ namespace ojph
       }
       ++next_tile_part;
 
-      // tile_end_location used on failure
+      //tile_end_location used on failure
       ui64 tile_end_location = tile_start_location + sot.get_payload_length();
 
-      ui32 data_left = sot.get_payload_length(); // bytes left to parse
+      ui32 data_left = sot.get_payload_length(); //bytes left to parse
       data_left -= (ui32)((ui64)file->tell() - tile_start_location);
 
       if (data_left == 0)
@@ -812,11 +797,11 @@ namespace ojph
       ui32 max_decompositions = 0;
       for (ui32 c = 0; c < num_comps; ++c)
         max_decompositions = ojph_max(max_decompositions,
-                                      comps[c].get_num_decompositions());
+          comps[c].get_num_decompositions());
 
       try
       {
-        // sequence the reading of precincts according to progression order
+        //sequence the reading of precincts according to progression order
         if (prog_order == OJPH_PO_LRCP || prog_order == OJPH_PO_RLCP)
         {
           max_decompositions -= skipped_res_for_read;
@@ -843,15 +828,9 @@ namespace ojph
                   found = true;
 
                 if (cur.y < smallest.y)
-                {
-                  smallest = cur;
-                  comp_num = c;
-                }
+                { smallest = cur; comp_num = c; }
                 else if (cur.y == smallest.y && cur.x < smallest.x)
-                {
-                  smallest = cur;
-                  comp_num = c;
-                }
+                { smallest = cur; comp_num = c; }
               }
               if (found == true && data_left > 0)
                 comps[comp_num].parse_one_precinct(r, data_left, file);
@@ -878,31 +857,15 @@ namespace ojph
                   found = true;
 
                 if (cur.y < smallest.y)
-                {
-                  smallest = cur;
-                  comp_num = c;
-                  res_num = r;
-                }
+                { smallest = cur; comp_num = c; res_num = r; }
                 else if (cur.y == smallest.y && cur.x < smallest.x)
-                {
-                  smallest = cur;
-                  comp_num = c;
-                  res_num = r;
-                }
+                { smallest = cur; comp_num = c; res_num = r; }
                 else if (cur.y == smallest.y && cur.x == smallest.x &&
                          c < comp_num)
-                {
-                  smallest = cur;
-                  comp_num = c;
-                  res_num = r;
-                }
+                { smallest = cur; comp_num = c; res_num = r; }
                 else if (cur.y == smallest.y && cur.x == smallest.x &&
                          c == comp_num && r < res_num)
-                {
-                  smallest = cur;
-                  comp_num = c;
-                  res_num = r;
-                }
+                { smallest = cur; comp_num = c; res_num = r; }
               }
             }
             if (found == true && data_left > 0)
@@ -922,21 +885,15 @@ namespace ojph
               point smallest(INT_MAX, INT_MAX), cur;
               for (ui32 r = 0; r <= max_decompositions; ++r)
               {
-                if (!comps[c].get_top_left_precinct(r, cur)) // res exist?
+                if (!comps[c].get_top_left_precinct(r, cur)) //res exist?
                   continue;
                 else
                   found = true;
 
                 if (cur.y < smallest.y)
-                {
-                  smallest = cur;
-                  res_num = r;
-                }
+                { smallest = cur; res_num = r; }
                 else if (cur.y == smallest.y && cur.x < smallest.x)
-                {
-                  smallest = cur;
-                  res_num = r;
-                }
+                { smallest = cur; res_num = r; }
               }
               if (found == true && data_left > 0)
                 comps[c].parse_one_precinct(res_num, data_left, file);
@@ -947,6 +904,7 @@ namespace ojph
         }
         else
           assert(0);
+
       }
       catch (const char *error)
       {

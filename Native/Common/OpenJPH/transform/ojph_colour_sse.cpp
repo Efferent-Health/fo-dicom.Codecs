@@ -2,21 +2,21 @@
 // This software is released under the 2-Clause BSD license, included
 // below.
 //
-// Copyright (c) 2019, Aous Naman
+// Copyright (c) 2019, Aous Naman 
 // Copyright (c) 2019, Kakadu Software Pty Ltd, Australia
 // Copyright (c) 2019, The University of New South Wales, Australia
-//
+// 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-//
+// 
 // 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
-//
+// 
 // 2. Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
-//
+// 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 // IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -46,10 +46,8 @@
 
 #include <xmmintrin.h>
 
-namespace ojph
-{
-  namespace local
-  {
+namespace ojph {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
     void sse_ict_forward(const float *r, const float *g, const float *b,
@@ -70,13 +68,9 @@ namespace ojph
         _mm_store_ps(y, my);
         _mm_store_ps(cb, _mm_mul_ps(beta_cbf, _mm_sub_ps(mb, my)));
         _mm_store_ps(cr, _mm_mul_ps(beta_crf, _mm_sub_ps(mr, my)));
-
-        r += 4;
-        g += 4;
-        b += 4;
-        y += 4;
-        cb += 4;
-        cr += 4;
+        
+        r += 4; g += 4; b += 4;
+        y += 4; cb += 4; cr += 4;
       }
     }
 
@@ -98,12 +92,8 @@ namespace ojph
         _mm_store_ps(r, _mm_add_ps(my, _mm_mul_ps(gamma_cr2r, mcr)));
         _mm_store_ps(b, _mm_add_ps(my, _mm_mul_ps(gamma_cb2b, mcb)));
 
-        y += 4;
-        cb += 4;
-        cr += 4;
-        r += 4;
-        g += 4;
-        b += 4;
+        y += 4; cb += 4; cr += 4;
+        r += 4; g += 4; b += 4;
       }
     }
   }

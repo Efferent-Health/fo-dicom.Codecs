@@ -35,38 +35,38 @@
 // Date: 15 May 2022
 //***************************************************************************/
 
+#include <climits>
+
 #include "ojph_defs.h"
 #include "ojph_arch.h"
 
-namespace ojph
-{
-  namespace local
-  {
+namespace ojph {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
-    void gen_mem_clear(void *addr, size_t count)
+    void gen_mem_clear(void* addr, size_t count)
     {
-      si64 *p = (si64 *)addr;
+      si64* p = (si64*)addr;
       for (size_t i = 0; i < count; i += 8)
         *p++ = 0;
     }
 
     //////////////////////////////////////////////////////////////////////////
-    ui32 gen_find_max_val32(ui32 *addr) { return addr[0]; }
+    ui32 gen_find_max_val32(ui32* addr) { return addr[0]; }
 
     //////////////////////////////////////////////////////////////////////////
-    ui64 gen_find_max_val64(ui64 *addr) { return addr[0]; }
+    ui64 gen_find_max_val64(ui64* addr) { return addr[0]; }
 
     //////////////////////////////////////////////////////////////////////////
     void gen_rev_tx_to_cb32(const void *sp, ui32 *dp, ui32 K_max,
                             float delta_inv, ui32 count,
-                            ui32 *max_val)
+                            ui32* max_val)
     {
       ojph_unused(delta_inv);
       ui32 shift = 31 - K_max;
       // convert to sign and magnitude and keep max_val
       ui32 tmax = *max_val;
-      si32 *p = (si32 *)sp;
+      si32 *p = (si32*)sp;
       for (ui32 i = count; i > 0; --i)
       {
         si32 v = *p++;
@@ -82,13 +82,13 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
     void gen_rev_tx_to_cb64(const void *sp, ui64 *dp, ui32 K_max,
                             float delta_inv, ui32 count,
-                            ui64 *max_val)
+                            ui64* max_val)
     {
       ojph_unused(delta_inv);
       ui32 shift = 63 - K_max;
       // convert to sign and magnitude and keep max_val
       ui64 tmax = *max_val;
-      si64 *p = (si64 *)sp;
+      si64 *p = (si64*)sp;
       for (ui32 i = count; i > 0; --i)
       {
         si64 v = *p++;
@@ -104,12 +104,12 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
     void gen_irv_tx_to_cb32(const void *sp, ui32 *dp, ui32 K_max,
                             float delta_inv, ui32 count,
-                            ui32 *max_val)
+                            ui32* max_val)
     {
       ojph_unused(K_max);
-      // quantize and convert to sign and magnitude and keep max_val
+      //quantize and convert to sign and magnitude and keep max_val
       ui32 tmax = *max_val;
-      float *p = (float *)sp;
+      float *p = (float*)sp;
       for (ui32 i = count; i > 0; --i)
       {
         float v = *p++;
@@ -128,8 +128,8 @@ namespace ojph
     {
       ojph_unused(delta);
       ui32 shift = 31 - K_max;
-      // convert to sign and magnitude
-      si32 *p = (si32 *)dp;
+      //convert to sign and magnitude
+      si32 *p = (si32*)dp;
       for (ui32 i = count; i > 0; --i)
       {
         ui32 v = *sp++;
@@ -144,8 +144,8 @@ namespace ojph
     {
       ojph_unused(delta);
       ui32 shift = 63 - K_max;
-      // convert to sign and magnitude
-      si64 *p = (si64 *)dp;
+      //convert to sign and magnitude
+      si64 *p = (si64*)dp;
       for (ui32 i = count; i > 0; --i)
       {
         ui64 v = *sp++;
@@ -159,8 +159,8 @@ namespace ojph
                               float delta, ui32 count)
     {
       ojph_unused(K_max);
-      // convert to sign and magnitude
-      float *p = (float *)dp;
+      //convert to sign and magnitude
+      float *p = (float*)dp;
       for (ui32 i = count; i > 0; --i)
       {
         ui32 v = *sp++;
@@ -169,5 +169,20 @@ namespace ojph
       }
     }
 
-  }
+    //////////////////////////////////////////////////////////////////////////
+    void gen_irv_tx_from_cb64(const ui64 *sp, void *dp, ui32 K_max,
+                              float delta, ui32 count)
+    {
+      ojph_unused(K_max);
+      //convert to sign and magnitude
+      float *p = (float*)dp;
+      for (ui32 i = count; i > 0; --i)
+      {
+        ui64 v = *sp++;
+        float val = (float)(v & LLONG_MAX) * delta;
+        *p++ = (v & (ui64)LLONG_MIN) ? -val : val;
+      }
+    }
+
+ }
 }
