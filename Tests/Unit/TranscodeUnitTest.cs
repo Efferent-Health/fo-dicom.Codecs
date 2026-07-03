@@ -57,7 +57,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             Assert.IsTrue(data1.Dataset.Contains(DicomTag.PixelData));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("RLELossless")]
         [DataRow("JPEG2000Lossless")]
         [DataRow("JPEG2000Lossy")]
@@ -87,7 +87,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             Assert.IsTrue(data1.Dataset.Contains(DicomTag.PixelData));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("RLELossless")]
         [DataRow("JPEG2000Lossless")]
         [DataRow("JPEG2000Lossy")]
@@ -116,7 +116,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             Assert.IsTrue(data1.Dataset.Contains(DicomTag.PixelData));
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("RLELossless")]
         [DataRow("JPEG2000Lossless")]
         [DataRow("JPEG2000Lossy")]
