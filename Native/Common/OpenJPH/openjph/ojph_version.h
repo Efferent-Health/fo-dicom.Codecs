@@ -31,52 +31,8 @@
 //***************************************************************************/
 // This file is part of the OpenJPH software implementation.
 // File: ojph_base.h
-// Author: Aous Naman
-// Date: 28 August 2019
 //***************************************************************************/
 
-
-#ifndef OJPH_BASE_H
-#define OJPH_BASE_H
-
-#include "ojph_defs.h"
-
-namespace ojph {
-
-  /////////////////////////////////////////////////////////////////////////////
-  struct size
-  {
-    explicit size(ui32 w = 0, ui32 h = 0) : w(w), h(h) {}
-    ui32 w; //width
-    ui32 h; //height
-
-    ui64 area() const { return (ui64)w * (ui64)h; }
-  };
-
-  /////////////////////////////////////////////////////////////////////////////
-  struct point
-  {
-    explicit point(ui32 x = 0, ui32 y = 0) : x(x), y(y) {}
-    ui32 x, y;
-  };
-
-  /////////////////////////////////////////////////////////////////////////////
-  struct rect
-  {
-    point org;
-    size siz;
-
-    bool operator==(const rect& a) const {
-      return a.org.x == org.x && a.org.y == org.y
-        && a.siz.w == siz.w && a.siz.h == siz.h;
-    }
-
-    bool operator!=(const rect& a) const
-    { return !(a == *this); }
-  };
-
-  /////////////////////////////////////////////////////////////////////////////
-
-}
-
-#endif // !OJPH_BASE_H
+#define OPENJPH_VERSION_MAJOR 0
+#define OPENJPH_VERSION_MINOR 30
+#define OPENJPH_VERSION_PATCH 1

@@ -363,7 +363,7 @@ SET(OPENJPEG_SRCS
 )
 
 #OpenJPH Library
-include_directories(../Common/OpenJPH/common/)
+include_directories(../Common/OpenJPH/openjph/)
 
 SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/codestream/ojph_bitbuffer_read.h
@@ -399,16 +399,16 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder64.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder.cpp
 
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arch.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arg.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_base.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_codestream.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_defs.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_file.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_mem.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_message.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_params.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_version.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_arch.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_arg.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_codestream.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_defs.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_file.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_mem.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_message.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_params.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_version.h
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_arch.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_file.cpp

@@ -7,12 +7,12 @@
     #include <stdint.h>
 #endif
 
-#include "../common/ojph_arch.h"
-#include "../common/ojph_file.h"
-#include "../common/ojph_mem.h"
-#include "../common/ojph_params.h"
+#include "../openjph/ojph_arch.h"
+#include "../openjph/ojph_file.h"
+#include "../openjph/ojph_mem.h"
+#include "../openjph/ojph_params.h"
 #include "../codestream/ojph_params_local.h"
-#include "../common/ojph_codestream.h"
+#include "../openjph/ojph_codestream.h"
 
 struct Htj2k_outdata
 {
