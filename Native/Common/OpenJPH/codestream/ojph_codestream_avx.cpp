@@ -36,26 +36,22 @@
 //***************************************************************************/
 
 #include "ojph_arch.h"
-
 #if defined(OJPH_ARCH_I386) || defined(OJPH_ARCH_X86_64)
 #include <immintrin.h>
 #include "ojph_defs.h"
 
-namespace ojph
-{
-  namespace local
-  {
+namespace ojph {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
-    void avx_mem_clear(void *addr, size_t count)
+    void avx_mem_clear(void* addr, size_t count)
     {
-      float *p = (float *)addr;
-      __m256 zero = _mm256_setzero_ps();
-      for (size_t i = 0; i < count; i += 32, p += 8)
-        _mm256_storeu_ps(p, zero);
+      __m256i zero = _mm256_setzero_si256();
+      for (size_t i = 0; i < count; i += 32, addr = (char*)addr + 32)
+        _mm256_storeu_si256((__m256i*)addr, zero);
     }
 
-  }
+ }
 }
 
 #endif

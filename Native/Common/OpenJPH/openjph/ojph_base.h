@@ -30,53 +30,53 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //***************************************************************************/
 // This file is part of the OpenJPH software implementation.
-// File: ojph_defs.h
+// File: ojph_base.h
 // Author: Aous Naman
 // Date: 28 August 2019
 //***************************************************************************/
 
-#ifndef OJPH_TYPES_H
-#define OJPH_TYPES_H
 
-#include <cstdint>
-#include "ojph_version.h"
+#ifndef OJPH_BASE_H
+#define OJPH_BASE_H
 
-namespace ojph
-{
+#include "ojph_defs.h"
 
-    /////////////////////////////////////////////////////////////////////////////
-    //                               types
-    /////////////////////////////////////////////////////////////////////////////
-    typedef uint8_t ui8;
-    typedef int8_t si8;
-    typedef uint16_t ui16;
-    typedef int16_t si16;
-    typedef uint32_t ui32;
-    typedef int32_t si32;
-    typedef uint64_t ui64;
-    typedef int64_t si64;
+namespace ojph {
 
-/////////////////////////////////////////////////////////////////////////////
-#define OJPH_INT_STRINGIFY(I) #I
-#define OJPH_INT_TO_STRING(I) OJPH_INT_STRINGIFY(I)
+  /////////////////////////////////////////////////////////////////////////////
+  struct size
+  {
+    explicit size(ui32 w = 0, ui32 h = 0) : w(w), h(h) {}
+    ui32 w; //width
+    ui32 h; //height
 
-    /////////////////////////////////////////////////////////////////////////////
-    // number of fractional bits for 16 bit representation
-    // for 32 bits, it is NUM_FRAC_BITS + 16
-    // All numbers are in the range of [-0.5, 0.5)
-    const int NUM_FRAC_BITS = 13;
+    ui64 area() const { return (ui64)w * (ui64)h; }
+  };
 
-/////////////////////////////////////////////////////////////////////////////
-#define ojph_div_ceil(a, b) (((a) + (b) - 1) / (b))
+  /////////////////////////////////////////////////////////////////////////////
+  struct point
+  {
+    explicit point(ui32 x = 0, ui32 y = 0) : x(x), y(y) {}
+    ui32 x, y;
+  };
 
-/////////////////////////////////////////////////////////////////////////////
-#define ojph_max(a, b) (((a) > (b)) ? (a) : (b))
+  /////////////////////////////////////////////////////////////////////////////
+  struct rect
+  {
+    point org;
+    size siz;
 
-/////////////////////////////////////////////////////////////////////////////
-#define ojph_min(a, b) (((a) < (b)) ? (a) : (b))
+    bool operator==(const rect& a) const {
+      return a.org.x == org.x && a.org.y == org.y
+        && a.siz.w == siz.w && a.siz.h == siz.h;
+    }
 
-#define ojph_unused(x) (void)(x)
+    bool operator!=(const rect& a) const
+    { return !(a == *this); }
+  };
+
+  /////////////////////////////////////////////////////////////////////////////
 
 }
 
-#endif // !OJPH_TYPES_H
+#endif // !OJPH_BASE_H

@@ -104,111 +104,216 @@ SET(CHARLS_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/CharLS/util.h
 )
 
-#libjpeg-turbo library
-SET(TURBO_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jchuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcicc.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcinit.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jclhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcomapi.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcparam.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jctrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdapimin.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatadst.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatasrc.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdicc.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdinput.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdlhuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdmarker.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdmaster.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdphuff.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdtrans.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jerror.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jfdctflt.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jmemmgr.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jmemnobs.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jpeg_nbits.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jaricom.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdarith.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccoefct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccoefct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdctmgr-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdctmgr-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcoefct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcoefct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddctmgr-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddctmgr-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmerge-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmerge-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctfst-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctfst-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctint-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctint-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctflt-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctflt-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctfst-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctfst-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctint-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctint-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctred-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctred-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant1-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant1-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant2-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant2-8.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-12.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-16.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-8.c
-)
-
+#libjpeg-turbo library
+
+SET(TURBO_SRCS
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcapimin.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jchuff.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcicc.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcinit.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jclhuff.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcmarker.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcmaster.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcomapi.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcparam.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcphuff.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jctrans.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdapimin.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatadst.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatasrc.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdhuff.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdicc.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdinput.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdlhuff.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdmarker.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdmaster.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdphuff.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdtrans.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jerror.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jfdctflt.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jmemmgr.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jmemnobs.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jpeg_nbits.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jaricom.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jcarith.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdarith.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcapistd-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccoefct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccoefct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jccolor-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdctmgr-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdctmgr-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcdiffct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jclossls-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcmainct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcprepct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jcsample-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdapistd-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcoefct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcoefct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdcolor-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddctmgr-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddctmgr-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jddiffct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdlossls-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmainct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmerge-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdmerge-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdpostct-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jdsample-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctfst-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctfst-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctint-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jfdctint-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctflt-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctflt-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctfst-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctfst-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctint-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctint-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctred-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jidctred-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant1-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant1-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant2-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jquant2-8.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-12.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-16.c
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-8.c
+
+)
+
+
+
 SET(OPENJPEG_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thread.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPEG/thread.h
@@ -299,16 +404,16 @@ SET(OPJH_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_decoder64.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/coding/ojph_block_encoder.cpp
 
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arch.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_arg.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_base.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_codestream.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_defs.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_file.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_mem.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_message.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_params.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/common/ojph_version.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_arch.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_arg.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_base.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_codestream.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_defs.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_file.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_mem.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_message.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_params.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/openjph/ojph_version.h
 
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_arch.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/others/ojph_file.cpp

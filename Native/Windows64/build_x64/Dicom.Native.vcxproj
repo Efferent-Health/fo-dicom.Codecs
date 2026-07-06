@@ -152,15 +152,15 @@
     <ClInclude Include="..\..\Common\OpenJPEG\dwt.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\cio.h" />
     <ClInclude Include="..\..\Common\OpenJPEG\bio.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arch.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_arg.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_base.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_codestream.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_defs.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_mem.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_message.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_params.h" />
-    <ClInclude Include="..\..\Common\OpenJPH\common\ojph_version.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_arch.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_arg.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_base.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_codestream.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_defs.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_mem.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_message.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_params.h" />
+    <ClInclude Include="..\..\Common\OpenJPH\openjph\ojph_version.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_read.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_bitbuffer_write.h" />
     <ClInclude Include="..\..\Common\OpenJPH\codestream\ojph_codeblock.h" />
@@ -815,6 +815,10 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="..\..\Common\OpenJPH\others\ojph_mem.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\OpenJPH\others\ojph_mem_c.c">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>

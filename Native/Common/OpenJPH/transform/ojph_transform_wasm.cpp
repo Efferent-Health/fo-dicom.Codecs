@@ -47,13 +47,12 @@
 #include "ojph_transform.h"
 #include "ojph_transform_local.h"
 
-namespace ojph
-{
-  namespace local
-  {
+namespace ojph {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
-    static inline void wasm_deinterleave32(float *dpl, float *dph, float *sp, int width)
+    static inline
+    void wasm_deinterleave32(float* dpl, float* dph, float* sp, int width)
     {
       for (; width > 0; width -= 8, sp += 8, dpl += 4, dph += 4)
       {
@@ -69,7 +68,8 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline void wasm_interleave32(float *dp, float *spl, float *sph, int width)
+    static inline
+    void wasm_interleave32(float* dp, float* spl, float* sph, int width)
     {
       for (; width > 0; width -= 8, dp += 8, spl += 4, sph += 4)
       {
@@ -85,12 +85,16 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline void wasm_deinterleave64(double *dpl, double *dph, double *sp, int width)
+    static inline
+    void wasm_deinterleave64(void* dpl, void* dph, const void* sp, int width)
     {
-      for (; width > 0; width -= 4, sp += 4, dpl += 2, dph += 2)
+      for (; width > 0; width -= 4,
+             sp = (const char*)sp + 32,
+             dpl = (char*)dpl + 16,
+             dph = (char*)dph + 16)
       {
         v128_t a = wasm_v128_load(sp);
-        v128_t b = wasm_v128_load(sp + 2);
+        v128_t b = wasm_v128_load((const char*)sp + 16);
         v128_t c = wasm_i64x2_shuffle(a, b, 0, 2 + 0);
         v128_t d = wasm_i64x2_shuffle(a, b, 1, 2 + 1);
         wasm_v128_store(dpl, c);
@@ -99,21 +103,26 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline void wasm_interleave64(double *dp, double *spl, double *sph, int width)
+    static inline
+    void wasm_interleave64(void* dp, const void* spl, const void* sph,
+                           int width)
     {
-      for (; width > 0; width -= 4, dp += 4, spl += 2, sph += 2)
+      for (; width > 0; width -= 4,
+             dp = (char*)dp + 32,
+             spl = (const char*)spl + 16,
+             sph = (const char*)sph + 16)
       {
         v128_t a = wasm_v128_load(spl);
         v128_t b = wasm_v128_load(sph);
         v128_t c = wasm_i64x2_shuffle(a, b, 0, 2 + 0);
         v128_t d = wasm_i64x2_shuffle(a, b, 1, 2 + 1);
         wasm_v128_store(dp, c);
-        wasm_v128_store(dp + 2, d);
+        wasm_v128_store((char*)dp + 16, d);
       }
     }
 
     //////////////////////////////////////////////////////////////////////////
-    static inline void wasm_multiply_const(float *p, float f, int width)
+    static inline void wasm_multiply_const(float* p, float f, int width)
     {
       v128_t factor = wasm_f32x4_splat(f);
       for (; width > 0; width -= 4, p += 4)
@@ -124,8 +133,8 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void wasm_irv_vert_step(const lifting_step *s, const line_buf *sig,
-                            const line_buf *other, const line_buf *aug,
+    void wasm_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
                             ui32 repeat, bool synthesis)
     {
       float a = s->irv.Aatk;
@@ -134,57 +143,57 @@ namespace ojph
 
       v128_t factor = wasm_f32x4_splat(a);
 
-      float *dst = aug->f32;
-      const float *src1 = sig->f32, *src2 = other->f32;
+      float* dst = aug->f32;
+      const float* src1 = sig->f32, * src2 = other->f32;
       int i = (int)repeat;
-      for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
+      for ( ; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
       {
         v128_t s1 = wasm_v128_load(src1);
         v128_t s2 = wasm_v128_load(src2);
-        v128_t d = wasm_v128_load(dst);
+        v128_t d  = wasm_v128_load(dst);
         d = wasm_f32x4_add(d, wasm_f32x4_mul(factor, wasm_f32x4_add(s1, s2)));
         wasm_v128_store(dst, d);
       }
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void wasm_irv_vert_times_K(float K, const line_buf *aug, ui32 repeat)
+    void wasm_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat)
     {
       wasm_multiply_const(aug->f32, K, (int)repeat);
     }
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_irv_horz_ana(const param_atk *atk, const line_buf *ldst,
-                           const line_buf *hdst, const line_buf *src,
+    void wasm_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
                            ui32 width, bool even)
     {
       if (width > 1)
       {
         // split src into ldst and hdst
         {
-          float *dpl = even ? ldst->f32 : hdst->f32;
-          float *dph = even ? hdst->f32 : ldst->f32;
-          float *sp = src->f32;
+          float* dpl = even ? ldst->f32 : hdst->f32;
+          float* dph = even ? hdst->f32 : ldst->f32;
+          float* sp = src->f32;
           int w = (int)width;
           wasm_deinterleave32(dpl, dph, sp, w);
         }
 
         // the actual horizontal transform
-        float *hp = hdst->f32, *lp = ldst->f32;
-        ui32 l_width = (width + (even ? 1 : 0)) >> 1; // low pass
-        ui32 h_width = (width + (even ? 0 : 1)) >> 1; // high pass
+        float* hp = hdst->f32, * lp = ldst->f32;
+        ui32 l_width = (width + (even ? 1 : 0)) >> 1;  // low pass
+        ui32 h_width = (width + (even ? 0 : 1)) >> 1;  // high pass
         ui32 num_steps = atk->get_num_steps();
         for (ui32 j = num_steps; j > 0; --j)
         {
-          const lifting_step *s = atk->get_step(j - 1);
+          const lifting_step* s = atk->get_step(j - 1);
           const float a = s->irv.Aatk;
 
           // extension
           lp[-1] = lp[0];
           lp[l_width] = lp[l_width - 1];
           // lifting step
-          const float *sp = lp;
-          float *dp = hp;
+          const float* sp = lp;
+          float* dp = hp;
           int i = (int)h_width;
           v128_t f = wasm_f32x4_splat(a);
           if (even)
@@ -211,13 +220,9 @@ namespace ojph
           }
 
           // swap buffers
-          float *t = lp;
-          lp = hp;
-          hp = t;
+          float* t = lp; lp = hp; hp = t;
           even = !even;
-          ui32 w = l_width;
-          l_width = h_width;
-          h_width = w;
+          ui32 w = l_width; l_width = h_width; h_width = w;
         }
 
         { // multiply by K or 1/K
@@ -227,8 +232,7 @@ namespace ojph
           wasm_multiply_const(hp, K, (int)h_width);
         }
       }
-      else
-      {
+      else {
         if (even)
           ldst->f32[0] = src->f32[0];
         else
@@ -237,16 +241,16 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void wasm_irv_horz_syn(const param_atk *atk, const line_buf *dst,
-                           const line_buf *lsrc, const line_buf *hsrc,
+    void wasm_irv_horz_syn(const param_atk* atk, const line_buf* dst,
+                           const line_buf* lsrc, const line_buf* hsrc,
                            ui32 width, bool even)
     {
       if (width > 1)
       {
         bool ev = even;
-        float *oth = hsrc->f32, *aug = lsrc->f32;
-        ui32 aug_width = (width + (even ? 1 : 0)) >> 1; // low pass
-        ui32 oth_width = (width + (even ? 0 : 1)) >> 1; // high pass
+        float* oth = hsrc->f32, * aug = lsrc->f32;
+        ui32 aug_width = (width + (even ? 1 : 0)) >> 1;  // low pass
+        ui32 oth_width = (width + (even ? 0 : 1)) >> 1;  // high pass
 
         { // multiply by K or 1/K
           float K = atk->get_K();
@@ -259,20 +263,20 @@ namespace ojph
         ui32 num_steps = atk->get_num_steps();
         for (ui32 j = 0; j < num_steps; ++j)
         {
-          const lifting_step *s = atk->get_step(j);
+          const lifting_step* s = atk->get_step(j);
           const float a = s->irv.Aatk;
 
           // extension
           oth[-1] = oth[0];
           oth[oth_width] = oth[oth_width - 1];
           // lifting step
-          const float *sp = oth;
-          float *dp = aug;
+          const float* sp = oth;
+          float* dp = aug;
           int i = (int)aug_width;
           v128_t f = wasm_f32x4_splat(a);
           if (ev)
           {
-            for (; i > 0; i -= 4, sp += 4, dp += 4)
+            for ( ; i > 0; i -= 4, sp += 4, dp += 4)
             {
               v128_t m = wasm_v128_load(sp);
               v128_t n = wasm_v128_load(sp - 1);
@@ -283,7 +287,7 @@ namespace ojph
           }
           else
           {
-            for (; i > 0; i -= 4, sp += 4, dp += 4)
+            for ( ; i > 0; i -= 4, sp += 4, dp += 4)
             {
               v128_t m = wasm_v128_load(sp);
               v128_t n = wasm_v128_load(sp + 1);
@@ -294,26 +298,21 @@ namespace ojph
           }
 
           // swap buffers
-          float *t = aug;
-          aug = oth;
-          oth = t;
+          float* t = aug; aug = oth; oth = t;
           ev = !ev;
-          ui32 w = aug_width;
-          aug_width = oth_width;
-          oth_width = w;
+          ui32 w = aug_width; aug_width = oth_width; oth_width = w;
         }
 
         // combine both lsrc and hsrc into dst
         {
-          float *dp = dst->f32;
-          float *spl = even ? lsrc->f32 : hsrc->f32;
-          float *sph = even ? hsrc->f32 : lsrc->f32;
+          float* dp = dst->f32;
+          float* spl = even ? lsrc->f32 : hsrc->f32;
+          float* sph = even ? hsrc->f32 : lsrc->f32;
           int w = (int)width;
           wasm_interleave32(dp, spl, sph, w);
         }
       }
-      else
-      {
+      else {
         if (even)
           dst->f32[0] = lsrc->f32[0];
         else
@@ -322,8 +321,8 @@ namespace ojph
     }
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_vert_step32(const lifting_step *s, const line_buf *sig,
-                              const line_buf *other, const line_buf *aug,
+    void wasm_rev_vert_step32(const lifting_step* s, const line_buf* sig,
+                              const line_buf* other, const line_buf* aug,
                               ui32 repeat, bool synthesis)
     {
       const si32 a = s->rev.Aatk;
@@ -332,8 +331,8 @@ namespace ojph
       v128_t va = wasm_i32x4_splat(a);
       v128_t vb = wasm_i32x4_splat(b);
 
-      si32 *dst = aug->i32;
-      const si32 *src1 = sig->i32, *src2 = other->i32;
+      si32* dst = aug->i32;
+      const si32* src1 = sig->i32, * src2 = other->i32;
       // The general definition of the wavelet in Part 2 is slightly
       // different to part 2, although they are mathematically equivalent
       // here, we identify the simpler form from Part 1 and employ them
@@ -343,26 +342,26 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t v = wasm_i32x4_add(vb, t);
             v128_t w = wasm_i32x4_shr(v, e);
             d = wasm_i32x4_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t v = wasm_i32x4_add(vb, t);
             v128_t w = wasm_i32x4_shr(v, e);
             d = wasm_i32x4_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
       else if (a == -1 && b == 1 && e == 1)
@@ -371,24 +370,24 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t w = wasm_i32x4_shr(t, e);
             d = wasm_i32x4_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t w = wasm_i32x4_shr(t, e);
             d = wasm_i32x4_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
       else if (a == -1)
@@ -397,26 +396,26 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t v = wasm_i32x4_sub(vb, t);
             v128_t w = wasm_i32x4_shr(v, e);
             d = wasm_i32x4_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t v = wasm_i32x4_sub(vb, t);
             v128_t w = wasm_i32x4_shr(v, e);
             d = wasm_i32x4_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
       else
@@ -425,35 +424,35 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t u = wasm_i32x4_mul(va, t);
             v128_t v = wasm_i32x4_add(vb, u);
             v128_t w = wasm_i32x4_shr(v, e);
             d = wasm_i32x4_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 4, dst += 4, src1 += 4, src2 += 4)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i32x4_add(s1, s2);
             v128_t u = wasm_i32x4_mul(va, t);
             v128_t v = wasm_i32x4_add(vb, u);
             v128_t w = wasm_i32x4_shr(v, e);
             d = wasm_i32x4_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
     }
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_vert_step64(const lifting_step *s, const line_buf *sig,
-                              const line_buf *other, const line_buf *aug,
+    void wasm_rev_vert_step64(const lifting_step* s, const line_buf* sig,
+                              const line_buf* other, const line_buf* aug,
                               ui32 repeat, bool synthesis)
     {
       const si32 a = s->rev.Aatk;
@@ -462,8 +461,8 @@ namespace ojph
       v128_t va = wasm_i64x2_splat(a);
       v128_t vb = wasm_i64x2_splat(b);
 
-      si64 *dst = aug->i64;
-      const si64 *src1 = sig->i64, *src2 = other->i64;
+      si64* dst = aug->i64;
+      const si64* src1 = sig->i64, * src2 = other->i64;
       // The general definition of the wavelet in Part 2 is slightly
       // different to part 2, although they are mathematically equivalent
       // here, we identify the simpler form from Part 1 and employ them
@@ -473,26 +472,26 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t v = wasm_i64x2_add(vb, t);
             v128_t w = wasm_i64x2_shr(v, e);
             d = wasm_i64x2_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t v = wasm_i64x2_add(vb, t);
             v128_t w = wasm_i64x2_shr(v, e);
             d = wasm_i64x2_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
       else if (a == -1 && b == 1 && e == 1)
@@ -501,24 +500,24 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t w = wasm_i64x2_shr(t, e);
             d = wasm_i64x2_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t w = wasm_i64x2_shr(t, e);
             d = wasm_i64x2_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
       else if (a == -1)
@@ -527,26 +526,26 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t v = wasm_i64x2_sub(vb, t);
             v128_t w = wasm_i64x2_shr(v, e);
             d = wasm_i64x2_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t v = wasm_i64x2_sub(vb, t);
             v128_t w = wasm_i64x2_shr(v, e);
             d = wasm_i64x2_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
       else
@@ -555,35 +554,35 @@ namespace ojph
         if (synthesis)
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t u = wasm_i64x2_mul(va, t);
             v128_t v = wasm_i64x2_add(vb, u);
             v128_t w = wasm_i64x2_shr(v, e);
             d = wasm_i64x2_sub(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
         else
           for (; i > 0; i -= 2, dst += 2, src1 += 2, src2 += 2)
           {
-            v128_t s1 = wasm_v128_load((v128_t *)src1);
-            v128_t s2 = wasm_v128_load((v128_t *)src2);
-            v128_t d = wasm_v128_load((v128_t *)dst);
+            v128_t s1 = wasm_v128_load((v128_t*)src1);
+            v128_t s2 = wasm_v128_load((v128_t*)src2);
+            v128_t d = wasm_v128_load((v128_t*)dst);
             v128_t t = wasm_i64x2_add(s1, s2);
             v128_t u = wasm_i64x2_mul(va, t);
             v128_t v = wasm_i64x2_add(vb, u);
             v128_t w = wasm_i64x2_shr(v, e);
             d = wasm_i64x2_add(d, w);
-            wasm_v128_store((v128_t *)dst, d);
+            wasm_v128_store((v128_t*)dst, d);
           }
       }
     }
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_vert_step(const lifting_step *s, const line_buf *sig,
-                            const line_buf *other, const line_buf *aug,
+    void wasm_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
                             ui32 repeat, bool synthesis)
     {
       if (((sig != NULL) && (sig->flags & line_buf::LFT_32BIT)) ||
@@ -605,29 +604,30 @@ namespace ojph
     }
 
     /////////////////////////////////////////////////////////////////////////
-    static void wasm_rev_horz_ana32(const param_atk *atk, const line_buf *ldst,
-                                    const line_buf *hdst, const line_buf *src,
-                                    ui32 width, bool even)
+    static
+    void wasm_rev_horz_ana32(const param_atk* atk, const line_buf* ldst,
+                             const line_buf* hdst, const line_buf* src,
+                             ui32 width, bool even)
     {
       if (width > 1)
       {
         // combine both lsrc and hsrc into dst
         {
-          float *dpl = even ? ldst->f32 : hdst->f32;
-          float *dph = even ? hdst->f32 : ldst->f32;
-          float *sp = src->f32;
+          float* dpl = even ? ldst->f32 : hdst->f32;
+          float* dph = even ? hdst->f32 : ldst->f32;
+          float* sp = src->f32;
           int w = (int)width;
           wasm_deinterleave32(dpl, dph, sp, w);
         }
 
-        si32 *hp = hdst->i32, *lp = ldst->i32;
-        ui32 l_width = (width + (even ? 1 : 0)) >> 1; // low pass
-        ui32 h_width = (width + (even ? 0 : 1)) >> 1; // high pass
+        si32* hp = hdst->i32, * lp = ldst->i32;
+        ui32 l_width = (width + (even ? 1 : 0)) >> 1;  // low pass
+        ui32 h_width = (width + (even ? 0 : 1)) >> 1;  // high pass
         ui32 num_steps = atk->get_num_steps();
         for (ui32 j = num_steps; j > 0; --j)
         {
           // first lifting step
-          const lifting_step *s = atk->get_step(j - 1);
+          const lifting_step* s = atk->get_step(j - 1);
           const si32 a = s->rev.Aatk;
           const si32 b = s->rev.Batk;
           const ui8 e = s->rev.Eatk;
@@ -638,8 +638,8 @@ namespace ojph
           lp[-1] = lp[0];
           lp[l_width] = lp[l_width - 1];
           // lifting step
-          const si32 *sp = lp;
-          si32 *dp = hp;
+          const si32* sp = lp;
+          si32* dp = hp;
           if (a == 1)
           { // 5/3 update and any case with a == 1
             int i = (int)h_width;
@@ -647,55 +647,55 @@ namespace ojph
             {
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_add(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
             else
             {
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_add(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
           }
           else if (a == -1 && b == 1 && e == 1)
-          { // 5/3 predict
+          {  // 5/3 predict
             int i = (int)h_width;
             if (even)
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t w = wasm_i32x4_shr(t, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t w = wasm_i32x4_shr(t, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else if (a == -1)
@@ -704,26 +704,26 @@ namespace ojph
             if (even)
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_sub(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_sub(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else
@@ -732,43 +732,38 @@ namespace ojph
             if (even)
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t u = wasm_i32x4_mul(va, t);
                 v128_t v = wasm_i32x4_add(vb, u);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t u = wasm_i32x4_mul(va, t);
                 v128_t v = wasm_i32x4_add(vb, u);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
 
           // swap buffers
-          si32 *t = lp;
-          lp = hp;
-          hp = t;
+          si32* t = lp; lp = hp; hp = t;
           even = !even;
-          ui32 w = l_width;
-          l_width = h_width;
-          h_width = w;
+          ui32 w = l_width; l_width = h_width; h_width = w;
         }
       }
-      else
-      {
+      else {
         if (even)
           ldst->i32[0] = src->i32[0];
         else
@@ -777,29 +772,30 @@ namespace ojph
     }
 
     /////////////////////////////////////////////////////////////////////////
-    static void wasm_rev_horz_ana64(const param_atk *atk, const line_buf *ldst,
-                                    const line_buf *hdst, const line_buf *src,
-                                    ui32 width, bool even)
+    static
+    void wasm_rev_horz_ana64(const param_atk* atk, const line_buf* ldst,
+                             const line_buf* hdst, const line_buf* src,
+                             ui32 width, bool even)
     {
       if (width > 1)
       {
         // combine both lsrc and hsrc into dst
         {
-          double *dpl = (double *)(even ? ldst->p : hdst->p);
-          double *dph = (double *)(even ? hdst->p : ldst->p);
-          double *sp = (double *)src->p;
+          void* dpl = even ? ldst->p : hdst->p;
+          void* dph = even ? hdst->p : ldst->p;
+          const void* sp = src->p;
           int w = (int)width;
           wasm_deinterleave64(dpl, dph, sp, w);
         }
 
-        si64 *hp = hdst->i64, *lp = ldst->i64;
-        ui32 l_width = (width + (even ? 1 : 0)) >> 1; // low pass
-        ui32 h_width = (width + (even ? 0 : 1)) >> 1; // high pass
+        si64* hp = hdst->i64, * lp = ldst->i64;
+        ui32 l_width = (width + (even ? 1 : 0)) >> 1;  // low pass
+        ui32 h_width = (width + (even ? 0 : 1)) >> 1;  // high pass
         ui32 num_steps = atk->get_num_steps();
         for (ui32 j = num_steps; j > 0; --j)
         {
           // first lifting step
-          const lifting_step *s = atk->get_step(j - 1);
+          const lifting_step* s = atk->get_step(j - 1);
           const si32 a = s->rev.Aatk;
           const si32 b = s->rev.Batk;
           const ui8 e = s->rev.Eatk;
@@ -810,8 +806,8 @@ namespace ojph
           lp[-1] = lp[0];
           lp[l_width] = lp[l_width - 1];
           // lifting step
-          const si64 *sp = lp;
-          si64 *dp = hp;
+          const si64* sp = lp;
+          si64* dp = hp;
           if (a == 1)
           { // 5/3 update and any case with a == 1
             int i = (int)h_width;
@@ -819,55 +815,55 @@ namespace ojph
             {
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_add(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
             else
             {
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_add(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
           }
           else if (a == -1 && b == 1 && e == 1)
-          { // 5/3 predict
+          {  // 5/3 predict
             int i = (int)h_width;
             if (even)
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t w = wasm_i64x2_shr(t, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t w = wasm_i64x2_shr(t, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else if (a == -1)
@@ -876,26 +872,26 @@ namespace ojph
             if (even)
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_sub(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_sub(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else
@@ -904,43 +900,38 @@ namespace ojph
             if (even)
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t u = wasm_i64x2_mul(va, t);
                 v128_t v = wasm_i64x2_add(vb, u);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t u = wasm_i64x2_mul(va, t);
                 v128_t v = wasm_i64x2_add(vb, u);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
 
           // swap buffers
-          si64 *t = lp;
-          lp = hp;
-          hp = t;
+          si64* t = lp; lp = hp; hp = t;
           even = !even;
-          ui32 w = l_width;
-          l_width = h_width;
-          h_width = w;
+          ui32 w = l_width; l_width = h_width; h_width = w;
         }
       }
-      else
-      {
+      else {
         if (even)
           ldst->i64[0] = src->i64[0];
         else
@@ -949,8 +940,8 @@ namespace ojph
     }
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_horz_ana(const param_atk *atk, const line_buf *ldst,
-                           const line_buf *hdst, const line_buf *src,
+    void wasm_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
                            ui32 width, bool even)
     {
       if (src->flags & line_buf::LFT_32BIT)
@@ -969,20 +960,20 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void wasm_rev_horz_syn32(const param_atk *atk, const line_buf *dst,
-                             const line_buf *lsrc, const line_buf *hsrc,
+    void wasm_rev_horz_syn32(const param_atk* atk, const line_buf* dst,
+                             const line_buf* lsrc, const line_buf* hsrc,
                              ui32 width, bool even)
     {
       if (width > 1)
       {
         bool ev = even;
-        si32 *oth = hsrc->i32, *aug = lsrc->i32;
-        ui32 aug_width = (width + (even ? 1 : 0)) >> 1; // low pass
-        ui32 oth_width = (width + (even ? 0 : 1)) >> 1; // high pass
+        si32* oth = hsrc->i32, * aug = lsrc->i32;
+        ui32 aug_width = (width + (even ? 1 : 0)) >> 1;  // low pass
+        ui32 oth_width = (width + (even ? 0 : 1)) >> 1;  // high pass
         ui32 num_steps = atk->get_num_steps();
         for (ui32 j = 0; j < num_steps; ++j)
         {
-          const lifting_step *s = atk->get_step(j);
+          const lifting_step* s = atk->get_step(j);
           const si32 a = s->rev.Aatk;
           const si32 b = s->rev.Batk;
           const ui8 e = s->rev.Eatk;
@@ -993,8 +984,8 @@ namespace ojph
           oth[-1] = oth[0];
           oth[oth_width] = oth[oth_width - 1];
           // lifting step
-          const si32 *sp = oth;
-          si32 *dp = aug;
+          const si32* sp = oth;
+          si32* dp = aug;
           if (a == 1)
           { // 5/3 update and any case with a == 1
             int i = (int)aug_width;
@@ -1002,55 +993,55 @@ namespace ojph
             {
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_add(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
             else
             {
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_add(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
           }
           else if (a == -1 && b == 1 && e == 1)
-          { // 5/3 predict
+          {  // 5/3 predict
             int i = (int)aug_width;
             if (ev)
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t w = wasm_i32x4_shr(t, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t w = wasm_i32x4_shr(t, e);
                 d = wasm_i32x4_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else if (a == -1)
@@ -1059,26 +1050,26 @@ namespace ojph
             if (ev)
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_sub(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t v = wasm_i32x4_sub(vb, t);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else
@@ -1087,52 +1078,47 @@ namespace ojph
             if (ev)
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t u = wasm_i32x4_mul(va, t);
                 v128_t v = wasm_i32x4_add(vb, u);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 4, sp += 4, dp += 4)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i32x4_add(s1, s2);
                 v128_t u = wasm_i32x4_mul(va, t);
                 v128_t v = wasm_i32x4_add(vb, u);
                 v128_t w = wasm_i32x4_shr(v, e);
                 d = wasm_i32x4_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
 
           // swap buffers
-          si32 *t = aug;
-          aug = oth;
-          oth = t;
+          si32* t = aug; aug = oth; oth = t;
           ev = !ev;
-          ui32 w = aug_width;
-          aug_width = oth_width;
-          oth_width = w;
+          ui32 w = aug_width; aug_width = oth_width; oth_width = w;
         }
 
         // combine both lsrc and hsrc into dst
         {
-          float *dp = dst->f32;
-          float *spl = even ? lsrc->f32 : hsrc->f32;
-          float *sph = even ? hsrc->f32 : lsrc->f32;
+          float* dp = dst->f32;
+          float* spl = even ? lsrc->f32 : hsrc->f32;
+          float* sph = even ? hsrc->f32 : lsrc->f32;
           int w = (int)width;
           wasm_interleave32(dp, spl, sph, w);
         }
       }
-      else
-      {
+      else {
         if (even)
           dst->i32[0] = lsrc->i32[0];
         else
@@ -1141,20 +1127,20 @@ namespace ojph
     }
 
     //////////////////////////////////////////////////////////////////////////
-    void wasm_rev_horz_syn64(const param_atk *atk, const line_buf *dst,
-                             const line_buf *lsrc, const line_buf *hsrc,
+    void wasm_rev_horz_syn64(const param_atk* atk, const line_buf* dst,
+                             const line_buf* lsrc, const line_buf* hsrc,
                              ui32 width, bool even)
     {
       if (width > 1)
       {
         bool ev = even;
-        si64 *oth = hsrc->i64, *aug = lsrc->i64;
-        ui32 aug_width = (width + (even ? 1 : 0)) >> 1; // low pass
-        ui32 oth_width = (width + (even ? 0 : 1)) >> 1; // high pass
+        si64* oth = hsrc->i64, * aug = lsrc->i64;
+        ui32 aug_width = (width + (even ? 1 : 0)) >> 1;  // low pass
+        ui32 oth_width = (width + (even ? 0 : 1)) >> 1;  // high pass
         ui32 num_steps = atk->get_num_steps();
         for (ui32 j = 0; j < num_steps; ++j)
         {
-          const lifting_step *s = atk->get_step(j);
+          const lifting_step* s = atk->get_step(j);
           const si32 a = s->rev.Aatk;
           const si32 b = s->rev.Batk;
           const ui8 e = s->rev.Eatk;
@@ -1165,8 +1151,8 @@ namespace ojph
           oth[-1] = oth[0];
           oth[oth_width] = oth[oth_width - 1];
           // lifting step
-          const si64 *sp = oth;
-          si64 *dp = aug;
+          const si64* sp = oth;
+          si64* dp = aug;
           if (a == 1)
           { // 5/3 update and any case with a == 1
             int i = (int)aug_width;
@@ -1174,55 +1160,55 @@ namespace ojph
             {
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_add(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
             else
             {
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_add(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             }
           }
           else if (a == -1 && b == 1 && e == 1)
-          { // 5/3 predict
+          {  // 5/3 predict
             int i = (int)aug_width;
             if (ev)
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t w = wasm_i64x2_shr(t, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t w = wasm_i64x2_shr(t, e);
                 d = wasm_i64x2_add(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else if (a == -1)
@@ -1231,26 +1217,26 @@ namespace ojph
             if (ev)
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_sub(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t v = wasm_i64x2_sub(vb, t);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
           else
@@ -1259,52 +1245,47 @@ namespace ojph
             if (ev)
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp - 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp - 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t u = wasm_i64x2_mul(va, t);
                 v128_t v = wasm_i64x2_add(vb, u);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
             else
               for (; i > 0; i -= 2, sp += 2, dp += 2)
               {
-                v128_t s1 = wasm_v128_load((v128_t *)sp);
-                v128_t s2 = wasm_v128_load((v128_t *)(sp + 1));
-                v128_t d = wasm_v128_load((v128_t *)dp);
+                v128_t s1 = wasm_v128_load((v128_t*)sp);
+                v128_t s2 = wasm_v128_load((v128_t*)(sp + 1));
+                v128_t d = wasm_v128_load((v128_t*)dp);
                 v128_t t = wasm_i64x2_add(s1, s2);
                 v128_t u = wasm_i64x2_mul(va, t);
                 v128_t v = wasm_i64x2_add(vb, u);
                 v128_t w = wasm_i64x2_shr(v, e);
                 d = wasm_i64x2_sub(d, w);
-                wasm_v128_store((v128_t *)dp, d);
+                wasm_v128_store((v128_t*)dp, d);
               }
           }
 
           // swap buffers
-          si64 *t = aug;
-          aug = oth;
-          oth = t;
+          si64* t = aug; aug = oth; oth = t;
           ev = !ev;
-          ui32 w = aug_width;
-          aug_width = oth_width;
-          oth_width = w;
+          ui32 w = aug_width; aug_width = oth_width; oth_width = w;
         }
 
         // combine both lsrc and hsrc into dst
         {
-          double *dp = (double *)dst->p;
-          double *spl = (double *)(even ? lsrc->p : hsrc->p);
-          double *sph = (double *)(even ? hsrc->p : lsrc->p);
+          void* dp = dst->p;
+          const void* spl = even ? lsrc->p : hsrc->p;
+          const void* sph = even ? hsrc->p : lsrc->p;
           int w = (int)width;
           wasm_interleave64(dp, spl, sph, w);
         }
       }
-      else
-      {
+      else {
         if (even)
           dst->i64[0] = lsrc->i64[0];
         else
@@ -1313,8 +1294,8 @@ namespace ojph
     }
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_horz_syn(const param_atk *atk, const line_buf *dst,
-                           const line_buf *lsrc, const line_buf *hsrc,
+    void wasm_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                           const line_buf* lsrc, const line_buf* hsrc,
                            ui32 width, bool even)
     {
       if (dst->flags & line_buf::LFT_32BIT)

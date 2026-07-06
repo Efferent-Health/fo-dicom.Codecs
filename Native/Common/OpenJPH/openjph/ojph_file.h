@@ -35,6 +35,7 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #ifndef OJPH_FILE_H
 #define OJPH_FILE_H
 
@@ -43,39 +44,38 @@
 
 #include "ojph_arch.h"
 
-namespace ojph
-{
+namespace ojph {
 
   ////////////////////////////////////////////////////////////////////////////
 #ifdef OJPH_OS_WINDOWS
-  int inline ojph_fseek(FILE *stream, si64 offset, int origin)
+  int inline ojph_fseek(FILE* stream, si64 offset, int origin)
   {
     return _fseeki64(stream, offset, origin);
   }
 
-  si64 inline ojph_ftell(FILE *stream)
+  si64 inline ojph_ftell(FILE* stream)
   {
     return _ftelli64(stream);
   }
 #else
-  int inline ojph_fseek(FILE *stream, si64 offset, int origin)
+  int inline ojph_fseek(FILE* stream, si64 offset, int origin)
   {
     return fseeko(stream, offset, origin);
   }
 
-  si64 inline ojph_ftell(FILE *stream)
+  si64 inline ojph_ftell(FILE* stream)
   {
     return ftello(stream);
   }
 #endif
+
 
   ////////////////////////////////////////////////////////////////////////////
   class OJPH_EXPORT outfile_base
   {
   public:
   public:
-    enum seek : int
-    {
+    enum seek : int {
       OJPH_SEEK_SET = SEEK_SET,
       OJPH_SEEK_CUR = SEEK_CUR,
       OJPH_SEEK_END = SEEK_END
@@ -86,8 +86,7 @@ namespace ojph
     virtual si64 tell() { return 0; }
     virtual int seek(si64 offset, enum outfile_base::seek origin)
     {
-      ojph_unused(offset);
-      ojph_unused(origin);
+      ojph_unused(offset); ojph_unused(origin);
       return -1; /* always fail, to remind you to write an implementation */
     }
     virtual void flush() {}
@@ -99,11 +98,7 @@ namespace ojph
   {
   public:
     j2c_outfile() { fh = 0; }
-    ~j2c_outfile() override
-    {
-      if (fh)
-        fclose(fh);
-    }
+    ~j2c_outfile() override { if (fh) fclose(fh); }
 
     void open(const char *filename);
     size_t write(const void *ptr, size_t size) override;
@@ -136,9 +131,23 @@ namespace ojph
     /**  A destructor */
     ~mem_outfile() override;
 
+    mem_outfile(mem_outfile const&) = delete;
+    mem_outfile& operator=(mem_outfile const&) = delete;
+
+    /**
+     * Move construction leaves the moved-from value in default constructed state
+     * and transfers ownership of the internal state to the moved-to instance.
+     **/
+    mem_outfile(mem_outfile &&) noexcept;
+    /**
+     * move assignment with the same ownership transfer semantics as
+     * move construction.
+     **/
+    mem_outfile& operator=(mem_outfile&&) noexcept;
+
     /**
      *  @brief Call this function to open a memory file.
-     *
+	   *
      *  This function creates a memory buffer to be used for storing
      *  the generated j2k codestream.
      *
@@ -150,7 +159,7 @@ namespace ojph
 
     /**
      *  @brief Call this function to write data to the memory file.
-     *
+	   *
      *  This function adds new data to the memory file.  The memory buffer
      *  of the file grows as needed.
      *
@@ -176,39 +185,60 @@ namespace ojph
     int seek(si64 offset, enum outfile_base::seek origin) override;
 
     /** Call this function to close the file and deallocate memory
-     *
+	   *
      *  The object can be used again after calling close
      */
     void close() override;
 
     /**
      *  @brief Call this function to access memory file data.
-     *
+	   *
      *  It is not recommended to store the returned value because buffer
      *  storage address can change between write calls.
      *
      *  @return a constant pointer to the data.
      */
-    const ui8 *get_data() { return buf; }
+    const ui8* get_data() { return buf; }
 
     /**
      *  @brief Call this function to access memory file data (for const
      *         objects)
-     *
+	   *
      *  This is similar to the above function, except that it can be used
      *  with constant objects.
      *
      *  @return a constant pointer to the data.
      */
-    const ui8 *get_data() const { return buf; }
+    const ui8* get_data() const { return buf; }
 
     /**
      *  @brief Call this function to write the memory file data to a file
-     *
+	   *
      */
     void write_to_file(const char *file_name) const;
 
+    /**
+     *  @brief Call this function to get the used size of the memory file.
+     *
+     *  @return the used size of the memory file in bytes.
+     */
+    size_t get_used_size() const { return used_size; }
+
+    /**
+     *  @brief Call this function to get the total buffer size of the memory
+     *         file including unused space (this is the allocated memory).
+     *
+     *  @return the full size of the memory file in bytes.
+     */
+     size_t get_buf_size() const { return buf_size; }
+
   private:
+
+    /**
+     * @brief A utility function to swap the contents of two instances
+     */
+    void swap(mem_outfile& other) noexcept;
+  
     /**
      *  @brief This function expands storage by x1.5 needed space.
      *
@@ -227,14 +257,16 @@ namespace ojph
     size_t used_size;
     ui8 *buf;
     ui8 *cur_ptr;
+
+  private:
+    static const size_t ALIGNED_ALLOC_MASK = 4096 - 1;
   };
 
   ////////////////////////////////////////////////////////////////////////////
   class OJPH_EXPORT infile_base
   {
   public:
-    enum seek : int
-    {
+    enum seek : int {
       OJPH_SEEK_SET = SEEK_SET,
       OJPH_SEEK_CUR = SEEK_CUR,
       OJPH_SEEK_END = SEEK_END
@@ -242,9 +274,9 @@ namespace ojph
 
     virtual ~infile_base() {}
 
-    // read reads size bytes, returns the number of bytes read
+    //read reads size bytes, returns the number of bytes read
     virtual size_t read(void *ptr, size_t size) = 0;
-    // seek returns 0 on success
+    //seek returns 0 on success
     virtual int seek(si64 offset, enum infile_base::seek origin) = 0;
     virtual si64 tell() = 0;
     virtual bool eof() = 0;
@@ -256,17 +288,13 @@ namespace ojph
   {
   public:
     j2c_infile() { fh = 0; }
-    ~j2c_infile() override
-    {
-      if (fh)
-        fclose(fh);
-    }
+    ~j2c_infile() override { if (fh) fclose(fh); }
 
     void open(const char *filename);
 
-    // read reads size bytes, returns the number of bytes read
+    //read reads size bytes, returns the number of bytes read
     size_t read(void *ptr, size_t size) override;
-    // seek returns 0 on success
+    //seek returns 0 on success
     int seek(si64 offset, enum infile_base::seek origin) override;
     si64 tell() override;
     bool eof() override { return feof(fh) != 0; }
@@ -281,26 +309,40 @@ namespace ojph
   {
   public:
     mem_infile() { close(); }
-    ~mem_infile() override {}
+    ~mem_infile() override { }
 
-    void open(const ui8 *data, size_t size);
+    mem_infile(mem_infile const&) = delete;
+    mem_infile& operator=(mem_infile const&) = delete;
 
-    // read reads size bytes, returns the number of bytes read
+    /**
+     * Move construction leaves the moved-from value in default constructed state
+     * and transfers ownership of the internal state to the moved-to instance.
+     **/
+    mem_infile(mem_infile &&) noexcept;
+    /**
+     * move assignment with the same ownership transfer semantics as
+     * move construction.
+     **/
+    mem_infile& operator=(mem_infile&&) noexcept;
+
+    void open(const ui8* data, size_t size);
+
+    //read reads size bytes, returns the number of bytes read
     size_t read(void *ptr, size_t size) override;
-    // seek returns 0 on success
+    //seek returns 0 on success
     int seek(si64 offset, enum infile_base::seek origin) override;
     si64 tell() override { return cur_ptr - data; }
     bool eof() override { return cur_ptr >= data + size; }
-    void close() override
-    {
-      data = cur_ptr = NULL;
-      size = 0;
-    }
+    void close() override { data = cur_ptr = NULL; size = 0; }
 
   private:
+    // swap the contents of two instances
+    void swap(mem_infile&) noexcept;
+
     const ui8 *data, *cur_ptr;
     size_t size;
   };
+
 
 }
 

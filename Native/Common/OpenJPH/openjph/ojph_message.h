@@ -41,8 +41,7 @@
 #include <cstring>
 #include "ojph_arch.h"
 
-namespace ojph
-{
+namespace ojph {
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -52,11 +51,12 @@ namespace ojph
    */
   enum OJPH_MSG_LEVEL : int
   {
-    ALL_MSG = 0, // uninitialized or print all message
-    INFO = 1,    // info message
-    WARN = 2,    // warning message
-    ERROR = 3,   // error message (the highest severity)
-    NO_MSG = 4,  // no message (higher severity for message printing only)
+    OJPH_MSG_ALL_MSG = 0,  // uninitialized or print all message
+    OJPH_MSG_INFO = 1,     // info message
+    OJPH_MSG_WARN = 2,     // warning message
+    OJPH_MSG_ERROR = 3,    // error message (the highest severity)
+    OJPH_MSG_NO_MSG = 4,   // no message (higher severity for message printing
+                           // only)
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -89,8 +89,7 @@ namespace ojph
    *  Importantly it defined the base virtual operator() that must be defined
    *  in all derived classes.
    */
-  class OJPH_EXPORT message_base
-  {
+  class OJPH_EXPORT message_base {
   public:
     /**
      * @brief Prints a message and for errors throws an exception.
@@ -103,8 +102,8 @@ namespace ojph
      * @param ...       A variable number of parameters to print.  This is
      *                  the parameters you would pass to printf.
      */
-    virtual void operator()(int warn_code, const char *file_name,
-                            int line_num, const char *fmt, ...) = 0;
+      virtual void operator() (int warn_code, const char* file_name,
+        int line_num, const char *fmt, ...) = 0;
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -113,13 +112,13 @@ namespace ojph
    */
   class OJPH_EXPORT message_info : public message_base
   {
-  public:
-    /**
-     * @brief See the base message_base::operator() for details about
-     *        parameters
-     */
-    virtual void operator()(int info_code, const char *file_name,
-                            int line_num, const char *fmt, ...);
+    public:
+      /**
+       * @brief See the base message_base::operator() for details about
+       *        parameters
+       */
+      virtual void operator() (int info_code, const char* file_name,
+        int line_num, const char* fmt, ...);
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -131,7 +130,7 @@ namespace ojph
    *          a log file, or NULL if no info messages are desired.
    */
   OJPH_EXPORT
-  void set_info_stream(FILE *s);
+    void set_info_stream(FILE* s);
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -141,7 +140,7 @@ namespace ojph
    *             behaviour.
    */
   OJPH_EXPORT
-  void configure_info(message_info *info);
+    void configure_info(message_info* info);
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -154,7 +153,7 @@ namespace ojph
    *         below.
    */
   OJPH_EXPORT
-  message_info *get_info();
+    message_info* get_info();
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -162,13 +161,13 @@ namespace ojph
    */
   class OJPH_EXPORT message_warning : public message_base
   {
-  public:
-    /**
-     * @brief See the base message_base::operator() for details about
-     *        parameters
-     */
-    virtual void operator()(int warn_code, const char *file_name,
-                            int line_num, const char *fmt, ...);
+    public:
+      /**
+       * @brief See the base message_base::operator() for details about
+       *        parameters
+       */
+      virtual void operator() (int warn_code, const char* file_name,
+        int line_num, const char* fmt, ...);
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -180,7 +179,7 @@ namespace ojph
    *          a log file, or NULL if no warning messages are desired.
    */
   OJPH_EXPORT
-  void set_warning_stream(FILE *s);
+    void set_warning_stream(FILE* s);
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -190,7 +189,7 @@ namespace ojph
    *             desired behaviour.
    */
   OJPH_EXPORT
-  void configure_warning(message_warning *warn);
+    void configure_warning(message_warning* warn);
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -203,7 +202,7 @@ namespace ojph
    *         the macros below.
    */
   OJPH_EXPORT
-  message_warning *get_warning();
+    message_warning* get_warning();
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -211,13 +210,13 @@ namespace ojph
    */
   class OJPH_EXPORT message_error : public message_base
   {
-  public:
-    /**
-     * @brief See the base message_base::operator() for details about
-     *        parameters
-     */
-    virtual void operator()(int warn_code, const char *file_name,
-                            int line_num, const char *fmt, ...);
+    public:
+      /**
+       * @brief See the base message_base::operator() for details about
+       *        parameters
+       */
+      virtual void operator() (int warn_code, const char* file_name,
+        int line_num, const char *fmt, ...);
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -229,7 +228,7 @@ namespace ojph
    *          a log file, or NULL if no error messages are desired.
    */
   OJPH_EXPORT
-  void set_error_stream(FILE *s);
+    void set_error_stream(FILE *s);
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -240,7 +239,7 @@ namespace ojph
    *              at the end.
    */
   OJPH_EXPORT
-  void configure_error(message_error *error);
+    void configure_error(message_error* error);
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -253,7 +252,7 @@ namespace ojph
    *         the macros below.
    */
   OJPH_EXPORT
-  message_error *get_error();
+    message_error* get_error();
 
   //////////////////////////////////////////////////////////////////////////////
   /**
@@ -263,7 +262,7 @@ namespace ojph
    *              OJPH_MSG_LEVEL.
    */
   OJPH_EXPORT
-  void set_message_level(OJPH_MSG_LEVEL level);
+    void set_message_level(OJPH_MSG_LEVEL level);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -271,28 +270,23 @@ namespace ojph
  * @brief MACROS to remove the directory name from the file name
  */
 #if (defined OJPH_OS_WINDOWS)
-#define __OJPHFILE__ \
-  (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+  #define __OJPHFILE__ \
+    (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 #else
-#define __OJPHFILE__ \
-  (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+  #define __OJPHFILE__ \
+    (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @brief MACROs to insert file and line number for info, warning, and error
  */
-#define OJPH_INFO(t, ...)                                        \
-  {                                                              \
-    ojph::get_info()[0](t, __OJPHFILE__, __LINE__, __VA_ARGS__); \
-  }
-#define OJPH_WARN(t, ...)                                           \
-  {                                                                 \
-    ojph::get_warning()[0](t, __OJPHFILE__, __LINE__, __VA_ARGS__); \
-  }
-#define OJPH_ERROR(t, ...)                                        \
-  {                                                               \
-    ojph::get_error()[0](t, __OJPHFILE__, __LINE__, __VA_ARGS__); \
-  }
+#define OJPH_INFO(t, ...) \
+  { ojph::get_info()[0](t, __OJPHFILE__, __LINE__, __VA_ARGS__); }
+#define OJPH_WARN(t, ...) \
+  { ojph::get_warning()[0](t, __OJPHFILE__, __LINE__, __VA_ARGS__); }
+#define OJPH_ERROR(t, ...) \
+  { ojph::get_error()[0](t, __OJPHFILE__, __LINE__,__VA_ARGS__); }
+
 
 #endif // !OJPH_MESSAGE_H

@@ -35,19 +35,18 @@
 // Date: 28 August 2019
 //***************************************************************************/
 
+
 #ifndef OJPH_TRANSFORM_LOCAL_H
 #define OJPH_TRANSFORM_LOCAL_H
 
 #include "ojph_defs.h"
 
-namespace ojph
-{
+namespace ojph {
 
   // defined elsewhere
   class line_buf;
 
-  namespace local
-  {
+  namespace local {
     struct param_atk;
     union lifting_step;
 
@@ -64,20 +63,20 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_irv_vert_step(const lifting_step *s, const line_buf *sig,
-                           const line_buf *other, const line_buf *aug,
+    void gen_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                           const line_buf* other, const line_buf* aug,
                            ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_irv_vert_times_K(float K, const line_buf *aug, ui32 repeat);
+    void gen_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat);
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_irv_horz_ana(const param_atk *atk, const line_buf *ldst,
-                          const line_buf *hdst, const line_buf *src,
+    void gen_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                          const line_buf* hdst, const line_buf* src,
                           ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_irv_horz_syn(const param_atk *atk, const line_buf *dst,
+    void gen_irv_horz_syn(const param_atk *atk, const line_buf* dst,
                           const line_buf *lsrc, const line_buf *hsrc,
                           ui32 width, bool even);
 
@@ -86,18 +85,18 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_rev_vert_step(const lifting_step *s, const line_buf *sig,
-                           const line_buf *other, const line_buf *aug,
+    void gen_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                           const line_buf* other, const line_buf* aug,
                            ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_rev_horz_ana(const param_atk *atk, const line_buf *ldst,
-                          const line_buf *hdst, const line_buf *src,
+    void gen_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                          const line_buf* hdst, const line_buf* src,
                           ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void gen_rev_horz_syn(const param_atk *atk, const line_buf *dst,
-                          const line_buf *lsrc, const line_buf *hsrc,
+    void gen_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                          const line_buf* lsrc, const line_buf* hsrc,
                           ui32 width, bool even);
 
     //////////////////////////////////////////////////////////////////////////
@@ -113,20 +112,20 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void sse_irv_vert_step(const lifting_step *s, const line_buf *sig,
-                           const line_buf *other, const line_buf *aug,
+    void sse_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                           const line_buf* other, const line_buf* aug,
                            ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void sse_irv_vert_times_K(float K, const line_buf *aug, ui32 repeat);
+    void sse_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat);
 
     /////////////////////////////////////////////////////////////////////////
-    void sse_irv_horz_ana(const param_atk *atk, const line_buf *ldst,
-                          const line_buf *hdst, const line_buf *src,
+    void sse_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                          const line_buf* hdst, const line_buf* src,
                           ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void sse_irv_horz_syn(const param_atk *atk, const line_buf *dst,
+    void sse_irv_horz_syn(const param_atk *atk, const line_buf* dst,
                           const line_buf *lsrc, const line_buf *hsrc,
                           ui32 width, bool even);
 
@@ -143,19 +142,20 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void sse2_rev_vert_step(const lifting_step *s, const line_buf *sig,
-                            const line_buf *other, const line_buf *aug,
+    void sse2_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
                             ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void sse2_rev_horz_ana(const param_atk *atk, const line_buf *ldst,
-                           const line_buf *hdst, const line_buf *src,
+    void sse2_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
                            ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void sse2_rev_horz_syn(const param_atk *atk, const line_buf *dst,
-                           const line_buf *lsrc, const line_buf *hsrc,
+    void sse2_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                           const line_buf* lsrc, const line_buf* hsrc,
                            ui32 width, bool even);
+
 
     //////////////////////////////////////////////////////////////////////////
     //
@@ -170,20 +170,20 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void avx_irv_vert_step(const lifting_step *s, const line_buf *sig,
-                           const line_buf *other, const line_buf *aug,
+    void avx_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                           const line_buf* other, const line_buf* aug,
                            ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx_irv_vert_times_K(float K, const line_buf *aug, ui32 repeat);
+    void avx_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx_irv_horz_ana(const param_atk *atk, const line_buf *ldst,
-                          const line_buf *hdst, const line_buf *src,
+    void avx_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                          const line_buf* hdst, const line_buf* src,
                           ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx_irv_horz_syn(const param_atk *atk, const line_buf *dst,
+    void avx_irv_horz_syn(const param_atk *atk, const line_buf* dst,
                           const line_buf *lsrc, const line_buf *hsrc,
                           ui32 width, bool even);
 
@@ -200,18 +200,18 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void avx2_rev_vert_step(const lifting_step *s, const line_buf *sig,
-                            const line_buf *other, const line_buf *aug,
+    void avx2_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
                             ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx2_rev_horz_ana(const param_atk *atk, const line_buf *ldst,
-                           const line_buf *hdst, const line_buf *src,
+    void avx2_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
                            ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx2_rev_horz_syn(const param_atk *atk, const line_buf *dst,
-                           const line_buf *lsrc, const line_buf *hsrc,
+    void avx2_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                           const line_buf* lsrc, const line_buf* hsrc,
                            ui32 width, bool even);
 
     //////////////////////////////////////////////////////////////////////////
@@ -227,40 +227,41 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_irv_vert_step(const lifting_step *s, const line_buf *sig,
-                              const line_buf *other, const line_buf *aug,
+    void avx512_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                              const line_buf* other, const line_buf* aug,
                               ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_irv_vert_times_K(float K, const line_buf *aug, ui32 repeat);
+    void avx512_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_irv_horz_ana(const param_atk *atk, const line_buf *ldst,
-                             const line_buf *hdst, const line_buf *src,
+    void avx512_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                             const line_buf* hdst, const line_buf* src,
                              ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_irv_horz_syn(const param_atk *atk, const line_buf *dst,
+    void avx512_irv_horz_syn(const param_atk *atk, const line_buf* dst,
                              const line_buf *lsrc, const line_buf *hsrc,
                              ui32 width, bool even);
+
 
     //////////////////////////////////////////////////////////////////////////
     // Reversible functions
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_rev_vert_step(const lifting_step *s, const line_buf *sig,
-                              const line_buf *other, const line_buf *aug,
+    void avx512_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                              const line_buf* other, const line_buf* aug,
                               ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_rev_horz_ana(const param_atk *atk, const line_buf *ldst,
-                             const line_buf *hdst, const line_buf *src,
+    void avx512_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                             const line_buf* hdst, const line_buf* src,
                              ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void avx512_rev_horz_syn(const param_atk *atk, const line_buf *dst,
-                             const line_buf *lsrc, const line_buf *hsrc,
+    void avx512_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                             const line_buf* lsrc, const line_buf* hsrc,
                              ui32 width, bool even);
 
     //////////////////////////////////////////////////////////////////////////
@@ -276,20 +277,20 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_irv_vert_step(const lifting_step *s, const line_buf *sig,
-                            const line_buf *other, const line_buf *aug,
+    void wasm_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
                             ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_irv_vert_times_K(float K, const line_buf *aug, ui32 repeat);
+    void wasm_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat);
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_irv_horz_ana(const param_atk *atk, const line_buf *ldst,
-                           const line_buf *hdst, const line_buf *src,
+    void wasm_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
                            ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_irv_horz_syn(const param_atk *atk, const line_buf *dst,
+    void wasm_irv_horz_syn(const param_atk *atk, const line_buf* dst,
                            const line_buf *lsrc, const line_buf *hsrc,
                            ui32 width, bool even);
 
@@ -298,18 +299,67 @@ namespace ojph
     //////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_vert_step(const lifting_step *s, const line_buf *sig,
-                            const line_buf *other, const line_buf *aug,
+    void wasm_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
                             ui32 repeat, bool synthesis);
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_horz_ana(const param_atk *atk, const line_buf *ldst,
-                           const line_buf *hdst, const line_buf *src,
+    void wasm_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
                            ui32 width, bool even);
 
     /////////////////////////////////////////////////////////////////////////
-    void wasm_rev_horz_syn(const param_atk *atk, const line_buf *dst,
+    void wasm_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                           const line_buf* lsrc, const line_buf* hsrc,
+                           ui32 width, bool even);
+
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //
+    //                           VSX Functions
+    //
+    //
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    // Irreversible functions
+    //////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_irv_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
+                            ui32 repeat, bool synthesis);
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_irv_vert_times_K(float K, const line_buf* aug, ui32 repeat);
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_irv_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
+                           ui32 width, bool even);
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_irv_horz_syn(const param_atk *atk, const line_buf* dst,
                            const line_buf *lsrc, const line_buf *hsrc,
+                           ui32 width, bool even);
+
+    //////////////////////////////////////////////////////////////////////////
+    // Reversible functions
+    //////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_rev_vert_step(const lifting_step* s, const line_buf* sig,
+                            const line_buf* other, const line_buf* aug,
+                            ui32 repeat, bool synthesis);
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_rev_horz_ana(const param_atk* atk, const line_buf* ldst,
+                           const line_buf* hdst, const line_buf* src,
+                           ui32 width, bool even);
+
+    /////////////////////////////////////////////////////////////////////////
+    void vsx_rev_horz_syn(const param_atk* atk, const line_buf* dst,
+                           const line_buf* lsrc, const line_buf* hsrc,
                            ui32 width, bool even);
   }
 }

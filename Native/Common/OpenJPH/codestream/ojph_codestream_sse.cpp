@@ -34,25 +34,22 @@
 // Author: Aous Naman
 // Date: 15 May 2022
 //***************************************************************************/
-#include "ojph_arch.h"
 
+#include "ojph_arch.h"
 #if defined(OJPH_ARCH_I386) || defined(OJPH_ARCH_X86_64)
 
 #include <immintrin.h>
 #include "ojph_defs.h"
 
-namespace ojph
-{
-  namespace local
-  {
+namespace ojph {
+  namespace local {
 
     //////////////////////////////////////////////////////////////////////////
-    void sse_mem_clear(void *addr, size_t count)
+    void sse_mem_clear(void* addr, size_t count)
     {
-      float *p = (float *)addr;
-      __m128 zero = _mm_setzero_ps();
-      for (size_t i = 0; i < count; i += 16, p += 4)
-        _mm_storeu_ps(p, zero);
+      __m128i zero = _mm_setzero_si128();
+      for (size_t i = 0; i < count; i += 16, addr = (char*)addr + 16)
+        _mm_storeu_si128((__m128i*)addr, zero);
     }
   }
 }
