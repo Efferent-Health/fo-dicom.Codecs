@@ -27,4 +27,4 @@
 #endif
 
 #define JCOPYRIGHT \
-  "Copyright (C) 1991-2026 The libjpeg-turbo Project and many others"
+  "Copyright (C) 1991-2026 The libjpeg-turbo Project and many others\n"

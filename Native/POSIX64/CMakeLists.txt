@@ -56,6 +56,7 @@ SET(CROSSPLATFORM_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.JpegLS.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg2000.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.HtJpeg2000.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_8.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_12.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../Dicom.Imaging.Codec.Jpeg_16.cpp
@@ -589,7 +590,7 @@ if(UNIX AND NOT APPLE)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${LIBJPEG_TURBO_SRCS} ${OPENJPEG_SRCS} ${LIBIJG16_SRCS} ${LIBIJG12_SRCS} ${LIBIJG8_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${LIBJPEG_TURBO_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
