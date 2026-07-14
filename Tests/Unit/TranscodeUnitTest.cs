@@ -28,7 +28,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             Directory.CreateDirectory("out");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("RLELossless")]
         [DataRow("JPEG2000Lossless")]
         [DataRow("JPEG2000Lossy")]
