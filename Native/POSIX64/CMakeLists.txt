@@ -578,7 +578,7 @@ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../Common/OpenJPH/transf
 
 if(UNIX AND NOT APPLE)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${LIBJPEG_TURBO_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -598,7 +598,7 @@ if(UNIX AND NOT APPLE)
   endif()
 elseif(UNIX)
   if("${ARCH_FLAG}" STREQUAL "arm64")
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${LIBJPEG_TURBO_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
@@ -607,7 +607,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
+    add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${LIBJPEG_TURBO_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
       PROPERTIES
