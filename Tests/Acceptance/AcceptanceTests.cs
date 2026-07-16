@@ -66,7 +66,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         }
 
         [TestMethod]
-        [DynamicData(nameof(Data), DynamicDataSourceType.Property)]
+        [DynamicData(nameof(Data))]
         public void PerformTranscode(int index0, int index1)
         { 
             var output = $"out/{transferSyntaxes[index1]}_{filenames[index0]}";
@@ -95,7 +95,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         }
 
         [TestMethod]
-        [DynamicData(nameof(Data), DynamicDataSourceType.Property)]
+        [DynamicData(nameof(Data))]
         public void InverseTranscode(int index0, int index1)
         {
             var input = $"out/{transferSyntaxes[index1]}_{filenames[index0]}";
@@ -125,7 +125,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         }
 
         [TestMethod]
-        [DynamicData(nameof(ImageData), DynamicDataSourceType.Property)]
+        [DynamicData(nameof(ImageData))]
         public void RenderImages(int index0)
         {
             var outputFile = Path.ChangeExtension(Path.GetFileNameWithoutExtension(filenames[index0]), ".png");

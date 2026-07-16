@@ -265,13 +265,7 @@
       <Filter>Source Files\OpenJPH</Filter>
     </ClCompile>
 
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_8.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_12.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg_16.cpp">
+    <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Dicom.Imaging.Codec.Jpeg2000.cpp">
@@ -284,6 +278,89 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\cderror.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\cdjpeg.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\cmyk.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jchuff.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jconfig.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jconfigint.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdcoefct.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdct.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdhuff.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdmainct.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdmaster.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdmerge.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jdsample.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jerror.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jinclude.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jlossls.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jmemsys.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jmorecfg.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jpeg_nbits.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jpegapicomp.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jpegint.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jpeglib.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\jversion.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\tjutil.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\transupp.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\turbojpeg.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\libjpeg-turbo\image.h">
+      <Filter>Header Files\libjpeg-turbo</Filter>
+    </ClInclude>
   
   <ItemGroup>
     <ClInclude Include="..\..\Common\OpenJPEG\tls_keys.h">
