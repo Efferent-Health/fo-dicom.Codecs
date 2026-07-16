@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" /-->
+    <None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" />
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
