@@ -361,6 +361,7 @@
     <ClInclude Include="..\..\Common\libjpeg-turbo\image.h">
       <Filter>Header Files\libjpeg-turbo</Filter>
     </ClInclude>
+  </ItemGroup>
   
   <ItemGroup>
     <ClInclude Include="..\..\Common\OpenJPEG\tls_keys.h">
