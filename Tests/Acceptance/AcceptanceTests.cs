@@ -21,7 +21,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
         private static string[] filenames;
 
-        private static DicomTransferSyntax[] transferSyntaxes =
+        private readonly static DicomTransferSyntax[] transferSyntaxes =
         {
             DicomTransferSyntax.RLELossless,
             DicomTransferSyntax.JPEG2000Lossless,
