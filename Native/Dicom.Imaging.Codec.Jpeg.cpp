@@ -270,7 +270,7 @@ extern "C"
         unsigned int jpegSize,
         int convertColorSpaceToRGB,
         int isSigned,
-        unsigned char **out_pixels,
+        unsigned char *out_pixels,
         unsigned int *out_size,
         unsigned int *out_width,
         unsigned int *out_height,
@@ -283,7 +283,6 @@ extern "C"
     {
         struct jpeg_decompress_struct dinfo;
         dicom_jpeg_error_mgr jerr;
-        unsigned char *pixels = nullptr;
 
         std::memset(&dinfo, 0, sizeof(dinfo));
 
@@ -297,8 +296,8 @@ extern "C"
         if (setjmp(jerr.setjmp_buffer))
         {
             jpeg_destroy_decompress(&dinfo);
-            if (pixels != nullptr)
-                free(pixels);
+            if (out_pixels != nullptr)
+                free(out_pixels);
             return 1;
         }
 
@@ -364,8 +363,8 @@ extern "C"
             return 4;
         }
 
-        pixels = static_cast<unsigned char *>(malloc(frameSize));
-        if (pixels == nullptr)
+        
+        if (out_pixels == nullptr)
         {
             if (errorMessage != nullptr && errorMessageSize > 0)
             {
@@ -378,7 +377,7 @@ extern "C"
 
         while (dinfo.output_scanline < dinfo.output_height)
         {
-            unsigned char *row = pixels + (size_t)dinfo.output_scanline * rowSize;
+            unsigned char *row = out_pixels + (size_t)dinfo.output_scanline * rowSize;
             JDIMENSION read = 0;
             if (precision <= 8)
             {
@@ -395,6 +394,7 @@ extern "C"
                 J16SAMPROW rowPtr = reinterpret_cast<J16SAMPLE *>(row);
                 read = jpeg16_read_scanlines(&dinfo, &rowPtr, 1);
             }
+
             if (read == 0)
             {
                 if (errorMessage != nullptr && errorMessageSize > 0)
@@ -402,13 +402,13 @@ extern "C"
                     std::strncpy(errorMessage, "jpeg_read_scanlines returned 0 (suspended)", errorMessageSize - 1);
                     errorMessage[errorMessageSize - 1] = '\0';
                 }
-                free(pixels);
+
+                free(out_pixels);
                 jpeg_destroy_decompress(&dinfo);
                 return 3;
             }
         }
 
-        *out_pixels = pixels;
         *out_size = static_cast<unsigned int>(frameSize);
         *out_width = dinfo.output_width;
         *out_height = dinfo.output_height;

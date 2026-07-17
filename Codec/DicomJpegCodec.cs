@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,6 +9,7 @@ using FellowOakDicom.IO;
 using FellowOakDicom.IO.Buffer;
 
 using FellowOakDicom.Imaging.NativeCodec.Jpeg;
+using CommunityToolkit.HighPerformance;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
@@ -120,7 +122,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode_win(
                 byte* jpegData, uint jpegSize, int convertColorSpaceToRGB, int isSigned,
-                out IntPtr outPixels, out uint outSize, out uint outWidth, out uint outHeight,
+                byte[] outPixels, out uint outSize, out uint outWidth, out uint outHeight,
                 out int outComponents, out int outPrecision, out int outColorSpace, out uint outRowSize,
                 byte[] errorMessage, uint errorMessageSize);
 
@@ -144,7 +146,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode(
                 byte* jpegData, uint jpegSize, int convertColorSpaceToRGB, int isSigned,
-                out IntPtr outPixels, out uint outSize, out uint outWidth, out uint outHeight,
+                byte[] outPixels, out uint outSize, out uint outWidth, out uint outHeight,
                 out int outComponents, out int outPrecision, out int outColorSpace, out uint outRowSize,
                 byte[] errorMessage, uint errorMessageSize);
 
@@ -296,10 +298,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
                 finally
                 {
-                    if (frameArray != null)
-                    {
-                        frameArray.Dispose();
-                    }
+                    frameArray?.Dispose();
                 }
             }
 
@@ -312,8 +311,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 PinnedByteArray jpegArray = new PinnedByteArray(this.TrytoFixPixelData(oldPixelData.GetFrame(frame).Data));
 
-                IntPtr outPixels = IntPtr.Zero;
-                bool havePixels = false;
+                var pool = ArrayPool<byte>.Shared;
+
+                var uncompressedSize = newPixelData.Height * newPixelData.Width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+                byte[] frameData = pool.Rent(uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize);
 
                 try
                 {
@@ -335,20 +336,18 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                     {
                         rc = DicomJpegDecode_win(jpegPtr, (uint)jpegArray.ByteSize, jpegParams.ConvertColorSpaceToRGB ? 1 : 0, isSigned,
-                            out outPixels, out outSize, out outWidth, out outHeight, out outComponents, out outPrecision, out outColorSpace, out outRowSize,
+                            frameData, out outSize, out outWidth, out outHeight, out outComponents, out outPrecision, out outColorSpace, out outRowSize,
                             errorMessage, (uint)errorMessage.Length);
                     }
                     else
                     {
                         rc = DicomJpegDecode(jpegPtr, (uint)jpegArray.ByteSize, jpegParams.ConvertColorSpaceToRGB ? 1 : 0, isSigned,
-                            out outPixels, out outSize, out outWidth, out outHeight, out outComponents, out outPrecision, out outColorSpace, out outRowSize,
+                            frameData, out outSize, out outWidth, out outHeight, out outComponents, out outPrecision, out outColorSpace, out outRowSize,
                             errorMessage, (uint)errorMessage.Length);
                     }
 
                     if (rc != 0)
                         throw new DicomCodecException("Unable to JPEG decode pixel data: " + ErrorText(errorMessage));
-
-                    havePixels = true;
 
                     // If the native side converted YCbCr/RGB to RGB, reflect that in
                     // the output photometric interpretation and planar configuration.
@@ -358,21 +357,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
                     }
 
-                    int frameSize = (int)outSize;
-                    int bufferSize = frameSize;
-
-                    if ((bufferSize % 2) != 0 && oldPixelData.NumberOfFrames == 1)
-                        bufferSize++;
-
-                    byte[] decoded = new byte[bufferSize];
-                    Marshal.Copy(outPixels, decoded, 0, frameSize);
-
                     IByteBuffer buffer;
 
-                    if (bufferSize >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                        buffer = new TempFileBuffer(decoded);
+                    if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                        buffer = new TempFileBuffer(frameData);
                     else
-                        buffer = new MemoryByteBuffer(decoded);
+                        buffer = new MemoryByteBuffer(frameData);
 
                     if (newPixelData.PlanarConfiguration == PlanarConfiguration.Planar && newPixelData.SamplesPerPixel > 1)
                     {
@@ -394,17 +384,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
                 finally
                 {
-                    if (havePixels && outPixels != IntPtr.Zero)
+                    if (frameData != null)
                     {
-                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                            DicomJpegFreeBuffer_win(outPixels);
-                        else
-                            DicomJpegFreeBuffer(outPixels);
+                        pool.Return(frameData);
                     }
-                    if (jpegArray != null)
-                    {
-                        jpegArray.Dispose();
-                    }
+                    
+                    jpegArray?.Dispose();
                 }
             }
 
@@ -459,9 +444,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     return buffer;
                 }
             }
-
-            //[ThreadStatic]
-            //internal static JpegCodec This;
         }
     }
 
