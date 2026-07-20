@@ -257,6 +257,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     throw new InvalidOperationException("Unsupported OS Platform");
                 }
 
+                var uncompressedSize = newPixelData.Height * newPixelData.Width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
                     IByteBuffer htjpeg2kData = oldPixelData.GetFrame(frame);
@@ -274,7 +276,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     PinnedByteArray htjpeg2kArray = new PinnedByteArray(htjpeg2kData.Data);
 
                     var pool = ArrayPool<byte>.Shared;
-                    byte[] frameData = pool.Rent(newPixelData.UncompressedFrameSize);
+                    byte[] frameData = pool.Rent(uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize);
 
                     try
                     {

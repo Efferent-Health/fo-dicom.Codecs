@@ -344,6 +344,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 throw new InvalidOperationException("Unsupported OS Platform");
             }
 
+            var uncompressedSize = newPixelData.Height * newPixelData.Width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer jpegData = oldPixelData.GetFrame(frame);
@@ -369,7 +371,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 PinnedByteArray jpeglsArray = new PinnedByteArray(jpegData.Data);
 
                 var pool = ArrayPool<byte>.Shared;
-                byte[] frameData = pool.Rent(newPixelData.UncompressedFrameSize);
+                byte[] frameData = pool.Rent(uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize);
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
                 try

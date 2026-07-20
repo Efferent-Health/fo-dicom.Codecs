@@ -248,15 +248,16 @@ jobs:
       - version
       - acceptance
       - nuget
-    if: (!contains(needs.version.outputs.release-version, '-'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           path: bin
           pattern: test
+
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
@@ -266,7 +267,8 @@ jobs:
           tag_name: ${{ needs.version.outputs.release-version }}
           release_name: Release ${{ needs.version.outputs.release-version }}
           draft: false
-          prerelease: false
+          prerelease: true
+
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}        

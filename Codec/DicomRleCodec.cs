@@ -70,12 +70,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
         {   
             try
             {
+                var uncompressedSize = newPixelData.Height * newPixelData.Width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+
                 for (var frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
                     var rleData = oldPixelData.GetFrame(frame);
 
                     // Create new frame data of even length
-                    var frameSize = newPixelData.UncompressedFrameSize;
+                    var frameSize = uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize;
+                    
                     if ((frameSize & 1) == 1)
                     {
                         ++frameSize;

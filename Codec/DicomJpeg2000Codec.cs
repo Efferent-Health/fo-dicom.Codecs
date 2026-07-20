@@ -1021,6 +1021,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
             //if (newPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull)
             //    newPixelData.PlanarConfiguration = PlanarConfiguration.Planar;
 
+            var uncompressedSize = newPixelData.Height * newPixelData.Width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+
             for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
             {
                 IByteBuffer j2kData = oldPixelData.GetFrame(frame);
@@ -1044,7 +1046,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
 
                 PinnedByteArray j2kArray = new PinnedByteArray(j2kData.Data);
-                PinnedByteArray destArray = new PinnedByteArray(newPixelData.UncompressedFrameSize);
+                PinnedByteArray destArray = new PinnedByteArray(uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize);
 
                 try
                 {
