@@ -116,7 +116,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* pixelData, uint width, uint height, int inputComponents, int inColorSpace,
                 int mode, int dataPrecision, int quality, int smoothingFactor, int predictor,
                 int pointTransform, int sampleFactor, uint rowStride,
-                out IntPtr outBuffer, out uint outSize, out int outJpegColorSpace,
+                byte * outBuffer, out uint outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
@@ -130,9 +130,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             private static extern unsafe int DicomJpegReadPrecision_win(
                 byte* jpegData, uint jpegSize, out int outPrecision, byte[] errorMessage, uint errorMessageSize);
 
-            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegFreeBuffer")]
-            private static extern unsafe void DicomJpegFreeBuffer_win(IntPtr buffer);
-
 
             // ---- Native ABI (Unix: Dicom.Native[.so/.dylib]) ----
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegEncode")]
@@ -140,7 +137,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* pixelData, uint width, uint height, int inputComponents, int inColorSpace,
                 int mode, int dataPrecision, int quality, int smoothingFactor, int predictor,
                 int pointTransform, int sampleFactor, uint rowStride,
-                out IntPtr outBuffer, out uint outSize, out int outJpegColorSpace,
+                byte * outBuffer, out uint outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
@@ -153,9 +150,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegReadPrecision")]
             private static extern unsafe int DicomJpegReadPrecision(
                 byte* jpegData, uint jpegSize, out int outPrecision, byte[] errorMessage, uint errorMessageSize);
-
-            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegFreeBuffer")]
-            private static extern unsafe void DicomJpegFreeBuffer(IntPtr buffer);
 
 
             public JpegCodec(JpegMode mode, int predictor, int point_transform, int bits)
@@ -226,70 +220,74 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     byte[] errorMessage = new byte[256];
-                    IntPtr outBuffer = IntPtr.Zero;
-                    uint outSize;
                     int outJpegColorSpace;
                     int rc;
 
+                    var pool = ArrayPool<byte>.Shared;
+                    byte[] jpegData = pool.Rent(frameArray.Data.Length);
+                    uint outSize;
+
                     try
-                    {
-                        int inColorSpace = (int)getJpegColorSpace(oldPixelData.PhotometricInterpretation);
-                        int rowStride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
-
-                        byte* framePtr = (byte*)(void*)frameArray.Pointer;
-
-                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                    {   
+                        fixed (byte * jpegDataPtr = jpegData)
                         {
-                            rc = DicomJpegEncode_win(framePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, inColorSpace,
-                                (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor, (uint)rowStride,
-                                out outBuffer, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                            int inColorSpace = (int)getJpegColorSpace(oldPixelData.PhotometricInterpretation);
+                            int rowStride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
+
+                            byte* sourceframePtr = (byte*)(void*)frameArray.Pointer;
+
+                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            {
+                                rc = DicomJpegEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, inColorSpace,
+                                    (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor, (uint)rowStride,
+                                    jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                            }
+                            else
+                            {
+                                rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, inColorSpace,
+                                    (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor, (uint)rowStride,
+                                    jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                            }
+
+                            if (rc != 0)
+                                throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
+
+                            pool.Resize(ref jpegData, (int)outSize);
+
+                            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                            {
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                            }
+
+                            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                            {
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
+                            }
+
+                            IByteBuffer buffer;
+
+                            if (jpegData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            {
+                                buffer = new TempFileBuffer(jpegData);
+                                buffer = EvenLengthBuffer.Create(buffer);
+                            }
+                            else
+                            {
+                                buffer = new MemoryByteBuffer(jpegData);
+                            }
+
+                            if (oldPixelData.NumberOfFrames == 1)
+                                buffer = EvenLengthBuffer.Create(buffer);
+
+                            newPixelData.AddFrame(buffer);
                         }
-                        else
-                        {
-                            rc = DicomJpegEncode(framePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, inColorSpace,
-                                (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor, (uint)rowStride,
-                                out outBuffer, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
-                        }
-
-                        if (rc != 0)
-                            throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
-
-                        byte[] encoded = new byte[outSize];
-                        Marshal.Copy(outBuffer, encoded, 0, (int)outSize);
-
-                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
-                        {
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                        }
-
-                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                        {
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
-                        }
-
-                        IByteBuffer buffer;
-
-                        if (encoded.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                        {
-                            buffer = new TempFileBuffer(encoded);
-                            buffer = EvenLengthBuffer.Create(buffer);
-                        }
-                        else
-                        {
-                            buffer = new MemoryByteBuffer(encoded);
-                        }
-
-                        if (oldPixelData.NumberOfFrames == 1)
-                            buffer = EvenLengthBuffer.Create(buffer);
-
-                        newPixelData.AddFrame(buffer);
                     }
                     finally
                     {
-                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                            DicomJpegFreeBuffer_win(outBuffer);
-                        else
-                            DicomJpegFreeBuffer(outBuffer);
+                        if (jpegData != null)
+                        {
+                            pool.Return(jpegData);
+                        }
                     }
                 }
                 catch (DicomCodecException e)
