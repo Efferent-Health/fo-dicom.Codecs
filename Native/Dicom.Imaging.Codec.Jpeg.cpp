@@ -30,6 +30,7 @@ extern "C"
 #if defined(_WIN32)
 #define EXPORT_Jpeg __declspec(dllexport)
 #elif defined(__linux__)
+#include <stdint.h>
 #define EXPORT_Jpeg extern
 #elif defined(__APPLE__)
 #include "TargetConditionals.h"
