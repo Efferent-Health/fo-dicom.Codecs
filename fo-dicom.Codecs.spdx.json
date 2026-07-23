@@ -1,0 +1,142 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "fo-dicom.Codecs",
+  "documentNamespace": "https://github.com/Efferent-Health/fo-dicom.Codecs/sbom/8f0a5d2c-3b6e-4a1d-9c77-2f1b6a4e0d31",
+  "creationInfo": {
+    "created": "2026-06-18T00:00:00Z",
+    "creators": [
+      "Tool: hand-authored",
+      "Organization: fo-dicom.Codecs contributors"
+    ],
+    "comment": "Software Bill of Materials for the fo-dicom.Codecs native imaging codec library. This SBOM primarily documents the third-party C/C++ codec libraries that are vendored (their source is copied into this repository, under Native/Common/, and statically linked into the Dicom.Native binary) rather than consumed as managed/binary package dependencies. Vendored components are not visible to NuGet/Dependabot, so they are enumerated here for supply-chain and license tracking."
+  },
+  "packages": [
+    {
+      "name": "fo-dicom.Codecs",
+      "SPDXID": "SPDXRef-Package-fo-dicom.Codecs",
+      "downloadLocation": "https://github.com/Efferent-Health/fo-dicom.Codecs",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MS-PL",
+      "licenseDeclared": "MS-PL",
+      "copyrightText": "Copyright (c) fo-dicom contributors",
+      "supplier": "Organization: Efferent Health",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:nuget/fo-dicom.Codecs"
+        }
+      ]
+    },
+    {
+      "name": "libijg",
+      "SPDXID": "SPDXRef-Package-libijg",
+      "versionInfo": "6b",
+      "downloadLocation": "https://www.ijg.org/files/jpegsrc.v6b.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "IJG",
+      "licenseDeclared": "IJG",
+      "copyrightText": "Copyright (C) 1991-1998, Thomas G. Lane",
+      "supplier": "Organization: Independent JPEG Group",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "Vendored (source copied into Native/Common/libijg8, Native/Common/libijg12, Native/Common/libijg16 and statically linked). Independent JPEG Group libjpeg 6b with the DCMTK lossless-JPEG extension; provides the JPEG baseline/extended/lossless processes. Built three times for 8/12/16-bit sample precision.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/libijg@6b?download_url=https://www.ijg.org/files/jpegsrc.v6b.tar.gz"
+        }
+      ]
+    },
+    {
+      "name": "openjpeg",
+      "SPDXID": "SPDXRef-Package-openjpeg",
+      "versionInfo": "2.5.4",
+      "downloadLocation": "https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.5.4.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-2-Clause",
+      "licenseDeclared": "BSD-2-Clause",
+      "copyrightText": "Copyright (c) 2002-2014, Universite catholique de Louvain (UCL), Belgium; Copyright (c) 2002-2014, Professor Benoit Macq, and others",
+      "supplier": "Organization: Universite catholique de Louvain (UCL)",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "Vendored (source copied into Native/Common/OpenJPEG and statically linked). Provides the JPEG 2000 codec.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/uclouvain/openjpeg@v2.5.4"
+        }
+      ]
+    },
+    {
+      "name": "charls",
+      "SPDXID": "SPDXRef-Package-charls",
+      "versionInfo": "2.4.2",
+      "downloadLocation": "https://github.com/team-charls/charls/archive/refs/tags/2.4.2.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "Copyright (c) Team CharLS",
+      "supplier": "Organization: Team CharLS",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "Vendored (source copied into Native/Common/CharLS and statically linked). Provides the JPEG-LS codec.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/team-charls/charls@2.4.2"
+        }
+      ]
+    },
+    {
+      "name": "openjph",
+      "SPDXID": "SPDXRef-Package-openjph",
+      "versionInfo": "0.21.2",
+      "downloadLocation": "https://github.com/aous72/OpenJPH/archive/refs/tags/0.21.2.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "BSD-2-Clause",
+      "licenseDeclared": "BSD-2-Clause",
+      "copyrightText": "Copyright (c) 2019, Aous Naman; Copyright (c) 2019, Kakadu Software Pty Ltd, Australia; Copyright (c) 2019, The University of New South Wales, Australia",
+      "supplier": "Organization: Aous Naman / Kakadu Software Pty Ltd",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "Vendored (source copied into Native/Common/OpenJPH and statically linked). Provides the High Throughput JPEG 2000 (HTJ2K) codec.",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/aous72/OpenJPH@0.21.2"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-fo-dicom.Codecs"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-fo-dicom.Codecs",
+      "relationshipType": "STATIC_LINK",
+      "relatedSpdxElement": "SPDXRef-Package-libijg"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-fo-dicom.Codecs",
+      "relationshipType": "STATIC_LINK",
+      "relatedSpdxElement": "SPDXRef-Package-openjpeg"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-fo-dicom.Codecs",
+      "relationshipType": "STATIC_LINK",
+      "relatedSpdxElement": "SPDXRef-Package-charls"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-fo-dicom.Codecs",
+      "relationshipType": "STATIC_LINK",
+      "relatedSpdxElement": "SPDXRef-Package-openjph"
+    }
+  ]
+}
