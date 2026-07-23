@@ -25,6 +25,7 @@ extern "C"
 #include <stdio.h>
 #include "./Common/libjpeg-turbo/jpeglib.h"
 #include "./Common/libjpeg-turbo/jerror.h"
+#include "./Common/libjpeg-turbo/turbojpeg.h"
 }
 
 #if defined(_WIN32)
@@ -144,7 +145,6 @@ namespace Dicom
 
                 typedef my_mem_destination_mgr *my_mem_dest_ptr;
 
-                
                 boolean empty_mem_output_buffer(j_compress_ptr cinfo)
                 {
                     size_t nextsize;
@@ -184,7 +184,6 @@ namespace Dicom
                     return TRUE;
                 }
 
-
                 void term_mem_destination(j_compress_ptr cinfo)
                 {
                     my_mem_dest_ptr dest = (my_mem_dest_ptr)cinfo->dest;
@@ -194,7 +193,7 @@ namespace Dicom
                 }
 
                 void jpeg_memory_destination(j_compress_ptr cinfo, unsigned char **outbuffer,
-                                    unsigned long *outsize)
+                                             unsigned long *outsize)
                 {
                     my_mem_dest_ptr dest;
 
@@ -562,6 +561,56 @@ namespace Dicom
                     jpeg_finish_decompress(&dinfo);
                     jpeg_destroy_decompress(&dinfo);
                     return 0;
+                }
+
+                EXPORT_Jpeg int DicomJpegTurboEncode(
+                    const unsigned char *pixelData,
+                    unsigned int width,
+                    unsigned int height,
+                    int pixelFormat,
+                    int mode,
+                    int dataPrecision,
+                    int quality,
+                    int sampleFactor,
+                    unsigned int rowStride,
+                    unsigned char *out_buffer,
+                    unsigned int *out_size,
+                    int *outJpegColorSpace)
+                {
+                    unsigned char *encoded = out_buffer;
+                    size_t encodedSize = 0;
+
+                    tjhandle compressor = tj3Init(TJINIT_COMPRESS);
+
+                    // Compress raw RGB into a compressed JPEG memory buffer
+                    int result = -1;
+
+                    if (mode == DJ_MODE_BASELINE)
+                    {
+                        tj3Set(compressor, TJPARAM_PROGRESSIVE, 0);
+                    }
+
+                    tj3Set(compressor, TJPARAM_SUBSAMP, sampleFactor); // Max color quality
+                    tj3Set(compressor, TJPARAM_QUALITY, quality);
+                    
+                    //tj3Set(compressor, TJPARAM_FASTDCT, 1);
+
+                    if (pixelFormat == TJPF_RGB)
+                    {
+                        tj3Set(compressor, TJPARAM_COLORSPACE, TJCS_YCbCr);
+                    }
+
+                    if (dataPrecision <= 8)
+                    {
+                        tj3Set(compressor, TJPARAM_PRECISION, 8);
+                        result = tj3Compress8(compressor, pixelData, width, rowStride, height, pixelFormat, &encoded, &encodedSize);
+                    }
+
+                    *out_size = static_cast<unsigned int>(encodedSize);
+                    *outJpegColorSpace = tj3Get(compressor, TJPARAM_COLORSPACE);
+
+                    tj3Destroy(compressor);
+                    return result;
                 }
 
                 // Read the data precision (bits per sample) from a JPEG SOF marker without

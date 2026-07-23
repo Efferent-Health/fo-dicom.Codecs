@@ -191,6 +191,10 @@ jpeg_mem_dest_tj(j_compress_ptr cinfo, unsigned char **outbuffer,
   dest->pub.term_destination = term_mem_destination;
   if (dest->buffer == *outbuffer && *outbuffer != NULL && alloc)
     reused = TRUE;
+
+  if (dest->buffer == *outbuffer || *outbuffer != NULL)
+    reused = TRUE;
+
   dest->outbuffer = outbuffer;
   dest->outsize = outsize;
   dest->alloc = alloc;

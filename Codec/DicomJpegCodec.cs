@@ -23,6 +23,200 @@ namespace FellowOakDicom.Imaging.NativeCodec
         JCS_YCCK
     }
 
+    public enum TJPF
+    {
+        /**
+         * RGB pixel format
+         *
+         * The red, green, and blue components in the image are stored in 3-sample
+         * pixels in the order R, G, B from lowest to highest memory address within
+         * each pixel.
+         */
+        TJPF_RGB,
+        /**
+         * BGR pixel format
+         *
+         * The red, green, and blue components in the image are stored in 3-sample
+         * pixels in the order B, G, R from lowest to highest memory address within
+         * each pixel.
+         */
+        TJPF_BGR,
+        /**
+         * RGBX pixel format
+         *
+         * The red, green, and blue components in the image are stored in 4-sample
+         * pixels in the order R, G, B from lowest to highest memory address within
+         * each pixel.  The X component is ignored when compressing/encoding and
+         * undefined when decompressing/decoding.
+         */
+        TJPF_RGBX,
+        /**
+         * BGRX pixel format
+         *
+         * The red, green, and blue components in the image are stored in 4-sample
+         * pixels in the order B, G, R from lowest to highest memory address within
+         * each pixel.  The X component is ignored when compressing/encoding and
+         * undefined when decompressing/decoding.
+         */
+        TJPF_BGRX,
+        /**
+         * XBGR pixel format
+         *
+         * The red, green, and blue components in the image are stored in 4-sample
+         * pixels in the order R, G, B from highest to lowest memory address within
+         * each pixel.  The X component is ignored when compressing/encoding and
+         * undefined when decompressing/decoding.
+         */
+        TJPF_XBGR,
+        /**
+         * XRGB pixel format
+         *
+         * The red, green, and blue components in the image are stored in 4-sample
+         * pixels in the order B, G, R from highest to lowest memory address within
+         * each pixel.  The X component is ignored when compressing/encoding and
+         * undefined when decompressing/decoding.
+         */
+        TJPF_XRGB,
+        /**
+         * Grayscale pixel format
+         *
+         * Each 1-sample pixel represents a luminance (brightness) level from 0 to
+         * the maximum sample value (which is, for instance, 255 for 8-bit samples or
+         * 4095 for 12-bit samples or 65535 for 16-bit samples.)
+         */
+        TJPF_GRAY,
+        /**
+         * RGBA pixel format
+         *
+         * This is the same as @ref TJPF_RGBX, except that when
+         * decompressing/decoding, the X component is guaranteed to be equal to the
+         * maximum sample value, which can be interpreted as an opaque alpha channel.
+         */
+        TJPF_RGBA,
+        /**
+         * BGRA pixel format
+         *
+         * This is the same as @ref TJPF_BGRX, except that when
+         * decompressing/decoding, the X component is guaranteed to be equal to the
+         * maximum sample value, which can be interpreted as an opaque alpha channel.
+         */
+        TJPF_BGRA,
+        /**
+         * ABGR pixel format
+         *
+         * This is the same as @ref TJPF_XBGR, except that when
+         * decompressing/decoding, the X component is guaranteed to be equal to the
+         * maximum sample value, which can be interpreted as an opaque alpha channel.
+         */
+        TJPF_ABGR,
+        /**
+         * ARGB pixel format
+         *
+         * This is the same as @ref TJPF_XRGB, except that when
+         * decompressing/decoding, the X component is guaranteed to be equal to the
+         * maximum sample value, which can be interpreted as an opaque alpha channel.
+         */
+        TJPF_ARGB,
+        /**
+         * CMYK pixel format
+         *
+         * Unlike RGB, which is an additive color model used primarily for display,
+         * CMYK (Cyan/Magenta/Yellow/Key) is a subtractive color model used primarily
+         * for printing.  In the CMYK color model, the value of each color component
+         * typically corresponds to an amount of cyan, magenta, yellow, or black ink
+         * that is applied to a white background.  In order to convert between CMYK
+         * and RGB, it is necessary to use a color management system (CMS.)  A CMS
+         * will attempt to map colors within the printer's gamut to perceptually
+         * similar colors in the display's gamut and vice versa, but the mapping is
+         * typically not 1:1 or reversible, nor can it be defined with a simple
+         * formula.  Thus, such a conversion is out of scope for a codec library.
+         * However, the TurboJPEG API allows for compressing packed-pixel CMYK images
+         * into YCCK JPEG images (see #TJCS_YCCK) and decompressing YCCK JPEG images
+         * into packed-pixel CMYK images.
+         */
+        TJPF_CMYK,
+        /**
+         * Unknown pixel format
+         *
+         * Currently this is only used by #tj3LoadImage8(), #tj3LoadImage12(), and
+         * #tj3LoadImage16().
+         */
+        TJPF_UNKNOWN = -1
+    };
+
+    public enum TJCS
+    {
+        /**
+        * RGB colorspace
+        *
+        * When generating the JPEG image, the R, G, and B components in the source
+        * image are reordered into image planes, but no colorspace conversion or
+        * subsampling is performed.  RGB JPEG images can be generated from and
+        * decompressed to packed-pixel images with any of the extended RGB or
+        * grayscale pixel formats, but they cannot be generated from or
+        * decompressed to planar YUV images.
+        */
+        TJCS_RGB,
+        /**
+        * YCbCr colorspace
+        *
+        * YCbCr is not an absolute colorspace but rather a mathematical
+        * transformation of RGB designed solely for storage and transmission.  YCbCr
+        * images must be converted to RGB before they can be displayed.  In the
+        * YCbCr colorspace, the Y (luminance) component represents the black & white
+        * portion of the original image, and the Cb and Cr (chrominance) components
+        * represent the color portion of the original image.  Historically, the
+        * analog equivalent of this transformation allowed the same signal to be
+        * displayed to both black & white and color televisions, but JPEG images
+        * primarily use YCbCr because it optionally allows the color data to be
+        * subsampled in order to reduce network and disk usage.  YCbCr is the most
+        * common JPEG colorspace, and YCbCr JPEG images can be generated from and
+        * decompressed to packed-pixel images with any of the extended RGB or
+        * grayscale pixel formats.  YCbCr JPEG images can also be generated from
+        * and decompressed to planar YUV images.
+        */
+        TJCS_YCbCr,
+        /**
+        * Grayscale colorspace
+        *
+        * The JPEG image retains only the luminance data (Y component), and any
+        * color data from the source image is discarded.  Grayscale JPEG images can
+        * be generated from and decompressed to packed-pixel images with any of the
+        * extended RGB or grayscale pixel formats, or they can be generated from
+        * and decompressed to planar YUV images.
+        */
+        TJCS_GRAY,
+        /**
+        * CMYK colorspace
+        *
+        * When generating the JPEG image, the C, M, Y, and K components in the
+        * source image are reordered into image planes, but no colorspace conversion
+        * or subsampling is performed.  CMYK JPEG images can only be generated from
+        * and decompressed to packed-pixel images with the CMYK pixel format.
+        */
+        TJCS_CMYK,
+        /**
+        * YCCK colorspace
+        *
+        * YCCK (AKA "YCbCrK") is not an absolute colorspace but rather a
+        * mathematical transformation of CMYK designed solely for storage and
+        * transmission.  It is to CMYK as YCbCr is to RGB.  CMYK pixels can be
+        * reversibly transformed into YCCK, and as with YCbCr, the chrominance
+        * components in the YCCK pixels can be subsampled without incurring major
+        * perceptual loss.  YCCK JPEG images can only be generated from and
+        * decompressed to packed-pixel images with the CMYK pixel format.
+        */
+        TJCS_YCCK,
+        /**
+        * Default colorspace
+        *
+        * Generate a grayscale JPEG image if #TJPARAM_SUBSAMP is set to
+        * #TJSAMP_GRAY, a YCCK JPEG image if the source image is CMYK, and a YCbCr
+        * JPEG image otherwise.
+        */
+        TJCS_DEFAULT = -1
+    };
+
     public enum DicomJpegSampleFactor
     {
         SF444,
@@ -116,8 +310,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* pixelData, uint width, uint height, int inputComponents, int inColorSpace,
                 int mode, int dataPrecision, int quality, int smoothingFactor, int predictor,
                 int pointTransform, int sampleFactor, uint rowStride,
-                byte * outBuffer, out uint outSize, out int outJpegColorSpace,
+                byte* outBuffer, out uint outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
+            private static extern unsafe int DicomJpegTurboEncode_win(
+                byte* pixelData, uint width, uint height, int pixelFormat,
+                int mode, int dataPrecision, int quality, int sampleFactor,
+                uint rowStride, byte* outBuffer, out uint outSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode_win(
@@ -137,8 +337,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* pixelData, uint width, uint height, int inputComponents, int inColorSpace,
                 int mode, int dataPrecision, int quality, int smoothingFactor, int predictor,
                 int pointTransform, int sampleFactor, uint rowStride,
-                byte * outBuffer, out uint outSize, out int outJpegColorSpace,
+                byte* outBuffer, out uint outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
+            private static extern unsafe int DicomJpegTurboEncode(
+                byte* pixelData, uint width, uint height, int pixelFormat,
+                int mode, int dataPrecision, int quality, int sampleFactor,
+                uint rowStride, byte* outBuffer, out uint outSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode(
@@ -160,18 +366,18 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 Bits = bits;
             }
 
-            public static J_COLOR_SPACE getJpegColorSpace(PhotometricInterpretation photometricInterpretation)
+            public static int getJpegColorSpace(PhotometricInterpretation photometricInterpretation, bool useTurboMode = false)
             {
                 if (photometricInterpretation == PhotometricInterpretation.Rgb)
-                    return J_COLOR_SPACE.JCS_RGB;
+                    return useTurboMode ? (int)TJPF.TJPF_RGB : (int)J_COLOR_SPACE.JCS_RGB;
                 else if (photometricInterpretation == PhotometricInterpretation.Monochrome1 || photometricInterpretation == PhotometricInterpretation.Monochrome2)
-                    return J_COLOR_SPACE.JCS_GRAYSCALE;
+                    return useTurboMode ? (int)TJPF.TJPF_GRAY : (int)J_COLOR_SPACE.JCS_GRAYSCALE;
                 else if (photometricInterpretation == PhotometricInterpretation.PaletteColor)
-                    return J_COLOR_SPACE.JCS_UNKNOWN;
+                    return useTurboMode ? (int)TJPF.TJPF_UNKNOWN : (int)J_COLOR_SPACE.JCS_UNKNOWN;
                 else if (photometricInterpretation == PhotometricInterpretation.YbrFull || photometricInterpretation == PhotometricInterpretation.YbrFull422 || photometricInterpretation == PhotometricInterpretation.YbrPartial422)
-                    return J_COLOR_SPACE.JCS_YCbCr;
+                    return useTurboMode ? (int)TJCS.TJCS_YCbCr : (int)J_COLOR_SPACE.JCS_YCbCr;
                 else
-                    return J_COLOR_SPACE.JCS_UNKNOWN;
+                    return useTurboMode ? (int)TJPF.TJPF_UNKNOWN : (int)J_COLOR_SPACE.JCS_UNKNOWN;
             }
 
             private static string ErrorText(byte[] buffer)
@@ -228,25 +434,46 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     uint outSize;
 
                     try
-                    {   
-                        fixed (byte * jpegDataPtr = jpegData)
+                    {
+                        fixed (byte* jpegDataPtr = jpegData)
                         {
-                            int inColorSpace = (int)getJpegColorSpace(oldPixelData.PhotometricInterpretation);
                             int rowStride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
 
                             byte* sourceframePtr = (byte*)(void*)frameArray.Pointer;
+                            bool useTurboMode = Mode.Equals(JpegMode.Baseline) && Bits <= 8 && oldPixelData.BitsStored <= 8;
+                            int pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                             {
-                                rc = DicomJpegEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, inColorSpace,
-                                    (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor, (uint)rowStride,
-                                    jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                                if (useTurboMode)
+                                {   
+                                    pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
+
+                                    rc = DicomJpegTurboEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality,
+                                        (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
+                                }
+                                else
+                                {
+                                    rc = DicomJpegEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
+                                        (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
+                                        (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                                }
                             }
                             else
                             {
-                                rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, inColorSpace,
-                                    (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor, (uint)rowStride,
-                                    jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                                if (useTurboMode)
+                                {   
+                                    pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
+
+                                    rc = DicomJpegTurboEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality,
+                                        (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
+                                }
+                                else
+                                {
+                                    rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
+                                        (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
+                                        (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                                }
                             }
 
                             if (rc != 0)
@@ -254,12 +481,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             pool.Resize(ref jpegData, (int)outSize);
 
-                            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                            if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb 
+                                && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
                             {
                                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
                             }
-
-                            if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                            else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                            {
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                            }
+                            else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
                             {
                                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
                             }
@@ -386,7 +617,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         pool.Return(frameData);
                     }
-                    
+
                     jpegArray?.Dispose();
                 }
             }
@@ -679,13 +910,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         protected override JpegNativeCodec GetCodec(int bits, DicomJpegParams jparams)
         {
-            if (bits == 8)
+            if (bits <= 8)
                 return new JpegCodec(JpegMode.Baseline, 0, 0, bits);
 
             else
                 throw new DicomCodecException(string.Format("Unable to create JPEG Process 1 codec for bits stored == {0}", bits));
         }
-
     };
 
     public class DicomJpegProcess4Codec : DicomJpegNativeCodec
@@ -700,12 +930,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         protected override JpegNativeCodec GetCodec(int bits, DicomJpegParams jparams)
         {
-            if (bits == 8)
-                return new JpegCodec(JpegMode.Sequential, 0, 0, bits);
-            else if (bits > 8 && bits <= 12)
+            if (bits <= 12)
                 return new JpegCodec(JpegMode.Sequential, 0, 0, bits);
             else
-                throw new DicomCodecException(string.Format("Unable to create JPEG Process 4 codec for bits stored == {0}", bits));
+                throw new DicomCodecException(string.Format("Unable to create JPEG Process 2_4 codec for bits stored == {0}", bits));
         }
     }
 
@@ -721,14 +949,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         protected override JpegNativeCodec GetCodec(int bits, DicomJpegParams jparams)
         {
-            if (bits == 8)
-                return new JpegCodec(JpegMode.Lossless, jparams.Predictor, jparams.PointTransform, bits);
-            else if (bits > 8 && bits <= 12)
-                return new JpegCodec(JpegMode.Lossless, jparams.Predictor, jparams.PointTransform, bits);
-            else if (bits > 12 && bits <= 16)
+            if (bits <= 16)
                 return new JpegCodec(JpegMode.Lossless, jparams.Predictor, jparams.PointTransform, bits);
             else
-                throw new DicomCodecException(String.Format("Unable to create JPEG Process 14 codec for bits stored == {0}", bits));
+                throw new DicomCodecException(string.Format("Unable to create JPEG Process 14 codec for bits stored == {0}", bits));
         }
     }
 
@@ -744,17 +968,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
         protected override JpegNativeCodec GetCodec(int bits, DicomJpegParams jparams)
         {
-            if (bits == 8)
+            if (bits <= 16)
                 return new JpegCodec(JpegMode.Lossless, 1, jparams.PointTransform, bits);
-
-            else if (bits > 8 && bits <= 12)
-                return new JpegCodec(JpegMode.Lossless, 1, jparams.PointTransform, bits);
-
-            else if (bits > 12 && bits <= 16)
-                return new JpegCodec(JpegMode.Lossless, 1, jparams.PointTransform, bits);
-
             else
-                throw new DicomCodecException(String.Format("Unable to create JPEG Process 14 [SV1] codec for bits stored == {0}", bits));
+                throw new DicomCodecException(string.Format("Unable to create JPEG Process 14 [SV1] codec for bits stored == {0}", bits));
         }
     }
 }
