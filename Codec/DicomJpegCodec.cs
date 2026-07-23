@@ -340,7 +340,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* outBuffer, out uint outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
 
-            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
             private static extern unsafe int DicomJpegTurboEncode(
                 byte* pixelData, uint width, uint height, int pixelFormat,
                 int mode, int dataPrecision, int quality, int sampleFactor,
