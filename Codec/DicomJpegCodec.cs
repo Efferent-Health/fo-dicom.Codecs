@@ -440,7 +440,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             int rowStride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
 
                             byte* sourceframePtr = (byte*)(void*)frameArray.Pointer;
-                            bool useTurboMode = Mode.Equals(JpegMode.Baseline) && Bits <= 8 && oldPixelData.BitsStored <= 8;
+                            bool useTurboMode = Mode.Equals(JpegMode.Baseline) && Bits <= 8 && oldPixelData.BitsStored <= 8
+                                                && !oldPixelData.PhotometricInterpretation.Equals(PhotometricInterpretation.PaletteColor);
+                            
                             int pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))

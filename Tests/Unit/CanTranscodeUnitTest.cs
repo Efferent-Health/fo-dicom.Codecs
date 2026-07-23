@@ -1,10 +1,6 @@
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using FellowOakDicom;
-using FellowOakDicom.Imaging.Codec;
-using FellowOakDicom.Imaging.NativeCodec;
-
 namespace FellowOakDicom.Imaging.NativeCodec.Test
 {
     [TestClass]
