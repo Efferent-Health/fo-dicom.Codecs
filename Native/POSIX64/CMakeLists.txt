@@ -211,12 +211,12 @@ SET(LIBJPEG_TURBO_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/wrapper/jutils-8.c
 
   # Sources for turbo compress and decompress 
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/libjpeg-turbo/jdatasrc-tj.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/libjpeg-turbo/jdatadst-tj.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/libjpeg-turbo/transupp.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/libjpeg-turbo/tjtran.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/libjpeg-turbo/tjutil.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../Common/libjpeg-turbo/turbojpeg.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatasrc-tj.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/jdatadst-tj.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/transupp.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/tjtran.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/tjutil.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../Common/libjpeg-turbo/turbojpeg.c
 )
 
 #OpenJPEG Library
