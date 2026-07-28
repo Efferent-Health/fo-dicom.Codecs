@@ -404,9 +404,13 @@ namespace Dicom
                 }
 
                 // Decode
-                // Returns 0 on success, non-zero on failure. On success *out_pixels points
-                // to a malloc-allocated buffer of *out_size bytes that the caller must
-                // release with DicomJpegFreeBuffer.
+                // Returns 0 on success, non-zero on failure.
+                //
+                // out_pixels is a CALLER-OWNED buffer of at least the decoded frame size;
+                // this function only writes into it and never takes ownership of it. In
+                // particular it must not be freed here on any path: the managed caller
+                // supplies a pinned byte[] rented from ArrayPool<byte>.Shared, which is
+                // not CRT-heap memory and is returned to the pool by the caller.
                 EXPORT_Jpeg int DicomJpegDecode(
                     const unsigned char *jpegData,
                     unsigned int jpegSize,
@@ -438,8 +442,6 @@ namespace Dicom
                     if (setjmp(jerr.setjmp_buffer))
                     {
                         jpeg_destroy_decompress(&dinfo);
-                        if (out_pixels != nullptr)
-                            free(out_pixels);
                         return 1;
                     }
 
@@ -544,7 +546,6 @@ namespace Dicom
                                 errorMessage[errorMessageSize - 1] = '\0';
                             }
 
-                            free(out_pixels);
                             jpeg_destroy_decompress(&dinfo);
                             return 3;
                         }
