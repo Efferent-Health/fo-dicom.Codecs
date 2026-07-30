@@ -285,8 +285,6 @@ namespace Dicom
                     if (setjmp(jerr.setjmp_buffer))
                     {
                         jpeg_destroy_compress(&cinfo);
-                        if (encoded != nullptr)
-                            free(encoded);
                         return 1;
                     }
 
