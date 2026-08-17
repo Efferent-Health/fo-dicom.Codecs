@@ -207,18 +207,23 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 throw new DicomCodecException("Error in HTJ2K encode stream => output buffer data has an incorrect size");
                             }
 
-                            pool.Resize(ref jpegHT2KData, (int)j2c_outinfo.size_outbuffer);
+                            // The pooled array is returned to the pool in the finally block below, so it
+                            // must not be handed over to the buffer: the array can be rented again and
+                            // overwritten while this dataset still points at it. Copy it out at its exact
+                            // size, the way DicomJpeg2000Codec already does.
+                            var encoded = new byte[j2c_outinfo.size_outbuffer];
+                            Buffer.BlockCopy(jpegHT2KData, 0, encoded, 0, (int)j2c_outinfo.size_outbuffer);
 
                             IByteBuffer buffer;
 
                             if (j2c_outinfo.size_outbuffer >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             {
-                                buffer = new TempFileBuffer(jpegHT2KData);
+                                buffer = new TempFileBuffer(encoded);
                                 buffer = EvenLengthBuffer.Create(buffer);
                             }
                             else
                             {
-                                buffer = new MemoryByteBuffer(jpegHT2KData);
+                                buffer = new MemoryByteBuffer(encoded);
                             }
 
                             if (oldPixelData.NumberOfFrames == 1)
@@ -296,13 +301,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 else
                                     InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count); ;
 
-                                pool.Resize(ref frameData, (int)raw_Outdata.size_outbuffer);
+                                // Same reason as in Encode: copy out of the pooled array before it goes
+                                // back to the pool, and at the exact decoded size instead of the pool
+                                // bucket size.
+                                var decoded = new byte[raw_Outdata.size_outbuffer];
+                                Buffer.BlockCopy(frameData, 0, decoded, 0, (int)raw_Outdata.size_outbuffer);
 
                                 IByteBuffer buffer;
-                                if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                                    buffer = new TempFileBuffer(frameData);
+                                if ((int)raw_Outdata.size_outbuffer >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                    buffer = new TempFileBuffer(decoded);
                                 else
-                                    buffer = new MemoryByteBuffer(frameData);
+                                    buffer = new MemoryByteBuffer(decoded);
 
                                 if (oldPixelData.NumberOfFrames == 1)
                                     buffer = EvenLengthBuffer.Create(buffer);

@@ -293,18 +293,23 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             else
                                 err = JpegLSEncode(jpegDataPointer, (uint)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
 
-                            pool.Resize(ref jpeglsData, (int)jpegDataSize);
+                            // The pooled array is returned to the pool in the finally block below, so it
+                            // must not be handed over to the buffer: the array can be rented again and
+                            // overwritten while this dataset still points at it. Copy it out at its exact
+                            // size, the way DicomJpeg2000Codec already does.
+                            var encoded = new byte[jpegDataSize];
+                            Buffer.BlockCopy(jpeglsData, 0, encoded, 0, (int)jpegDataSize);
 
                             IByteBuffer buffer;
 
                             if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             {
-                                buffer = new TempFileBuffer(jpeglsData);
+                                buffer = new TempFileBuffer(encoded);
                                 buffer = EvenLengthBuffer.Create(buffer);
                             }
                             else
                             {
-                                buffer = new MemoryByteBuffer(jpeglsData);
+                                buffer = new MemoryByteBuffer(encoded);
                             }
 
                             if (oldPixelData.NumberOfFrames == 1)
@@ -371,7 +376,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 PinnedByteArray jpeglsArray = new PinnedByteArray(jpegData.Data);
 
                 var pool = ArrayPool<byte>.Shared;
-                byte[] frameData = pool.Rent(uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize);
+                var frameSize = uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize;
+                byte[] frameData = pool.Rent(frameSize);
                 PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
                 try
@@ -389,11 +395,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         else
                             err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpeglsArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
 
+                        // Same reason as in Encode: copy out of the pooled array before it goes back
+                        // to the pool, and at the exact frame size instead of the pool bucket size.
+                        var decoded = new byte[frameSize];
+                        Buffer.BlockCopy(frameData, 0, decoded, 0, frameSize);
+
                         IByteBuffer buffer;
-                        if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                            buffer = new TempFileBuffer(frameData);
+                        if (frameSize >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            buffer = new TempFileBuffer(decoded);
                         else
-                            buffer = new MemoryByteBuffer(frameData);
+                            buffer = new MemoryByteBuffer(decoded);
 
                         if (oldPixelData.NumberOfFrames == 1)
                             buffer = EvenLengthBuffer.Create(buffer);
