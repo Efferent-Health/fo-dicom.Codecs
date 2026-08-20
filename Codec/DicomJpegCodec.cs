@@ -481,7 +481,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (rc != 0)
                                 throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
 
-                            pool.Resize(ref jpegData, (int)outSize);
+                            var encoded = new byte[(int)outSize];
+                            Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
 
                             if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb 
                                 && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
@@ -501,12 +502,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             if (jpegData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                             {
-                                buffer = new TempFileBuffer(jpegData);
+                                buffer = new TempFileBuffer(encoded);
                                 buffer = EvenLengthBuffer.Create(buffer);
                             }
                             else
                             {
-                                buffer = new MemoryByteBuffer(jpegData);
+                                buffer = new MemoryByteBuffer(encoded);
                             }
 
                             if (oldPixelData.NumberOfFrames == 1)
@@ -590,10 +591,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     IByteBuffer buffer;
 
+                    var decoded = new byte[(int)outSize];
+                    Buffer.BlockCopy(frameData, 0, decoded, 0, (int)outSize);
+
                     if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                        buffer = new TempFileBuffer(frameData);
+                        buffer = new TempFileBuffer(decoded);
                     else
-                        buffer = new MemoryByteBuffer(frameData);
+                        buffer = new MemoryByteBuffer(decoded);
 
                     if (newPixelData.PlanarConfiguration == PlanarConfiguration.Planar && newPixelData.SamplesPerPixel > 1)
                     {
