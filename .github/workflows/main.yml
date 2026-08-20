@@ -20,7 +20,7 @@ jobs:
         id: get-version
         run: |
           $xml1 = [xml](Get-Content -Path Platform/fo-dicom/fo-dicom.Codecs.csproj)
-          $version1 = $xml1.Project.PropertyGroup.Version;
+          $version1 = $xml1.Project.PropertyGroup.Version.Trim();
           echo "RELEASE_VERSION=$version1" >> $env:GITHUB_OUTPUT          
         shell: pwsh
 
