@@ -15,7 +15,7 @@ jobs:
       release-version: ${{ steps.get-version.outputs.RELEASE_VERSION }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Version extraction
         id: get-version
         run: |
@@ -29,18 +29,18 @@ jobs:
     needs: version
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
       - name: Compile Dicom.Native for windows x64
         run: msbuild Native/Windows64/build_x64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=x64
       - name: Publish windows x64 artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-win-x64
           path: Native/Windows64/build_x64/bin/x64/Release/Dicom.Native
       - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
       - name: Prepare SN Key
@@ -54,13 +54,13 @@ jobs:
     needs: build_win_x64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
       - name: Compile Dicom.Native for windows arm64
         run: msbuild Native/Windows64/build_arm64/Dicom.Native.vcxproj /p:Configuration=Release /p:Platform=ARM64
       - name: Publish windows ARM64 artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-win-arm64
           path: Native/Windows64/build_arm64/bin/ARM64/Release/Dicom.Native
@@ -69,14 +69,14 @@ jobs:
     needs: build_win_x64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Compile Dicom.Native for linux x64 
         run: |
           cd Native/POSIX64/
           cmake ./CMakeLists.txt
           make
       - name: Publish linux x64 artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-linux-x64
           path: Native/POSIX64/lib-linux-x64
@@ -85,12 +85,12 @@ jobs:
       - name: Publish managed library
         run: dotnet publish Platform/fo-dicom/fo-dicom.Codecs.csproj --configuration Release
       - name: Publish managed artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
       - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
       - name: Run unit tests
@@ -101,7 +101,7 @@ jobs:
     needs: build_win_x64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Compile Dicom.Native for linux arm64
         run: |
           sudo apt-get update
@@ -110,7 +110,7 @@ jobs:
           cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
           make
       - name: Publish linux arm64 artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-linux-arm64
           path: Native/POSIX64/lib-linux-arm64
@@ -120,19 +120,19 @@ jobs:
     needs: build_win_x64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Compile Dicom.Native for macOS x64
         run: |
           cd Native/POSIX64/
           cmake ./CMakeLists.txt
           make
       - name: Publish osx x64 artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
       - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
       - name: Prepare SN key
@@ -145,14 +145,14 @@ jobs:
     needs: build_win_x64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Compile Dicom.Native for macOS arm64
         run: |
           cd Native/POSIX64/
           cmake -DARCH_FLAG:STRING=arm64 ./CMakeLists.txt
           make
       - name: Publish osx arm64 artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lib-osx-arm64
           path: Native/POSIX64/lib-osx-arm64
@@ -168,13 +168,13 @@ jobs:
       - build_osx_arm64
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: bin
           pattern: lib-win-x64
@@ -190,7 +190,7 @@ jobs:
         run: Compress-Archive Tests/Acceptance/bin/debug/net8.0/out ./AcceptanceTestResults.zip
         shell: pwsh
       - name: Archive files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test
           path: ./AcceptanceTestResults.zip
@@ -202,7 +202,7 @@ jobs:
     outputs:
       only-tests: ${{ steps.check.outputs.only-tests }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Check if only Tests folder changed
@@ -232,11 +232,15 @@ jobs:
       id-token: write # Required for NuGet Trusted Publisher (OIDC)
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: bin
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '9.x'
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
@@ -252,24 +256,21 @@ jobs:
       - nuget
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: bin
           pattern: test
 
       - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with: 
-          tag_name: ${{ needs.version.outputs.release-version }}
-          release_name: Release ${{ needs.version.outputs.release-version }}
-          draft: false
-          prerelease: true
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ needs.version.outputs.release-version }}" \
+            --title "Release ${{ needs.version.outputs.release-version }}" \
+            --prerelease
 
       - name: Upload Release Asset
         env:
