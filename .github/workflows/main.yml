@@ -228,6 +228,8 @@ jobs:
       - acceptance
       - check-paths
     if: needs.check-paths.outputs.only-tests != 'true'
+    permissions:
+      id-token: write # Required for NuGet Trusted Publisher (OIDC)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -240,7 +242,7 @@ jobs:
       - name: Prepare NuGet package
         run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version ${{needs.version.outputs.release-version}} -Suffix alpha3
       - name: Publish NuGet package
-        run: nuget push "fo-dicom.Codecs.*.nupkg" -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}          
+        run: dotnet nuget push "fo-dicom.Codecs.*.nupkg" --source https://api.nuget.org/v3/index.json --api-key oidc
 
   release:
     runs-on: ubuntu-latest
