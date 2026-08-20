@@ -176,8 +176,8 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v7
         with:
-          path: bin
-          pattern: lib-win-x64
+          path: bin/lib-win-x64
+          name: lib-win-x64
       - name: Prepare SN Key
         run: |
           echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
