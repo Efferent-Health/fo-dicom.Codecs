@@ -245,8 +245,13 @@ jobs:
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
         run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version ${{needs.version.outputs.release-version}} -Suffix alpha3
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: Efferent
       - name: Publish NuGet package
-        run: dotnet nuget push "fo-dicom.Codecs.*.nupkg" --source https://api.nuget.org/v3/index.json --api-key oidc
+        run: dotnet nuget push "fo-dicom.Codecs.*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
 
   release:
     runs-on: ubuntu-latest
