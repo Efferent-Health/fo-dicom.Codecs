@@ -896,16 +896,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         else
                                             clen = (int)Opj_stream_tell(c_stream);
 
-                                        pool.Resize(ref cbuf, clen);
+                                        var encoded = new byte[clen];
+                                        Buffer.BlockCopy(cbuf, 0, encoded, 0, clen);
 
                                         IByteBuffer buffer;
                                         if (clen >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                         {
-                                            buffer = new TempFileBuffer(cbuf);
+                                            buffer = new TempFileBuffer(encoded);
                                             buffer = EvenLengthBuffer.Create(buffer);
                                         }
                                         else
-                                            buffer = new MemoryByteBuffer(cbuf);
+                                            buffer = new MemoryByteBuffer(encoded);
 
                                         if (oldPixelData.NumberOfFrames == 1)
                                             buffer = EvenLengthBuffer.Create(buffer);
