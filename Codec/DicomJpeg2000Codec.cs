@@ -873,12 +873,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                                     {
                                         Opj_setup_encoder_win(codec, ref eparams, image);
-                                        c_stream = Opj_create_stream_win((byte*)buf, (uint)cbuf.Length, false);
+                                        c_stream = Opj_create_stream_win(buf, (uint)cbuf.Length, false);
                                     }
                                     else
                                     {
                                         Opj_setup_encoder(codec, ref eparams, image);
-                                        c_stream = Opj_create_stream((byte*)buf, (uint)cbuf.Length, false);
+                                        c_stream = Opj_create_stream(buf, (uint)cbuf.Length, false);
                                     }
 
                                     var isEncodeSuccess = false;

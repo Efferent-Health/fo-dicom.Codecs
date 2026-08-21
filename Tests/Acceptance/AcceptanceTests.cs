@@ -117,10 +117,13 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
                 resultsInverse[index0][index1] = "OK";
             }
-            catch
-            {
+            catch (DicomCodecException ex)
+            {   
+                Console.WriteLine($"{ex.Message} => {ex.StackTrace}");
+                
                 resultsInverse[index0][index1] = "FAIL";
                 Assert.Fail("Couldn't Decode from: " + filenames[index0] + " file.");
+
             }
         }
 
@@ -142,10 +145,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 
                 resultsRender[index0] = "OK";
             }
-            catch
-            {
+            catch (DicomCodecException ex)
+            {   
+                Console.WriteLine($"{ex.Message} => {ex.StackTrace}");
+                
                 resultsRender[index0] = "FAIL";
-            
                 Assert.Fail("Couldn't extract image from: " + filenames[index0] + " file.");
             }
         }
