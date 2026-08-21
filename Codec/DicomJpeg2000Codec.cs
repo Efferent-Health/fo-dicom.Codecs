@@ -859,14 +859,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         throw new DicomCodecException("JPEG 2000 codec only supports Bits Allocated == 8 or 16");
                                 }
 
-                                uint img_size = 0;
+                                ulong img_size = 0;
                                 for (int i = 0; i < image->numcomps; i++)
                                 {
-                                    img_size += image->comps[i].w * image->comps[i].h * image->comps[i].prec;
+                                    img_size += (ulong)image->comps[i].w * image->comps[i].h * image->comps[i].prec;
                                 }
 
-                                var outlen = (uint)(0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
-                                cbuf = pool.Rent((int)outlen);
+                                const int maxArrayLength = 0x7FFFFFC7;
+                                var outlen = (ulong)(0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
+                                cbuf = pool.Rent(outlen > maxArrayLength ? maxArrayLength : (int)outlen);
 
                                 fixed (byte * buf = cbuf)
                                 {
