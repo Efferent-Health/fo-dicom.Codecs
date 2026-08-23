@@ -1107,6 +1107,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 pixelCount = (int)(image->x1 * image->y1);
                             }
 
+                            //The extraction below writes numcomps samples per pixel over an extent taken from
+                            //the codestream, into a buffer sized from the geometry the dataset declares.
+                            //Compare against what was actually allocated rather than recomputing that size,
+                            //so the check holds even where the sizing arithmetic above overflows. Only the
+                            //larger-than case is rejected, so a smaller codestream decodes as it always has.
+                            if ((ulong)image->x1 * image->y1 * image->numcomps * (ulong)oldPixelData.BytesAllocated > (ulong)destArray.Count)
+                                throw new DicomCodecException("Error in JPEG 2000 decode stream => output image is larger than the pixel buffer the dataset declares");
+
                             for (int c = 0; c < image->numcomps; c++)
                             {
                                 opj_image_comp_t* comp = &image->comps[c];
