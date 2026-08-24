@@ -123,7 +123,6 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
                 
                 resultsInverse[index0][index1] = "FAIL";
                 Assert.Fail("Couldn't Decode from: " + filenames[index0] + " file.");
-
             }
         }
 
