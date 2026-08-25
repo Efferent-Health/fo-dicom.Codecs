@@ -521,6 +521,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (jpegData != null)
                         {
                             pool.Return(jpegData);
+                            jpegData = null;
                         }
                     }
                 }

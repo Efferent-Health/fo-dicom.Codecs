@@ -868,7 +868,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 var outlen = (uint)(0.1625 * img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
                                 cbuf = pool.Rent((int)outlen);
 
-                                fixed (byte * buf = cbuf)
+                                fixed (byte* buf = cbuf)
                                 {
                                     if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                                     {
@@ -910,6 +910,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                         if (oldPixelData.NumberOfFrames == 1)
                                             buffer = EvenLengthBuffer.Create(buffer);
+
+                                        if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                                        {
+                                            newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+
+                                            if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
+                                            {
+                                                if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
+                                                    newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
+                                                else
+                                                    newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
+                                            }
+                                        }
 
                                         newPixelData.AddFrame(buffer);
                                     }
@@ -983,19 +996,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (cbuf != null)
                     {
                         pool.Return(cbuf);
-                    }
-                }
-
-                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull || oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                {
-                    newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
-
-                    if (jparams.AllowMCT && jparams.UpdatePhotometricInterpretation)
-                    {
-                        if (newPixelData.Syntax == DicomTransferSyntax.JPEG2000Lossy && jparams.Irreversible)
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrIct;
-                        else
-                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrRct;
                     }
                 }
             }
@@ -1145,7 +1145,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     }
                                 }
                                 else if (oldPixelData.BytesAllocated == 2)
-                                {   
+                                {
                                     if (prec <= 16)
                                     {
                                         destArray = ExtractDataLineByLinefor16bit(destArray, pixelCount, comp, pos, offset);
