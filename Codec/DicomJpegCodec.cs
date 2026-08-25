@@ -530,8 +530,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }
                 finally
-                {
+                {   
                     frameArray?.Dispose();
+                    frameArray = null;
                 }
             }
 
@@ -623,9 +624,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (frameData != null)
                     {
                         pool.Return(frameData);
+                        frameData = null;
                     }
 
                     jpegArray?.Dispose();
+                    frameData = null;
                 }
             }
 

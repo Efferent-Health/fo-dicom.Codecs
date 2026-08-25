@@ -963,6 +963,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     else
                                         Opj_destroy_compress(codec);
                                 }
+
+                                if (cbuf != null)
+                                {
+                                    pool.Return(cbuf);
+                                }
                             }
                         }
                         catch (DicomCodecException e)
@@ -990,13 +995,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 catch (Exception e)
                 {
                     throw new DicomCodecException(e.Message + " => " + e.StackTrace);
-                }
-                finally
-                {
-                    if (cbuf != null)
-                    {
-                        pool.Return(cbuf);
-                    }
                 }
             }
         }

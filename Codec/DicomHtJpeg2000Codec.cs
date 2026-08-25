@@ -245,9 +245,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         if (jpegHT2KData != null)
                         {
                             pool.Return(jpegHT2KData);
+                            jpegHT2KData = null;
                         }
 
                         frameArray?.Dispose();
+                        frameArray = null;
                     }
                 }
             }

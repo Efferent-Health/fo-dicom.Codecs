@@ -328,14 +328,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
                     finally
                     {
-                        if (frameArray != null)
-                        {
-                            frameArray.Dispose();
-                        }
+                        frameArray?.Dispose();
 
                         if (jpeglsData != null)
                         {
                             pool.Return(jpeglsData);
+                            jpeglsData = null;
                         }
                     }
                 }
@@ -425,17 +423,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     if (frameData != null)
                     {
                         pool.Return(frameData);
+                        frameData = null;
                     }
 
-                    if (frameArray != null)
-                    {
-                        frameArray.Dispose();
-                    }
-
-                    if (jpeglsArray != null)
-                    {
-                        jpeglsArray.Dispose();
-                    }
+                    frameArray?.Dispose();
+                    jpeglsArray?.Dispose();
                 }
             }
         }
