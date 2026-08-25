@@ -244,7 +244,7 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
-        run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version ${{needs.version.outputs.release-version}} -Suffix alpha3
+        run: nuget pack Setup/fo-dicom.Codecs.nuspec -Version ${{needs.version.outputs.release-version}} -Suffix alpha4
       - name: NuGet login
         uses: NuGet/login@v1
         id: nuget-login
