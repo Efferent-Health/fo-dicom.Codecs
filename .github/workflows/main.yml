@@ -48,7 +48,7 @@ jobs:
           echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
           certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
-        run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
+        run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx --maxcpucount:1
   build_win_arm64:
     runs-on: windows-2022
     needs: build_win_x64
@@ -94,7 +94,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx      
+        run: dotnet test Tests/Unit/*.csproj --logger:trx --maxcpucount:1      
 
   build_linux_arm64:
     runs-on: ubuntu-22.04
@@ -138,7 +138,7 @@ jobs:
       - name: Prepare SN key
         run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx
+        run: dotnet test Tests/Unit/*.csproj --logger:trx --maxcpucount:1
 
   build_osx_arm64:
     runs-on: macos-14
@@ -185,7 +185,7 @@ jobs:
       - name: Run acceptance tests
         run: |        
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
-          dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
+          dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx --maxcpucount:1
       - name: Compress results
         run: Compress-Archive Tests/Acceptance/bin/debug/net8.0/out ./AcceptanceTestResults.zip
         shell: pwsh
