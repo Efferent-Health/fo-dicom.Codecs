@@ -196,19 +196,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
     {
         //Encode JPEGLS for win_x64 or win_arm64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode_win(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSEncode_win(void* destination, ulong destinationLength, ulong* bytesWritten, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //Decode JPEGLS for winx64
         [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode_win(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode_win(void* destination, ulong destinationLength, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Encode JPEGLS
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode(void* destination, uint destinationLength, uint* bytesWritten, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSEncode(void* destination, ulong destinationLength, ulong* bytesWritten, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         //For Decode JPEGLS
         [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode(void* destination, int destinationLength, void* source, uint sourceLength, ref JlsParameters obj, char[] errorMessage);
+        public static extern unsafe CharlsApiResultType JpegLSDecode(void* destination, ulong destinationLength, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
 
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
@@ -283,15 +283,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         fixed (byte* jpegDataPointer = jpeglsData)
                         {
-                            uint jpegDataSize = 0;
+                            ulong jpegDataSize;
                             char[] errorMessage = new char[256];
 
                             CharlsApiResultType err = CharlsApiResultType.Unknown;
 
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                err = JpegLSEncode_win(jpegDataPointer, (uint)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+                                err = JpegLSEncode_win(jpegDataPointer, (ulong)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (ulong)frameArray.Count, ref jls, errorMessage);
                             else
-                                err = JpegLSEncode(jpegDataPointer, (uint)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (uint)frameArray.Count, ref jls, errorMessage);
+                                err = JpegLSEncode(jpegDataPointer, (ulong)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (ulong)frameArray.Count, ref jls, errorMessage);
 
                             // The pooled array is returned to the pool in the finally block below, so it
                             // must not be handed over to the buffer: the array can be rented again and
@@ -389,9 +389,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     unsafe
                     {
                         if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                            err = JpegLSDecode_win((void*)frameArray.Pointer, frameData.Length, (void*)jpeglsArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                            err = JpegLSDecode_win((void*)frameArray.Pointer, (ulong)frameData.Length, (void*)jpeglsArray.Pointer, (ulong)jpegData.Size, ref jls, errorMessage);
                         else
-                            err = JpegLSDecode((void*)frameArray.Pointer, frameData.Length, (void*)jpeglsArray.Pointer, Convert.ToUInt32(jpegData.Size), ref jls, errorMessage);
+                            err = JpegLSDecode((void*)frameArray.Pointer, (ulong)frameData.Length, (void*)jpeglsArray.Pointer, (ulong)jpegData.Size, ref jls, errorMessage);
 
                         // Same reason as in Encode: copy out of the pooled array before it goes back
                         // to the pool, and at the exact frame size instead of the pool bucket size.
