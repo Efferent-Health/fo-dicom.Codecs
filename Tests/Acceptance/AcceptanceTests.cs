@@ -86,10 +86,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
                 resultsPerform[index0][index1] = "OK";
             }
-            catch
+            catch (DicomCodecException ex)
             {
-                resultsPerform[index0][index1] = "FAIL";
+                Console.WriteLine($"{ex.Message} => {ex.StackTrace}");
 
+                resultsPerform[index0][index1] = "FAIL";
                 Assert.Fail("Couldn't change Transfer syntax " + transferSyntaxes[index1] + " from: " + filenames[index0] + " file.");
             }
         }
@@ -207,7 +208,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             {
                 for (int i = 0; i < filenames.Length; i++)
                 {
-                        yield return new object[] { i };
+                    yield return new object[] { i };
                 }
             }
         }

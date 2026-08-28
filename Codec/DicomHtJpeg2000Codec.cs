@@ -110,19 +110,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
     {
         // Encode HTJ2K for win_x64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
-        public static extern unsafe EncodeStatus InvokeHTJ2KEncode_win(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
+        public static extern unsafe EncodeStatus InvokeHTJ2KEncode_win(ref Htj2k_outdata j2c_outinfo, byte* source, ulong sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
         // Decode HTJ2K for win_x64
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
-        public static extern unsafe void InvokeHTJ2KDecode_win(ref Raw_outdata raw_outinfo, byte* source, uint sourceLength);
+        public static extern unsafe void InvokeHTJ2KDecode_win(ref Raw_outdata raw_outinfo, byte* source, ulong sourceLength);
 
         // Encode HTJ2k
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KEncode")]
-        public static extern unsafe EncodeStatus InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, uint sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
+        public static extern unsafe EncodeStatus InvokeHTJ2KEncode(ref Htj2k_outdata j2c_outinfo, byte* source, ulong sourceLength, ref Frameinfo frameinfo, OPJ_PROG_ORDER progressionOrder = OPJ_PROG_ORDER.PROG_UNKNOWN);
 
         // Decode HTJ2k
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
-        public static extern unsafe void InvokeHTJ2KDecode(ref Raw_outdata raw_outinfo, byte* source, uint sourceLength);
+        public static extern unsafe void InvokeHTJ2KDecode(ref Raw_outdata raw_outinfo, byte* source, ulong sourceLength);
 
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
@@ -198,9 +198,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             EncodeStatus status = EncodeStatus.Unknown;
 
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                status = InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameData.Data.Length, ref frameinfo, progressionOrder);
+                                status = InvokeHTJ2KEncode_win(ref j2c_outinfo, (byte*)frameArray.Pointer, (ulong)frameData.Data.Length, ref frameinfo, progressionOrder);
                             else
-                                status = InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (uint)frameData.Data.Length, ref frameinfo, progressionOrder);
+                                status = InvokeHTJ2KEncode(ref j2c_outinfo, (byte*)frameArray.Pointer, (ulong)frameData.Data.Length, ref frameinfo, progressionOrder);
 
                             if (!status.Equals(EncodeStatus.Success))
                             {
@@ -299,9 +299,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 };
 
                                 if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                    InvokeHTJ2KDecode_win(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count);
+                                    InvokeHTJ2KDecode_win(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (ulong)htjpeg2kArray.Count);
                                 else
-                                    InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (uint)htjpeg2kArray.Count); ;
+                                    InvokeHTJ2KDecode(ref raw_Outdata, (byte*)htjpeg2kArray.Pointer, (ulong)htjpeg2kArray.Count); ;
 
                                 // Same reason as in Encode: copy out of the pooled array before it goes
                                 // back to the pool, and at the exact decoded size instead of the pool
