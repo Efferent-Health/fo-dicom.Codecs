@@ -124,6 +124,62 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, EntryPoint = "InvokeHTJ2KDecode")]
         public static extern unsafe void InvokeHTJ2KDecode(ref Raw_outdata raw_outinfo, byte* source, ulong sourceLength);
 
+        /// <summary>
+        /// Reads the decoded size the native decoder will produce, from the codestream's own
+        /// SIZ marker. Mirrors HTJpeg2000DecodeStream term for term: width and height are the
+        /// image extent minus the image offset, multiplied by the component count and by the
+        /// bytes per sample taken from component zero's precision.
+        /// </summary>
+        /// <returns>
+        /// false when the header cannot be read, in which case the caller must not reject:
+        /// a guard that turned an unreadable header into a refusal would fail files the decoder
+        /// handles today, which is a worse regression than the one it is closing.
+        /// </returns>
+        private static bool TryGetCodestreamLength(byte[] codestream, out ulong length)
+        {
+            length = 0;
+
+            //SOC then SIZ, at fixed offsets. The native side hands these bytes straight to
+            //ojph::codestream::read_headers, which expects a raw codestream laid out exactly
+            //this way, so anything else is not something this decoder would have decoded.
+            //Searching for the marker instead would risk matching 0xFF51 inside arbitrary
+            //data and computing a size from it, which could refuse a perfectly good file.
+            //43 bytes is the smallest prefix that still carries component zero's Ssiz, which
+            //sits at 42; anything shorter cannot be read without going out of bounds here.
+            if (codestream == null || codestream.Length < 43)
+                return false;
+            if (codestream[0] != 0xFF || codestream[1] != 0x4F)
+                return false;
+            if (codestream[2] != 0xFF || codestream[3] != 0x51)
+                return false;
+
+            //Big-endian, per the JPEG 2000 codestream syntax. Offsets are from the SIZ marker
+            //at 2: Lsiz 4, Rsiz 6, Xsiz 8, Ysiz 12, XOsiz 16, YOsiz 20, then the four tile
+            //fields, Csiz at 40 and component zero's Ssiz at 42.
+            uint xsiz = ReadUInt32(codestream, 8);
+            uint ysiz = ReadUInt32(codestream, 12);
+            uint xosiz = ReadUInt32(codestream, 16);
+            uint yosiz = ReadUInt32(codestream, 20);
+            ushort csiz = (ushort)((codestream[40] << 8) | codestream[41]);
+
+            if (xsiz <= xosiz || ysiz <= yosiz || csiz == 0)
+                return false;
+
+            //Ssiz carries the precision less one in its low seven bits; the high bit is the
+            //sign flag and does not change the byte width.
+            int bitsPerSample = (codestream[42] & 0x7F) + 1;
+            ulong bytesPerSample = (ulong)((bitsPerSample + 8 - 1) / 8);
+
+            length = (ulong)(xsiz - xosiz) * (ysiz - yosiz) * csiz * bytesPerSample;
+            return true;
+        }
+
+        private static uint ReadUInt32(byte[] data, int offset)
+        {
+            return ((uint)data[offset] << 24) | ((uint)data[offset + 1] << 16) |
+                   ((uint)data[offset + 2] << 8) | data[offset + 3];
+        }
+
         public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             unsafe
@@ -287,6 +343,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     try
                     {
+                        //The native decoder sizes its own output from the codestream's SIZ marker and
+                        //memcpy's that many bytes into frameData, which was rented from the geometry the
+                        //dataset declares. Neither side compares the two, so a codestream covering a
+                        //larger extent than the declared geometry writes past the end of the rented array.
+                        //Reject before the call rather than after, since by then the write has happened.
+                        //Compare against the rented length rather than recomputing the declared size, so
+                        //the check holds even where the sizing arithmetic above overflows. Only the
+                        //larger-than case is rejected, and only when the extent was positively read, so a
+                        //smaller codestream and an unparsable header both decode as they always have.
+                        if (TryGetCodestreamLength(htjpeg2kData.Data, out ulong required) &&
+                            required > (ulong)frameData.Length)
+                            throw new DicomCodecException("Error in HTJ2K decode stream => output image is larger than the pixel buffer the dataset declares");
+
                         Raw_outdata raw_Outdata;
 
                         unsafe
