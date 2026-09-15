@@ -71,7 +71,12 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         }
 
         private static DicomDataset Decode(DicomDataset dataset)
-        {
+        {   
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
+                
             var transcoder = new DicomTranscoder(dataset.InternalTransferSyntax,
                                                  DicomTransferSyntax.ExplicitVRLittleEndian);
             return transcoder.Transcode(dataset);
