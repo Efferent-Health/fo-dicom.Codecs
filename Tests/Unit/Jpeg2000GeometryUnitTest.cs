@@ -57,6 +57,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
             DicomPixelData.Create(dataset, true).AddFrame(new MemoryByteBuffer(pixels));
 
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
+
             var encoded = dataset.Clone(DicomTransferSyntax.JPEG2000Lossless);
             encoded.AddOrUpdate(DicomTag.Rows, declaredSide);
             encoded.AddOrUpdate(DicomTag.Columns, declaredSide);
@@ -92,6 +97,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
             DicomPixelData.Create(dataset, true).AddFrame(new MemoryByteBuffer(pixels));
 
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
+
             var encoded = dataset.Clone(DicomTransferSyntax.JPEG2000Lossless);
             encoded.AddOrUpdate(DicomTag.SamplesPerPixel, (ushort)1);
             encoded.AddOrUpdate(DicomTag.PhotometricInterpretation, "MONOCHROME2");
@@ -108,7 +118,12 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             var encoded = BuildEncoded(bitsAllocated, 8);
 
             try
-            {
+            {   
+                new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
+
                 encoded.Clone(DicomTransferSyntax.ExplicitVRLittleEndian);
                 Assert.Fail("Expected a DicomCodecException for a codestream larger than the declared geometry.");
             }
@@ -134,7 +149,12 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             var encoded = BuildEncodedWithComponentMismatch(bitsAllocated);
 
             try
-            {
+            {   
+                new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
+
                 encoded.Clone(DicomTransferSyntax.ExplicitVRLittleEndian);
                 Assert.Fail("Expected a DicomCodecException for a codestream with more components than declared.");
             }
@@ -172,6 +192,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
             DicomPixelData.Create(dataset, true).AddFrame(new MemoryByteBuffer(pixels));
 
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
+
             var encoded = dataset.Clone(DicomTransferSyntax.JPEG2000Lossless);
             encoded.AddOrUpdate(DicomTag.Rows, (ushort)33000);
             encoded.AddOrUpdate(DicomTag.Columns, (ushort)65103);
@@ -196,6 +221,11 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             // destination buffer and has always decoded, so the check stays
             // one-sided instead of demanding an exact match.
             var encoded = BuildEncoded(bitsAllocated, 128);
+
+            new DicomSetupBuilder()
+                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                .SkipValidation()
+                .Build();
 
             var decoded = encoded.Clone(DicomTransferSyntax.ExplicitVRLittleEndian);
 
