@@ -409,8 +409,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     frameArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
 
                     if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                    {
-                        frameArray = new PinnedByteArray(PixelDataConverter.YbrFull422ToRgb(new MemoryByteBuffer(frameArray.Data), oldPixelData.Width).Data);
+                    {   
+                        if (!IsJpegBuffer(frameArray.Data))
+                        {
+                            frameArray = new PinnedByteArray(PixelDataConverter.YbrFull422ToRgb(new MemoryByteBuffer(frameArray.Data), oldPixelData.Width).Data);
+                        }
+                        else
+                        {
+                            throw new DicomCodecException($"This frame buffer number => {frame} is corrupted. JPEG encoding is not supported.");
+                        }
                     }
                 }
 
@@ -635,9 +642,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
             internal override unsafe int ScanHeaderForPrecision(DicomPixelData pixelData, bool isjPEG, int frame = 0)
             {
                 PinnedByteArray jpegArray = new PinnedByteArray(pixelData.GetFrame(frame).Data);
-                var jpegFile = new byte[] { 255, 216, 255 };
 
-                if (!jpegFile.SequenceEqual(jpegArray.Data.Take(jpegFile.Length)))
+                if (!IsJpegBuffer(jpegArray.Data))
                 {
                     jpegArray.Dispose();
                     throw new DicomCodecException("Not a JPEG file.");
@@ -665,6 +671,18 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 {
                     jpegArray.Dispose();
                 }
+            }
+
+            private bool IsJpegBuffer(byte[] buffer)
+            {
+                var magixBytesofJpeg = new byte[] { 255, 216, 255 };
+                
+                if (!magixBytesofJpeg.SequenceEqual(buffer.Take(magixBytesofJpeg.Length)))
+                {
+                    return false;
+                }
+
+                return true;
             }
 
             private byte[] TrytoFixPixelData(byte[] buffer)
