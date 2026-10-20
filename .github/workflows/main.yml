@@ -39,10 +39,10 @@ jobs:
         with:
           name: lib-win-x64
           path: Native/Windows64/build_x64/bin/x64/Release/Dicom.Native
-      - name: Setup .NET 8.0
+      - name: Setup .NET 10.0
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Prepare SN Key
         run: |
           echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
@@ -89,10 +89,10 @@ jobs:
         with:
           name: lib-managed
           path: Platform/fo-dicom/bin/Release/netstandard2.0
-      - name: Setup .NET 8.0
+      - name: Setup .NET 10.0
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Run unit tests
         run: dotnet test Tests/Unit/*.csproj --logger:trx --maxcpucount:1      
 
@@ -131,10 +131,10 @@ jobs:
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
-      - name: Setup .NET 8.0
+      - name: Setup .NET 10.0
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Prepare SN key
         run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
@@ -169,10 +169,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-      - name: Setup .NET 8.0
+      - name: Setup .NET 10.0
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Download build artifacts
         uses: actions/download-artifact@v7
         with:
@@ -187,7 +187,7 @@ jobs:
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
           dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx --maxcpucount:1
       - name: Compress results
-        run: Compress-Archive Tests/Acceptance/bin/debug/net8.0/out ./AcceptanceTestResults.zip
+        run: Compress-Archive Tests/Acceptance/bin/debug/net10.0/out ./AcceptanceTestResults.zip
         shell: pwsh
       - name: Archive files
         uses: actions/upload-artifact@v7
@@ -237,10 +237,10 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           path: bin
-      - name: Setup .NET 9
+      - name: Setup .NET 10
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '9.x'
+          dotnet-version: '10.0.x'
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
       - name: Prepare NuGet package
