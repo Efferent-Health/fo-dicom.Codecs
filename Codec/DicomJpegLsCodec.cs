@@ -293,6 +293,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             else
                                 err = JpegLSEncode(jpegDataPointer, (ulong)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (ulong)frameArray.Count, ref jls, errorMessage);
 
+                            if (err != CharlsApiResultType.OK)
+                                throw new DicomCodecException($"JPEG-LS encode failed for frame {frame}: {err} ({new string(errorMessage).TrimEnd('\0')})");
+
                             // The pooled array is returned to the pool in the finally block below, so it
                             // must not be handed over to the buffer: the array can be rented again and
                             // overwritten while this dataset still points at it. Copy it out at its exact
@@ -392,6 +395,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             err = JpegLSDecode_win((void*)frameArray.Pointer, (ulong)frameData.Length, (void*)jpeglsArray.Pointer, (ulong)jpegData.Size, ref jls, errorMessage);
                         else
                             err = JpegLSDecode((void*)frameArray.Pointer, (ulong)frameData.Length, (void*)jpeglsArray.Pointer, (ulong)jpegData.Size, ref jls, errorMessage);
+
+                        if (err != CharlsApiResultType.OK)
+                            throw new DicomCodecException($"JPEG-LS decode failed for frame {frame}: {err} ({new string(errorMessage).TrimEnd('\0')})");
 
                         // Same reason as in Encode: copy out of the pooled array before it goes back
                         // to the pool, and at the exact frame size instead of the pool bucket size.
