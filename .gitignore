@@ -4,6 +4,10 @@
 **/*.dll
 **/*.so
 **.dylib
+**/POSIX64/CMakeCache.txt
+**/POSIX64/cmake_install.cmake
+**/POSIX64/CMakeFiles
+**/POSIX64/Makefile
 **/build_*/CMakeFiles
 **/build_*/Makefile
 **/build_*/cmake_install.cmake
