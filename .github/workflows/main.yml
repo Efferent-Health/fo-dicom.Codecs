@@ -187,7 +187,7 @@ jobs:
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
           dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx --maxcpucount:1
       - name: Compress results
-        run: Compress-Archive Tests/Acceptance/bin/debug/net10.0/out ./AcceptanceTestResults.zip
+        run: Compress-Archive Tests/Acceptance/bin/debug/net8.0/out ./AcceptanceTestResults.zip
         shell: pwsh
       - name: Archive files
         uses: actions/upload-artifact@v7
