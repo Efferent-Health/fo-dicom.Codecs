@@ -65,7 +65,7 @@ jobs:
           name: lib-win-arm64
           path: Native/Windows64/build_arm64/bin/ARM64/Release/Dicom.Native
   build_linux_x64:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build_win_x64
     steps:
       - name: Checkout repository
@@ -97,7 +97,7 @@ jobs:
         run: dotnet test Tests/Unit/*.csproj --logger:trx --maxcpucount:1      
 
   build_linux_arm64:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build_win_x64
     steps:
       - name: Checkout repository
@@ -254,7 +254,7 @@ jobs:
         run: dotnet nuget push "fo-dicom.Codecs.*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
 
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: 
       - version
       - acceptance
