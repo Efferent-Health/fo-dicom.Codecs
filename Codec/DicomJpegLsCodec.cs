@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using CommunityToolkit.HighPerformance;
 using FellowOakDicom.Imaging.Codec;
@@ -24,6 +25,30 @@ namespace FellowOakDicom.Imaging.NativeCodec
         public int Threshold2;
         public int Threshold3;
         public int ResetValue;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Charls_frame_info
+    {
+        /// <summary>
+        /// Width of the image, range [1, 100000].
+        /// </summary>
+        public uint width;
+
+        /// <summary>
+        /// Height of the image, range [1, 100000].
+        /// </summary>
+        public uint height;
+
+        /// <summary>
+        /// Number of bits per sample, range [2, 16]
+        /// </summary>
+        public int bits_per_sample;
+
+        /// <summary>
+        /// Number of components contained in the frame, range [1, 255]
+        /// </summary>
+        public int component_count;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -194,7 +219,78 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
     public abstract class DicomJpegLsNativeCodec : DicomJpegLsCodec
     {
-        //Encode JPEGLS for win_x64 or win_arm64
+        public class EncodeSafeContextHandle : SafeHandle
+        {
+            public EncodeSafeContextHandle() : base(IntPtr.Zero, true) { }
+            public override bool IsInvalid => handle == IntPtr.Zero;
+            protected override bool ReleaseHandle()
+            {
+                Charls_jpegls_encoder_destroy(handle);
+                return true;
+            }
+        }
+
+        public class DecodeSafeContextHandle : SafeHandle
+        {
+            public DecodeSafeContextHandle() : base(IntPtr.Zero, true) {}
+            public override bool IsInvalid => handle == IntPtr.Zero;
+            protected override bool ReleaseHandle()
+            {
+                Charls_jpegls_decoder_destroy(handle);
+                return true;
+            }
+        }
+
+        //Encode JPEGLS for linux or macOS
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_create")]
+        public static extern EncodeSafeContextHandle Charls_jpegls_encoder_create();
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_set_frame_info")]
+        public static extern int Charls_jpegls_encoder_set_frame_info(EncodeSafeContextHandle encoder, ref Charls_frame_info frameInfo);
+        
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_encode_from_buffer")]
+        public static extern unsafe int Charls_jpegls_encoder_encode_from_buffer(EncodeSafeContextHandle encoder, void * sourceBuffer, ulong source_size_bytes, uint stride);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_set_near_lossless")]
+        public static extern int Charls_jpegls_encoder_set_near_lossless(EncodeSafeContextHandle encoder, int near_lossless);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_get_estimated_destination_size")]
+        public static unsafe extern int Charls_jpegls_encoder_get_estimated_destination_size(EncodeSafeContextHandle encoder, ulong* size_in_bytes);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_set_destination_buffer")]
+        public static unsafe extern int Charls_jpegls_encoder_set_destination_buffer(EncodeSafeContextHandle encoder, void* destination_buffer, ulong destination_size_bytes);
+        
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_get_bytes_written")]
+        public static unsafe extern int Charls_jpegls_encoder_get_bytes_written(EncodeSafeContextHandle encoder, ulong* bytes_written);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_set_interleave_mode")]
+        public static extern int Charls_jpegls_encoder_set_interleave_mode(EncodeSafeContextHandle encoder, CharlsInterleaveModeType interleaveModeType);
+        
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_encoder_destroy")]
+        public static extern void Charls_jpegls_encoder_destroy(IntPtr encoder);
+
+        //Decode JPEGLS for linux or macOS
+        
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_create")]
+        public static extern DecodeSafeContextHandle Charls_jpegls_decoder_create();
+        
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_set_source_buffer")]
+        public static unsafe extern int Charls_jpegls_decoder_set_source_buffer(DecodeSafeContextHandle decoder, void * sourceBuffer, ulong source_size_bytes);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_read_header")]
+        public static extern int Charls_jpegls_decoder_read_header(DecodeSafeContextHandle decoder);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_get_destination_size")]
+        public static unsafe extern int Charls_jpegls_decoder_get_destination_size(DecodeSafeContextHandle decoder, uint stride, ulong* destination_size_bytes);
+
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_decode_to_buffer")]
+        public static unsafe extern int Charls_jpegls_decoder_decode_to_buffer(DecodeSafeContextHandle decoder, void * destination_buffer, ulong destination_size_bytes, uint stride);
+        
+        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_destroy")]
+        public static extern void Charls_jpegls_decoder_destroy(IntPtr decoder);
+
+        // Native methods deprecated
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
         public static extern unsafe CharlsApiResultType JpegLSEncode_win(void* destination, ulong destinationLength, ulong* bytesWritten, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
 
@@ -210,7 +306,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
         public static extern unsafe CharlsApiResultType JpegLSDecode(void* destination, ulong destinationLength, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
 
-        public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             // IMPORT JpegLsEncode
             unsafe
@@ -233,25 +329,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     jparams = (DicomJpegLsParams)GetDefaultParameters();
                 }
 
-                JlsParameters jls = new JlsParameters
+                var frameInfo = new Charls_frame_info
                 {
                     width = oldPixelData.Width,
                     height = oldPixelData.Height,
-                    bitsPerSample = oldPixelData.BitsStored,
-                    stride = oldPixelData.BytesAllocated * oldPixelData.Width * oldPixelData.SamplesPerPixel,
-                    components = oldPixelData.SamplesPerPixel,
-                    interleaveMode = oldPixelData.SamplesPerPixel == 1
-                        ? CharlsInterleaveModeType.None
-                        : oldPixelData.PlanarConfiguration == PlanarConfiguration.Interleaved
-                            ? CharlsInterleaveModeType.Sample
-                            : CharlsInterleaveModeType.Line,
-                    colorTransformation = CharlsColorTransformationType.None
+                    component_count = oldPixelData.SamplesPerPixel,
+                    bits_per_sample = oldPixelData.BitsStored
                 };
-
-                if (TransferSyntax == DicomTransferSyntax.JPEGLSNearLossless)
-                {
-                    jls.allowedLossyError = jparams.AllowedError;
-                }
 
                 for (int frame = 0; frame < oldPixelData.NumberOfFrames; frame++)
                 {
@@ -276,49 +360,69 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     PinnedByteArray frameArray = new PinnedByteArray(frameData.Data);
 
-                    var pool = ArrayPool<byte>.Shared;
-                    var jpeglsData = pool.Rent((int)frameData.Size);
+                    var stride = oldPixelData.Width * oldPixelData.SamplesPerPixel * (oldPixelData.BitsStored <= 8 ? 1 : oldPixelData.BytesAllocated);
+                    CharlsInterleaveModeType interleaveMode = oldPixelData.SamplesPerPixel == 1
+                        ? CharlsInterleaveModeType.None
+                        : oldPixelData.PlanarConfiguration == PlanarConfiguration.Interleaved
+                            ? CharlsInterleaveModeType.Sample
+                            : CharlsInterleaveModeType.Line;
+                        
+                    //var colorTransformation = CharlsColorTransformationType.None;
 
                     try
                     {
-                        fixed (byte* jpegDataPointer = jpeglsData)
-                        {
-                            ulong jpegDataSize;
-                            char[] errorMessage = new char[256];
+                        using (EncodeSafeContextHandle encoder = Charls_jpegls_encoder_create())
+                        {      
+                            if (encoder.IsInvalid) throw new DicomCodecException("Failed to create JPEG-LS encoder.");
+                            Charls_jpegls_encoder_set_frame_info(encoder, ref frameInfo);
 
-                            CharlsApiResultType err = CharlsApiResultType.Unknown;
+                            ulong size_estimated = 0;
+                            int result;
 
-                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                                err = JpegLSEncode_win(jpegDataPointer, (ulong)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (ulong)frameArray.Count, ref jls, errorMessage);
-                            else
-                                err = JpegLSEncode(jpegDataPointer, (ulong)jpeglsData.Length, &jpegDataSize, (void*)frameArray.Pointer, (ulong)frameArray.Count, ref jls, errorMessage);
+                            Charls_jpegls_encoder_get_estimated_destination_size(encoder, &size_estimated);
+                            Charls_jpegls_encoder_set_interleave_mode(encoder, interleaveMode);
 
-                            if (err != CharlsApiResultType.OK)
-                                throw new DicomCodecException($"JPEG-LS encode failed for frame {frame}: {err} ({new string(errorMessage).TrimEnd('\0')})");
-
-                            // The pooled array is returned to the pool in the finally block below, so it
-                            // must not be handed over to the buffer: the array can be rented again and
-                            // overwritten while this dataset still points at it. Copy it out at its exact
-                            // size, the way DicomJpeg2000Codec already does.
-                            var encoded = new byte[jpegDataSize];
-                            Buffer.BlockCopy(jpeglsData, 0, encoded, 0, (int)jpegDataSize);
-
-                            IByteBuffer buffer;
-
-                            if (jpegDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                            if (TransferSyntax == DicomTransferSyntax.JPEGLSNearLossless)
                             {
-                                buffer = new TempFileBuffer(encoded);
-                                buffer = EvenLengthBuffer.Create(buffer);
-                            }
-                            else
-                            {
-                                buffer = new MemoryByteBuffer(encoded);
+                                result = Charls_jpegls_encoder_set_near_lossless(encoder, jparams.AllowedError);
+                                if (result != 0) throw new DicomCodecException($"Failed to set near-lossless mode: {result}");
                             }
 
-                            if (oldPixelData.NumberOfFrames == 1)
-                                buffer = EvenLengthBuffer.Create(buffer);
+                            var jpeglsArray = new PinnedByteArray((int)size_estimated);
 
-                            newPixelData.AddFrame(buffer);
+                            fixed (byte * jpeglsDataPointer = jpeglsArray.Data)
+                            {
+                                result = Charls_jpegls_encoder_set_destination_buffer(encoder, jpeglsDataPointer, size_estimated);
+                                if (result != 0)
+                                    throw new DicomCodecException($"set_destination_buffer failed: {result}");
+
+                                result = Charls_jpegls_encoder_encode_from_buffer(encoder, (void*)frameArray.Pointer, (ulong)frameArray.Data.Length, (uint)stride);
+                                if (result != 0)
+                                    throw new DicomCodecException($"Charls_jpegls_encoder_encode_from_buffer failed: {result}");
+                                
+                                ulong jpeglsDataSize = 0;
+                                result = Charls_jpegls_encoder_get_bytes_written(encoder, &jpeglsDataSize);
+
+                                var encoded = new byte[jpeglsDataSize];
+                                Buffer.BlockCopy(jpeglsArray.Data, 0, encoded, 0, (int)jpeglsDataSize);
+
+                                IByteBuffer buffer;
+
+                                if (jpeglsDataSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                {
+                                    buffer = new TempFileBuffer(encoded);
+                                    buffer = EvenLengthBuffer.Create(buffer);
+                                }
+                                else
+                                {
+                                    buffer = new MemoryByteBuffer(encoded);
+                                }
+
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
+                                newPixelData.AddFrame(buffer);
+                            }
                         }
                     }
                     catch (DicomCodecException e)
@@ -332,12 +436,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     finally
                     {
                         frameArray?.Dispose();
-
-                        if (jpeglsData != null)
-                        {
-                            pool.Return(jpeglsData);
-                            jpeglsData = null;
-                        }
                     }
                 }
             }
@@ -370,50 +468,59 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Cannot convert JPEG-LS buffer data from PhotometricInterpretation = {0} to RGB => {1} => {2}", oldPixelData
-                    .PhotometricInterpretation.ToString(), ex.Message, ex.StackTrace);
+                    throw new DicomCodecException($"Cannot convert JPEG-LS buffer data from PhotometricInterpretation = {oldPixelData.PhotometricInterpretation.ToString()} to RGB => {ex.Message} => {ex.StackTrace}");
                 }
 
                 PinnedByteArray jpeglsArray = new PinnedByteArray(jpegData.Data);
 
-                var pool = ArrayPool<byte>.Shared;
                 var frameSize = uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize;
-                byte[] frameData = pool.Rent(frameSize);
-                PinnedByteArray frameArray = new PinnedByteArray(frameData);
 
                 try
                 {
-                    JlsParameters jls = new JlsParameters();
-
-                    char[] errorMessage = new char[256];
-
-                    CharlsApiResultType err = CharlsApiResultType.Unknown;
-
                     unsafe
-                    {
-                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                            err = JpegLSDecode_win((void*)frameArray.Pointer, (ulong)frameData.Length, (void*)jpeglsArray.Pointer, (ulong)jpegData.Size, ref jls, errorMessage);
-                        else
-                            err = JpegLSDecode((void*)frameArray.Pointer, (ulong)frameData.Length, (void*)jpeglsArray.Pointer, (ulong)jpegData.Size, ref jls, errorMessage);
+                    {   
 
-                        if (err != CharlsApiResultType.OK)
-                            throw new DicomCodecException($"JPEG-LS decode failed for frame {frame}: {err} ({new string(errorMessage).TrimEnd('\0')})");
+                        using (var decoder = Charls_jpegls_decoder_create())
+                        {
+                            if (decoder.IsInvalid) throw new DicomCodecException("Failed to create JPEG-LS encoder.");
 
-                        // Same reason as in Encode: copy out of the pooled array before it goes back
-                        // to the pool, and at the exact frame size instead of the pool bucket size.
-                        var decoded = new byte[frameSize];
-                        Buffer.BlockCopy(frameData, 0, decoded, 0, frameSize);
+                            int result;
 
-                        IByteBuffer buffer;
-                        if (frameSize >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                            buffer = new TempFileBuffer(decoded);
-                        else
-                            buffer = new MemoryByteBuffer(decoded);
+                            result = Charls_jpegls_decoder_set_source_buffer(decoder, (void *)jpeglsArray.Pointer, (ulong)jpeglsArray.Data.Length);
+                            
+                            if (result != 0)
+                                throw new DicomCodecException($"Charls_jpegls_decoder_set_source_buffer failed with error code: {result}");
 
-                        if (oldPixelData.NumberOfFrames == 1)
-                            buffer = EvenLengthBuffer.Create(buffer);
+                            result = Charls_jpegls_decoder_read_header(decoder);
 
-                        newPixelData.AddFrame(buffer);
+                            if (result != 0)
+                                throw new DicomCodecException($"Charls_jpegls_decoder_read_header failed with error code: {result}");
+
+                            ulong destination_size_bytes = (ulong)frameSize;
+                            result = Charls_jpegls_decoder_get_destination_size(decoder, 0, &destination_size_bytes);
+                            if (result != 0)
+                                throw new DicomCodecException($"Charls_jpegls_decoder_get_destination_size failed with error code: {result}");
+
+                            var decodeBuffer = new byte[(int)destination_size_bytes];
+
+                            fixed (byte * decodeBufferPtr = decodeBuffer)
+                            {
+                                result = Charls_jpegls_decoder_decode_to_buffer(decoder, decodeBufferPtr, destination_size_bytes, 0);
+                                if (result != 0)
+                                    throw new DicomCodecException($"Charls_jpegls_decoder_decode_to_buffer failed with error code: {result}");
+                                
+                                IByteBuffer buffer;
+                                if (destination_size_bytes >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                    buffer = new TempFileBuffer(decodeBuffer);
+                                else
+                                    buffer = new MemoryByteBuffer(decodeBuffer);
+
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
+                                newPixelData.AddFrame(buffer);
+                            }
+                        }
                     }
                 }
                 catch (DicomCodecException e)
@@ -426,13 +533,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
                 finally
                 {
-                    if (frameData != null)
-                    {
-                        pool.Return(frameData);
-                        frameData = null;
-                    }
-
-                    frameArray?.Dispose();
                     jpeglsArray?.Dispose();
                 }
             }

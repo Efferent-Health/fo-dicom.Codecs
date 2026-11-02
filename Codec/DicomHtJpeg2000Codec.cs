@@ -180,7 +180,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                    ((uint)data[offset + 2] << 8) | data[offset + 3];
         }
 
-        public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             unsafe
             {
@@ -311,7 +311,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             }
         }
 
-        public override unsafe void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             try
             {
@@ -379,7 +379,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 Buffer.BlockCopy(frameData, 0, decoded, 0, (int)raw_Outdata.size_outbuffer);
 
                                 IByteBuffer buffer;
-                                if ((int)raw_Outdata.size_outbuffer >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                if (raw_Outdata.size_outbuffer >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
                                     buffer = new TempFileBuffer(decoded);
                                 else
                                     buffer = new MemoryByteBuffer(decoded);
