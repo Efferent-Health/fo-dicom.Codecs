@@ -123,7 +123,7 @@ EXPORT_Charls charls::jpegls_errc Charls_jpegls_decoder_decode_to_buffer(charls_
 
 EXPORT_Charls void Charls_jpegls_decoder_destroy(const charls_jpegls_decoder *decode)
 {
-    Charls_jpegls_decoder_destroy(decode);
+    charls_jpegls_decoder_destroy(decode);
 }
 
 
