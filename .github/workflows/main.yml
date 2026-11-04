@@ -227,7 +227,7 @@ jobs:
       - version
       - acceptance
       - check-paths
-    if: needs.check-paths.outputs.only-tests != 'true'
+    #if: needs.check-paths.outputs.only-tests != 'true'
     permissions:
       id-token: write # Required for NuGet Trusted Publisher (OIDC)
     steps:
