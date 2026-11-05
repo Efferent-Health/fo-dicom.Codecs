@@ -326,8 +326,16 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 public SafeCodecHandle() : base(IntPtr.Zero, true) { }
                 public override bool IsInvalid => handle == IntPtr.Zero;
                 protected override bool ReleaseHandle()
-                {
-                    Tj3Destroy(handle);
+                {   
+                    if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                    {
+                        Tj3Destroy_win(handle);
+                    }
+                    else
+                    {
+                        Tj3Destroy(handle);
+                    }
+
                     return true;
                 }
             }
@@ -389,11 +397,23 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Compress8")]
             private static extern unsafe int Tj3Compress8(SafeCodecHandle encoder, void* srcBuf,
-                           int width, int pitch, int height, int pixelFormat, int mode, int quality, 
+                           int width, int pitch, int height, int pixelFormat, int mode, int quality,
                            int sampleFactor, void** jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy(IntPtr codec);
+
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
+            private static extern SafeCodecHandle Tj3Init_win(TJINIT initType);
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Compress8")]
+            private static extern unsafe int Tj3Compress8_win(SafeCodecHandle encoder, void* srcBuf,
+                           int width, int pitch, int height, int pixelFormat, int mode, int quality,
+                           int sampleFactor, void** jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
+            private static extern void Tj3Destroy_win(IntPtr codec);
 
 
             public JpegCodec(JpegMode mode, int predictor, int point_transform, int bits)
@@ -490,119 +510,107 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                             int pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
-                            //if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            if (useTurboMode)
                             {
-                                if (useTurboMode)
+                                pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
+                                var samplefactor = (int)jpegParams.SampleFactor;
+
+                                SafeCodecHandle encoder;
+                                if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                                 {
-                                    pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
-                                    var samplefactor = (int)jpegParams.SampleFactor;
+                                    encoder = Tj3Init_win(TJINIT.TJINIT_COMPRESS);
+                                }
+                                else
+                                {
+                                    encoder = Tj3Init(TJINIT.TJINIT_COMPRESS);
+                                }
+                                using (encoder)
+                                {
+                                    rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
+                                            jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
 
-                                    //rc = DicomJpegTurboEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality,
-                                    //    (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
+                                    if (rc != 0)
+                                        throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
 
-                                    using (var encoder = Tj3Init(TJINIT.TJINIT_COMPRESS))
+                                    var encoded = new byte[(int)outSize];
+                                    Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
+
+                                    if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
+                                        && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
                                     {
-                                        rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode, 
-                                                jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
-
-                                        if (rc != 0)
-                                            throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
-
-                                        var encoded = new byte[(int)outSize];
-                                        Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
-
-                                        if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
-                                            && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
-                                        {
-                                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                                        }
-                                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
-                                        {
-                                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                                        }
-                                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                                        {
-                                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
-                                        }
-
-                                        IByteBuffer buffer;
-
-                                        if (outSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                                        {
-                                            buffer = new TempFileBuffer(encoded);
-                                            buffer = EvenLengthBuffer.Create(buffer);
-                                        }
-                                        else
-                                        {
-                                            buffer = new MemoryByteBuffer(encoded);
-                                        }
-
-                                        if (oldPixelData.NumberOfFrames == 1)
-                                            buffer = EvenLengthBuffer.Create(buffer);
-
-                                        newPixelData.AddFrame(buffer);
+                                        newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
                                     }
+                                    else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                                    {
+                                        newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                                    }
+                                    else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                                    {
+                                        newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
+                                    }
+
+                                    IByteBuffer buffer;
+
+                                    if (outSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                    {
+                                        buffer = new TempFileBuffer(encoded);
+                                        buffer = EvenLengthBuffer.Create(buffer);
+                                    }
+                                    else
+                                    {
+                                        buffer = new MemoryByteBuffer(encoded);
+                                    }
+
+                                    if (oldPixelData.NumberOfFrames == 1)
+                                        buffer = EvenLengthBuffer.Create(buffer);
+
+                                    newPixelData.AddFrame(buffer);
                                 }
-                                else
-                                {
-                                    rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
-                                        (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
-                                        (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
-                                }
-                            }
-                            /*else
-                            {
-                                if (useTurboMode)
-                                {   
-                                    pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
-
-                                    rc = DicomJpegTurboEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality,
-                                        (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
-                                }
-                                else
-                                {
-                                    rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
-                                        (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
-                                        (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
-                                }
-                            }*/
-
-                            /*if (rc != 0)
-                                throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
-
-                            var encoded = new byte[(int)outSize];
-                            Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
-
-                            if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
-                                && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                            }
-                            else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                            }
-                            else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                            {
-                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
-                            }
-
-                            IByteBuffer buffer;
-
-                            if (jpegData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                            {
-                                buffer = new TempFileBuffer(encoded);
-                                buffer = EvenLengthBuffer.Create(buffer);
                             }
                             else
                             {
-                                buffer = new MemoryByteBuffer(encoded);
+                                rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
+                                    (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
+                                    (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+
+
+                                if (rc != 0)
+                                    throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
+
+                                var encoded = new byte[(int)outSize];
+                                Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
+
+                                if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
+                                    && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
+                                {
+                                    newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                                }
+                                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                                {
+                                    newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                                }
+                                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                                {
+                                    newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
+                                }
+
+                                IByteBuffer buffer;
+
+                                if (jpegData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                {
+                                    buffer = new TempFileBuffer(encoded);
+                                    buffer = EvenLengthBuffer.Create(buffer);
+                                }
+                                else
+                                {
+                                    buffer = new MemoryByteBuffer(encoded);
+                                }
+
+                                if (oldPixelData.NumberOfFrames == 1)
+                                    buffer = EvenLengthBuffer.Create(buffer);
+
+                                newPixelData.AddFrame(buffer);
                             }
-
-                            if (oldPixelData.NumberOfFrames == 1)
-                                buffer = EvenLengthBuffer.Create(buffer);
-
-                            newPixelData.AddFrame(buffer);*/
                         }
                     }
                     finally
