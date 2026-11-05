@@ -578,10 +578,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 }
                             }
                             else
-                            {
-                                rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
-                                    (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
-                                    (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                            {   
+                                if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                {
+                                    rc = DicomJpegEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
+                                        (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
+                                        (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                                }
+                                else
+                                {
+                                    rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
+                                        (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
+                                        (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
+                                }
 
 
                                 if (rc != 0)
