@@ -516,6 +516,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 var samplefactor = (int)jpegParams.SampleFactor;
 
                                 SafeCodecHandle encoder;
+
                                 if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                                 {
                                     encoder = Tj3Init_win(TJINIT.TJINIT_COMPRESS);
@@ -524,10 +525,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 {
                                     encoder = Tj3Init(TJINIT.TJINIT_COMPRESS);
                                 }
+
                                 using (encoder)
-                                {
-                                    rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
-                                            jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
+                                {   
+                                    if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                    {
+                                        rc = Tj3Compress8_win(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
+                                                jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
+                                    }
+                                    else
+                                    {
+                                        rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
+                                                jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
+                                    }
 
                                     if (rc != 0)
                                         throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
