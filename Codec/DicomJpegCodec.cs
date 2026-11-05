@@ -13,6 +13,23 @@ using CommunityToolkit.HighPerformance;
 
 namespace FellowOakDicom.Imaging.NativeCodec
 {
+    public enum TJINIT
+    {
+        /**
+        * Initialize the TurboJPEG instance for compression.
+        */
+        TJINIT_COMPRESS,
+        /**
+        * Initialize the TurboJPEG instance for decompression.
+        */
+        TJINIT_DECOMPRESS,
+        /**
+        * Initialize the TurboJPEG instance for lossless transformation (both
+        * compression and decompression.)
+        */
+        TJINIT_TRANSFORM
+    }
+
     public enum J_COLOR_SPACE
     {
         JCS_UNKNOWN,            /* error/unspecified */
@@ -304,20 +321,31 @@ namespace FellowOakDicom.Imaging.NativeCodec
         //  DicomJpegEncode / DicomJpegDecode / DicomJpegReadPrecision / DicomJpegFreeBuffer
         public class JpegCodec : JpegNativeCodec
         {
+            public class SafeCodecHandle : SafeHandle
+            {
+                public SafeCodecHandle() : base(IntPtr.Zero, true) { }
+                public override bool IsInvalid => handle == IntPtr.Zero;
+                protected override bool ReleaseHandle()
+                {
+                    Tj3Destroy(handle);
+                    return true;
+                }
+            }
+
             // ---- Native ABI (Windows: Dicom.Native.dll) ----
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegEncode")]
             private static extern unsafe int DicomJpegEncode_win(
                 byte* pixelData, uint width, uint height, int inputComponents, int inColorSpace,
                 int mode, int dataPrecision, int quality, int smoothingFactor, int predictor,
                 int pointTransform, int sampleFactor, uint rowStride,
-                byte* outBuffer, out uint outSize, out int outJpegColorSpace,
+                byte* outBuffer, out ulong outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
             private static extern unsafe int DicomJpegTurboEncode_win(
                 byte* pixelData, uint width, uint height, int pixelFormat,
                 int mode, int dataPrecision, int quality, int sampleFactor,
-                uint rowStride, byte* outBuffer, out uint outSize, out int outJpegColorSpace);
+                uint rowStride, byte* outBuffer, out ulong outSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode_win(
@@ -337,14 +365,14 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* pixelData, uint width, uint height, int inputComponents, int inColorSpace,
                 int mode, int dataPrecision, int quality, int smoothingFactor, int predictor,
                 int pointTransform, int sampleFactor, uint rowStride,
-                byte* outBuffer, out uint outSize, out int outJpegColorSpace,
+                byte* outBuffer, out ulong outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
             private static extern unsafe int DicomJpegTurboEncode(
                 byte* pixelData, uint width, uint height, int pixelFormat,
                 int mode, int dataPrecision, int quality, int sampleFactor,
-                uint rowStride, byte* outBuffer, out uint outSize, out int outJpegColorSpace);
+                uint rowStride, byte* outBuffer, out ulong outSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode(
@@ -354,8 +382,18 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte[] errorMessage, uint errorMessageSize);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegReadPrecision")]
-            private static extern unsafe int DicomJpegReadPrecision(
-                byte* jpegData, uint jpegSize, out int outPrecision, byte[] errorMessage, uint errorMessageSize);
+            private static extern unsafe int DicomJpegReadPrecision(byte* jpegData, uint jpegSize, out int outPrecision, byte[] errorMessage, uint errorMessageSize);
+
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
+            private static extern SafeCodecHandle Tj3Init(TJINIT initType);
+
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Compress8")]
+            private static extern unsafe int Tj3Compress8(SafeCodecHandle encoder, void* srcBuf,
+                           int width, int pitch, int height, int pixelFormat, int mode, int quality, 
+                           int sampleFactor, void** jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
+
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
+            private static extern void Tj3Destroy(IntPtr codec);
 
 
             public JpegCodec(JpegMode mode, int predictor, int point_transform, int bits)
@@ -409,7 +447,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     frameArray = new PinnedByteArray(oldPixelData.GetFrame(frame).Data);
 
                     if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
-                    {   
+                    {
                         if (!IsJpegBuffer(frameArray.Data))
                         {
                             frameArray = new PinnedByteArray(PixelDataConverter.YbrFull422ToRgb(new MemoryByteBuffer(frameArray.Data), oldPixelData.Width).Data);
@@ -438,7 +476,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     var pool = ArrayPool<byte>.Shared;
                     byte[] jpegData = pool.Rent(frameArray.Data.Length);
-                    uint outSize;
+                    ulong outSize;
 
                     try
                     {
@@ -449,26 +487,70 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             byte* sourceframePtr = (byte*)(void*)frameArray.Pointer;
                             bool useTurboMode = Mode.Equals(JpegMode.Baseline) && Bits <= 8 && oldPixelData.BitsStored <= 8
                                                 && !oldPixelData.PhotometricInterpretation.Equals(PhotometricInterpretation.PaletteColor);
-                            
+
                             int pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation);
 
-                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            //if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                             {
                                 if (useTurboMode)
-                                {   
+                                {
                                     pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
+                                    var samplefactor = (int)jpegParams.SampleFactor;
 
-                                    rc = DicomJpegTurboEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality,
-                                        (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
+                                    //rc = DicomJpegTurboEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality,
+                                    //    (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
+
+                                    using (var encoder = Tj3Init(TJINIT.TJINIT_COMPRESS))
+                                    {
+                                        rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode, 
+                                                jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
+
+                                        if (rc != 0)
+                                            throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
+
+                                        var encoded = new byte[(int)outSize];
+                                        Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
+
+                                        if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
+                                            && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
+                                        {
+                                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                                        }
+                                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                                        {
+                                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
+                                        }
+                                        else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrFull422)
+                                        {
+                                            newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
+                                        }
+
+                                        IByteBuffer buffer;
+
+                                        if (outSize >= NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                        {
+                                            buffer = new TempFileBuffer(encoded);
+                                            buffer = EvenLengthBuffer.Create(buffer);
+                                        }
+                                        else
+                                        {
+                                            buffer = new MemoryByteBuffer(encoded);
+                                        }
+
+                                        if (oldPixelData.NumberOfFrames == 1)
+                                            buffer = EvenLengthBuffer.Create(buffer);
+
+                                        newPixelData.AddFrame(buffer);
+                                    }
                                 }
                                 else
                                 {
-                                    rc = DicomJpegEncode_win(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
+                                    rc = DicomJpegEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, oldPixelData.SamplesPerPixel, pixelFormat,
                                         (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
                                         (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
                                 }
                             }
-                            else
+                            /*else
                             {
                                 if (useTurboMode)
                                 {   
@@ -483,15 +565,15 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                         (int)Mode, Bits, jpegParams.Quality, jpegParams.SmoothingFactor, Predictor, PointTransform, (int)jpegParams.SampleFactor,
                                         (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace, errorMessage, (uint)errorMessage.Length);
                                 }
-                            }
+                            }*/
 
-                            if (rc != 0)
+                            /*if (rc != 0)
                                 throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
 
                             var encoded = new byte[(int)outSize];
                             Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
 
-                            if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb 
+                            if (useTurboMode && oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
                                 && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
                             {
                                 newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
@@ -520,7 +602,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             if (oldPixelData.NumberOfFrames == 1)
                                 buffer = EvenLengthBuffer.Create(buffer);
 
-                            newPixelData.AddFrame(buffer);
+                            newPixelData.AddFrame(buffer);*/
                         }
                     }
                     finally
@@ -537,7 +619,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     throw new DicomCodecException(e.Message + " => " + e.StackTrace);
                 }
                 finally
-                {   
+                {
                     frameArray?.Dispose();
                     frameArray = null;
                 }
@@ -676,7 +758,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             private bool IsJpegBuffer(byte[] buffer)
             {
                 var magixBytesofJpeg = new byte[] { 255, 216, 255 };
-                
+
                 if (!magixBytesofJpeg.SequenceEqual(buffer.Take(magixBytesofJpeg.Length)))
                 {
                     return false;

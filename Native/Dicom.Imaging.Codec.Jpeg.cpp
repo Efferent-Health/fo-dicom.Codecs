@@ -648,6 +648,45 @@ namespace Dicom
                     jpeg_destroy_decompress(&dinfo);
                     return 0;
                 }
+                
+                
+                EXPORT_Jpeg tjhandle Tj3Init(int initType)
+                {
+                    return tj3Init(initType);
+                }
+
+                EXPORT_Jpeg int Tj3Compress8(tjhandle handle, const unsigned char *srcBuf,
+                           int width, int pitch, int height, int pixelFormat, int mode,
+                           int quality, int sampleFactor, unsigned char **jpegBuf, 
+                           size_t *jpegSize, int *outJpegColorSpace)
+                {   
+                    if (mode == DJ_MODE_BASELINE)
+                    {
+                        tj3Set(handle, TJPARAM_PROGRESSIVE, 0);
+                    }
+
+                    tj3Set(handle, TJPARAM_SUBSAMP, sampleFactor); // Max color quality
+                    tj3Set(handle, TJPARAM_QUALITY, quality);
+                    
+                    //tj3Set(compressor, TJPARAM_FASTDCT, 1);
+
+                    if (pixelFormat == TJPF_RGB)
+                    {
+                        tj3Set(handle, TJPARAM_COLORSPACE, TJCS_YCbCr);
+                    }
+                    
+                    tj3Set(handle, TJPARAM_PRECISION, 8);
+
+                    int result = tj3Compress8(handle, srcBuf, width, pitch, height, pixelFormat, jpegBuf, jpegSize);
+                    *outJpegColorSpace = tj3Get(handle, TJPARAM_COLORSPACE);
+                    
+                    return result;
+                }
+
+                EXPORT_Jpeg void Tj3Destroy(tjhandle compressor)
+                {
+                    tj3Destroy(compressor);
+                }
 
 #ifdef __cplusplus
             }
