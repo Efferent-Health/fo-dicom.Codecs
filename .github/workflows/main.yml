@@ -116,7 +116,7 @@ jobs:
           path: Native/POSIX64/lib-linux-arm64
         
   build_osx_x64:
-    runs-on: macos-14
+    runs-on: macos-15
     needs: build_win_x64
     steps:
       - name: Checkout repository
@@ -141,7 +141,7 @@ jobs:
         run: dotnet test Tests/Unit/*.csproj --logger:trx
 
   build_osx_arm64:
-    runs-on: macos-14
+    runs-on: macos-15
     needs: build_win_x64
     steps:
       - name: Checkout repository
