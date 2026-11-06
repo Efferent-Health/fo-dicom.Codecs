@@ -138,7 +138,7 @@ jobs:
       - name: Prepare SN key
         run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx
+        run: dotnet test Tests/Unit/*.csproj --logger:trx --arch x64
 
   build_osx_arm64:
     runs-on: macos-15
