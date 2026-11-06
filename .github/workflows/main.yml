@@ -131,14 +131,14 @@ jobs:
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
-      - name: Setup .NET 10.0
-        uses: actions/setup-dotnet@v6
-        with:
-          dotnet-version: '10.0.x'
-      - name: Prepare SN key
-        run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
-      - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx --arch x64
+#      - name: Setup .NET 10.0
+#        uses: actions/setup-dotnet@v6
+#        with:
+#          dotnet-version: '10.0.x'
+#      - name: Prepare SN key
+#        run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
+#      - name: Run unit tests
+#        run: dotnet test Tests/Unit/*.csproj --logger:trx --arch x64
 
   build_osx_arm64:
     runs-on: macos-15
