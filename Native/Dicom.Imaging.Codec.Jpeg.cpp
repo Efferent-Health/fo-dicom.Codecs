@@ -657,7 +657,7 @@ namespace Dicom
 
                 EXPORT_Jpeg int Tj3Compress8(tjhandle handle, const unsigned char *srcBuf,
                            int width, int pitch, int height, int pixelFormat, int mode,
-                           int quality, int sampleFactor, unsigned char **jpegBuf, 
+                           int quality, int sampleFactor, unsigned char *jpegBuf, 
                            size_t *jpegSize, int *outJpegColorSpace)
                 {   
                     if (mode == DJ_MODE_BASELINE)
@@ -677,7 +677,7 @@ namespace Dicom
                     
                     tj3Set(handle, TJPARAM_PRECISION, 8);
 
-                    int result = tj3Compress8(handle, srcBuf, width, pitch, height, pixelFormat, jpegBuf, jpegSize);
+                    int result = tj3Compress8(handle, srcBuf, width, pitch, height, pixelFormat, &jpegBuf, jpegSize);
                     *outJpegColorSpace = tj3Get(handle, TJPARAM_COLORSPACE);
                     
                     return result;

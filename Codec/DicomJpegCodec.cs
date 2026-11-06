@@ -398,7 +398,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Compress8")]
             private static extern unsafe int Tj3Compress8(SafeCodecHandle encoder, void* srcBuf,
                            int width, int pitch, int height, int pixelFormat, int mode, int quality,
-                           int sampleFactor, void** jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
+                           int sampleFactor, void* jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy(IntPtr codec);
@@ -536,7 +536,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     else
                                     {
                                         rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
-                                                jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
+                                        jpegParams.Quality, (int)jpegParams.SampleFactor, (void*)jpegDataPtr, &outSize, out outJpegColorSpace);
+
+                                        //rc = DicomJpegTurboEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality, 
+                                        //            (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
                                     }
 
                                     if (rc != 0)
