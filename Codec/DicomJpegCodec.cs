@@ -410,7 +410,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Compress8")]
             private static extern unsafe int Tj3Compress8_win(SafeCodecHandle encoder, void* srcBuf,
                            int width, int pitch, int height, int pixelFormat, int mode, int quality,
-                           int sampleFactor, void** jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
+                           int sampleFactor, void* jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy_win(IntPtr codec);
@@ -496,7 +496,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                     var pool = ArrayPool<byte>.Shared;
                     byte[] jpegData = pool.Rent(frameArray.Data.Length);
-                    ulong outSize;
+                    ulong outSize = (ulong)jpegData.Length;
 
                     try
                     {
@@ -531,12 +531,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                                     {
                                         rc = Tj3Compress8_win(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
-                                                jpegParams.Quality, (int)jpegParams.SampleFactor, (void**)jpegDataPtr, &outSize, out outJpegColorSpace);
+                                                jpegParams.Quality, (int)jpegParams.SampleFactor, jpegDataPtr, &outSize, out outJpegColorSpace);
                                     }
                                     else
                                     {
                                         rc = Tj3Compress8(encoder, sourceframePtr, oldPixelData.Width, rowStride, oldPixelData.Height, pixelFormat, (int)Mode,
-                                        jpegParams.Quality, (int)jpegParams.SampleFactor, (void*)jpegDataPtr, &outSize, out outJpegColorSpace);
+                                        jpegParams.Quality, (int)jpegParams.SampleFactor, jpegDataPtr, &outSize, out outJpegColorSpace);
 
                                         //rc = DicomJpegTurboEncode(sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode, Bits, jpegParams.Quality, 
                                         //            (int)jpegParams.SampleFactor, (uint)rowStride, jpegDataPtr, out outSize, out outJpegColorSpace);
