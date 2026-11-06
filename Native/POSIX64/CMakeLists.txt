@@ -411,7 +411,7 @@ elseif(UNIX)
       PREFIX ""
     )
   else()
-    add_compile_options(-msse)
+    ##add_compile_options(-msse)
     add_library(Dicom.Native SHARED ${CROSSPLATFORM_SRCS} ${LIBJPEG_TURBO_SRCS} ${OPENJPEG_SRCS} ${CHARLS_SRCS} ${OPJH_SRCS} ${OPJH_INTEL_SIMD_SRCS})
     #Setting properties for shared or dynamic library 
     set_target_properties(Dicom.Native
