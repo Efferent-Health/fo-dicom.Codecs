@@ -15,7 +15,6 @@
 // structures.
 
 #include <cstring>
-#include <csetjmp>
 #include <cstdlib>
 
 extern "C"
@@ -23,8 +22,6 @@ extern "C"
 // jpeglib.h references FILE (jpeg_stdio_src/dest) and therefore requires
 // <stdio.h> to have been included beforehand.
 #include <stdio.h>
-#include "./Common/libjpeg-turbo/jpeglib.h"
-#include "./Common/libjpeg-turbo/jerror.h"
 #include "./Common/libjpeg-turbo/turbojpeg.h"
 }
 
@@ -73,15 +70,15 @@ namespace Dicom
 
                 // setjmp-based error handling so a libjpeg ERREXIT does not abort the
                 // process. The error message is copied out for the managed layer.
-                struct dicom_jpeg_error_mgr
+                /*struct dicom_jpeg_error_mgr
                 {
                     struct jpeg_error_mgr pub;
                     jmp_buf setjmp_buffer;
                     char *message_out;
                     size_t message_out_size;
-                };
+                };*/
 
-                static void dicom_jpeg_error_exit(j_common_ptr cinfo)
+                /*static void dicom_jpeg_error_exit(j_common_ptr cinfo)
                 {
                     dicom_jpeg_error_mgr *err = reinterpret_cast<dicom_jpeg_error_mgr *>(cinfo->err);
                     if (err->message_out != nullptr && err->message_out_size > 0)
@@ -92,64 +89,64 @@ namespace Dicom
                         err->message_out[err->message_out_size - 1] = '\0';
                     }
                     longjmp(err->setjmp_buffer, 1);
-                }
+                }*/
 
                 // Suppress libjpeg's default stderr emission of warnings/trace messages.
-                static void dicom_jpeg_emit_message(j_common_ptr /*cinfo*/, int /*msg_level*/)
-                {
-                }
+                //static void dicom_jpeg_emit_message(j_common_ptr /*cinfo*/, int /*msg_level*/)
+                //{
+                //}
 
-                static void dicom_jpeg_output_message(j_common_ptr /*cinfo*/)
-                {
-                }
+                //static void dicom_jpeg_output_message(j_common_ptr /*cinfo*/)
+                //{
+                //}
 
-                typedef struct
-                {
-                    struct jpeg_destination_mgr pub; /* public fields */
+                //typedef struct
+                //{
+                //    struct jpeg_destination_mgr pub; /* public fields */
 
-                    FILE *outfile;  /* target stream */
-                    JOCTET *buffer; /* start of buffer */
-                } my_destination_mgr;
+                //    FILE *outfile;  /* target stream */
+                //    JOCTET *buffer; /* start of buffer */
+                //} my_destination_mgr;
 
-                typedef my_destination_mgr *my_dest_ptr;
+                //typedef my_destination_mgr *my_dest_ptr;
 
-                METHODDEF(void)
-                init_destination(j_compress_ptr cinfo)
-                {
-                    my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
+                //METHODDEF(void)
+                //init_destination(j_compress_ptr cinfo)
+                //{
+                //    my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
 
                     /* Allocate the output buffer --- it will be released when done with image */
-                    dest->buffer = (JOCTET *)(*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_IMAGE,
-                                                                        4096 * sizeof(JOCTET));
+                //    dest->buffer = (JOCTET *)(*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_IMAGE,
+                                                                        //4096 * sizeof(JOCTET));
 
-                    dest->pub.next_output_byte = dest->buffer;
-                    dest->pub.free_in_buffer = 4096;
-                }
+                //    dest->pub.next_output_byte = dest->buffer;
+                //    dest->pub.free_in_buffer = 4096;
+                //}
 
-                METHODDEF(void)
-                init_mem_destination(j_compress_ptr cinfo)
-                {
-                    /* no work necessary here */
-                }
+                //METHODDEF(void)
+                //init_mem_destination(j_compress_ptr cinfo)
+                //{
+                //    /* no work necessary here */
+                //}
 
-                typedef struct
-                {
-                    struct jpeg_destination_mgr pub; /* public fields */
+                //typedef struct
+                //{
+                //    struct jpeg_destination_mgr pub; /* public fields */
 
-                    unsigned char **outbuffer; /* target buffer */
-                    unsigned long *outsize;
-                    unsigned char *newbuffer; /* newly allocated buffer */
-                    JOCTET *buffer;           /* start of buffer */
-                    size_t bufsize;
-                } my_mem_destination_mgr;
+                //    unsigned char **outbuffer; /* target buffer */
+                //    unsigned long *outsize;
+                //    unsigned char *newbuffer; /* newly allocated buffer */
+                //    JOCTET *buffer;           /* start of buffer */
+                //    size_t bufsize;
+                //} my_mem_destination_mgr;
 
-                typedef my_mem_destination_mgr *my_mem_dest_ptr;
+                //typedef my_mem_destination_mgr *my_mem_dest_ptr;
 
-                boolean empty_mem_output_buffer(j_compress_ptr cinfo)
+                /*boolean empty_mem_output_buffer(j_compress_ptr cinfo)
                 {
                     size_t nextsize;
                     JOCTET *nextbuffer;
-                    my_mem_dest_ptr dest = (my_mem_dest_ptr)cinfo->dest;
+                    my_mem_dest_ptr dest = (my_mem_dest_ptr)cinfo->dest;*/
 
                     /* Try to allocate new buffer with double size
                      *
@@ -161,7 +158,7 @@ namespace Dicom
                      * fail before 32-bit integer overflow/wraparound can occur.  The sole
                      * purpose of this code is to shut up automated code analysis tools.
                      */
-                    if (dest->bufsize > SIZE_MAX / 2)
+                    /*if (dest->bufsize > SIZE_MAX / 2)
                         ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 13);
                     nextsize = dest->bufsize * 2;
                     nextbuffer = (JOCTET *)malloc(nextsize);
@@ -195,28 +192,28 @@ namespace Dicom
                 void jpeg_memory_destination(j_compress_ptr cinfo, unsigned char **outbuffer,
                                              unsigned long *outsize)
                 {
-                    my_mem_dest_ptr dest;
+                    my_mem_dest_ptr dest;*/
 
-                    if (outbuffer == NULL || outsize == NULL) /* sanity check */
-                        ERREXIT(cinfo, JERR_BUFFER_SIZE);
+                    //if (outbuffer == NULL || outsize == NULL) /* sanity check */
+                    //    ERREXIT(cinfo, JERR_BUFFER_SIZE);
 
                     /* The destination object is made permanent so that multiple JPEG images
                      * can be written to the same buffer without re-executing jpeg_mem_dest.
                      */
-                    if (cinfo->dest == NULL)
-                    { /* first time for this JPEG object? */
-                        cinfo->dest = (struct jpeg_destination_mgr *)(*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_PERMANENT,
-                                                                                                sizeof(my_mem_destination_mgr));
-                    }
-                    else if (cinfo->dest->init_destination != init_mem_destination)
-                    {
+                    //if (cinfo->dest == NULL)
+                    //{ /* first time for this JPEG object? */
+                    //    cinfo->dest = (struct jpeg_destination_mgr *)(*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_PERMANENT,
+                                                                                                //sizeof(my_mem_destination_mgr));
+                    //}
+                    //else if (cinfo->dest->init_destination != init_mem_destination)
+                    //{
                         /* It is unsafe to reuse the existing destination manager unless it was
                          * created by this function.
                          */
-                        ERREXIT(cinfo, JERR_BUFFER_SIZE);
-                    }
+                    //    ERREXIT(cinfo, JERR_BUFFER_SIZE);
+                    //}
 
-                    dest = (my_mem_dest_ptr)cinfo->dest;
+                    /*dest = (my_mem_dest_ptr)cinfo->dest;
                     dest->pub.init_destination = init_mem_destination;
                     dest->pub.empty_output_buffer = empty_mem_output_buffer;
                     dest->pub.term_destination = term_mem_destination;
@@ -225,30 +222,30 @@ namespace Dicom
                     dest->newbuffer = NULL;
 
                     if (*outbuffer == NULL && *outsize == 0)
-                    {
+                    {*/
                         /* Allocate initial buffer */
-                        dest->newbuffer = *outbuffer = (unsigned char *)malloc(4096);
-                        if (dest->newbuffer == NULL)
-                            ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
-                        *outsize = 4096;
-                    }
-                    else if (*outbuffer != NULL && *outsize == 0)
-                    {
+                    //    dest->newbuffer = *outbuffer = (unsigned char *)malloc(4096);
+                    //    if (dest->newbuffer == NULL)
+                    //        ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
+                    //    *outsize = 4096;
+                    //}
+                    //else if (*outbuffer != NULL && *outsize == 0)
+                    //{
                         /* Reference initial buffer */
-                        dest->newbuffer = *outbuffer;
-                        if (dest->newbuffer == NULL)
-                            ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
-                    }
+                    //    dest->newbuffer = *outbuffer;
+                    //    if (dest->newbuffer == NULL)
+                    //        ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
+                    //}
 
-                    dest->pub.next_output_byte = dest->buffer = *outbuffer;
-                    dest->pub.free_in_buffer = dest->bufsize = *outsize;
-                }
+                    //dest->pub.next_output_byte = dest->buffer = *outbuffer;
+                    //dest->pub.free_in_buffer = dest->bufsize = *outsize;
+                //}
 
                 // Encode
                 // Returns 0 on success, non-zero on failure. On success *out_buffer points
                 // to a libjpeg-allocated buffer of *out_size bytes that the caller must
                 // release with DicomJpegFreeBuffer.
-                EXPORT_Jpeg int DicomJpegEncode(
+                /*EXPORT_Jpeg int DicomJpegEncode(
                     const unsigned char *pixelData,
                     unsigned int width,
                     unsigned int height,
@@ -399,7 +396,7 @@ namespace Dicom
 
                     jpeg_destroy_compress(&cinfo);
                     return 0;
-                }
+                }*/
 
                 // Decode
                 // Returns 0 on success, non-zero on failure.
@@ -409,7 +406,8 @@ namespace Dicom
                 // particular it must not be freed here on any path: the managed caller
                 // supplies a pinned byte[] rented from ArrayPool<byte>.Shared, which is
                 // not CRT-heap memory and is returned to the pool by the caller.
-                EXPORT_Jpeg int DicomJpegDecode(
+                
+                /*EXPORT_Jpeg int DicomJpegDecode(
                     const unsigned char *jpegData,
                     unsigned int jpegSize,
                     int convertColorSpaceToRGB,
@@ -560,9 +558,9 @@ namespace Dicom
                     jpeg_finish_decompress(&dinfo);
                     jpeg_destroy_decompress(&dinfo);
                     return 0;
-                }
+                }*/
 
-                EXPORT_Jpeg int DicomJpegTurboEncode(
+                /*EXPORT_Jpeg int DicomJpegTurboEncode(
                     const unsigned char *pixelData,
                     unsigned int width,
                     unsigned int height,
@@ -610,11 +608,11 @@ namespace Dicom
 
                     tj3Destroy(compressor);
                     return result;
-                }
+                }*/
 
                 // Read the data precision (bits per sample) from a JPEG SOF marker without
                 // performing a full decode. Returns 0 on success.
-                EXPORT_Jpeg int DicomJpegReadPrecision(
+                /*EXPORT_Jpeg int DicomJpegReadPrecision(
                     const unsigned char *jpegData,
                     unsigned int jpegSize,
                     int *out_precision,
@@ -647,7 +645,7 @@ namespace Dicom
 
                     jpeg_destroy_decompress(&dinfo);
                     return 0;
-                }
+                }*/
                 
                 
                 EXPORT_Jpeg tjhandle Tj3Init(int initType)
@@ -655,29 +653,63 @@ namespace Dicom
                     return tj3Init(initType);
                 }
 
-                EXPORT_Jpeg int Tj3Compress8(tjhandle handle, const unsigned char *srcBuf,
-                           int width, int pitch, int height, int pixelFormat, int mode,
-                           int quality, int sampleFactor, unsigned char *jpegBuf, 
+                EXPORT_Jpeg int EncodeFrame(tjhandle handle, const void *srcBuf,
+                           int width, int height, int pixelFormat, int dataPrecision, int mode,
+                           int quality, int sampleFactor, int predictor, unsigned char *jpegBuf, 
                            size_t *jpegSize, int *outJpegColorSpace)
                 {   
-                    if (mode == DJ_MODE_BASELINE)
-                    {
-                        tj3Set(handle, TJPARAM_PROGRESSIVE, 0);
-                    }
+                    int result = -1;
+                    int pitch = 0; // stride will be calculated automatically
 
-                    tj3Set(handle, TJPARAM_SUBSAMP, sampleFactor); // Max color quality
                     tj3Set(handle, TJPARAM_QUALITY, quality);
-                    
                     //tj3Set(compressor, TJPARAM_FASTDCT, 1);
 
                     if (pixelFormat == TJPF_RGB)
                     {
                         tj3Set(handle, TJPARAM_COLORSPACE, TJCS_YCbCr);
                     }
-                    
-                    tj3Set(handle, TJPARAM_PRECISION, 8);
 
-                    int result = tj3Compress8(handle, srcBuf, width, pitch, height, pixelFormat, &jpegBuf, jpegSize);
+                    int isLossless = (mode == DJ_MODE_BASELINE || mode == DJ_MODE_SEQUENTIAL) ? 0 : 1;
+                    tj3Set(handle, TJPARAM_LOSSLESS, isLossless);
+
+                    if (isLossless)
+                    {
+                        tj3Set(handle, TJPARAM_LOSSLESSPSV, predictor);   
+                        tj3Set(handle, TJPARAM_PROGRESSIVE, 1);
+
+                        if (pixelFormat == TJPF_RGB)
+                            tj3Set(handle, TJPARAM_SUBSAMP, TJSAMP_444);
+                        else if (pixelFormat == TJPF_GRAY)
+                            tj3Set(handle, TJPARAM_SUBSAMP, TJSAMP_GRAY);
+                        else
+                            tj3Set(handle, TJPARAM_SUBSAMP, sampleFactor); // Max color quality
+                    }
+                    else // lossy mode
+                    {
+                        if (pixelFormat == TJPF_RGB)
+                            tj3Set(handle, TJPARAM_SUBSAMP, TJSAMP_422);
+                        else if (pixelFormat == TJPF_GRAY)
+                            tj3Set(handle, TJPARAM_SUBSAMP, TJSAMP_GRAY);
+                        else
+                            tj3Set(handle, TJPARAM_SUBSAMP, sampleFactor); // Max color quality
+                    }
+
+                    if (dataPrecision <= 8)
+                    {   
+                        tj3Set(handle, TJPARAM_PRECISION, 8);
+                        result = tj3Compress8(handle, (unsigned char *)srcBuf, width, pitch, height, pixelFormat, &jpegBuf, jpegSize);
+                    }
+                    else if (dataPrecision > 8 && dataPrecision <= 12)
+                    {
+                        tj3Set(handle, TJPARAM_PRECISION, 12);
+                        result = tj3Compress12(handle, (short *)srcBuf, width, pitch, height, pixelFormat, &jpegBuf, jpegSize);
+                    }
+                    else if (dataPrecision > 12 && dataPrecision <= 16)
+                    {   
+                        tj3Set(handle, TJPARAM_PRECISION, 16);
+                        result = tj3Compress16(handle, (unsigned short*)srcBuf, width, pitch, height, pixelFormat, &jpegBuf, jpegSize);
+                    }
+                    
                     *outJpegColorSpace = tj3Get(handle, TJPARAM_COLORSPACE);
                     
                     return result;

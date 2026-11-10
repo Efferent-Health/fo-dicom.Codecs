@@ -1,7 +1,7 @@
 /* Version ID for the JPEG library.
  * Might be useful for tests like "#if JPEG_LIB_VERSION >= 60".
  */
-#define JPEG_LIB_VERSION  62
+#define JPEG_LIB_VERSION  70
 
 /* libjpeg-turbo version */
 #define LIBJPEG_TURBO_VERSION  3.2.0
