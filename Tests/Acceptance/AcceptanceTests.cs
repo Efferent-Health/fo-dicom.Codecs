@@ -37,6 +37,15 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             DicomTransferSyntax.JPEGProcess14SV1
         };
 
+        private readonly static DicomTransferSyntax[] lossyTransferSyntaxes =
+        {
+            DicomTransferSyntax.JPEG2000Lossy,
+            DicomTransferSyntax.HTJ2K,
+            DicomTransferSyntax.JPEGProcess1,
+            DicomTransferSyntax.JPEGProcess2_4,
+            DicomTransferSyntax.JPEGLSNearLossless
+        };
+
         private static string[][] resultsPerform;
         private static string[][] resultsInverse;
         private static string[] resultsRender;
@@ -77,14 +86,21 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
 
                 var ts = transferSyntaxes[index1];
 
-                new DicomSetupBuilder()
-                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
-                .Build();
-                var image = new DicomFile(data.Dataset).Clone(ts);
+                if (CanBeEncoded(data.Dataset, ts))
+                {
+                    new DicomSetupBuilder()
+                        .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                        .Build();
+                    
+                    var image = new DicomFile(data.Dataset).Clone(ts);
+                    image.Save(output);
 
-                image.Save(output);
-
-                resultsPerform[index0][index1] = "OK";
+                    resultsPerform[index0][index1] = "OK";
+                }
+                else
+                {
+                    resultsPerform[index0][index1] = "NO SUPPORTED";
+                }
             }
             catch (DicomCodecException ex)
             {
@@ -98,25 +114,28 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         [TestMethod]
         [DynamicData(nameof(Data))]
         public void InverseTranscode(int index0, int index1)
-        {
+        {   
             var input = $"out/{transferSyntaxes[index1]}_{filenames[index0]}";
             var output = $"out/RAW_FROM_{transferSyntaxes[index1]}_{filenames[index0]}";
 
             try
-            {
-                var data = DicomFile.Open(input);
+            {   
+                if (File.Exists(input))
+                {
+                    var data = DicomFile.Open(input);
 
-                var ts = transferSyntaxes[index1];
+                    var ts = transferSyntaxes[index1];
 
-                new DicomSetupBuilder()
-                .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
-                .Build();
-                
-                var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.ExplicitVRLittleEndian);
+                    new DicomSetupBuilder()
+                    .RegisterServices(s => s.AddFellowOakDicom().AddTranscoderManager<NativeTranscoderManager>())
+                    .Build();
+                    
+                    var image = new DicomFile(data.Dataset).Clone(DicomTransferSyntax.ExplicitVRLittleEndian);
 
-                image.Save(output);
+                    image.Save(output);
 
-                resultsInverse[index0][index1] = "OK";
+                    resultsInverse[index0][index1] = "OK";
+                }
             }
             catch (DicomCodecException ex)
             {   
@@ -225,5 +244,15 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         {		
             return Regex.Replace(name, "([A-Z][a-z])", " $1");
         }	
+
+        private bool CanBeEncoded(DicomDataset dataset, DicomTransferSyntax ts)
+        {   
+            var pixelData = DicomPixelData.Create(dataset, false);
+            
+            if (pixelData.PhotometricInterpretation == PhotometricInterpretation.PaletteColor && lossyTransferSyntaxes.Contains(ts))
+                return false;
+
+            return true;
+        }
     }
 }
