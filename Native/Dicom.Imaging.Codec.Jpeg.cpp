@@ -654,9 +654,9 @@ namespace Dicom
                 }
 
                 EXPORT_Jpeg int EncodeFrame(tjhandle handle, const void *srcBuf,
-                           int width, int height, int pixelFormat, int dataPrecision, int mode,
+                           int width, int height, TJPF pixelFormat, int dataPrecision, int mode,
                            int quality, int sampleFactor, int predictor, unsigned char *jpegBuf, 
-                           size_t *jpegSize, int *outJpegColorSpace)
+                           size_t *jpegSize, TJCS *jpegColorSpace)
                 {   
                     int result = -1;
                     int pitch = 0; // stride will be calculated automatically
@@ -710,14 +710,68 @@ namespace Dicom
                         result = tj3Compress16(handle, (unsigned short*)srcBuf, width, pitch, height, pixelFormat, &jpegBuf, jpegSize);
                     }
                     
-                    *outJpegColorSpace = tj3Get(handle, TJPARAM_COLORSPACE);
+                    *jpegColorSpace = (TJCS)tj3Get(handle, TJPARAM_COLORSPACE);
                     
                     return result;
                 }
 
-                EXPORT_Jpeg void Tj3Destroy(tjhandle compressor)
+                EXPORT_Jpeg int Tj3DecompressHeader3(tjhandle handle, const unsigned char *jpegBuf, size_t jpegSize, int* dataPrecision, int * width, int* height, TJPF* pixelFormat)
+                {   
+                    int result = -1;
+                    result = tj3DecompressHeader(handle, jpegBuf, jpegSize);
+                    
+                    if (result == 0)
+                    {   
+                        *dataPrecision = tj3Get(handle, TJPARAM_PRECISION);
+                        *width = tj3Get(handle, TJPARAM_JPEGWIDTH);
+                        *height = tj3Get(handle, TJPARAM_JPEGHEIGHT);
+
+                        int subsamp = tj3Get(handle, TJPARAM_SUBSAMP);
+
+                        if(subsamp == TJSAMP_GRAY)
+                        {
+                            *pixelFormat = TJPF_GRAY;
+                        }
+                        else if (subsamp == TJSAMP_422 || subsamp == TJSAMP_444)
+                        {
+                            *pixelFormat = TJPF_RGB;
+                        }
+                        else
+                        {
+                            *pixelFormat = TJPF_UNKNOWN;
+                        }
+                    }
+
+                    return result;
+                }
+
+                EXPORT_Jpeg int DecodeFrame(tjhandle handle, int dataPrecision, const unsigned char* jpegBuf, size_t jpegSize,
+                                void *dstBuf, int pixelFormat, TJCS *jpegColorSpace)
                 {
-                    tj3Destroy(compressor);
+                    int result = -1;
+                    int pitch = 0;
+                    
+                    if (dataPrecision <= 8)
+                    {
+                        result = tj3Decompress8(handle, jpegBuf, jpegSize, (unsigned char*)dstBuf, pitch, pixelFormat);
+                    }
+                    else if (dataPrecision > 8 && dataPrecision <= 12)
+                    {
+                        result = tj3Decompress12(handle, jpegBuf, jpegSize, (short*)dstBuf, pitch, pixelFormat);
+                    }
+                    else if (dataPrecision > 12 && dataPrecision <= 16)
+                    {
+                        result = tj3Decompress16(handle, jpegBuf, jpegSize, (unsigned short*)dstBuf, pitch, pixelFormat);
+                    }
+
+                    *jpegColorSpace = (TJCS)tj3Get(handle, TJPARAM_COLORSPACE);
+
+                    return result;
+                }
+
+                EXPORT_Jpeg void Tj3Destroy(tjhandle codec)
+                {
+                    tj3Destroy(codec);
                 }
 
 #ifdef __cplusplus

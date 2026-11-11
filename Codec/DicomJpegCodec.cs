@@ -376,12 +376,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 byte* outBuffer, out ulong outSize, out int outJpegColorSpace,
                 byte[] errorMessage, uint errorMessageSize);
 
-            /*[DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegTurboEncode")]
-            private static extern unsafe int DicomJpegTurboEncode(
-                byte* pixelData, uint width, uint height, int pixelFormat,
-                int mode, int dataPrecision, int quality, int sampleFactor,
-                uint rowStride, byte* outBuffer, out ulong outSize, out int outJpegColorSpace);*/
-
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegDecode")]
             private static extern unsafe int DicomJpegDecode(
                 byte* jpegData, uint jpegSize, int convertColorSpaceToRGB, int isSigned,
@@ -392,25 +386,42 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DicomJpegReadPrecision")]
             private static extern unsafe int DicomJpegReadPrecision(byte* jpegData, uint jpegSize, out int outPrecision, byte[] errorMessage, uint errorMessageSize);
 
-            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
+
+            // Methods for encoding on macOs or linux (x64/arm64)
+
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")] 
             private static extern SafeCodecHandle CreateCodecHandle(TJINIT initType);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "EncodeFrame")]
             private static extern unsafe int EncodeFrame(SafeCodecHandle encoder, void* srcBuf,
-                           int width, int height, int pixelFormat, int dataPrecision, int mode, int quality,
-                           int sampleFactor, int predictor, void* jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
+                           int width, int height, TJPF pixelFormat, int dataPrecision, int mode, int quality,
+                           int sampleFactor, int predictor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
+
+                        [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
+            private static extern unsafe int Tj3DecompressHeader3(SafeCodecHandle decoder, void * jpegBuf, ulong jpegSize, out int dataPrecision, out int width, out int height, out TJPF pixelFormat);
+
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DecodeFrame")]
+            private static extern unsafe int DecodeFrame(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize, 
+                            void* dstBuf, TJPF pixelFormat, out TJCS jpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy(IntPtr codec);
 
-
+            // Methods for encoding on win x64 or arm64 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
             private static extern SafeCodecHandle CreateCodecHandle_win(TJINIT initType);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "EncodeFrame")]
             private static extern unsafe int EncodeFrame_win(SafeCodecHandle encoder, void* srcBuf,
-                           int width, int height, int pixelFormat, int mode, int quality,
-                           int sampleFactor, void* jpegBuf, ulong* jpegSize, out int outJpegColorSpace);
+                           int width, int height, TJPF pixelFormat, int mode, int quality,
+                           int sampleFactor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
+            private static extern unsafe int Tj3DecompressHeader3_win(SafeCodecHandle decoder, void * jpegBuf, ulong jpegSize, out int dataPrecision, out int width, out int height, out TJPF pixelFormat);
+
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DecodeFrame")]
+            private static extern unsafe int DecodeFrame_win(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize, void* dstBuf,
+                            TJPF pixelFormat, out TJCS jpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy_win(IntPtr codec);
@@ -424,18 +435,19 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 Bits = bits;
             }
 
-            public static int getJpegColorSpace(PhotometricInterpretation photometricInterpretation, bool useTurboMode = false)
+            public static TJPF getPixelFormat(PhotometricInterpretation photometricInterpretation)
             {
                 if (photometricInterpretation == PhotometricInterpretation.Rgb)
-                    return useTurboMode ? (int)TJPF.TJPF_RGB : (int)J_COLOR_SPACE.JCS_RGB;
-                else if (photometricInterpretation == PhotometricInterpretation.Monochrome1 || photometricInterpretation == PhotometricInterpretation.Monochrome2)
-                    return useTurboMode ? (int)TJPF.TJPF_GRAY : (int)J_COLOR_SPACE.JCS_GRAYSCALE;
+                    return TJPF.TJPF_RGB;
+                else if (photometricInterpretation == PhotometricInterpretation.Monochrome1 || photometricInterpretation == PhotometricInterpretation.Monochrome2 
+                            || photometricInterpretation == PhotometricInterpretation.PaletteColor)
+                    return  TJPF.TJPF_GRAY;
                 else if (photometricInterpretation == PhotometricInterpretation.PaletteColor)
-                    return useTurboMode ? (int)TJPF.TJPF_UNKNOWN : (int)J_COLOR_SPACE.JCS_UNKNOWN;
+                    return TJPF.TJPF_UNKNOWN;
                 else if (photometricInterpretation == PhotometricInterpretation.YbrFull || photometricInterpretation == PhotometricInterpretation.YbrFull422 || photometricInterpretation == PhotometricInterpretation.YbrPartial422)
-                    return useTurboMode ? (int)TJCS.TJCS_YCbCr : (int)J_COLOR_SPACE.JCS_YCbCr;
+                    return TJPF.TJPF_RGB;
                 else
-                    return useTurboMode ? (int)TJPF.TJPF_UNKNOWN : (int)J_COLOR_SPACE.JCS_UNKNOWN;
+                    return TJPF.TJPF_UNKNOWN;
             }
 
             private static string ErrorText(byte[] buffer)
@@ -490,9 +502,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         frameArray = new PinnedByteArray(PixelDataConverter.PlanarToInterleaved24(new MemoryByteBuffer(frameArray.Data)).Data);
                     }
 
-                    byte[] errorMessage = new byte[256];
-                    int outJpegColorSpace;
-                    int result;
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.PaletteColor && 
+                                (Mode == JpegMode.Baseline || Mode == JpegMode.Sequential))
+                    {
+                        throw new DicomCodecException("Lossy JPEG compression is not supported for PALETTE COLOR images because quantization alters color lookup table indices. " +
+                                "Use a lossless transfer syntax or convert the pixel data to RGB before encoding.");
+                    }
 
                     var pool = ArrayPool<byte>.Shared;
                     byte[] jpegData = pool.Rent(frameArray.Data.Length);
@@ -503,7 +518,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         fixed (byte* jpegDataPtr = jpegData)
                         {
                             void* sourceframePtr = (void*)frameArray.Pointer;
-                            int pixelFormat = getJpegColorSpace(oldPixelData.PhotometricInterpretation, true);
+                            TJPF pixelFormat = getPixelFormat(oldPixelData.PhotometricInterpretation);
                             var samplefactor = (int)jpegParams.SampleFactor;
 
                             SafeCodecHandle encoder;
@@ -518,7 +533,10 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
 
                             using (encoder)
-                            {
+                            {   
+                                int result = -1;
+                                TJCS outJpegColorSpace = TJCS.TJCS_DEFAULT;
+
                                 if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                                 {
                                     result = EncodeFrame_win(encoder, sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode,
@@ -531,17 +549,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 }
 
                                 if (result != 0)
-                                    throw new DicomCodecException("Unable to JPEG encode pixel data: " + ErrorText(errorMessage));
+                                    throw new DicomCodecException("Unable to JPEG encode pixel data.");
 
                                 var encoded = new byte[(int)outSize];
                                 Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
 
                                 if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb
-                                    && outJpegColorSpace == (int)TJCS.TJCS_YCbCr)
-                                {
-                                    newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
-                                }
-                                else if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb && outJpegColorSpace == (int)J_COLOR_SPACE.JCS_YCbCr)
+                                    && outJpegColorSpace == TJCS.TJCS_YCbCr)
                                 {
                                     newPixelData.PhotometricInterpretation = PhotometricInterpretation.YbrFull422;
                                 }
@@ -598,11 +612,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                 PinnedByteArray jpegArray = new PinnedByteArray(this.TrytoFixPixelData(oldPixelData.GetFrame(frame).Data));
 
-                var pool = ArrayPool<byte>.Shared;
-
-                var uncompressedSize = newPixelData.Height * newPixelData.Width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
-                byte[] frameData = pool.Rent(uncompressedSize > newPixelData.UncompressedFrameSize ? uncompressedSize : newPixelData.UncompressedFrameSize);
-
                 try
                 {
                     if (oldPixelData.PhotometricInterpretation != PhotometricInterpretation.Rgb)
@@ -611,58 +620,87 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     newPixelData.PhotometricInterpretation = oldPixelData.PhotometricInterpretation;
-                    int isSigned = oldPixelData.PixelRepresentation == PixelRepresentation.Signed ? 1 : 0;
-
-                    byte[] errorMessage = new byte[256];
-                    uint outSize, outWidth, outHeight, outRowSize;
-                    int outComponents, outPrecision, outColorSpace;
-                    int rc;
 
                     byte* jpegPtr = (byte*)(void*)jpegArray.Pointer;
 
+                    SafeCodecHandle decoder;
+
                     if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                     {
-                        rc = DicomJpegDecode_win(jpegPtr, (uint)jpegArray.ByteSize, jpegParams.ConvertColorSpaceToRGB ? 1 : 0, isSigned,
-                            frameData, out outSize, out outWidth, out outHeight, out outComponents, out outPrecision, out outColorSpace, out outRowSize,
-                            errorMessage, (uint)errorMessage.Length);
+                        decoder = CreateCodecHandle_win(TJINIT.TJINIT_DECOMPRESS);
                     }
                     else
                     {
-                        rc = DicomJpegDecode(jpegPtr, (uint)jpegArray.ByteSize, jpegParams.ConvertColorSpaceToRGB ? 1 : 0, isSigned,
-                            frameData, out outSize, out outWidth, out outHeight, out outComponents, out outPrecision, out outColorSpace, out outRowSize,
-                            errorMessage, (uint)errorMessage.Length);
+                        decoder = CreateCodecHandle(TJINIT.TJINIT_DECOMPRESS);
                     }
 
-                    if (rc != 0)
-                        throw new DicomCodecException("Unable to JPEG decode pixel data: " + ErrorText(errorMessage));
+                    using (decoder)
+                    {   
+                        int result = -1;
+                        int width, height, dataPrecision;
+                        TJPF pixelFormat = TJPF.TJPF_UNKNOWN;
 
-                    // If the native side converted YCbCr/RGB to RGB, reflect that in
-                    // the output photometric interpretation and planar configuration.
-                    if (outColorSpace == (int)J_COLOR_SPACE.JCS_RGB)
-                    {
-                        newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
-                        newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                        {
+                            result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision, 
+                                        out width, out  height, out pixelFormat);
+                        }
+                        else
+                        {
+                            result = Tj3DecompressHeader3(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision, 
+                                        out width, out height, out pixelFormat);
+                        }
+                        
+                        if (result != 0) 
+                            throw new DicomCodecException("JPEG decode failed to read bitstream header.");
+
+                        var uncompressedSize = height * width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
+                        byte[] uncompressedData = new byte[uncompressedSize];
+
+                        fixed (void* dest = uncompressedData)
+                        {   
+                            TJCS jpegColorSpace = TJCS.TJCS_DEFAULT;
+
+                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            {
+                                result = DecodeFrame_win(decoder, dataPrecision, jpegPtr, (ulong)jpegArray.Data.Length, dest, 
+                                            pixelFormat, out jpegColorSpace);
+                            }
+                            else
+                            {
+                                result = DecodeFrame(decoder, dataPrecision, jpegPtr, (ulong)jpegArray.Data.Length, dest, 
+                                            pixelFormat, out jpegColorSpace);     
+                            }
+
+                            if (result != 0)
+                                throw new DicomCodecException("Unable to JPEG decode pixel data");
+                            
+                            // If the native side converted YCbCr/RGB to RGB, reflect that in
+                            // the output photometric interpretation and planar configuration.
+                            if (jpegColorSpace.Equals(TJCS.TJCS_RGB) || jpegColorSpace.Equals(TJCS.TJCS_YCbCr))
+                            {
+                                newPixelData.PhotometricInterpretation = PhotometricInterpretation.Rgb;
+                                newPixelData.PlanarConfiguration = PlanarConfiguration.Interleaved;
+                            }
+
+                            IByteBuffer buffer;
+
+                            if (uncompressedData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
+                                buffer = new TempFileBuffer(uncompressedData);
+                            else
+                                buffer = new MemoryByteBuffer(uncompressedData);
+
+                            if (newPixelData.PlanarConfiguration == PlanarConfiguration.Planar && newPixelData.SamplesPerPixel > 1)
+                            {
+                                if (oldPixelData.SamplesPerPixel != 3 || oldPixelData.BitsStored > 8)
+                                    throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel = 3 && BitsStored <= 8");
+
+                                buffer = PixelDataConverter.InterleavedToPlanar24(buffer);
+                            }
+
+                            newPixelData.AddFrame(buffer);
+                        }
                     }
-
-                    IByteBuffer buffer;
-
-                    var decoded = new byte[(int)outSize];
-                    Buffer.BlockCopy(frameData, 0, decoded, 0, (int)outSize);
-
-                    if (frameData.Length >= (int)NativeTranscoderManager.MemoryBufferThreshold || oldPixelData.NumberOfFrames > 1)
-                        buffer = new TempFileBuffer(decoded);
-                    else
-                        buffer = new MemoryByteBuffer(decoded);
-
-                    if (newPixelData.PlanarConfiguration == PlanarConfiguration.Planar && newPixelData.SamplesPerPixel > 1)
-                    {
-                        if (oldPixelData.SamplesPerPixel != 3 || oldPixelData.BitsStored > 8)
-                            throw new DicomCodecException("Planar reconfiguration only implemented for SamplesPerPixel = 3 && BitsStored <= 8");
-
-                        buffer = PixelDataConverter.InterleavedToPlanar24(buffer);
-                    }
-
-                    newPixelData.AddFrame(buffer);
                 }
                 catch (DicomCodecException e)
                 {
@@ -674,14 +712,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 }
                 finally
                 {
-                    if (frameData != null)
-                    {
-                        pool.Return(frameData);
-                        frameData = null;
-                    }
-
                     jpegArray?.Dispose();
-                    frameData = null;
+                    jpegArray = null;
                 }
             }
 
