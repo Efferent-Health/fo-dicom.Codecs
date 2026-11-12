@@ -236,9 +236,99 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
     public enum DicomJpegSampleFactor
     {
-        SF444,
-        SF422,
-        Unknown
+        /**
+   * 4:4:4 chrominance subsampling (no chrominance subsampling)
+   *
+   * The JPEG or YUV image will contain one chrominance component for every
+   * pixel in the source image.
+   */
+        TJSAMP_444,
+        /**
+         * 4:2:2 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 2x1
+         * block of pixels in the source image.
+         */
+        TJSAMP_422,
+        /**
+         * 4:2:0 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 2x2
+         * block of pixels in the source image.
+         */
+        TJSAMP_420,
+        /**
+         * Grayscale
+         *
+         * The JPEG or YUV image will contain no chrominance components.
+         */
+        TJSAMP_GRAY,
+        /**
+         * 4:4:0 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 1x2
+         * block of pixels in the source image.
+         *
+         * @note 4:4:0 subsampling is not fully accelerated in libjpeg-turbo.
+         */
+        TJSAMP_440,
+        /**
+         * 4:1:1 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 4x1
+         * block of pixels in the source image.  All else being equal, a JPEG image
+         * with 4:1:1 subsampling is almost exactly the same size as a JPEG image
+         * with 4:2:0 subsampling, and in the aggregate, both subsampling methods
+         * produce approximately the same perceptual quality.  However, 4:1:1 is
+         * better able to reproduce sharp horizontal features.
+         *
+         * @note 4:1:1 subsampling is not fully accelerated in libjpeg-turbo.
+         */
+        TJSAMP_411,
+        /**
+         * 4:4:1 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 1x4
+         * block of pixels in the source image.  All else being equal, a JPEG image
+         * with 4:4:1 subsampling is almost exactly the same size as a JPEG image
+         * with 4:2:0 subsampling, and in the aggregate, both subsampling methods
+         * produce approximately the same perceptual quality.  However, 4:4:1 is
+         * better able to reproduce sharp vertical features.
+         *
+         * @note 4:4:1 subsampling is not fully accelerated in libjpeg-turbo.
+         */
+        TJSAMP_441,
+        /**
+         * 4:1:0 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 4x2
+         * block of pixels in the source image.  4:1:0 chrominance subsampling cannot
+         * be used with YCCK JPEG images.
+         *
+         * @note 4:1:0 subsampling is not fully accelerated in libjpeg-turbo.
+         */
+        TJSAMP_410,
+        /**
+         * 2:4 chrominance subsampling
+         *
+         * The JPEG or YUV image will contain one chrominance component for every 2x4
+         * block of pixels in the source image.  2:4 chrominance subsampling cannot
+         * be used with YCCK JPEG images.
+         *
+         * @note 2:4 subsampling is not fully accelerated in libjpeg-turbo.
+         */
+        TJSAMP_24,
+        /**
+         * Unknown subsampling
+         *
+         * The JPEG image uses an unusual type of chrominance subsampling.  Such
+         * images can be decompressed into packed-pixel images, but they cannot be
+         * - decompressed into planar YUV images,
+         * - losslessly transformed if #TJXOPT_CROP is specified and #TJXOPT_GRAY is
+         * not specified, or
+         * - partially decompressed using a cropping region.
+         */
+        TJSAMP_UNKNOWN = -1
     }
 
     public class DicomJpegParams : DicomCodecParams
@@ -255,7 +345,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             Quality = 90;
             SmoothingFactor = 0;
             ConvertColorSpaceToRGB = false;
-            SampleFactor = DicomJpegSampleFactor.SF422;
+            SampleFactor = DicomJpegSampleFactor.TJSAMP_422;
             Predictor = 1;
             PointTransform = 0;
         }
@@ -389,8 +479,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             // Methods for encoding on macOs or linux (x64/arm64)
 
-            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")] 
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
             private static extern SafeCodecHandle CreateCodecHandle(TJINIT initType);
+
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3JpegBufferSize")]
+            private static extern ulong Tj3JpegBufferSize(int width, int height, int sampleFactor);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "EncodeFrame")]
             private static extern unsafe int EncodeFrame(SafeCodecHandle encoder, void* srcBuf,
@@ -398,10 +491,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                            int sampleFactor, int predictor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
-            private static extern unsafe int Tj3DecompressHeader3(SafeCodecHandle decoder, void * jpegBuf, ulong jpegSize, out int dataPrecision, out int width, out int height, out TJPF pixelFormat);
+            private static extern unsafe int Tj3DecompressHeader3(SafeCodecHandle decoder, void* jpegBuf, ulong jpegSize, out int dataPrecision,
+                            out int width, out int height, out TJPF pixelFormat);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DecodeFrame")]
-            private static extern unsafe int DecodeFrame(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize, 
+            private static extern unsafe int DecodeFrame(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize,
                             void* dstBuf, TJPF pixelFormat, out TJCS jpegColorSpace);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
@@ -412,13 +506,17 @@ namespace FellowOakDicom.Imaging.NativeCodec
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
             private static extern SafeCodecHandle CreateCodecHandle_win(TJINIT initType);
 
+            [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3JpegBufferSize")]
+            private static extern ulong Tj3JpegBufferSize_win(int width, int height, int sampleFactor);
+
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "EncodeFrame")]
             private static extern unsafe int EncodeFrame_win(SafeCodecHandle encoder, void* srcBuf,
                            int width, int height, TJPF pixelFormat, int mode, int quality,
                            int sampleFactor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
-            private static extern unsafe int Tj3DecompressHeader3_win(SafeCodecHandle decoder, void * jpegBuf, ulong jpegSize, out int dataPrecision, out int width, out int height, out TJPF pixelFormat);
+            private static extern unsafe int Tj3DecompressHeader3_win(SafeCodecHandle decoder, void* jpegBuf, ulong jpegSize, out int dataPrecision,
+                            out int width, out int height, out TJPF pixelFormat);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DecodeFrame")]
             private static extern unsafe int DecodeFrame_win(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize, void* dstBuf,
@@ -440,9 +538,9 @@ namespace FellowOakDicom.Imaging.NativeCodec
             {
                 if (photometricInterpretation == PhotometricInterpretation.Rgb)
                     return TJPF.TJPF_RGB;
-                else if (photometricInterpretation == PhotometricInterpretation.Monochrome1 || photometricInterpretation == PhotometricInterpretation.Monochrome2 
+                else if (photometricInterpretation == PhotometricInterpretation.Monochrome1 || photometricInterpretation == PhotometricInterpretation.Monochrome2
                             || photometricInterpretation == PhotometricInterpretation.PaletteColor)
-                    return  TJPF.TJPF_GRAY;
+                    return TJPF.TJPF_GRAY;
                 else if (photometricInterpretation == PhotometricInterpretation.PaletteColor)
                     return TJPF.TJPF_UNKNOWN;
                 else if (photometricInterpretation == PhotometricInterpretation.YbrFull || photometricInterpretation == PhotometricInterpretation.YbrFull422 || photometricInterpretation == PhotometricInterpretation.YbrPartial422)
@@ -503,15 +601,37 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         frameArray = new PinnedByteArray(PixelDataConverter.PlanarToInterleaved24(new MemoryByteBuffer(frameArray.Data)).Data);
                     }
 
-                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.PaletteColor && 
+                    if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.PaletteColor &&
                                 (Mode == JpegMode.Baseline || Mode == JpegMode.Sequential))
                     {
                         throw new DicomCodecException("Lossy JPEG compression is not supported for PALETTE COLOR images because quantization alters color lookup table indices. " +
                                 "Use a lossless transfer syntax or convert the pixel data to RGB before encoding.");
                     }
 
+                    TJPF pixelFormat = getPixelFormat(oldPixelData.PhotometricInterpretation);
+
                     var pool = ArrayPool<byte>.Shared;
-                    byte[] jpegData = pool.Rent(frameArray.Data.Length);
+                    
+                    if (Mode == JpegMode.Baseline ||  Mode == JpegMode.Sequential)
+                    {
+                        if (pixelFormat.Equals(TJPF.TJPF_RGB))
+                            jpegParams.SampleFactor = DicomJpegSampleFactor.TJSAMP_422;
+                        else if (pixelFormat.Equals(TJPF.TJPF_GRAY))
+                            jpegParams.SampleFactor = DicomJpegSampleFactor.TJSAMP_GRAY;
+                    }
+                    else
+                    {
+                        if (pixelFormat.Equals(TJPF.TJPF_RGB))
+                            jpegParams.SampleFactor = DicomJpegSampleFactor.TJSAMP_444;
+                        else if (pixelFormat.Equals(TJPF.TJPF_GRAY))
+                            jpegParams.SampleFactor = DicomJpegSampleFactor.TJSAMP_GRAY;
+                    }
+
+                    var isWindows = Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64);
+                    var maxBufferJpegSize = isWindows ? Tj3JpegBufferSize_win(oldPixelData.Width, oldPixelData.Height, (int)jpegParams.SampleFactor) 
+                                    : Tj3JpegBufferSize(oldPixelData.Width, oldPixelData.Height, (int)jpegParams.SampleFactor) ;
+                    
+                    byte[] jpegData = pool.Rent((int)maxBufferJpegSize);
                     ulong outSize = (ulong)jpegData.Length;
 
                     try
@@ -519,12 +639,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         fixed (byte* jpegDataPtr = jpegData)
                         {
                             void* sourceframePtr = (void*)frameArray.Pointer;
-                            TJPF pixelFormat = getPixelFormat(oldPixelData.PhotometricInterpretation);
                             var samplefactor = (int)jpegParams.SampleFactor;
 
                             SafeCodecHandle encoder;
 
-                            if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                            if (isWindows)
                             {
                                 encoder = CreateCodecHandle_win(TJINIT.TJINIT_COMPRESS);
                             }
@@ -534,11 +653,11 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             }
 
                             using (encoder)
-                            {   
+                            {
                                 int result = -1;
                                 TJCS outJpegColorSpace = TJCS.TJCS_DEFAULT;
 
-                                if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                                if (isWindows)
                                 {
                                     result = EncodeFrame_win(encoder, sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode,
                                             jpegParams.Quality, (int)jpegParams.SampleFactor, jpegDataPtr, &outSize, out outJpegColorSpace);
@@ -636,46 +755,46 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     using (decoder)
-                    {   
+                    {
                         int result = -1;
                         int width, height, dataPrecision;
                         TJPF pixelFormat = TJPF.TJPF_UNKNOWN;
 
                         if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                         {
-                            result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision, 
-                                        out width, out  height, out pixelFormat);
+                            result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision,
+                                        out width, out height, out pixelFormat);
                         }
                         else
                         {
-                            result = Tj3DecompressHeader3(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision, 
+                            result = Tj3DecompressHeader3(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision,
                                         out width, out height, out pixelFormat);
                         }
-                        
-                        if (result != 0) 
+
+                        if (result != 0)
                             throw new DicomCodecException("JPEG decode failed to read bitstream header.");
 
                         var uncompressedSize = height * width * newPixelData.SamplesPerPixel * newPixelData.BytesAllocated;
                         byte[] uncompressedData = new byte[uncompressedSize];
 
                         fixed (void* dest = uncompressedData)
-                        {   
+                        {
                             TJCS jpegColorSpace = TJCS.TJCS_DEFAULT;
 
                             if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                             {
-                                result = DecodeFrame_win(decoder, dataPrecision, jpegPtr, (ulong)jpegArray.Data.Length, dest, 
+                                result = DecodeFrame_win(decoder, dataPrecision, jpegPtr, (ulong)jpegArray.Data.Length, dest,
                                             pixelFormat, out jpegColorSpace);
                             }
                             else
                             {
-                                result = DecodeFrame(decoder, dataPrecision, jpegPtr, (ulong)jpegArray.Data.Length, dest, 
-                                            pixelFormat, out jpegColorSpace);     
+                                result = DecodeFrame(decoder, dataPrecision, jpegPtr, (ulong)jpegArray.Data.Length, dest,
+                                            pixelFormat, out jpegColorSpace);
                             }
 
                             if (result != 0)
                                 throw new DicomCodecException("Unable to JPEG decode pixel data");
-                            
+
                             // If the native side converted YCbCr/RGB to RGB, reflect that in
                             // the output photometric interpretation and planar configuration.
                             if (jpegColorSpace.Equals(TJCS.TJCS_RGB) || jpegColorSpace.Equals(TJCS.TJCS_YCbCr))
@@ -747,12 +866,12 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     {
                         if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
                         {
-                            result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out precision, out int width, 
+                            result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out precision, out int width,
                                 out int height, out TJPF pixelFormat);
                         }
                         else
                         {
-                            result = Tj3DecompressHeader3(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out precision, out int width, 
+                            result = Tj3DecompressHeader3(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out precision, out int width,
                                 out int height, out TJPF pixelFormat);
                         }
                     }

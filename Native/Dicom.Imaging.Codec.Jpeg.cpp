@@ -653,6 +653,11 @@ namespace Dicom
                     return tj3Init(initType);
                 }
 
+                EXPORT_Jpeg size_t Tj3JpegBufferSize(int width, int height, int jpegSubsamp)
+                {
+                    return tj3JPEGBufSize(width, height, jpegSubsamp);
+                }
+
                 EXPORT_Jpeg int EncodeFrame(tjhandle handle, const void *srcBuf,
                            int width, int height, TJPF pixelFormat, int dataPrecision, int mode,
                            int quality, int sampleFactor, int predictor, unsigned char *jpegBuf, 
@@ -763,7 +768,7 @@ namespace Dicom
                     {
                         result = tj3Decompress16(handle, jpegBuf, jpegSize, (unsigned short*)dstBuf, pitch, pixelFormat);
                     }
-
+                    
                     *jpegColorSpace = (TJCS)tj3Get(handle, TJPARAM_COLORSPACE);
 
                     return result;
