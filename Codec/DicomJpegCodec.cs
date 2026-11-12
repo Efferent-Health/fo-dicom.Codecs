@@ -645,7 +645,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision, 
                                         out width, out  height, out pixelFormat);
-                            Console.WriteLine($"precision => {dataPrecision}");
                         }
                         else
                         {
