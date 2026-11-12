@@ -48,7 +48,7 @@ jobs:
           echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
           certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
-        run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
+        run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx --maxcpucount:1
   build_win_arm64:
     runs-on: windows-2022
     needs: build_win_x64
