@@ -519,8 +519,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
                             out int width, out int height, out TJPF pixelFormat);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DecodeFrame")]
-            private static extern unsafe int DecodeFrame_win(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize, void* dstBuf,
-                            TJPF pixelFormat, out TJCS jpegColorSpace);
+            private static extern unsafe int DecodeFrame_win(SafeCodecHandle decoder, int dataPrecision, void* jpegBuf, ulong jpegSize,
+                            void* dstBuf, TJPF pixelFormat, out TJCS jpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy_win(IntPtr codec);
