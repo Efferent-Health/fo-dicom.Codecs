@@ -511,8 +511,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "EncodeFrame")]
             private static extern unsafe int EncodeFrame_win(SafeCodecHandle encoder, void* srcBuf,
-                           int width, int height, TJPF pixelFormat, int mode, int quality,
-                           int sampleFactor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
+                           int width, int height, TJPF pixelFormat, int dataPrecision, int mode, int quality,
+                           int sampleFactor, int predictor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
             private static extern unsafe int Tj3DecompressHeader3_win(SafeCodecHandle decoder, void* jpegBuf, ulong jpegSize, out int dataPrecision,
@@ -659,8 +659,8 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
                                 if (isWindows)
                                 {
-                                    result = EncodeFrame_win(encoder, sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, (int)Mode,
-                                            jpegParams.Quality, (int)jpegParams.SampleFactor, jpegDataPtr, &outSize, out outJpegColorSpace);
+                                    result = EncodeFrame_win(encoder, sourceframePtr, oldPixelData.Width, oldPixelData.Height, pixelFormat, Bits, (int)Mode,
+                                        jpegParams.Quality, (int)jpegParams.SampleFactor, jpegParams.Predictor, jpegDataPtr, &outSize, out outJpegColorSpace);
                                 }
                                 else
                                 {
