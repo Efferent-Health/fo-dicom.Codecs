@@ -397,7 +397,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                            int width, int height, TJPF pixelFormat, int dataPrecision, int mode, int quality,
                            int sampleFactor, int predictor, void* jpegBuf, ulong* jpegSize, out TJCS outJpegColorSpace);
 
-                        [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
+            [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3DecompressHeader3")]
             private static extern unsafe int Tj3DecompressHeader3(SafeCodecHandle decoder, void * jpegBuf, ulong jpegSize, out int dataPrecision, out int width, out int height, out TJPF pixelFormat);
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DecodeFrame")]
@@ -406,6 +406,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Destroy")]
             private static extern void Tj3Destroy(IntPtr codec);
+
 
             // Methods for encoding on win x64 or arm64 
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
@@ -644,6 +645,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         {
                             result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out dataPrecision, 
                                         out width, out  height, out pixelFormat);
+                            Console.WriteLine($"precision => {dataPrecision}");
                         }
                         else
                         {
@@ -731,17 +733,33 @@ namespace FellowOakDicom.Imaging.NativeCodec
                 {
                     byte[] errorMessage = new byte[256];
                     int precision;
-                    int rc;
+                    int result = -1;
 
                     byte* jpegPtr = (byte*)(void*)jpegArray.Pointer;
 
-                    if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
-                        rc = DicomJpegReadPrecision_win(jpegPtr, (uint)jpegArray.ByteSize, out precision, errorMessage, (uint)errorMessage.Length);
-                    else
-                        rc = DicomJpegReadPrecision(jpegPtr, (uint)jpegArray.ByteSize, out precision, errorMessage, (uint)errorMessage.Length);
+                    SafeCodecHandle decoder;
 
-                    if (rc != 0)
-                        throw new DicomCodecException("Unable to read JPEG header: " + ErrorText(errorMessage));
+                    if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                        decoder = CreateCodecHandle_win(TJINIT.TJINIT_DECOMPRESS);
+                    else
+                        decoder = CreateCodecHandle(TJINIT.TJINIT_DECOMPRESS);
+
+                    using (decoder)
+                    {
+                        if (Platform.Current.Equals(Platform.Type.win_x64) || Platform.Current.Equals(Platform.Type.win_arm64))
+                        {
+                            result = Tj3DecompressHeader3_win(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out precision, out int width, 
+                                out int height, out TJPF pixelFormat);
+                        }
+                        else
+                        {
+                            result = Tj3DecompressHeader3(decoder, jpegPtr, (ulong)jpegArray.Data.Length, out precision, out int width, 
+                                out int height, out TJPF pixelFormat);
+                        }
+                    }
+
+                    if (result != 0)
+                        throw new DicomCodecException("JPEG decode failed to read bitstream header.");
 
                     return precision;
                 }
