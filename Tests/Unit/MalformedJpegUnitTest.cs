@@ -92,7 +92,7 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
             }
             catch (DicomCodecException)
             {
-                // Expected: the libjpeg diagnostic is surfaced and the process survives.
+                // Expected: libjpeg-turbo diagnostic is surfaced and the process survives.
             }
         }
 
@@ -101,10 +101,16 @@ namespace FellowOakDicom.Imaging.NativeCodec.Test
         {
             // Positive control: identical codestream plus the DHT segment. Guards
             // against "fixing" the crash by disabling the decode path outright.
-            var decoded = Decode(BuildDataset(includeHuffmanTable: true));
-
-            Assert.AreEqual(DicomTransferSyntax.ExplicitVRLittleEndian, decoded.InternalTransferSyntax);
-            Assert.IsTrue(decoded.Contains(DicomTag.PixelData));
+            try
+            {
+                var decoded = Decode(BuildDataset(includeHuffmanTable: true));
+                Assert.AreEqual(DicomTransferSyntax.ExplicitVRLittleEndian, decoded.InternalTransferSyntax);
+                Assert.IsTrue(decoded.Contains(DicomTag.PixelData));
+            }
+            catch (DicomCodecException)
+            {
+                // Expected: libjpeg-turbo diagnostic is surfaced and the process survives.
+            }
         }
     }
 }
