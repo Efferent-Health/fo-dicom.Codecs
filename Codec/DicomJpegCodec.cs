@@ -477,7 +477,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             private static extern unsafe int DicomJpegReadPrecision(byte* jpegData, uint jpegSize, out int outPrecision, byte[] errorMessage, uint errorMessageSize);
 
 
-            // Methods for encoding on macOs or linux (x64/arm64)
+            // Methods for encoding and decoding on macOs or linux (x64/arm64)
 
             [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
             private static extern SafeCodecHandle CreateCodecHandle(TJINIT initType);
@@ -502,7 +502,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             private static extern void Tj3Destroy(IntPtr codec);
 
 
-            // Methods for encoding on win x64 or arm64 
+            // Methods for encoding and decoding on windowns (x64/arm64)
             [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "Tj3Init")]
             private static extern SafeCodecHandle CreateCodecHandle_win(TJINIT initType);
 

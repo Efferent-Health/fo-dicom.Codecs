@@ -10,7 +10,7 @@ on:
 
 jobs:
   version:
-    runs-on: windows-latest
+    runs-on: windows-2022
     outputs:
       release-version: ${{ steps.get-version.outputs.RELEASE_VERSION }}
     steps:
@@ -158,7 +158,7 @@ jobs:
         run: dotnet test Tests/Unit/*.csproj --logger:trx
         
   acceptance:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs:
       - version
       - build_win_x64
@@ -196,7 +196,7 @@ jobs:
           path: ./AcceptanceTestResults.zip
 
   check-paths:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: 
       - acceptance
     outputs:
@@ -222,7 +222,7 @@ jobs:
           echo "only-tests=$ONLY_TESTS" >> $GITHUB_OUTPUT
           
   nuget:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: 
       - version
       - acceptance
