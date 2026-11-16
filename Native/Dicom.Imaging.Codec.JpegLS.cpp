@@ -34,17 +34,6 @@ extern "C" {
 
 #endif
 
-EXPORT_Charls CharlsApiResultType JpegLSEncode(void* destination, size_t destinationLength, size_t* bytesWritten, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage)
-{
-    return JpegLsEncode(destination, destinationLength, bytesWritten, source, sourceLength, obj, errorMessage); 
-}
-
-EXPORT_Charls CharlsApiResultType JpegLSDecode(void * destination, size_t destinationLength, void* source, size_t sourceLength, JlsParameters* obj, char* errorMessage)
-{
-    return JpegLsDecode(destination, destinationLength, source, sourceLength, obj, errorMessage);     
-}
-
-
 //Charls methods for encoding
 
 EXPORT_Charls void * Charls_jpegls_encoder_create()

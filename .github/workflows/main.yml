@@ -275,7 +275,8 @@ jobs:
         run: |
           gh release create "${{ needs.version.outputs.release-version }}" \
             --title "Release ${{ needs.version.outputs.release-version }}" \
-            --prerelease
+            --prerelease=false \
+            --generate-notes
 
       - name: Upload Release Asset
         env:

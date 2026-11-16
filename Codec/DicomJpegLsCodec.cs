@@ -339,22 +339,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
         [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Charls_jpegls_decoder_destroy")]
         public static extern void Charls_jpegls_decoder_destroy_win(IntPtr decoder);
 
-        // Native methods deprecated
-        [DllImport("Dicom.Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode_win(void* destination, ulong destinationLength, ulong* bytesWritten, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
-
-        //Decode JPEGLS for winx64
-        [DllImport("Dicom.Native.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode_win(void* destination, ulong destinationLength, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
-
-        //For Encode JPEGLS
-        [DllImport("Dicom.Native", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSEncode")]
-        public static extern unsafe CharlsApiResultType JpegLSEncode(void* destination, ulong destinationLength, ulong* bytesWritten, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
-
-        //For Decode JPEGLS
-        [DllImport("Dicom.Native", CallingConvention = CallingConvention.Cdecl, EntryPoint = "JpegLSDecode")]
-        public static extern unsafe CharlsApiResultType JpegLSDecode(void* destination, ulong destinationLength, void* source, ulong sourceLength, ref JlsParameters obj, char[] errorMessage);
-
         public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             unsafe
