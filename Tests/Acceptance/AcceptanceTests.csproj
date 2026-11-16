@@ -18,8 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../../bin/lib-win-x64/Dicom.Native.dll" CopyToOutputDirectory="Always" />
     <None Include="./*.dcm" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/lib-linux-x64/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/lib-linux-arm64/*.so" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/lib-osx-x64/*.dylib" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/POSIX64/lib-osx-arm64/*.dylib" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/Windows64/build_x64/bin/x64/Release/Dicom.Native/*.dll" CopyToOutputDirectory="Always" />
+    <None Include="../../Native/Windows64/build_arm64/bin/ARM64/Release/Dicom.Native/*.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>

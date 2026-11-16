@@ -48,7 +48,7 @@ jobs:
           echo "${{ secrets.STRONG_NAME_KEY }}" >Platform/fo-dicom/fo-dicom.Codecs.snk.base64
           certutil -decode Platform/fo-dicom/fo-dicom.Codecs.snk.base64 Platform/fo-dicom/fo-dicom.Codecs.snk
       - name: Run unit tests
-        run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx --maxcpucount:1
+        run: dotnet test Tests/Unit/UnitTests.csproj --logger:trx
   build_win_arm64:
     runs-on: windows-2022
     needs: build_win_x64
@@ -94,7 +94,7 @@ jobs:
         with:
           dotnet-version: '10.0.x'
       - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx --maxcpucount:1      
+        run: dotnet test Tests/Unit/*.csproj --logger:trx      
 
   build_linux_arm64:
     runs-on: ubuntu-24.04
@@ -116,7 +116,7 @@ jobs:
           path: Native/POSIX64/lib-linux-arm64
         
   build_osx_x64:
-    runs-on: macos-14
+    runs-on: macos-15
     needs: build_win_x64
     steps:
       - name: Checkout repository
@@ -124,24 +124,16 @@ jobs:
       - name: Compile Dicom.Native for macOS x64
         run: |
           cd Native/POSIX64/
-          cmake ./CMakeLists.txt
+          cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 ./CMakeLists.txt
           make
       - name: Publish osx x64 artifacts
         uses: actions/upload-artifact@v7
         with:
           name: lib-osx-x64
           path: Native/POSIX64/lib-osx-x64
-      - name: Setup .NET 10.0
-        uses: actions/setup-dotnet@v6
-        with:
-          dotnet-version: '10.0.x'
-      - name: Prepare SN key
-        run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
-      - name: Run unit tests
-        run: dotnet test Tests/Unit/*.csproj --logger:trx --maxcpucount:1
 
   build_osx_arm64:
-    runs-on: macos-14
+    runs-on: macos-15
     needs: build_win_x64
     steps:
       - name: Checkout repository
@@ -156,6 +148,14 @@ jobs:
         with:
           name: lib-osx-arm64
           path: Native/POSIX64/lib-osx-arm64
+      - name: Setup .NET 10.0
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - name: Prepare SN key
+        run: echo ${{ secrets.STRONG_NAME_KEY }} | base64 --decode >Platform/fo-dicom/fo-dicom.Codecs.snk
+      - name: Run unit tests
+        run: dotnet test Tests/Unit/*.csproj --logger:trx
         
   acceptance:
     runs-on: windows-latest
@@ -185,7 +185,7 @@ jobs:
       - name: Run acceptance tests
         run: |        
           echo "Running Acceptance Test for version ${{ needs.version.outputs.release-version }}..." 
-          dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx --maxcpucount:1 -f net8.0
+          dotnet test Tests/Acceptance/AcceptanceTests.csproj --logger:trx
       - name: Compress results
         run: Compress-Archive Tests/Acceptance/bin/debug/net8.0/out ./AcceptanceTestResults.zip
         shell: pwsh
