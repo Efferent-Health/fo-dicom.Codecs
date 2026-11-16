@@ -619,7 +619,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                     throw new DicomCodecException($"Charls_jpegls_decoder_get_destination_size failed with error code: {result}");
                             }
 
-                            var decodeBuffer = new byte[(int)destination_size_bytes];
+                            var decodeBuffer = new byte[destination_size_bytes];
 
                             fixed (byte* decodeBufferPtr = decodeBuffer)
                             {   

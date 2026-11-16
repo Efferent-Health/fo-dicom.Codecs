@@ -628,6 +628,13 @@ namespace FellowOakDicom.Imaging.NativeCodec
                         (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.YbrPartial420))
                     throw new DicomCodecException($"Photometric Interpretation {oldPixelData.PhotometricInterpretation} not supported by JPEG 2000 encoder");
 
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.PaletteColor &&
+                        TransferSyntax == DicomTransferSyntax.JPEG2000Lossy)
+                {
+                    throw new DicomCodecException("JPEG2000 Lossy is not supported for PALETTE COLOR images because quantization alters color lookup table indices. " +
+                            "Use a lossless transfer syntax or convert the pixel data to RGB before encoding.");
+                }
+
                 DicomJpeg2000Params jparams = (DicomJpeg2000Params)parameters;
 
                 if (jparams == null)

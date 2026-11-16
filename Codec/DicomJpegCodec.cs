@@ -609,8 +609,6 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     }
 
                     TJPF pixelFormat = getPixelFormat(oldPixelData.PhotometricInterpretation);
-
-                    var pool = ArrayPool<byte>.Shared;
                     
                     if (Mode == JpegMode.Baseline ||  Mode == JpegMode.Sequential)
                     {
@@ -631,6 +629,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                     var maxBufferJpegSize = isWindows ? Tj3JpegBufferSize_win(oldPixelData.Width, oldPixelData.Height, (int)jpegParams.SampleFactor) 
                                     : Tj3JpegBufferSize(oldPixelData.Width, oldPixelData.Height, (int)jpegParams.SampleFactor) ;
                     
+                    var pool = ArrayPool<byte>.Shared;
                     byte[] jpegData = pool.Rent((int)maxBufferJpegSize);
                     ulong outSize = (ulong)jpegData.Length;
 
@@ -671,7 +670,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
                                 if (result != 0)
                                     throw new DicomCodecException("Unable to JPEG encode pixel data.");
 
-                                var encoded = new byte[(int)outSize];
+                                var encoded = new byte[outSize];
                                 Buffer.BlockCopy(jpegData, 0, encoded, 0, (int)outSize);
 
                                 if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.Rgb

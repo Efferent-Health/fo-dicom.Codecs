@@ -180,13 +180,20 @@ namespace FellowOakDicom.Imaging.NativeCodec
                    ((uint)data[offset + 2] << 8) | data[offset + 3];
         }
 
-        public override unsafe void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        public override void Encode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             unsafe
             {
                 if (Platform.Current == Platform.Type.unsupported)
                 {
                     throw new InvalidOperationException("Unsupported OS Platform");
+                }
+
+                if (oldPixelData.PhotometricInterpretation == PhotometricInterpretation.PaletteColor &&
+                        TransferSyntax == DicomTransferSyntax.HTJ2K)
+                {
+                    throw new DicomCodecException("HTJ2K is not supported for PALETTE COLOR images because quantization alters color lookup table indices. " +
+                            "Use a lossless transfer syntax or convert the pixel data to RGB before encoding.");
                 }
 
                 DicomHtJpeg2000Params jparams = (DicomHtJpeg2000Params)parameters;
@@ -311,7 +318,7 @@ namespace FellowOakDicom.Imaging.NativeCodec
             }
         }
 
-        public override unsafe void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
+        public override void Decode(DicomPixelData oldPixelData, DicomPixelData newPixelData, DicomCodecParams parameters)
         {
             try
             {
