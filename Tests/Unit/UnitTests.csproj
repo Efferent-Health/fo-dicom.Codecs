@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" />
+    <!--ProjectReference Include="../../Platform/fo-dicom/fo-dicom.Codecs.csproj" /-->
+    <PackageReference Include="fo-dicom.Codecs" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>
